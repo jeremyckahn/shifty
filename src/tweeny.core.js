@@ -36,23 +36,40 @@
 				step,
 				complete,
 				loop,
-				timestamp;
+				timestamp,
+				easingFunc,
+				fromClone,
+				prop;
+				
+			function tweenProps (currentTime) {
+				var prop;
+				
+				for (prop in from) {
+					if (from.hasOwnProperty(prop) && to.hasOwnProperty(prop)) {
+						from[prop] = easingFunc(currentTime - timestamp, fromClone[prop], to[prop] - fromClone[prop], duration);
+					}
+				}
+			}
 				
 			function scheduleUpdate (handler) {
 				loop = setTimeout(handler, 1000 / this.fps);
 			}
 				
 			function timeoutHandler () {
-				if (now() < timestamp + duration) {
+				var currentTime;
+				
+				currentTime = now();
+				
+				if (currentTime < timestamp + duration) {
 					// The tween is still running, schedule an update
+					tweenProps(currentTime);
+					step(from, to);
 					scheduleUpdate(timeoutHandler);
 				} else {
 					// The duration of the tween has expired
 					complete();
 				}
 			}
-				
-			timestamp = now();
 			
 			if (to) {
 				// Assume the shorthand syntax is being used.
@@ -72,6 +89,17 @@
 				to = params.to || {};
 				duration = params.duration || this.duration;
 				easing = params.easing || this.easing;
+			}
+			
+			timestamp = now();
+			easingFunc = tweeny.formula[easing] || tweeny.formula.linear;
+			
+			fromClone = {};
+			
+			for (prop in from) {
+				if (from.hasOwnProperty(prop)) {
+					fromClone[prop] = from[prop];
+				}
 			}
 			
 			scheduleUpdate(timeoutHandler);

@@ -29,8 +29,27 @@
 		</footer>
 	</div> <!--! end of #container -->
 
-	<script type="text/javascript" charset="utf-8" src="util/yepnope.js"></script>
-	<script type="text/javascript" charset="utf-8" src="util/load.js"></script>
+	<!--<script type="text/javascript" charset="utf-8" src="util/yepnope.js"></script>
+	<script type="text/javascript" charset="utf-8" src="util/load.js"></script>-->
+	<script type="text/javascript" charset="utf-8" src="src/tweeny.core.js"></script>
+	
+	<script type="text/javascript" charset="utf-8">
+		tweeny.tween({
+			from: {
+				'test': 0
+			},
+			to: {
+				'test': 10
+			},
+			'duration': 1000,
+			'step': function (from) {
+				console.log(from.test);
+			},
+			'complete': function () {
+				console.log('Done!');
+			}
+		});
+	</script>
 
 </body>
 </html>
