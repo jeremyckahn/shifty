@@ -1,5 +1,15 @@
-(function (global, undefined) {
+/*global setTimeout:true */
+
+(function (global) {
 	var tweeny;
+	
+	/**
+	 * Get the current UNIX time as an integer
+	 * @returns {Number} An integer representing the current timestamp.
+	 */
+	function now () {
+		return +new Date();
+	}
 	
 	if (global.tweeny) {
 		return;
@@ -24,18 +34,36 @@
 		'tween': function tween (from, to, duration, easing) {
 			var params,
 				step,
-				complete;
+				complete,
+				loop,
+				timestamp;
+				
+			function scheduleUpdate (handler) {
+				loop = setTimeout(handler, 1000 / this.fps);
+			}
+				
+			function timeoutHandler () {
+				if (now() < timestamp + duration) {
+					// The tween is still running, schedule an update
+					scheduleUpdate(timeoutHandler);
+				} else {
+					// The duration of the tween has expired
+					complete();
+				}
+			}
+				
+			timestamp = now();
 			
-			if (toProps) {
+			if (to) {
 				// Assume the shorthand syntax is being used.
 				step = function () {};
 				complete = function () {};
-				from = params.from || {};
+				from = from || {};
 				to = to || {};
 				duration = duration || this.duration;
 				easing = easing || this.easing;
 			} else {
-				params = fromProps;
+				params = from;
 				
 				// If the second argument is not present, assume the longhand syntax is being used.
 				step = params.step || function () {};
@@ -46,7 +74,7 @@
 				easing = params.easing || this.easing;
 			}
 			
-			
+			scheduleUpdate(timeoutHandler);
 		},
 		
 		/**
@@ -67,4 +95,4 @@
 		}
 	};
 	
-})(this);
+}(this));
