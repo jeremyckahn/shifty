@@ -13,20 +13,44 @@ Tweeny doesn't do:
   * Drawing.
   * Much else.
 
-Possible API
+API
 ---
 
-`tweeny.tween( fromProps, toProps, duration, easingFormula );`
+##Making a tween##
+
+```javascript
+var tween = tweeny.tween( from, to, duration, easing );
+````
 
 or...
 
 ````javascript
-tweeny.tween({
-  fromProps:  {  },
-  toProps:    {  },
-  duration:   1000,
-  easing:     'linear',
-  step:       function () {},
-  complete:   function () {}
+var tween = tweeny.tween({
+  from:       {  },            // Object
+  to:         {  },            // Object
+  duration:   1000,            // Number
+  easing:     'linear',        // String
+  step:       function () {},  // Function
+  complete:   function () {}   // Function
 });
 ````
+
+This starts a tween.  You can use either format, but the second, longer format give you more hooks and controls.  The method returns an object that you can use to control a tween, as described in the next section.
+
+##Controlling a tween##
+
+Continuing from above...
+
+````javascript
+tween.stop( gotoEnd );
+````
+
+Stops a tween.
+
+  * `gotoEnd`: Boolean.  Controls whether to jump to the end "to" state or just stop where the tweened values currently are.
+
+````javascript
+tween.get();
+````
+
+Returns a tween's current values.
