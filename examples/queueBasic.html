@@ -1,0 +1,84 @@
+<!doctype html>
+<!--[if lt IE 9]>			 <html class="no-js oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+
+	<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+			 Remove this if you use the .htaccess -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title></title>
+	
+	<!-- CSS: implied media="all" -->
+	<link rel="stylesheet" href="../style.css">
+
+</head>
+
+<body id="root">
+
+	<div id="container">
+		<header>
+
+		</header>
+		<div id="main" role="main">
+
+		</div>
+		<footer>
+
+		</footer>
+	</div> <!--! end of #container -->
+
+	<script type="text/javascript" charset="utf-8" src="../src/tweeny.core.js"></script>
+	<script type="text/javascript" charset="utf-8" src="../src/tweeny.queue.js"></script>
+	
+	<script type="text/javascript" charset="utf-8">
+
+		tweeny.queue({
+			test: 0
+		}, {
+			test: 10
+		}, 100, 
+		function () {
+			console.log('Tween 1 complete.');
+		}, 'linear');
+		
+		tweeny.queue({
+			test: 0
+		}, {
+			test: 10
+		}, 100, 
+		function () {
+			console.log('Tween 2 complete.');
+		}, 'linear');
+		
+		tweeny.queue({
+			from: {
+				test: 0
+			},
+			to: {
+				test: 10
+			},
+			callback: function () {
+				console.log('Tween 3 complete.')
+			},
+			duration: 100
+		});
+		
+		tweeny.queue({
+			from: {
+				test: 0
+			},
+			to: {
+				test: 10
+			},
+			callback: function () {
+				console.log('Tween 4 complete.')
+			},
+			duration: 100
+		});
+		
+	</script>
+
+</body>
+</html>

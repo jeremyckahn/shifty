@@ -49,7 +49,7 @@
 		 * @param {Number} duration
 		 * @param {String} easing
 		 */
-		'tween': function tween (from, to, duration, easing) {
+		'tween': function tween (from, to, duration, callback, easing) {
 			var params,
 				step,
 				callback,
@@ -116,10 +116,10 @@
 			if (to) {
 				// Assume the shorthand syntax is being used.
 				step = function () {};
-				callback = function () {};
 				from = from || {};
 				to = to || {};
 				duration = duration || this.duration;
+				callback = callback || function () {};
 				easing = easing || this.easing;
 			} else {
 				params = from;
