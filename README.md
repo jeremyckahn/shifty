@@ -37,6 +37,10 @@ var tween = tweeny.tween({
 
 This starts a tween.  You can use either format, but the second, longer format give you more hooks and controls.  The method returns an object that you can use to control a tween, as described in the next section.
 
+This method returns an object that you can use to interact with the tween, as outlined below.
+
+__Important!__  The object that is passed as the `from` parameter, regardless of which syntax you use to invoke `tweeny.tween`, is modified.
+
 ##Controlling a tween##
 
 Continuing from above...

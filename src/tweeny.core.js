@@ -89,6 +89,29 @@
 				}
 			}
 			
+			// Set up the tween controller methods.  This object is the return value for `tweeny.tween`.
+			tweenController = {
+				/**
+				 * Stops the tween.
+				 * @param {Boolean} gotoEnd If `false`, or omitted, the tween just stops at its current state, and the `callback` is not invoked.  If `true`, the tweened object's values are instantly set the the target values, and the `callbabk` is invoked.
+				*/
+				'stop': function (gotoEnd) {
+					clearTimeout(loopId);
+					if (gotoEnd) {
+						simpleCopy(from, to);
+						callback.call(from);
+					}
+				},
+				
+				/**
+				 * Returns a reference to the tweened object (the `from` object that wat passed to `tweeny.tween`).
+				 * @returns {Object}
+				 */
+				'get': function () {
+					return from;
+				}
+			};
+			
 			// Normalize some internal values depending on how `tweeny.tween` was invoked
 			if (to) {
 				// Assume the shorthand syntax is being used.
@@ -114,28 +137,6 @@
 			easingFunc = tweeny.formula[easing] || tweeny.formula.linear;
 			fromClone = simpleCopy({}, from);
 			scheduleUpdate(timeoutHandler);
-			
-			tweenController = {
-				/**
-				 * Stops the tween.
-				 * @param {Boolean} gotoEnd If `false`, or omitted, the tween just stops at its current state, and the `callback` is not invoked.  If `true`, the tweened object's values are instantly set the the target values, and the `callbabk` is invoked.
-				*/
-				'stop': function (gotoEnd) {
-					clearTimeout(loopId);
-					if (gotoEnd) {
-						simpleCopy(from, to);
-						callback.call(from);
-					}
-				},
-				
-				/**
-				 * Returns a reference to the tweened object (the `from` object that wat passed to `tweeny.tween`).
-				 * @returns {Object}
-				 */
-				'get': function () {
-					return from;
-				}
-			};
 			
 			return tweenController;
 		},
