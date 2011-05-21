@@ -1,4 +1,4 @@
-/*global setTimeout:true */
+/*global setTimeout:true, clearTimeout:true */
 
 (function (global) {
 	var tweeny;
@@ -13,8 +13,8 @@
 	
 	/**
 	 * Does a basic copy of one Object's properties to another.  This is not a robust `extend` function, nor is it recusrsive.  It is only appropriate to use on objects that have primitive properties (Numbers, Strings, Boolean, etc.)
-	 * @param targetObject The object to copy into
-	 * @param srcObject The object to copy from
+	 * @param {Object} targetObject The object to copy into
+	 * @param {Object} srcObject The object to copy from
 	 * @returns {Object} A reference to the augmented `targetObj` Object
 	 */
 	function simpleCopy (targetObj, srcObj) {
@@ -52,11 +52,12 @@
 		'tween': function tween (from, to, duration, easing) {
 			var params,
 				step,
-				complete,
-				loop,
+				callback,
+				loopId,
 				timestamp,
 				easingFunc,
-				fromClone;
+				fromClone,
+				tweenController;
 				
 			function tweenProps (currentTime) {
 				var prop;
@@ -69,7 +70,7 @@
 			}
 				
 			function scheduleUpdate (handler) {
-				loop = setTimeout(handler, 1000 / this.fps);
+				loopId = setTimeout(handler, 1000 / this.fps);
 			}
 				
 			function timeoutHandler () {
@@ -80,20 +81,19 @@
 				if (currentTime < timestamp + duration) {
 					// The tween is still running, schedule an update
 					tweenProps(currentTime);
-					//step(from, to);
 					step.call(from);
 					scheduleUpdate(timeoutHandler);
 				} else {
 					// The duration of the tween has expired
-					simpleCopy(from, to);
-					complete.call(from);
+					tweenController.stop(true);
 				}
 			}
 			
+			// Normalize some internal values depending on how `tweeny.tween` was invoked
 			if (to) {
 				// Assume the shorthand syntax is being used.
 				step = function () {};
-				complete = function () {};
+				callback = function () {};
 				from = from || {};
 				to = to || {};
 				duration = duration || this.duration;
@@ -103,7 +103,7 @@
 				
 				// If the second argument is not present, assume the longhand syntax is being used.
 				step = params.step || function () {};
-				complete = params.complete || function () {};
+				callback = params.callback || function () {};
 				from = params.from || {};
 				to = params.to || {};
 				duration = params.duration || this.duration;
@@ -114,6 +114,30 @@
 			easingFunc = tweeny.formula[easing] || tweeny.formula.linear;
 			fromClone = simpleCopy({}, from);
 			scheduleUpdate(timeoutHandler);
+			
+			tweenController = {
+				/**
+				 * Stops the tween.
+				 * @param {Boolean} gotoEnd If `false`, or omitted, the tween just stops at its current state, and the `callback` is not invoked.  If `true`, the tweened object's values are instantly set the the target values, and the `callbabk` is invoked.
+				*/
+				'stop': function (gotoEnd) {
+					clearTimeout(loopId);
+					if (gotoEnd) {
+						simpleCopy(from, to);
+						callback.call(from);
+					}
+				},
+				
+				/**
+				 * Returns a reference to the tweened object (the `from` object that wat passed to `tweeny.tween`).
+				 * @returns {Object}
+				 */
+				'get': function () {
+					return from;
+				}
+			};
+			
+			return tweenController;
 		},
 		
 		/**

@@ -31,7 +31,7 @@ var tween = tweeny.tween({
   duration:   1000,            // Number
   easing:     'linear',        // String
   step:       function () {},  // Function
-  complete:   function () {}   // Function
+  callback:   function () {}   // Function
 });
 ````
 

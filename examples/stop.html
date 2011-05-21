@@ -11,7 +11,7 @@
 	<title></title>
 	
 	<!-- CSS: implied media="all" -->
-	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="../style.css">
 
 </head>
 
@@ -29,17 +29,17 @@
 		</footer>
 	</div> <!--! end of #container -->
 
-	<script type="text/javascript" charset="utf-8" src="src/tweeny.core.js"></script>
+	<script type="text/javascript" charset="utf-8" src="../src/tweeny.core.js"></script>
 	
 	<script type="text/javascript" charset="utf-8">
-		tweeny.tween({
+		var tween = tweeny.tween({
 			from: {
 				'test': 0
 			},
 			to: {
 				'test': 10
 			},
-			'duration': 1000,
+			'duration': 3000,
 			'step': function () {
 				console.log(this.test);
 			},
@@ -47,6 +47,11 @@
 				console.log('Done!  Final value: ' + this.test);
 			}
 		});
+		
+		setTimeout(function () {
+			console.log('Stopping early...');
+			tween.stop(true);
+		}, 500);
 	</script>
 
 </body>
