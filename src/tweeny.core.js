@@ -11,6 +11,24 @@
 		return +new Date();
 	}
 	
+	/**
+	 * Does a basic copy of one Object's properties to another.  This is not a robust `extend` function, nor is it recusrsive.  It is only appropriate to use on objects that have primitive properties (Numbers, Strings, Boolean, etc.)
+	 * @param targetObject The object to copy into
+	 * @param srcObject The object to copy from
+	 * @returns {Object} A reference to the augmented `targetObj` Object
+	 */
+	function simpleCopy (targetObj, srcObj) {
+		var prop;
+		
+		for (prop in srcObj) {
+			if (srcObj.hasOwnProperty(prop)) {
+				targetObj[prop] = srcObj[prop];
+			}
+		}
+		
+		return targetObj;
+	}
+	
 	if (global.tweeny) {
 		return;
 	}
@@ -38,8 +56,7 @@
 				loop,
 				timestamp,
 				easingFunc,
-				fromClone,
-				prop;
+				fromClone;
 				
 			function tweenProps (currentTime) {
 				var prop;
@@ -63,11 +80,13 @@
 				if (currentTime < timestamp + duration) {
 					// The tween is still running, schedule an update
 					tweenProps(currentTime);
-					step(from, to);
+					//step(from, to);
+					step.call(from);
 					scheduleUpdate(timeoutHandler);
 				} else {
 					// The duration of the tween has expired
-					complete();
+					simpleCopy(from, to);
+					complete.call(from);
 				}
 			}
 			
@@ -93,15 +112,7 @@
 			
 			timestamp = now();
 			easingFunc = tweeny.formula[easing] || tweeny.formula.linear;
-			
-			fromClone = {};
-			
-			for (prop in from) {
-				if (from.hasOwnProperty(prop)) {
-					fromClone[prop] = from[prop];
-				}
-			}
-			
+			fromClone = simpleCopy({}, from);
 			scheduleUpdate(timeoutHandler);
 		},
 		

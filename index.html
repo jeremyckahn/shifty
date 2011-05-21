@@ -42,11 +42,11 @@
 				'test': 10
 			},
 			'duration': 1000,
-			'step': function (from) {
-				console.log(from.test);
+			'step': function () {
+				console.log(this.test);
 			},
 			'complete': function () {
-				console.log('Done!');
+				console.log('Done!  Final value: ' + this.test);
 			}
 		});
 	</script>
