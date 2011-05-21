@@ -13,6 +13,8 @@
 		
 		if (queue.length) {
 			queue[0]();
+		} else {
+			queue.running = false;
 		}
 	}
 	
