@@ -94,7 +94,7 @@
 				/**
 				 * Stops the tween.
 				 * @param {Boolean} gotoEnd If `false`, or omitted, the tween just stops at its current state, and the `callback` is not invoked.  If `true`, the tweened object's values are instantly set the the target values, and the `callbabk` is invoked.
-				*/
+				 */
 				'stop': function (gotoEnd) {
 					clearTimeout(loopId);
 					if (gotoEnd) {
