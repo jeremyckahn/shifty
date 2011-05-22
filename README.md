@@ -21,7 +21,9 @@ Using Tweeny
 If you just want raw tweening functionality, all you need is `tweeny.core.js`.  All of the source files are in the `src` directory.  Just drop that in your page, and you are done.  If you want to use Tweeny extensions, just include them in the page after `tweeny.core.js`.
 
 API
----
+===
+
+The section explains how to use the Tweeny core.  For information on each extension, explore the `doc/` directory.
 
 ##Tweeny core methods##
 
