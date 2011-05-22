@@ -1,7 +1,7 @@
 /*global setTimeout:true, clearTimeout:true */
 
 /**
-Tweeny Queue extension
+Tweeny Queue Extension
 By Jeremy Kahn - jeremyckahn@gmail.com
   v0.1.0
 
@@ -12,7 +12,7 @@ For instructions on how to use Tweeny and this extension, please consult the man
 
 */
 
-(function (global) {
+(function tweenyQueue (global) {
 	var tweeny,
 		currentQueueName,
 		queues;
