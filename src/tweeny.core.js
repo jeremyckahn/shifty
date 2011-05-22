@@ -1,5 +1,15 @@
 /*global setTimeout:true, clearTimeout:true */
 
+/**
+Tweeny - A teeny tiny JavaScript tweening engine
+By Jeremy Kahn - jeremyckahn@gmail.com
+  v0.1.0
+
+Tweeny and all official extensions are freely available under an MIT license.
+For instructions on how to use Tweeny, please consult the manual: https://github.com/jeremyckahn/tweeny/blob/master/README.md
+
+*/
+
 (function (global) {
 	var tweeny;
 	
