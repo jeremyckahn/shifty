@@ -1,7 +1,7 @@
 Tweeny
 ===
 
-Tweeny is a tweening engine for JavaScript.  That's it.  Tweeny is meant to be a low level tool that can be encapsulated by higher-level tools.  It does:
+Tweeny is a tweening engine for JavaScript.  That's it.  Tweeny is meant to be a low level tool that can be encapsulated by higher-level tools.  At its core, it does:
 
   * Tweening.
   * Extensibility hooks for the tweening.
@@ -13,31 +13,40 @@ Tweeny doesn't do:
   * Drawing.
   * Much else.
 
+If you need functionality like this and more, you can easily extend Tweeny's core (`tweeny.core.js`) with whatever you need.
+
+Using Tweeny
+---
+
+If you just want raw tweening functionality, all you need is `tweeny.core.js`.  All of the source files are in the `src` directory.  Just drop that in your page, and you are done.  If you want to use Tweeny extensions, just include them in the page after `tweeny.core.js`.
+
 API
 ---
 
-##Making a tween##
+##Tweeny core methods##
+
+__Making a tween:__
 
 ```javascript
 var tween = tweeny.tween( from, to );
 ````
 
-You can add some fun extra parameters:
+You can optionally add some fun extra parameters:
 
 ```javascript
 var tween = tweeny.tween( from, to, duration, callback, easing );
 ````
 
-or...
+Or you can use the configuration object syntax:
 
 ````javascript
 var tween = tweeny.tween({
-  from:       {  },            // Object
-  to:         {  },            // Object
-  duration:   1000,            // Number
-  easing:     'linear',        // String
-  step:       function () {},  // Function
-  callback:   function () {}   // Function
+  from:       {  },            // Object.  Contains the properties to tween.  This object's properties are modified by Tweeny.
+  to:         {  },            // Object.  The "destination" `Number`s that the properties in `from` will tween to.
+  duration:   1000,            // Number.  How long the tween lasts for, in milliseconds.
+  easing:     'linear',        // String.  Tweening equation to use.  "Linear" is the default.  You can specify any tweening method that was added to `tweeny.formula`.
+  step:       function () {},  // Function.  Runs each "frame" that the tween is updated.
+  callback:   function () {}   // Function.  Runs when the tween completes.
 });
 ````
 
@@ -66,6 +75,8 @@ tween.get();
 Returns a tween's current values.
 
 ##Queuing##
+
+To use queues, include `tweeny.queue.js` on your page.
 
 You can define a list of tweens to be executed sequentially as each one completes.  The first thing you need to do, before working with queues, is define the queue you are working with:
 
