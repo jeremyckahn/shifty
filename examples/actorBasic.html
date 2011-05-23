@@ -9,6 +9,14 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
 	<title></title>
+	
+	<style type="text/css" media="screen">
+		canvas {
+			background: #000;
+			height: 300px;
+			width: 500px;
+		}
+	</style>
 
 </head>
 
@@ -20,6 +28,8 @@
 		</header>
 		<div id="main" role="main">
 
+			<canvas id="canvas" height="300" width="500"></canvas>
+
 		</div>
 		<footer>
 
@@ -28,9 +38,10 @@
 
 	<script type="text/javascript" charset="utf-8" src="../src/tweeny.core.js"></script>
 	<script type="text/javascript" charset="utf-8" src="../src/tweeny.actor.js"></script>
+	<script type="text/javascript" charset="utf-8" src="../util/actors.js"></script>
 	
 	<script type="text/javascript" charset="utf-8">
-		tweeny.tween({
+		/*tweeny.tween({
 			from: {
 				'test': 0
 			},
@@ -44,7 +55,17 @@
 			'callback': function () {
 				console.log('Done!  Final value: ' + this.test);
 			}
-		});
+		});*/
+		
+		var canvas, ctx, circleInst;
+		
+		canvas = document.getElementById('canvas');
+		ctx = canvas.getContext('2d');
+		
+		circleInst = tweeny.actorInit(circle, ctx);
+		//circleInst.begin();
+		
+		
 	</script>
 
 </body>

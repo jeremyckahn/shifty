@@ -13,6 +13,7 @@
 		
 		for (i = 0; i < limit; i++) {
 			actorInst = drawList[i];
+			actorInst.state = actorInst.get();  // Won't work!
 			actorInst.draw.call(actorInst.state, actorInst);
 		}
 		
@@ -48,7 +49,8 @@
 	tweeny.actorInit = function actorInit (actorTemplate, context) {
 		var actorController,
 			actorId,
-			actorInst;
+			actorInst,
+			prop;
 		
 		actorId = guid++;
 		
@@ -114,6 +116,13 @@
 				return actorInst.data;
 			}
 		};
+		
+		// Attach all of the tweeny methods
+		for (prop in tweeny) {
+			if (tweeny.hasOwnProperty(prop) && typeof tweeny[prop] === 'function') {
+				actorController[prop] = tweeny[prop];
+			}
+		}
 		
 		return actorController;
 	};
