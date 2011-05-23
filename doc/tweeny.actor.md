@@ -8,7 +8,33 @@ This documentation uses `circle` as an example actor.
 ##Making an actor tween-able##
 
 ````javascript
-var actorInst = tweeny.actorInit(circle);
+// @param {Object|Function} `actorTemplate` A Kapi-style actor template
+// @param {Object} `context` An HTML 5 canvas object context
+var actorInst = tweeny.actorInit(actorTemplate, context);
+````
+
+`tweeny.actorInit()` also calls the actor's `setup` method, if there is one.
+
+##Controlling an actor's `draw` behavior##
+
+A Kapi actor works by calling its `draw` method each frame.  This is what draws the actor to the canvas.
+
+````javascript
+// Starts drawing actor to the canvas each frame.
+// This rate is controlled by the `tweeny.fps` Number property.
+actorInst.begin();
+````
+
+````javascript
+// Stops the repeated call to the actor's `draw` function.
+actorInst.stop();
+````
+
+##Removing an actor##
+
+````javascript
+// Removes the actor and calls its `destroy` method, if there is one.
+actorInst.destroy();
 ````
 
 ##Tweening an actor##
