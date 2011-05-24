@@ -1,24 +1,30 @@
 Tweeny
 ===
 
-Tweeny is a tweening engine for JavaScript.  That's it.  Tweeny is meant to be a low level tool that can be encapsulated by higher-level tools.  At its core, it does:
+Tweeny is a tweening engine for JavaScript.  That's it.  Tweeny is a low level tool that can be encapsulated by higher-level tools.  At its core, it does:
 
   * Tweening.
   * Extensibility hooks for the tweening.
 
-Tweeny doesn't do:
+The Tweeny core doesn't do:
 
   * Keyframing.
   * Queuing.
   * Drawing.
   * Much else.
 
-If you need functionality like this and more, you can easily extend Tweeny's core (`tweeny.core.js`) with whatever you need.
+If you need functionality like this and more, you can easily extend or wrap Tweeny's core with whatever you need.
 
 Using Tweeny
 ---
 
-If you just want raw tweening functionality, all you need is `tweeny.core.js`.  All of the source files are in the `src` directory.  Just drop that in your page, and you are done.  If you want to use Tweeny extensions, just include them in the page after `tweeny.core.js`.
+If you just want raw tweening functionality, all you need is `tweeny.core.js`.  This is in the `src` directory.  Just drop that in your page, and you are ready to go.  If you want to use Tweeny extensions, just include them in the page after `tweeny.core.js`.
+
+Currently, there are extensions, included in this repo, for:
+
+  * queueing
+
+Extension source files can also be found in the `src` directory.
 
 API
 ===
