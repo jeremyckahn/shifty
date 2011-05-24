@@ -62,9 +62,22 @@
 		canvas = document.getElementById('canvas');
 		ctx = canvas.getContext('2d');
 		
-		circleInst = tweeny.actorInit(circle, ctx);
-		//circleInst.begin();
+		circleInst = tweeny.actorCreate(circle, ctx);
+		circleInst.begin();
 		
+		circleInst.tween({
+			from: {
+				x: 100,
+				y: 100,
+				radius: 50
+			},
+			to: {
+				x: 200,
+				y: 200,
+				radius: 75
+			},
+			duration: 2000
+		})
 		
 	</script>
 

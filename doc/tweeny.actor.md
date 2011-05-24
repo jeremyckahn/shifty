@@ -3,15 +3,15 @@ Tweeny Actor Extension
 
 To use Kapi-compatible actors, include `tweeny.actor.js` on your page after `tweeny.core.js`.  [Info on actors](http://jeremyckahn.github.com/kapi/extending.html#actors).
 
-##Making an actor tween-able##
+##Creating a tween-able actor##
 
 ````javascript
 // @param {Object|Function} `actorTemplate` A Kapi-style actor template
 // @param {Object} `context` An HTML 5 canvas object context
-var actorInst = tweeny.actorInit(actorTemplate, context);
+var actorInst = tweeny.actorCreate(actorTemplate, context);
 ````
 
-`tweeny.actorInit()` also calls the actor's `setup` method, if there is one.
+`tweeny.actorCreate()` also calls the actor's `setup` method, if there is one.
 
 ##Controlling an actor's `draw` behavior##
 
@@ -41,8 +41,4 @@ actorInst.destroy();
 actorInst.tween( from, to, duration, callback, easing );
 ````
 
-All `tweeny.tween()` syntaxes are valid.  You can also use any Tweeny extensions with actors:
-
-````javascript
-actorInst.queue( from, to, duration, callback, easing );
-````
+All `tweeny.tween()` syntaxes are valid.
