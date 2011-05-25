@@ -99,7 +99,6 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 			}
 			
 			// Set up the tween controller methods.  This object is the return value for `tweeny.tween`.
-			//tweenController = {
 			function Tween () {
 				/**
 				 * Stops the tween.
@@ -124,8 +123,6 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 				return this;
 			}
 			
-			tweenController = new Tween();
-			
 			// Normalize some internal values depending on how `tweeny.tween` was invoked
 			if (to) {
 				// Assume the shorthand syntax is being used.
@@ -147,6 +144,7 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 				easing = params.easing || this.easing;
 			}
 			
+			tweenController = new Tween();
 			timestamp = now();
 			easingFunc = tweeny.formula[easing] || tweeny.formula.linear;
 			fromClone = simpleCopy({}, from);
