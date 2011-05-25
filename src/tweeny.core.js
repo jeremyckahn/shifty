@@ -43,15 +43,16 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		return;
 	}
 	
-	global.tweeny = tweeny = {
+	//global.tweeny = tweeny = {
+	function Tweeny () {
 		// The framerate at which Tweeny updates.
-		'fps': 30,
+		this.fps = 30;
 		
 		// The default easing formula.  This can be changed publicly.
-		'easing': 'linear',
+		this.easing = 'linear';
 		
 		// The default `duration`.  This can be changed publicly.
-		'duration': 500,
+		this.duration = 500;
 		
 		/**
 		 * @param {Object} from 
@@ -59,7 +60,7 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		 * @param {Number} duration
 		 * @param {String} easing
 		 */
-		'tween': function tween (from, to, duration, callback, easing) {
+		this.tween = function (from, to, duration, callback, easing) {
 			var params,
 				step,
 				loopId,
@@ -146,12 +147,12 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 			
 			tweenController = new Tween();
 			timestamp = now();
-			easingFunc = tweeny.formula[easing] || tweeny.formula.linear;
+			easingFunc = global.tweeny.formula[easing] || global.tweeny.formula.linear;
 			fromClone = simpleCopy({}, from);
 			scheduleUpdate(timeoutHandler);
 			
 			return tweenController;
-		},
+		};
 		
 		/**
 		 * This object contains all of the tweens available to Tweeny.  It is extendable - simply attach properties to the tweeny.formula Object following the same format at `linear`.
@@ -163,12 +164,16 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		 * @param c Change in value (delta)
 		 * @param d Duration of the tween
 		 */
-		'formula' : {
+		this.formula = {
 			linear: function (t, b, c, d) {
 				// no easing, no acceleration
 				return c * t / d + b;
 			}
-		}
-	};
+		};
+		
+		return this;
+	}
+	
+	global.tweeny = new Tweeny();
 	
 }(this));
