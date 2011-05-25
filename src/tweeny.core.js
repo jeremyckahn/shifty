@@ -62,7 +62,6 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		'tween': function tween (from, to, duration, callback, easing) {
 			var params,
 				step,
-				callback,
 				loopId,
 				timestamp,
 				easingFunc,
@@ -100,27 +99,32 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 			}
 			
 			// Set up the tween controller methods.  This object is the return value for `tweeny.tween`.
-			tweenController = {
+			//tweenController = {
+			function Tween () {
 				/**
 				 * Stops the tween.
 				 * @param {Boolean} gotoEnd If `false`, or omitted, the tween just stops at its current state, and the `callback` is not invoked.  If `true`, the tweened object's values are instantly set the the target values, and the `callbabk` is invoked.
 				 */
-				'stop': function stop (gotoEnd) {
+				this.stop = function stop (gotoEnd) {
 					clearTimeout(loopId);
 					if (gotoEnd) {
 						simpleCopy(from, to);
 						callback.call(from);
 					}
-				},
+				};
 				
 				/**
 				 * Returns a reference to the tweened object (the `from` object that wat passed to `tweeny.tween`).
 				 * @returns {Object}
 				 */
-				'get': function get () {
+				this.get = function get () {
 					return from;
-				}
-			};
+				};
+				
+				return this;
+			}
+			
+			tweenController = new Tween();
 			
 			// Normalize some internal values depending on how `tweeny.tween` was invoked
 			if (to) {
