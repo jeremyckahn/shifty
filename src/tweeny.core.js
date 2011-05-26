@@ -11,7 +11,6 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 */
 
 (function (global) {
-	var tweeny;
 	
 	/**
 	 * Get the current UNIX time as an integer
@@ -39,12 +38,13 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		return targetObj;
 	}
 	
-	if (global.tweeny) {
+	/*if (global.tweeny) {
 		return;
-	}
+	}*/
 	
-	//global.tweeny = tweeny = {
 	function Tweeny () {
+		var prop;
+		
 		// The framerate at which Tweeny updates.
 		this.fps = 30;
 		
@@ -145,11 +145,11 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 				easing = params.easing || this.easing;
 			}
 			
-			tweenController = new Tween();
 			timestamp = now();
 			easingFunc = global.tweeny.formula[easing] || global.tweeny.formula.linear;
 			fromClone = simpleCopy({}, from);
 			scheduleUpdate(timeoutHandler);
+			tweenController = new Tween();
 			
 			return tweenController;
 		};
@@ -170,6 +170,21 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 				return c * t / d + b;
 			}
 		};
+		
+		// If tweeny has already been defined and the constructor is being called again, than tweeny is being inherited
+		if (global.tweeny) {
+			// Add all the extension methods that were already attached to the global `tweeny`
+			for (prop in global.tweeny) {
+				if (global.tweeny.hasOwnProperty(prop) && !this.hasOwnProperty(prop)) {
+					this[prop] = global.tweeny[prop];
+				}
+			}
+
+			// Add all the tween formulas that were already added
+			if (global.tweeny.formula) {
+				simpleCopy(this, global.tweeny.formula);
+			}
+		}
 		
 		return this;
 	}
