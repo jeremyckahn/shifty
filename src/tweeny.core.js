@@ -182,7 +182,7 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 
 			// Add all the tween formulas that were already added
 			if (global.tweeny.formula) {
-				simpleCopy(this, global.tweeny.formula);
+				simpleCopy(this.formula, global.tweeny.formula);
 			}
 		}
 		
