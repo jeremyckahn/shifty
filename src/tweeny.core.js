@@ -43,7 +43,10 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 	}*/
 	
 	function Tweeny () {
-		var prop;
+		var self,
+			prop;
+			
+		self = this;
 		
 		// The framerate at which Tweeny updates.
 		this.fps = 30;
@@ -54,6 +57,8 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		// The default `duration`.  This can be changed publicly.
 		this.duration = 500;
 		
+		this.hook = {};
+		
 		/**
 		 * @param {Object} from 
 		 * @param {Object} to
@@ -62,6 +67,7 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		 */
 		this.tween = function (from, to, duration, callback, easing) {
 			var params,
+				hook,
 				step,
 				loopId,
 				timestamp,
@@ -83,6 +89,14 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 				loopId = setTimeout(handler, 1000 / this.fps);
 			}
 				
+			function invokeHooks (hookName, args) {
+				var i;
+				
+				for (i = 0; i < self.hook[hookName].length; i++) {
+					self.hook[hookName][i].apply(self, args);
+				}
+			}
+				
 			function timeoutHandler () {
 				var currentTime;
 				
@@ -91,6 +105,12 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 				if (currentTime < timestamp + duration) {
 					// The tween is still running, schedule an update
 					tweenProps(currentTime);
+					
+					if (self.hook.step) {
+						//self.hook.step.call(from);
+						invokeHooks('step', [from]);
+					}
+					
 					step.call(from);
 					scheduleUpdate(timeoutHandler);
 				} else {
@@ -145,6 +165,7 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 				easing = params.easing || this.easing;
 			}
 			
+			hook = {};
 			timestamp = now();
 			easingFunc = global.tweeny.formula[easing] || global.tweeny.formula.linear;
 			fromClone = simpleCopy({}, from);
@@ -171,6 +192,33 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 			}
 		};
 		
+		this.hookAdd = function (hookName, hookFunc) {
+			if (!self.hook.hasOwnProperty(hookName)) {
+				self.hook[hookName] = [];
+			}
+			
+			self.hook[hookName].push(hookFunc);
+		};
+		
+		this.hookRemove = function (hookName, hookFunc) {
+			var i;
+			
+			if (!self.hook.hasOwnProperty(hookName)) {
+				return;
+			}
+			
+			if (!hookFunc) {
+				self.hook[hookName] = [];
+				return;
+			}
+			
+			for (i = self.hook[hookName].length; i >= 0; i++) {
+				if (self.hook[hookName][i] === hookFunc) {
+					self.hook[hookName].splice(i, 1);
+				}
+			}
+		};
+		
 		// If tweeny has already been defined and the constructor is being called again, than tweeny is being inherited
 		if (global.tweeny) {
 			// Add all the extension methods that were already attached to the global `tweeny`
@@ -184,6 +232,8 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 			if (global.tweeny.formula) {
 				simpleCopy(this.formula, global.tweeny.formula);
 			}
+			
+			simpleCopy(this.hook, global.tweeny.hook);
 		}
 		
 		return this;
