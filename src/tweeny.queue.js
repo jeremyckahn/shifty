@@ -42,7 +42,8 @@ For instructions on how to use Tweeny and this extension, please consult the man
 	
 	tweeny.queue = function (from, to, duration, callback, easing) {
 		var queue,
-			closuredQueueName;
+			closuredQueueName,
+			self;
 			
 		function wrappedCallback () {
 			callback();
@@ -51,12 +52,14 @@ For instructions on how to use Tweeny and this extension, please consult the man
 		
 		function tweenInit () {
 			if (to) {
-				tweeny.tween(from, to, duration, wrappedCallback, easing);
+				self.tween(from, to, duration, wrappedCallback, easing);
 			} else {
 				from.callback = wrappedCallback;
-				tweeny.tween(from);
+				self.tween(from);
 			}
 		}
+		
+		self = this;
 		
 		// Make sure there is always an invokable callback
 		callback = callback || from.callback || function () {};
