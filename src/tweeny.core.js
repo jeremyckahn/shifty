@@ -55,6 +55,8 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		// The default `duration`.  This can be changed publicly.
 		this.duration = 500;
 		
+		this.fn = {};
+		
 		/**
 		 * @param {Object} from 
 		 * @param {Object} to
@@ -214,10 +216,11 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		
 		// If tweeny has already been defined and the constructor is being called again, than tweeny is being inherited
 		if (global.tweeny) {
-			// Add all the extension methods that were already attached to the global `tweeny`
-			for (prop in global.tweeny) {
-				if (global.tweeny.hasOwnProperty(prop) && !this.hasOwnProperty(prop)) {
-					this[prop] = global.tweeny[prop];
+			// Add all the extension methods that were already attached to the global `tweeny`			
+			for (prop in global.tweeny.fn) {
+				if (global.tweeny.fn.hasOwnProperty(prop)) {
+					this.fn[prop] = global.tweeny.fn[prop];
+					global.tweeny.fn[prop](this);
 				}
 			}
 
