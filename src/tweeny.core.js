@@ -39,12 +39,12 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 	}
 	
 	// Modifies the `from` object
-	function tweenProps (currentTime, params) {
+	function tweenProps (currentTime, params, state) {
 		var prop;
 		
-		for (prop in params.from) {
-			if (params.from.hasOwnProperty(prop) && params.to.hasOwnProperty(prop)) {
-				params.from[prop] = params.easingFunc(currentTime - params.timestamp, params.originalState[prop], params.to[prop] - params.originalState[prop], params.duration);
+		for (prop in state.current) {
+			if (state.current.hasOwnProperty(prop) && params.to.hasOwnProperty(prop)) {
+				state.current[prop] = params.easingFunc(currentTime - params.timestamp, params.originalState[prop], params.to[prop] - params.originalState[prop], params.duration);
 			}
 		}
 	}
@@ -69,8 +69,8 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		this.stop = function stop (gotoEnd) {
 			clearTimeout(state.loopId);
 			if (gotoEnd) {
-				simpleCopy(params.from, params.to);
-				params.callback.call(params.from);
+				simpleCopy(state.current, params.to);
+				params.callback.call(state.current);
 			}
 		};
 		
@@ -79,7 +79,7 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		 * @returns {Object}
 		 */
 		this.get = function get () {
-			return params.from;
+			return state.current;
 		};
 		
 		return this;
@@ -92,13 +92,13 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		
 		if (currentTime < params.timestamp + params.duration) {
 			// The tween is still running, schedule an update
-			tweenProps (currentTime, params);
+			tweenProps (currentTime, params, state);
 			
 			if (params.hook.step) {
-				invokeHook('step', params.hook, params.context, [params.from]);
+				invokeHook('step', params.hook, params.context, [state.current]);
 			}
 			
-			params.step.call(params.from);
+			params.step.call(state.current);
 			state.loopId = scheduleUpdate(function () {
 				timeoutHandler(params, state);
 			}, params.fps);
@@ -133,48 +133,44 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		 * @param {Number} duration
 		 * @param {String} easing
 		 */
-		this.tween = function (from, to, duration, callback, easing) {
-			var params,
-				tweenParams,
+		this.tween = function tween (from, to, duration, callback, easing) {
+			var tweenParams,
 				state;
 				
 			tweenParams = {};
+			state = {
+				loopId: 0,
+				current: {}
+			};
 			
 			// Normalize some internal values depending on how `tweeny.tween` was invoked
 			if (to) {
 				// Assume the shorthand syntax is being used.
 				tweenParams.step = function () {};
-				tweenParams.from = from || {};
+				state.current = from || {};
 				tweenParams.to = to || {};
 				tweenParams.duration = duration || this.duration;
 				tweenParams.callback = callback || function () {};
 				tweenParams.easing = easing || this.easing;
 			} else {
-				params = from;
-				
 				// If the second argument is not present, assume the longhand syntax is being used.
-				tweenParams.step = params.step || function () {};
-				tweenParams.callback = params.callback || function () {};
-				tweenParams.from = params.from || {};
-				tweenParams.to = params.to || {};
-				tweenParams.duration = params.duration || this.duration;
-				tweenParams.easing = params.easing || this.easing;
+				tweenParams.step = from.step || function () {};
+				tweenParams.callback = from.callback || function () {};
+				state.current = from.from || {};
+				tweenParams.to = from.to || {};
+				tweenParams.duration = from.duration || this.duration;
+				tweenParams.easing = from.easing || this.easing;
 			}
-			
-			state = {
-				loopId: 0
-			};
 			
 			tweenParams.hook = hook;
 			tweenParams.timestamp = now();
 			tweenParams.easingFunc = global.tweeny.formula[easing] || global.tweeny.formula.linear;
-			tweenParams.originalState = simpleCopy({}, tweenParams.from);
+			tweenParams.originalState = simpleCopy({}, state.current);
+			tweenParams.tweenController = new Tween(tweenParams, state);
 
 			scheduleUpdate(function () {
 				timeoutHandler(tweenParams, state);
 			});
-			
-			tweenParams.tweenController = new Tween(tweenParams, state);
 			
 			return tweenParams.tweenController;
 		};
@@ -196,7 +192,7 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 			}
 		};
 		
-		this.hookAdd = function (hookName, hookFunc) {
+		this.hookAdd = function hookAdd (hookName, hookFunc) {
 			if (!hook.hasOwnProperty(hookName)) {
 				hook[hookName] = [];
 			}
@@ -204,7 +200,7 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 			hook[hookName].push(hookFunc);
 		};
 		
-		this.hookRemove = function (hookName, hookFunc) {
+		this.hookRemove = function hookRemove (hookName, hookFunc) {
 			var i;
 			
 			if (!hook.hasOwnProperty(hookName)) {
