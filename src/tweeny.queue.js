@@ -14,96 +14,90 @@ For instructions on how to use Tweeny and this extension, please consult the man
 
 (function tweenyQueue (global) {
 	
-	if (!global.tweeny) {
+	var currentQueueName,
+		queues;
+	
+	if (!global.Tweenable) {
 		return;
 	}
+
+	function iterateQueue (queueName) {
+		var queue; 
+
+		queue = queues[queueName];
+		queue.shift();
+
+		if (queue.length) {
+			queue[0]();
+		} else {
+			queue.running = false;
+		}
+	}
+
+	queues = {
+		'default': []
+	};
 	
-	function initQueue (tweenyInst) {
-		var tweeny,
-			currentQueueName,
-			queues;
+	currentQueueName = 'default';
 
-		function iterateQueue (queueName) {
-			var queue; 
+	Tweenable.prototype.queue = function (from, to, duration, callback, easing) {
+		var queue,
+			closuredQueueName,
+			self;
 
-			queue = queues[queueName];
-			queue.shift();
+		function wrappedCallback () {
+			callback();
+			iterateQueue(closuredQueueName);
+		}
 
-			if (queue.length) {
-				queue[0]();
+		function tweenInit () {
+			if (to) {
+				self.tween(from, to, duration, wrappedCallback, easing);
 			} else {
-				queue.running = false;
+				from.callback = wrappedCallback;
+				self.tween(from);
 			}
 		}
 
-		tweeny = tweenyInst;
-		queues = {
-			'default': []
-		};
-		currentQueueName = 'default';
+		self = this;
 
-		tweeny.queue = function (from, to, duration, callback, easing) {
-			var queue,
-				closuredQueueName,
-				self;
+		// Make sure there is always an invokable callback
+		callback = callback || from.callback || function () {};
 
-			function wrappedCallback () {
-				callback();
-				iterateQueue(closuredQueueName);
-			}
+		closuredQueueName = currentQueueName;
+		queue = queues[closuredQueueName];
+		queue.push(tweenInit);
 
-			function tweenInit () {
-				if (to) {
-					self.tween(from, to, duration, wrappedCallback, easing);
-				} else {
-					from.callback = wrappedCallback;
-					self.tween(from);
-				}
-			}
+		if (!queue.running) {
+			queue[0]();
+			queue.running = true;
+		}
+	};
 
-			self = this;
+	Tweenable.prototype.queueName = function ( name ) {
+		currentQueueName = name;
 
-			// Make sure there is always an invokable callback
-			callback = callback || from.callback || function () {};
+		if (!queues[currentQueueName]) {
+			queues[currentQueueName] = [];
+		}
 
-			closuredQueueName = currentQueueName;
-			queue = queues[closuredQueueName];
-			queue.push(tweenInit);
+		return currentQueueName;
+	};
 
-			if (!queue.running) {
-				queue[0]();
-				queue.running = true;
-			}
-		};
+	Tweenable.prototype.queueShift = function () {
+		queues[currentQueueName].shift();
+	};
 
-		tweeny.queueName = function ( name ) {
-			currentQueueName = name;
+	Tweenable.prototype.queueUnshift = function () {
+		queues[currentQueueName].unshift();
+	};
 
-			if (!queues[currentQueueName]) {
-				queues[currentQueueName] = [];
-			}
+	Tweenable.prototype.queueEmpty = function () {
+		queues[currentQueueName].length = 0;
+	};
 
-			return currentQueueName;
-		};
-
-		tweeny.queueShift = function () {
-			queues[currentQueueName].shift();
-		};
-
-		tweeny.queueUnShift = function () {
-			queues[currentQueueName].unshift();
-		};
-
-		tweeny.queueEmpty = function () {
-			queues[currentQueueName].length = 0;
-		};
-
-		tweeny.queueLength = function () {
-			return queues[currentQueueName].length;
-		};
-	}
-	
-	global.tweeny.fn.initQueue = initQueue;
-	initQueue(global.tweeny);
+	Tweenable.prototype.queueLength = function () {
+		return queues[currentQueueName].length;
+	};
 	
 }(this));
