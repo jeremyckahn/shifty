@@ -110,7 +110,6 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 	
 	function Tweenable () {
 		var self,
-			prop,
 			hook;
 			
 		self = this;
@@ -124,8 +123,6 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		
 		// The default `duration`.  This can be changed publicly.
 		this.duration = 500;
-		
-		this.fn = {};
 		
 		/**
 		 * @param {Object} from 
@@ -175,23 +172,6 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 			return tweenParams.tweenController;
 		};
 		
-		/**
-		 * This object contains all of the tweens available to Tweeny.  It is extendable - simply attach properties to the tweeny.formula Object following the same format at `linear`.
-		 * 
-		 * This pattern was copied from Robert Penner, under BSD License (http://www.robertpenner.com/)
-		 * 
-		 * @param t The current time
-		 * @param b Start value
-		 * @param c Change in value (delta)
-		 * @param d Duration of the tween
-		 */
-		this.formula = {
-			linear: function (t, b, c, d) {
-				// no easing, no acceleration
-				return c * t / d + b;
-			}
-		};
-		
 		this.hookAdd = function hookAdd (hookName, hookFunc) {
 			if (!hook.hasOwnProperty(hookName)) {
 				hook[hookName] = [];
@@ -219,27 +199,25 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 			}
 		};
 		
-		// THIS NEEDS TO GO.
-		// If tweeny has already been defined and the constructor is being called again, then tweeny is being inherited
-		if (global.tweeny) {
-			// Add all the extension methods that were already attached to the global `tweeny`			
-			for (prop in global.tweeny.fn) {
-				if (global.tweeny.fn.hasOwnProperty(prop)) {
-					this.fn[prop] = global.tweeny.fn[prop];
-					global.tweeny.fn[prop](this);
-				}
-			}
-
-			// Add all the tween formulas that were already added
-			if (global.tweeny.formula) {
-				simpleCopy(this.formula, global.tweeny.formula);
-			}
-			
-			simpleCopy(this.hook, global.tweeny.hook);
-		}
-		
 		return this;
 	}
+	
+	/**
+	 * This object contains all of the tweens available to Tweeny.  It is extendable - simply attach properties to the Tweenable.prototype.formula Object following the same format at `linear`.
+	 * 
+	 * This pattern was copied from Robert Penner, under BSD License (http://www.robertpenner.com/)
+	 * 
+	 * @param t The current time
+	 * @param b Start value
+	 * @param c Change in value (delta)
+	 * @param d Duration of the tween
+	 */
+	Tweenable.prototype.formula = {
+		linear: function (t, b, c, d) {
+			// no easing, no acceleration
+			return c * t / d + b;
+		}
+	};
 	
 	global.Tweenable = Tweenable;
 	global.tweeny = new Tweenable();
