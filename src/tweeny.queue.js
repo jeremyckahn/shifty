@@ -14,17 +14,11 @@ For instructions on how to use Tweeny and this extension, please consult the man
 
 (function tweenyQueue (global) {
 	
-	var currentQueueName,
-		queues;
-	
 	if (!global.Tweenable) {
 		return;
 	}
 
-	function iterateQueue (queueName) {
-		var queue; 
-
-		queue = queues[queueName];
+	function iterateQueue (queue) {
 		queue.shift();
 
 		if (queue.length) {
@@ -34,10 +28,10 @@ For instructions on how to use Tweeny and this extension, please consult the man
 		}
 	}
 	
-	function getWrappedCallback (callback, queueName) {
+	function getWrappedCallback (callback, queue) {
 		return function () {
 			callback();
-			iterateQueue(queueName);
+			iterateQueue(queue);
 		};
 	}
 	
@@ -52,53 +46,38 @@ For instructions on how to use Tweeny and this extension, please consult the man
 		};
 	}
 
-	queues = {
-		'default': []
-	};
-	
-	currentQueueName = 'default';
-
 	global.Tweenable.prototype.queue = function (from, to, duration, callback, easing) {
-		var queue,
-			wrappedCallback;
+		var wrappedCallback;
+			
+		if (!this._tweenQueue) {
+			this._tweenQueue = [];
+		}
 
 		// Make sure there is always an invokable callback
 		callback = callback || from.callback || function () {};
-		wrappedCallback = getWrappedCallback(callback, currentQueueName);
-		
-		queue = queues[currentQueueName];
-		queue.push(tweenInit(this, from, to, duration, wrappedCallback, easing));
+		wrappedCallback = getWrappedCallback(callback, this._tweenQueue);
+		this._tweenQueue.push(tweenInit(this, from, to, duration, wrappedCallback, easing));
 
-		if (!queue.running) {
-			queue[0]();
-			queue.running = true;
+		if (!this._tweenQueue.running) {
+			this._tweenQueue[0]();
+			this._tweenQueue.running = true;
 		}
-	};
-
-	global.Tweenable.prototype.queueName = function ( name ) {
-		currentQueueName = name;
-
-		if (!queues[currentQueueName]) {
-			queues[currentQueueName] = [];
-		}
-
-		return currentQueueName;
 	};
 
 	global.Tweenable.prototype.queueShift = function () {
-		queues[currentQueueName].shift();
+		this._tweenQueue.shift();
 	};
 
 	global.Tweenable.prototype.queueUnshift = function () {
-		queues[currentQueueName].unshift();
+		this._tweenQueue.unshift();
 	};
 
 	global.Tweenable.prototype.queueEmpty = function () {
-		queues[currentQueueName].length = 0;
+		this._tweenQueue.length = 0;
 	};
 
 	global.Tweenable.prototype.queueLength = function () {
-		return queues[currentQueueName].length;
+		return this._tweenQueue.length;
 	};
 	
 }(this));
