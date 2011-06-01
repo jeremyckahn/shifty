@@ -29,11 +29,14 @@
 	<script type="text/javascript" charset="utf-8" src="../src/tweeny.core.js"></script>
 	
 	<script type="text/javascript" charset="utf-8">
-		tweeny.hookAdd('step', function (from) {
+		
+		var myTweenable = new Tweenable();
+		
+		myTweenable.hookAdd('step', function (from) {
 			console.log(from.test);
 		});
 	
-		tweeny.tween({
+		myTweenable.tween({
 			from: {
 				'test': 0
 			},

@@ -31,7 +31,9 @@
 	
 	<script type="text/javascript" charset="utf-8">
 
-		tweeny.queue({
+		var myTweenable = new Tweenable();
+
+		myTweenable.queue({
 			test: 0
 		}, {
 			test: 10
@@ -40,7 +42,7 @@
 			console.log('Tween 1 complete.');
 		}, 'linear');
 		
-		tweeny.queue({
+		myTweenable.queue({
 			test: 0
 		}, {
 			test: 10
@@ -49,7 +51,7 @@
 			console.log('Tween 2 complete.');
 		}, 'linear');
 		
-		tweeny.queue({
+		myTweenable.queue({
 			from: {
 				test: 0
 			},
@@ -62,7 +64,7 @@
 			duration: 100
 		});
 		
-		tweeny.queue({
+		myTweenable.queue({
 			from: {
 				test: 0
 			},

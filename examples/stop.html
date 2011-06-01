@@ -29,21 +29,23 @@
 	<script type="text/javascript" charset="utf-8" src="../src/tweeny.core.js"></script>
 	
 	<script type="text/javascript" charset="utf-8">
-		var tween = tweeny.tween({
-			from: {
-				'test': 0
-			},
-			to: {
-				'test': 10
-			},
-			'duration': 3000,
-			'step': function () {
-				console.log(this.test);
-			},
-			'callback': function () {
-				console.log('Done!  Final value: ' + this.test);
-			}
-		});
+		
+		var myTweenable = new Tweenable(),
+				tween = myTweenable.tween({
+					from: {
+						'test': 0
+					},
+					to: {
+						'test': 10
+					},
+					'duration': 3000,
+					'step': function () {
+						console.log(this.test);
+					},
+					'callback': function () {
+						console.log('Done!  Final value: ' + this.test);
+					}
+				});
 		
 		setTimeout(function () {
 			console.log('Stopping early...');
