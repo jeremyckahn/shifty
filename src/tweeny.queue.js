@@ -33,6 +33,24 @@ For instructions on how to use Tweeny and this extension, please consult the man
 			queue.running = false;
 		}
 	}
+	
+	function getWrappedCallback (callback, queueName) {
+		return function () {
+			callback();
+			iterateQueue(queueName);
+		};
+	}
+	
+	function tweenInit (context, from, to, duration, callback, easing) {
+		return function () {
+			if (to) {
+				context.tween(from, to, duration, callback, easing);
+			} else {
+				from.callback = callback;
+				context.tween(from);
+			}
+		};
+	}
 
 	queues = {
 		'default': []
@@ -40,33 +58,16 @@ For instructions on how to use Tweeny and this extension, please consult the man
 	
 	currentQueueName = 'default';
 
-	Tweenable.prototype.queue = function (from, to, duration, callback, easing) {
+	global.Tweenable.prototype.queue = function (from, to, duration, callback, easing) {
 		var queue,
-			closuredQueueName,
-			self;
-
-		function wrappedCallback () {
-			callback();
-			iterateQueue(closuredQueueName);
-		}
-
-		function tweenInit () {
-			if (to) {
-				self.tween(from, to, duration, wrappedCallback, easing);
-			} else {
-				from.callback = wrappedCallback;
-				self.tween(from);
-			}
-		}
-
-		self = this;
+			wrappedCallback;
 
 		// Make sure there is always an invokable callback
 		callback = callback || from.callback || function () {};
-
-		closuredQueueName = currentQueueName;
-		queue = queues[closuredQueueName];
-		queue.push(tweenInit);
+		wrappedCallback = getWrappedCallback(callback, currentQueueName);
+		
+		queue = queues[currentQueueName];
+		queue.push(tweenInit(this, from, to, duration, wrappedCallback, easing));
 
 		if (!queue.running) {
 			queue[0]();
@@ -74,7 +75,7 @@ For instructions on how to use Tweeny and this extension, please consult the man
 		}
 	};
 
-	Tweenable.prototype.queueName = function ( name ) {
+	global.Tweenable.prototype.queueName = function ( name ) {
 		currentQueueName = name;
 
 		if (!queues[currentQueueName]) {
@@ -84,19 +85,19 @@ For instructions on how to use Tweeny and this extension, please consult the man
 		return currentQueueName;
 	};
 
-	Tweenable.prototype.queueShift = function () {
+	global.Tweenable.prototype.queueShift = function () {
 		queues[currentQueueName].shift();
 	};
 
-	Tweenable.prototype.queueUnshift = function () {
+	global.Tweenable.prototype.queueUnshift = function () {
 		queues[currentQueueName].unshift();
 	};
 
-	Tweenable.prototype.queueEmpty = function () {
+	global.Tweenable.prototype.queueEmpty = function () {
 		queues[currentQueueName].length = 0;
 	};
 
-	Tweenable.prototype.queueLength = function () {
+	global.Tweenable.prototype.queueLength = function () {
 		return queues[currentQueueName].length;
 	};
 	
