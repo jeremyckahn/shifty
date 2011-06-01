@@ -131,11 +131,11 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		 * @param {String} easing
 		 */
 		this.tween = function tween (from, to, duration, callback, easing) {
-			var tweenParams,
-				state;
+			var self;
 				
-			tweenParams = {};
-			state = {
+			self = this;
+			this._tweenParams = {};
+			this._state = {
 				loopId: 0,
 				current: {}
 			};
@@ -143,33 +143,33 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 			// Normalize some internal values depending on how `tweeny.tween` was invoked
 			if (to) {
 				// Assume the shorthand syntax is being used.
-				tweenParams.step = function () {};
-				state.current = from || {};
-				tweenParams.to = to || {};
-				tweenParams.duration = duration || this.duration;
-				tweenParams.callback = callback || function () {};
-				tweenParams.easing = easing || this.easing;
+				this._tweenParams.step = function () {};
+				this._state.current = from || {};
+				this._tweenParams.to = to || {};
+				this._tweenParams.duration = duration || this.duration;
+				this._tweenParams.callback = callback || function () {};
+				this._tweenParams.easing = easing || this.easing;
 			} else {
 				// If the second argument is not present, assume the longhand syntax is being used.
-				tweenParams.step = from.step || function () {};
-				tweenParams.callback = from.callback || function () {};
-				state.current = from.from || {};
-				tweenParams.to = from.to || {};
-				tweenParams.duration = from.duration || this.duration;
-				tweenParams.easing = from.easing || this.easing;
+				this._tweenParams.step = from.step || function () {};
+				this._tweenParams.callback = from.callback || function () {};
+				this._state.current = from.from || {};
+				this._tweenParams.to = from.to || {};
+				this._tweenParams.duration = from.duration || this.duration;
+				this._tweenParams.easing = from.easing || this.easing;
 			}
 			
-			tweenParams.hook = hook;
-			tweenParams.timestamp = now();
-			tweenParams.easingFunc = global.tweeny.formula[easing] || global.tweeny.formula.linear;
-			tweenParams.originalState = simpleCopy({}, state.current);
-			tweenParams.tweenController = new Tween(tweenParams, state);
+			this._tweenParams.hook = hook;
+			this._tweenParams.timestamp = now();
+			this._tweenParams.easingFunc = global.tweeny.formula[easing] || global.tweeny.formula.linear;
+			this._tweenParams.originalState = simpleCopy({}, this._state.current);
+			this._tweenParams.tweenController = new Tween(this._tweenParams, this._state);
 
 			scheduleUpdate(function () {
-				timeoutHandler(tweenParams, state);
+				timeoutHandler(self._tweenParams, self._state);
 			});
 			
-			return tweenParams.tweenController;
+			return this._tweenParams.tweenController;
 		};
 		
 		this.hookAdd = function hookAdd (hookName, hookFunc) {
