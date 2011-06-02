@@ -62,18 +62,23 @@ For instructions on how to use Tweeny and this extension, please consult the man
 			this._tweenQueue[0]();
 			this._tweenQueue.running = true;
 		}
+		
+		return this;
 	};
 
 	global.Tweenable.prototype.queueShift = function () {
 		this._tweenQueue.shift();
+		return this;
 	};
 
 	global.Tweenable.prototype.queueUnshift = function () {
 		this._tweenQueue.unshift();
+		return this;
 	};
 
 	global.Tweenable.prototype.queueEmpty = function () {
 		this._tweenQueue.length = 0;
+		return this;
 	};
 
 	global.Tweenable.prototype.queueLength = function () {
