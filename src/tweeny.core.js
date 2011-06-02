@@ -109,10 +109,6 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 	}
 	
 	function Tweenable () {
-		var self;
-			
-		self = this;
-		
 		this._hook = {};
 		
 		this._tweenParams = {
@@ -141,10 +137,8 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 				
 			self = this;
 			
-			this._state = {
-				loopId: 0,
-				current: {}
-			};
+			this._state.loopId = 0;
+			this._state.current = {};
 			
 			// Normalize some internal values depending on how `tweeny.tween` was invoked
 			if (to) {
