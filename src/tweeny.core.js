@@ -115,6 +115,12 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		
 		this._hook = {};
 		
+		this._tweenParams = {
+			hook: this._hook
+		};
+		
+		this._state = {};
+		
 		// The framerate at which Tweeny updates.
 		this.fps = 30;
 		
@@ -134,9 +140,6 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 			var self;
 				
 			self = this;
-			this._tweenParams = {
-				hook: this._hook
-			};
 			
 			this._state = {
 				loopId: 0,
