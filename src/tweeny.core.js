@@ -109,11 +109,11 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 	}
 	
 	function Tweenable () {
-		var self,
-			hook;
+		var self;
 			
 		self = this;
-		hook = {};
+		
+		this._hook = {};
 		
 		// The framerate at which Tweeny updates.
 		this.fps = 30;
@@ -134,7 +134,10 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 			var self;
 				
 			self = this;
-			this._tweenParams = {};
+			this._tweenParams = {
+				hook: this._hook
+			};
+			
 			this._state = {
 				loopId: 0,
 				current: {}
@@ -159,7 +162,6 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 				this._tweenParams.easing = from.easing || this.easing;
 			}
 			
-			this._tweenParams.hook = hook;
 			this._tweenParams.timestamp = now();
 			this._tweenParams.easingFunc = global.tweeny.formula[easing] || global.tweeny.formula.linear;
 			this._tweenParams.originalState = simpleCopy({}, this._state.current);
@@ -173,28 +175,28 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		};
 		
 		this.hookAdd = function hookAdd (hookName, hookFunc) {
-			if (!hook.hasOwnProperty(hookName)) {
-				hook[hookName] = [];
+			if (!this._hook.hasOwnProperty(hookName)) {
+				this._hook[hookName] = [];
 			}
 			
-			hook[hookName].push(hookFunc);
+			this._hook[hookName].push(hookFunc);
 		};
 		
 		this.hookRemove = function hookRemove (hookName, hookFunc) {
 			var i;
 			
-			if (!hook.hasOwnProperty(hookName)) {
+			if (!this._hook.hasOwnProperty(hookName)) {
 				return;
 			}
 			
 			if (!hookFunc) {
-				hook[hookName] = [];
+				this._hook[hookName] = [];
 				return;
 			}
 			
-			for (i = hook[hookName].length; i >= 0; i++) {
-				if (hook[hookName][i] === hookFunc) {
-					hook[hookName].splice(i, 1);
+			for (i = this._hook[hookName].length; i >= 0; i++) {
+				if (this._hook[hookName][i] === hookFunc) {
+					this._hook[hookName].splice(i, 1);
 				}
 			}
 		};
