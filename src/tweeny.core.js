@@ -61,36 +61,12 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		}
 	}
 	
-	function Tween (params, state) {
-		/**
-		 * Stops the tween.
-		 * @param {Boolean} gotoEnd If `false`, or omitted, the tween just stops at its current state, and the `callback` is not invoked.  If `true`, the tweened object's values are instantly set the the target values, and the `callbabk` is invoked.
-		 */
-		this.stop = function stop (gotoEnd) {
-			clearTimeout(state.loopId);
-			if (gotoEnd) {
-				simpleCopy(state.current, params.to);
-				params.callback.call(state.current);
-			}
-		};
-		
-		/**
-		 * Returns a reference to the tweened object (the `from` object that wat passed to `tweeny.tween`).
-		 * @returns {Object}
-		 */
-		this.get = function get () {
-			return state.current;
-		};
-		
-		return this;
-	}
-	
 	function timeoutHandler (params, state) {
 		var currentTime;
 		
 		currentTime = now();
 		
-		if (currentTime < params.timestamp + params.duration) {
+		if (currentTime < params.timestamp + params.duration && state.isAnimating) {
 			// The tween is still running, schedule an update
 			tweenProps (currentTime, params, state);
 			
@@ -106,6 +82,51 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 			// The duration of the tween has expired
 			params.tweenController.stop(true);
 		}
+	}
+	
+	function Tween (params, state) {
+		/**
+		 * Stops the tween.
+		 * @param {Boolean} gotoEnd If `false`, or omitted, the tween just stops at its current state, and the `callback` is not invoked.  If `true`, the tweened object's values are instantly set the the target values, and the `callbabk` is invoked.
+		 */
+		this.stop = function stop (gotoEnd) {
+			clearTimeout(state.loopId);
+			if (gotoEnd) {
+				simpleCopy(state.current, params.to);
+				state.isAnimating = false;
+				params.callback.call(state.current);
+			}
+		};
+		
+		// This needs an example file!
+		this.pause = function pause () {
+			clearTimeout(state.loopId);
+			state.pausedAtTime = now();
+			state.isPaused = true;
+			return this;
+		};
+		
+		this.resume = function play () {
+			if (state.isPaused) {
+				params.timestamp += state.pausedAtTime - params.timestamp;
+			}
+			
+			scheduleUpdate(function () {
+				timeoutHandler(params, state);
+			});
+			
+			return this;
+		};
+		
+		/**
+		 * Returns a reference to the tweened object (the `from` object that wat passed to `tweeny.tween`).
+		 * @returns {Object}
+		 */
+		this.get = function get () {
+			return state.current;
+		};
+		
+		return this;
 	}
 	
 	function Tweenable () {
@@ -139,13 +160,17 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		 */
 		this.tween = function tween (from, to, duration, callback, easing) {
 			var self;
+			
+			if (this._state.isAnimating) {
+				return;
+			}
 				
 			self = this;
-			
 			this._state.loopId = 0;
 			this._state.current = {};
+			this._state.pausedAtTime = null;
 			
-			// Normalize some internal values depending on how `tweeny.tween` was invoked
+			// Normalize some internal values depending on how `Tweenable.tween` was invoked
 			if (to) {
 				// Assume the shorthand syntax is being used.
 				this._tweenParams.step = function () {};
@@ -168,6 +193,7 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 			this._tweenParams.easingFunc = global.tweeny.formula[easing] || global.tweeny.formula.linear;
 			this._tweenParams.originalState = simpleCopy({}, this._state.current);
 			this._tweenParams.tweenController = new Tween(this._tweenParams, this._state);
+			this._state.isAnimating = true;
 
 			scheduleUpdate(function () {
 				timeoutHandler(self._tweenParams, self._state);
