@@ -51,6 +51,11 @@
 		
 		setTimeout(function () {
 			tween.pause();
+			console.log("The tween is paused...");
+			setTimeout(function () {
+				console.log("Resume!");
+				tween.resume();
+			}, 1250);
 		}, 500);
 	</script>
 
