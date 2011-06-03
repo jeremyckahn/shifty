@@ -10,7 +10,7 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 
 */
 
-(function (global) {
+(function Tweeny (global) {
 	
 	/**
 	 * Get the current UNIX time as an integer
@@ -231,6 +231,8 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		
 		return this;
 	}
+	
+	Tweenable.prototype.filter = {};
 	
 	/**
 	 * This object contains all of the tweens available to Tweeny.  It is extendable - simply attach properties to the Tweenable.prototype.formula Object following the same format at `linear`.
