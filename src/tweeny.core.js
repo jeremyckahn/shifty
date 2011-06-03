@@ -109,22 +109,27 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 	}
 	
 	function Tweenable () {
-		this._hook = {};
 		
-		this._tweenParams = {
-			hook: this._hook
+		this.init = function init () {
+			this._hook = {};
+
+			this._tweenParams = {
+				hook: this._hook
+			};
+
+			this._state = {};
+
+			// The framerate at which Tweeny updates.
+			this.fps = 30;
+
+			// The default easing formula.  This can be changed publicly.
+			this.easing = 'linear';
+
+			// The default `duration`.  This can be changed publicly.
+			this.duration = 500;
+			
+			return this;
 		};
-		
-		this._state = {};
-		
-		// The framerate at which Tweeny updates.
-		this.fps = 30;
-		
-		// The default easing formula.  This can be changed publicly.
-		this.easing = 'linear';
-		
-		// The default `duration`.  This can be changed publicly.
-		this.duration = 500;
 		
 		/**
 		 * @param {Object} from 
