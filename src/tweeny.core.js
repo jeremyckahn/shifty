@@ -20,6 +20,16 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		return +new Date();
 	}
 	
+	function each (obj, func) {
+		var prop;
+		
+		for (prop in obj) {
+			if (obj.hasOwnProperty(prop)) {
+				func(obj, prop);
+			}
+		}
+	}
+	
 	/**
 	 * Does a basic copy of one Object's properties to another.  This is not a robust `extend` function, nor is it recusrsive.  It is only appropriate to use on objects that have primitive properties (Numbers, Strings, Boolean, etc.)
 	 * @param {Object} targetObject The object to copy into
@@ -61,6 +71,10 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		}
 	}
 	
+	function applyFilter (filterName, filters, currentState, originalState, toState) {
+		filters[filterName](currentState, originalState, toState);
+	}
+	
 	function timeoutHandler (params, state) {
 		var currentTime;
 		
@@ -69,6 +83,10 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		if (currentTime < params.timestamp + params.duration && state.isAnimating) {
 			// The tween is still running, schedule an update
 			tweenProps (currentTime, params, state);
+			
+			each(global.Tweenable.prototype.filter, function (filters, name) {
+				applyFilter('beforeTween', filters[name], state.current, params.originalState, params.to);
+			});
 			
 			if (params.hook.step) {
 				invokeHook('step', params.hook, params.context, [state.current]);

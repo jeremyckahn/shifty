@@ -35,50 +35,22 @@
 		var myTweenable = (new Tweenable()).init();
 
 		window.myTweenable = myTweenable;
-
-		/*myTweenable.queue({
-			test: 0
-		}, {
-			test: 10
-		}, 100, 
-		function () {
-			console.log('Tween 1 complete.');
-		}, 'linear');
-		
-		myTweenable.queue({
-			test: 0
-		}, {
-			test: 10
-		}, 100, 
-		function () {
-			console.log('Tween 2 complete.');
-		}, 'linear');
-		
-		myTweenable.queue({
+	
+		window.tween = myTweenable.tween({
 			from: {
-				test: 0
+				'test': 0
 			},
 			to: {
-				test: 10
+				'test': 10
 			},
-			callback: function () {
-				console.log('Tween 3 complete.')
+			'duration': 1000,
+			'step': function () {
+				//console.log(this.test);
 			},
-			duration: 100
+			'callback': function () {
+				console.log('Done!  Final value: ' + this.test);
+			}
 		});
-		
-		myTweenable.queue({
-			from: {
-				test: 0
-			},
-			to: {
-				test: 10
-			},
-			callback: function () {
-				console.log('Tween 4 complete.')
-			},
-			duration: 100
-		});*/
 		
 	</script>
 
