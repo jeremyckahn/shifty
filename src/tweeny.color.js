@@ -4,11 +4,12 @@
 	}
 	
 	global.Tweenable.prototype.filter.color = {
-		'beforeTween': function pretween (currentState, fromState, toState) {
-			//console.log(currentState.test, fromState.test, toState.test)
+		
+		'beforeTween': function beforeTween (currentState, fromState, toState) {
+			console.log(currentState.test, fromState.test, toState.test)
 		},
 		
-		'afterTween': function postTween (currentState, fromState, toState) {
+		'afterTween': function afterTween (currentState, fromState, toState) {
 			
 		}
 	};

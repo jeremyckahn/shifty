@@ -36,7 +36,7 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 	 * @param {Object} srcObject The object to copy from
 	 * @returns {Object} A reference to the augmented `targetObj` Object
 	 */
-	function simpleCopy (targetObj, srcObj) {		
+	function simpleCopy (targetObj, srcObj) {
 		each(srcObj, function (srcObj, prop) {
 			targetObj[prop] = srcObj[prop];
 		});
@@ -67,8 +67,12 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		}
 	}
 	
-	function applyFilter (filterName, filters, applyTo, args) {
-		filters[filterName].apply(applyTo, args);
+	function applyFilter (filterName, applyTo, args) {
+		each(global.Tweenable.prototype.filter, function (filters, name) {
+			if (filters[name][filterName]) {
+				filters[name][filterName].apply(applyTo, args);
+			}
+		});
 	}
 	
 	function timeoutHandler (params, state) {
@@ -77,18 +81,16 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		currentTime = now();
 		
 		if (currentTime < params.timestamp + params.duration && state.isAnimating) {
-			// The tween is still running, schedule an update
-			tweenProps (currentTime, params, state);
-			
-			each(global.Tweenable.prototype.filter, function (filters, name) {
-				applyFilter('beforeTween', filters[name], params.owner, [state.current, params.originalState, params.to]);
-			});
+			tweenProps (currentTime, params, state);		
+			applyFilter('beforeTween', params.owner, [state.current, params.originalState, params.to]);
 			
 			if (params.hook.step) {
 				invokeHook('step', params.hook, params.owner, [state.current]);
 			}
 			
 			params.step.call(state.current);
+			
+			// The tween is still running, schedule an update
 			state.loopId = scheduleUpdate(function () {
 				timeoutHandler(params, state);
 			}, params.fps);
@@ -207,7 +209,14 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 			this._tweenParams.timestamp = now();
 			this._tweenParams.easingFunc = global.tweeny.formula[easing] || global.tweeny.formula.linear;
 			this._tweenParams.originalState = simpleCopy({}, this._state.current);
+			
+			/*each(global.Tweenable.prototype.filter, function (filters, name) {
+				applyFilter('beforeTween', filters[name], params.owner, [state.current, params.originalState, params.to]);
+			});*/
+			
 			this._tweenParams.tweenController = new Tween(this._tweenParams, this._state);
+			
+			
 			this._state.isAnimating = true;
 
 			scheduleUpdate(function () {
