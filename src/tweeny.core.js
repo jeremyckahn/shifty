@@ -36,14 +36,10 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 	 * @param {Object} srcObject The object to copy from
 	 * @returns {Object} A reference to the augmented `targetObj` Object
 	 */
-	function simpleCopy (targetObj, srcObj) {
-		var prop;
-		
-		for (prop in srcObj) {
-			if (srcObj.hasOwnProperty(prop)) {
-				targetObj[prop] = srcObj[prop];
-			}
-		}
+	function simpleCopy (targetObj, srcObj) {		
+		each(srcObj, function (srcObj, prop) {
+			targetObj[prop] = srcObj[prop];
+		});
 		
 		return targetObj;
 	}
@@ -63,16 +59,16 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		return setTimeout(handler, 1000 / fps);
 	}
 	
-	function invokeHook (hookName, hooks, context, args) {
+	function invokeHook (hookName, hooks, applyTo, args) {
 		var i;
 		
 		for (i = 0; i < hooks[hookName].length; i++) {
-			hooks[hookName][i].apply(context, args);
+			hooks[hookName][i].apply(applyTo, args);
 		}
 	}
 	
-	function applyFilter (filterName, filters, currentState, originalState, toState) {
-		filters[filterName](currentState, originalState, toState);
+	function applyFilter (filterName, filters, applyTo, args) {
+		filters[filterName].apply(applyTo, args);
 	}
 	
 	function timeoutHandler (params, state) {
@@ -85,11 +81,11 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 			tweenProps (currentTime, params, state);
 			
 			each(global.Tweenable.prototype.filter, function (filters, name) {
-				applyFilter('beforeTween', filters[name], state.current, params.originalState, params.to);
+				applyFilter('beforeTween', filters[name], params.owner, [state.current, params.originalState, params.to]);
 			});
 			
 			if (params.hook.step) {
-				invokeHook('step', params.hook, params.context, [state.current]);
+				invokeHook('step', params.hook, params.owner, [state.current]);
 			}
 			
 			params.step.call(state.current);
@@ -153,6 +149,7 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 			this._hook = {};
 
 			this._tweenParams = {
+				owner: this,
 				hook: this._hook
 			};
 
