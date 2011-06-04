@@ -1,4 +1,6 @@
 (function tweenyColor (global) {
+	var savedRGBPropNames;
+	
 	if (!global.Tweenable) {
 		return;
 	}
@@ -38,23 +40,55 @@
 		return str;
 	}
 	
-	function findAndConvertStringProps (obj) {
+	function getAndConvertStringProps (obj) {
+		var stringPropNames;
+		
+		stringPropNames = [];
+		
 		global.Tweenable.util.each(obj, function (obj, prop) {
 			if (typeof obj[prop] === 'string') {
 				obj[prop] = getRGBStringFromHex(obj[prop]);
+				stringPropNames.push(prop);
 			}
 		});
+		
+		return stringPropNames;
+	}
+	
+	function rgbToArr (str) {
+		return str.split(/\D+/g).slice(1, 4);
+	}
+	
+	function splitRGBChunks (obj, savedRGBPropNames) {
+		var i,
+			limit,
+			rgbParts;
+			
+			limit = savedRGBPropNames.length;
+			
+			for (i = 0; i < limit; i++) {
+				rgbParts = rgbToArr(obj[savedRGBPropNames[i]]);
+				obj['__r__' + savedRGBPropNames[i]] = rgbParts[0];
+				obj['__g__' + savedRGBPropNames[i]] = rgbParts[1];
+				obj['__b__' + savedRGBPropNames[i]] = rgbParts[2];
+				delete obj[savedRGBPropNames[i]];
+			}
 	}
 	
 	global.Tweenable.prototype.filter.color = {
 		'tweenCreated': function tweenCreated (fromState, toState) {
+			savedRGBPropNames = getAndConvertStringProps(fromState);
+			getAndConvertStringProps(toState);
+
+			splitRGBChunks(fromState, savedRGBPropNames);
+			splitRGBChunks(toState, savedRGBPropNames);
+			
 			//console.log(fromState, toState)
-			findAndConvertStringProps(fromState);
-			findAndConvertStringProps(toState);
 		},
 		
 		'beforeTween': function beforeTween (currentState, fromState, toState) {
 			//console.log(currentState.test, fromState.test, toState.test)
+			
 		},
 		
 		'afterTween': function afterTween (currentState, fromState, toState) {

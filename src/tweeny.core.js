@@ -81,8 +81,9 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 		currentTime = now();
 		
 		if (currentTime < params.timestamp + params.duration && state.isAnimating) {
-			tweenProps (currentTime, params, state);		
 			applyFilter('beforeTween', params.owner, [state.current, params.originalState, params.to]);
+			tweenProps (currentTime, params, state);		
+			applyFilter('afterTween', params.owner, [state.current, params.originalState, params.to]);
 			
 			if (params.hook.step) {
 				invokeHook('step', params.hook, params.owner, [state.current]);
