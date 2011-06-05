@@ -37,6 +37,7 @@
 	</div> <!--! end of #container -->
 
 	<script type="text/javascript" charset="utf-8" src="../src/tweeny.core.js"></script>
+	<script type="text/javascript" charset="utf-8" src="../src/tweeny.formulas.js"></script>
 	<script type="text/javascript" charset="utf-8" src="../src/tweeny.color.js"></script>
 	<script type="text/javascript" charset="utf-8" src="../src/tweeny.px.js"></script>
 	
@@ -64,7 +65,8 @@
 			},
 			'callback': function () {
 				console.log('Done!  Final value: ' + this.left);
-			}
+			},
+			'easing': 'easeOutQuint'
 		});
 		
 	</script>
