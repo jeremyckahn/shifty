@@ -46,7 +46,7 @@
 		}
 	}
 	
-	global.Tweenable.prototype.filter.color = {
+	global.Tweenable.prototype.filter.px = {
 		'beforeTween': function beforeTween (currentState, fromState, toState) {
 			savedPxPropNames = getPxProps(fromState);
 			
