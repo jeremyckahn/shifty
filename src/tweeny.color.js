@@ -1,5 +1,8 @@
 (function tweenyColor (global) {
-	var savedRGBPropNames;
+	var R_SHORTHAND_HEX = /^#([0-9]|[a-f]){3}$/i,
+		R_LONGHAND_HEX = /^#([0-9]|[a-f]){6}$/i,
+		R_RGB = /^rgb\(\d+\s*,\d+\s*,\d+\s*\)\s*$/i,
+		savedRGBPropNames;
 	
 	if (!global.Tweenable) {
 		return;
@@ -30,31 +33,38 @@
 	}
 	
 	function getRGBStringFromHex (str) {
-		var rgbArr;
+		var rgbArr,
+			convertedStr;
 		
-		if ((/^#([0-9]|[a-f]){3}$/i).test(str) || (/^#([0-9]|[a-f]){6}$/i).test(str)) {
-			rgbArr = hexToRGBArr(str);
-			str = 'rgb(' + rgbArr[0] + ',' + rgbArr[1] + ',' + rgbArr[2] + ')';
-		}
+		rgbArr = hexToRGBArr(str);
+		convertedStr = 'rgb(' + rgbArr[0] + ',' + rgbArr[1] + ',' + rgbArr[2] + ')';
 		
-		return str;
+		return convertedStr;
 	}
 	
-	function convertStringProps (obj) {
+	function isColorString (str) {
+		return (typeof str === 'string') && (R_SHORTHAND_HEX.test(str) || R_LONGHAND_HEX.test(str) || R_RGB.test(str));
+	}
+	
+	function isHexString (str) {
+		return (typeof str === 'string') && (R_SHORTHAND_HEX.test(str) || R_LONGHAND_HEX.test(str));
+	}
+	
+	function convertHexStringPropsToRGB (obj) {
 		global.Tweenable.util.each(obj, function (obj, prop) {
-			if (typeof obj[prop] === 'string') {
+			if (isHexString(obj[prop])) {
 				obj[prop] = getRGBStringFromHex(obj[prop]);
 			}
 		});
 	}
 	
-	function getStringPropNames (obj) {
+	function getColorStringPropNames (obj) {
 		var list;
 		
 		list = [];
 		
 		global.Tweenable.util.each(obj, function (obj, prop) {
-			if (typeof obj[prop] === 'string') {
+			if (isColorString(obj[prop])) {
 				list.push(prop);
 			}
 		});
@@ -103,12 +113,12 @@
 	
 	global.Tweenable.prototype.filter.color = {
 		'tweenCreated': function tweenCreated (fromState, toState) {
-			convertStringProps(fromState);
-			convertStringProps(toState);
+			convertHexStringPropsToRGB(fromState);
+			convertHexStringPropsToRGB(toState);
 		},
 		
 		'beforeTween': function beforeTween (currentState, fromState, toState) {
-			savedRGBPropNames = getStringPropNames(fromState);
+			savedRGBPropNames = getColorStringPropNames(fromState);
 			
 			splitRGBChunks(currentState, savedRGBPropNames);
 			splitRGBChunks(fromState, savedRGBPropNames);
