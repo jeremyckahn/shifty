@@ -68,31 +68,48 @@
 			
 			for (i = 0; i < limit; i++) {
 				rgbParts = rgbToArr(obj[savedRGBPropNames[i]]);
-				obj['__r__' + savedRGBPropNames[i]] = rgbParts[0];
-				obj['__g__' + savedRGBPropNames[i]] = rgbParts[1];
-				obj['__b__' + savedRGBPropNames[i]] = rgbParts[2];
+				obj['__r__' + savedRGBPropNames[i]] = +rgbParts[0];
+				obj['__g__' + savedRGBPropNames[i]] = +rgbParts[1];
+				obj['__b__' + savedRGBPropNames[i]] = +rgbParts[2];
 				delete obj[savedRGBPropNames[i]];
 			}
+	}
+	
+	function joinRGBChunks (obj, savedRGBPropNames) {
+		var i,
+			limit;
+			
+		limit = savedRGBPropNames.length;
+		
+		for (i = 0; i < limit; i++) {
+			
+			obj[savedRGBPropNames[i]] = 'rgb(' + 
+				parseInt(obj['__r__' + savedRGBPropNames[i]], 10) + ',' + 
+				parseInt(obj['__g__' + savedRGBPropNames[i]], 10) + ',' + 
+				parseInt(obj['__b__' + savedRGBPropNames[i]], 10) + ')';
+			
+			delete obj['__r__' + savedRGBPropNames[i]];
+			delete obj['__g__' + savedRGBPropNames[i]];
+			delete obj['__b__' + savedRGBPropNames[i]];
+		}
 	}
 	
 	global.Tweenable.prototype.filter.color = {
 		'tweenCreated': function tweenCreated (fromState, toState) {
 			savedRGBPropNames = getAndConvertStringProps(fromState);
 			getAndConvertStringProps(toState);
-
-			splitRGBChunks(fromState, savedRGBPropNames);
-			splitRGBChunks(toState, savedRGBPropNames);
-			
-			//console.log(fromState, toState)
 		},
 		
 		'beforeTween': function beforeTween (currentState, fromState, toState) {
-			//console.log(currentState.test, fromState.test, toState.test)
-			
+			splitRGBChunks(currentState, savedRGBPropNames);
+			splitRGBChunks(fromState, savedRGBPropNames);
+			splitRGBChunks(toState, savedRGBPropNames);
 		},
 		
 		'afterTween': function afterTween (currentState, fromState, toState) {
-			
+			joinRGBChunks(currentState, savedRGBPropNames);
+			joinRGBChunks(fromState, savedRGBPropNames);
+			joinRGBChunks(toState, savedRGBPropNames);
 		}
 	};
 	
