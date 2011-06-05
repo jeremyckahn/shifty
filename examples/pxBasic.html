@@ -9,6 +9,16 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
 	<title></title>
+	
+	<style type="text/css" media="screen">
+		#main {
+			background: #0f0;
+			height: 200px;
+			left: 0px;
+			position: absolute;
+			width: 200px;
+		}
+	</style>
 
 </head>
 
@@ -27,30 +37,33 @@
 	</div> <!--! end of #container -->
 
 	<script type="text/javascript" charset="utf-8" src="../src/tweeny.core.js"></script>
-	<script type="text/javascript" charset="utf-8" src="../src/tweeny.queue.js"></script>
 	<script type="text/javascript" charset="utf-8" src="../src/tweeny.color.js"></script>
+	<script type="text/javascript" charset="utf-8" src="../src/tweeny.px.js"></script>
 	
 	<script type="text/javascript" charset="utf-8">
 
-		var myTweenable = (new Tweenable()).init();
+		var myTweenable = (new Tweenable()).init(),
+				div = document.getElementById('main');
 
 		window.myTweenable = myTweenable;
 	
 		window.tween = myTweenable.tween({
 			from: {
-				'test': 0,
-				'hex': '#f0f'
+				'left': '0px',
+				'color': '#0f0'
 			},
 			to: {
-				'test': 10,
-				'hex': '#bada55'
+				'left': '400px',
+				'color': '#f0f'
 			},
-			'duration': 1000,
+			'duration': 2500,
 			'step': function () {
-				console.log(this.hex);
+				console.log(this.left);
+				div.style.left = this.left;
+				div.style.background = this.color;
 			},
 			'callback': function () {
-				console.log('Done!  Final value: ' + this.test);
+				console.log('Done!  Final value: ' + this.left);
 			}
 		});
 		
