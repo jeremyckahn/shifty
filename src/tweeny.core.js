@@ -148,7 +148,9 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 	
 	function Tweenable () {
 		
-		this.init = function init () {
+		this.init = function init (options) {
+			options = options || {};
+			
 			this._hook = {};
 
 			this._tweenParams = {
@@ -159,13 +161,13 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 			this._state = {};
 
 			// The framerate at which Tweeny updates.
-			this.fps = 30;
+			this.fps = options.fps || 30;
 
 			// The default easing formula.  This can be changed publicly.
-			this.easing = 'linear';
+			this.easing = options.easing || 'linear';
 
 			// The default `duration`.  This can be changed publicly.
-			this.duration = 500;
+			this.duration = options.duration || 500;
 			
 			return this;
 		};
@@ -216,7 +218,7 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 
 			scheduleUpdate(function () {
 				timeoutHandler(self._tweenParams, self._state);
-			});
+			}, this.fps);
 			
 			return this._tweenParams.tweenController;
 		};
