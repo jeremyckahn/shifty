@@ -42,7 +42,7 @@
 			limit = pxPropNames.length;
 			
 		for (i = 0; i < limit; i++) {
-			obj[pxPropNames[i]] = obj[pxPropNames[i]] + 'px';
+			obj[pxPropNames[i]] = Math.floor(obj[pxPropNames[i]]) + 'px';
 		}
 	}
 	

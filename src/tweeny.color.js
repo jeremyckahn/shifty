@@ -76,38 +76,38 @@
 		return str.split(/\D+/g).slice(1, 4);
 	}
 	
-	function splitRGBChunks (obj, savedRGBPropNames) {
+	function splitRGBChunks (obj, rgbPropNames) {
 		var i,
 			limit,
 			rgbParts;
 			
-			limit = savedRGBPropNames.length;
+			limit = rgbPropNames.length;
 			
 			for (i = 0; i < limit; i++) {
-				rgbParts = rgbToArr(obj[savedRGBPropNames[i]]);
-				obj['__r__' + savedRGBPropNames[i]] = +rgbParts[0];
-				obj['__g__' + savedRGBPropNames[i]] = +rgbParts[1];
-				obj['__b__' + savedRGBPropNames[i]] = +rgbParts[2];
-				delete obj[savedRGBPropNames[i]];
+				rgbParts = rgbToArr(obj[rgbPropNames[i]]);
+				obj['__r__' + rgbPropNames[i]] = +rgbParts[0];
+				obj['__g__' + rgbPropNames[i]] = +rgbParts[1];
+				obj['__b__' + rgbPropNames[i]] = +rgbParts[2];
+				delete obj[rgbPropNames[i]];
 			}
 	}
 	
-	function joinRGBChunks (obj, savedRGBPropNames) {
+	function joinRGBChunks (obj, rgbPropNames) {
 		var i,
 			limit;
 			
-		limit = savedRGBPropNames.length;
+		limit = rgbPropNames.length;
 		
 		for (i = 0; i < limit; i++) {
 			
-			obj[savedRGBPropNames[i]] = 'rgb(' + 
-				parseInt(obj['__r__' + savedRGBPropNames[i]], 10) + ',' + 
-				parseInt(obj['__g__' + savedRGBPropNames[i]], 10) + ',' + 
-				parseInt(obj['__b__' + savedRGBPropNames[i]], 10) + ')';
+			obj[rgbPropNames[i]] = 'rgb(' + 
+				parseInt(obj['__r__' + rgbPropNames[i]], 10) + ',' + 
+				parseInt(obj['__g__' + rgbPropNames[i]], 10) + ',' + 
+				parseInt(obj['__b__' + rgbPropNames[i]], 10) + ')';
 			
-			delete obj['__r__' + savedRGBPropNames[i]];
-			delete obj['__g__' + savedRGBPropNames[i]];
-			delete obj['__b__' + savedRGBPropNames[i]];
+			delete obj['__r__' + rgbPropNames[i]];
+			delete obj['__g__' + rgbPropNames[i]];
+			delete obj['__b__' + rgbPropNames[i]];
 		}
 	}
 	
