@@ -5,7 +5,7 @@ Tweeny Queue Extension
 By Jeremy Kahn - jeremyckahn@gmail.com
   v0.1.0
 
-Dependencies: tweeny.core.js
+Dependencies: shifty.core.js
 
 Tweeny and all official extensions are freely available under an MIT license.
 For instructions on how to use Tweeny and this extension, please consult the manual: https://github.com/jeremyckahn/tweeny/blob/master/README.md

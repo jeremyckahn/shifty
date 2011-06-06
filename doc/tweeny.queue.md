@@ -1,7 +1,7 @@
 Tweeny Queue Extension
 ===
 
-To use queues, include `tweeny.queue.js` on your page after `tweeny.core.js`.
+To use queues, include `shifty.queue.js` on your page after `shifty.core.js`.
 
 You can define a list of tweens to be executed sequentially as each one completes.  The first thing you need to do, before working with queues, is define the queue you are working with:
 
