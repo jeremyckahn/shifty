@@ -151,7 +151,7 @@ myCartoon.logMyProperties();
 
 That's fun, but how do we inject some useful functionality into `Tweenable` instances?
 
-hooks
+Hooks
 ---
 
 You can attach various hooks that get run at key points in a `Tweenable` instance's lifecycle.
