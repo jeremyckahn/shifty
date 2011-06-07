@@ -126,3 +126,50 @@ var myCartoon = new cartoon();
 This is awesome because any plugins or extensions that you are present on the `Tweenable()` prototype are also available to `myCartoon`, and all instances of `cartoon`.  That's fun, but how do we inject some useful functionality into `Tweenable` instances?
 
 __hooks__
+
+You can attach various hooks that get run at key points in a `Tweenable` instance's lifecycle.
+
+````javascript
+var myTweenable = (new Tweenable()).init();
+
+/**
+ * @param {String} hookName The `Tweenable` hook to attach the `hookFunction` to.
+ * @param {Function} hookFunction The function to execute.
+ */
+tweenableInst.hookAdd( hookName, hookFunction )
+````
+
+You can attach as many functions as you please to any hook.  Here's an example: 
+
+````javascript
+function stepHook (state) {
+	// Limit x to 300
+	if (state.x > 300) {
+		state.x = 300;
+	}
+}
+
+myTweenable.hookAdd('step', stepHook);
+````
+
+This snippet will set the anonymous function supplied for `hookFunction` to be called every frame.  You can also remove hooks:
+
+````javascript
+/**
+ * @param {String} hookName The `Tweenable` hook to remove the `hookFunction` from.
+ * @param {Function|undefined} hookFunction The function to remove.  If omitted, all functions attached to `hookName` are removed.
+ */
+tweenableInst.hookRemove( hookName, hookFunction )
+````
+
+Example, continuing from above:
+
+````javascript
+myTweenable.hookRemove('step', stepHook);
+````
+
+The hooks you can currently attach functions to are:
+
+  * `step`:  Runs on every frame that a tween runs for.  Hook handler receives a tween's `currentState` for a parameter.
+
+... And that's it.  They're easy to add in, please make Github issue or make a pull request if you'd like more to be added.
