@@ -10,7 +10,7 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 
 */
 
-(function Tweeny (global) {
+(function Shifty (global) {
 	
 	/**
 	 * Get the current UNIX time as an integer

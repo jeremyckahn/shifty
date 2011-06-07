@@ -102,3 +102,17 @@ aTween.get();
 ````
 
 Returns a tween's current values.
+
+##Extending Tweenable()##
+
+Shifty's true power comes from it's extensibility.  Specifically, it is designed to be inherited, and to fit in easily to any prototypal inheritance chain.  A quick example of how to do that:
+
+````javascript
+function cartoon () {
+	this.init();
+	console.log('Whoop whoop!  This is my framerate: ' + this.fps);
+}
+
+cartoon.prototype = Tweenable();
+var myCartoon = new cartoon();
+````
