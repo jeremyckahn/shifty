@@ -180,7 +180,7 @@ Filters
 
 Filters are used for transforming the properties of a tween at various points in a `tweenable` instance's lifecycle.  Filters differ from hooks because they get executed for all `Tweenable` instances globally.  Just define a filter once, attach it to `Tweenable.prototype`, and all `new` instances of `Tweenable` will have access to it.
 
-Here's an annotated, example of a filter:
+Here's an annotated example of a filter:
 
 ````javascript
 Tweenable.prototype.filter.doubler = {
@@ -209,4 +209,4 @@ Tweenable.prototype.filter.doubler = {
 }
 ````
 
-Yes, having `doubler` filter is useless.  Are more practical use of filters is to add support for more data types.  __Remember, `Tweenable()` only supports `Numbers` out of the box__, but you can add support for strings, functions, or whatever else you might need.  The `px` and `color` extensions work by filtering string values into numbers before each tween step, and then back again after the tween step.
+Yes, having `doubler` filter is useless.  A more practical use of filters is to add support for more data types.  __Remember, `Tweenable()` only supports `Numbers` out of the box__, but you can add support for strings, functions, or whatever else you might need.  The `px` and `color` extensions work by filtering string values into numbers before each tween step, and then back again after the tween step.
