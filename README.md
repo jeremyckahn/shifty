@@ -119,11 +119,37 @@ function cartoon () {
 	console.log('Whoop whoop!  This is my framerate: ' + this.fps);
 }
 
-cartoon.prototype = Tweenable();
-var myCartoon = new cartoon();
+cartoon.prototype = new Tweenable();
+var myCartoon = (new cartoon()).init();
 ````
 
-This is awesome because any plugins or extensions that you are present on the `Tweenable()` prototype are also available to `myCartoon`, and all instances of `cartoon`.  That's fun, but how do we inject some useful functionality into `Tweenable` instances?
+This is awesome because any plugins or extensions that are present on the `Tweenable()` prototype are also available to `myCartoon`, and all instances of `cartoon` (and `Tweenable`).  You can define these inheritable functions by attaching them to the `Tweenable.prototype` object.  A full example of this:
+
+````javascript
+// Add a new method to the `Tweenable` prototype
+Tweenable.prototype.logMyProperties = function () {
+	Tweenable.util.each(this, function (obj, prop) {
+		console.log(prop + ': ' + obj[prop]);
+	});
+}
+
+// Define a constructor function
+function cartoon () {
+	this.init();
+	console.log('Whoop whoop!  This is my framerate: ' + this.fps);
+}
+
+// Set `cartoon`'s `prototype` to a `new` instance of `Tweenable`
+cartoon.prototype = new Tweenable();
+
+// Make a new instance of `cartoon`
+var myCartoon = (new cartoon()).init();
+
+// Test the new prototype method
+myCartoon.logMyProperties();
+````
+
+That's fun, but how do we inject some useful functionality into `Tweenable` instances?
 
 hooks
 ---
