@@ -42,6 +42,12 @@ var myTweenable = (new Tweenable()).init();
 
 __Why do I make you call `init()`?__  Because I like to make you do mindless busy work.  More importantly, `Tweenable()` is meant to be inherited - properly, in context of JavaScript's prototypal inheritance model - and `Tweenable()` objects need to maintain individual state.  In plain English, they need their own properties that are not shared across instances.  In even plainer English, calling `init()` ensures that multiple `Tweenable()` instances do not share data that they shouldn't be sharing, and your stuff won't break mysteriously.
 
+You can also supply some fun options to `init()`.  They are:
+
+  * `fps`: This is the framerate (frames per second) at which the tween updates.  The default is `30`.
+  * `easing`: The default easing formula to use on a tween.  This can be overridden on a per-tween basis via the `tween` function's `easing` parameter (see below).
+  * `duration`: The default duration that a tween lasts for.  This can be overridden on a per-tween basis via the `tween` function's `duration` parameter (see below).
+
 ##Shifty core methods##
 
 __Tweening:__
@@ -116,3 +122,7 @@ function cartoon () {
 cartoon.prototype = Tweenable();
 var myCartoon = new cartoon();
 ````
+
+This is awesome because any plugins or extensions that you are present on the `Tweenable()` prototype are also available to `myCartoon`, and all instances of `cartoon`.  That's fun, but how do we inject some useful functionality into `Tweenable` instances?
+
+__hooks__
