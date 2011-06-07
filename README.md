@@ -125,7 +125,8 @@ var myCartoon = new cartoon();
 
 This is awesome because any plugins or extensions that you are present on the `Tweenable()` prototype are also available to `myCartoon`, and all instances of `cartoon`.  That's fun, but how do we inject some useful functionality into `Tweenable` instances?
 
-__hooks__
+hooks
+---
 
 You can attach various hooks that get run at key points in a `Tweenable` instance's lifecycle.
 
@@ -173,3 +174,39 @@ The hooks you can currently attach functions to are:
   * `step`:  Runs on every frame that a tween runs for.  Hook handler receives a tween's `currentState` for a parameter.
 
 ... And that's it.  They're easy to add in, please make Github issue or make a pull request if you'd like more to be added.
+
+Filters
+---
+
+Filters are used for transforming the properties of a tween at various points in a `tweenable` instance's lifecycle.  Filters differ from hooks because they get executed for all `Tweenable` instances globally.  Just define a filter once, attach it to `Tweenable.prototype`, and all `new` instances of `Tweenable` will have access to it.
+
+Here's an annotated, example of a filter:
+
+````javascript
+Tweenable.prototype.filter.doubler = {
+	// Gets called when a tween is created.  `fromState` is the state that the tween starts at, and `toState` contains the target values.
+	'tweenCreated': function tweenCreated (fromState, toState) {
+		Tweenable.util.each(obj, function (fromState, prop) {
+			obj[prop] *= 2;
+		});
+	},
+	
+	// Gets called right before a tween state is calculated.
+	// `currentState` is the current state of the tweened object, `fromState` is the state that the tween started at, and `toState` contains the target values.
+	'beforeTween': function beforeTween (currentState, fromState, toState) {
+		Tweenable.util.each(currentState, function (obj, prop) {
+			obj[prop] *= 2;
+		});
+	},
+	
+	// Gets called right after a tween state is calculated.
+	// `currentState` is the current state of the tweened object, `fromState` is the state that the tween started at, and `toState` contains the target values.
+	'afterTween': function afterTween (currentState, fromState, toState) {
+		Tweenable.util.each(currentState, function (obj, prop) {
+			obj[prop] *= 2;
+		});
+	}
+}
+````
+
+Yes, having `doubler` filter is useless.  Are more practical use of filters is to add support for more data types.  __Remember, `Tweenable()` only supports `Numbers` out of the box__, but you can add support for strings, functions, or whatever else you might need.  The `px` and `color` extensions work by filtering string values into numbers before each tween step, and then back again after the tween step.
