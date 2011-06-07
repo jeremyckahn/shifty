@@ -1,12 +1,12 @@
 Shifty
 ===
 
-Shifty is a tweening engine for JavaScript.  That's it.  Shifty is a low level tool that can be encapsulated by higher-level tools.  At the most basic level, it does:
+Shifty is a tweening engine for JavaScript.  That's it.  Shifty is a low-level library that can be encapsulated by higher-level tools.  At the most basic level, it does:
 
   * Tweening of `Number`s.
   * Extensibility hooks for the tweening.
 
-The Shifty core doesn't do:
+Shifty is great because it focuses on doing one thing very well - tweening.  It is optimized to run many times a second with minimal processing and memory overhead, which is necessary for smooth animations.  To this end. the Shifty core doesn't do:
 
   * Keyframing.
   * Drawing.

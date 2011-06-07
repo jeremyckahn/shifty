@@ -72,8 +72,22 @@
 		return list;
 	}
 	
-	function rgbToArr (str) {
+	/*function rgbToArr (str) {
 		return str.split(/\D+/g).slice(1, 4);
+	}*/
+	
+	function rgbToArr (str) {
+		var splitStr;
+		
+		splitStr = str.split(/\D+/g);
+		
+		// Really terriblw workaround for the way IE handles the RegEx above.
+		// There's probably a better way to do this.
+		if (splitStr.length > 3) {
+			splitStr = splitStr.slice(1, 4);
+		}
+		
+		return splitStr;
 	}
 	
 	function splitRGBChunks (obj, rgbPropNames) {
@@ -112,7 +126,8 @@
 	}
 	
 	global.Tweenable.prototype.filter.color = {
-		'tweenCreated': function tweenCreated (fromState, toState) {
+		'tweenCreated': function tweenCreated (currentState, fromState, toState) {
+			convertHexStringPropsToRGB(currentState);
 			convertHexStringPropsToRGB(fromState);
 			convertHexStringPropsToRGB(toState);
 		},

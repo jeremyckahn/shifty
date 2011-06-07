@@ -212,7 +212,7 @@ For instructions on how to use Tweeny, please consult the manual: https://github
 			this._tweenParams.timestamp = now();
 			this._tweenParams.easingFunc = this.formula[this._tweenParams.easing] || this.formula.linear;
 			this._tweenParams.originalState = simpleCopy({}, this._state.current);
-			applyFilter('tweenCreated', this._tweenParams.owner, [this._tweenParams.originalState, this._tweenParams.to]);
+			applyFilter('tweenCreated', this._tweenParams.owner, [this._state.current, this._tweenParams.originalState, this._tweenParams.to]);
 			this._tweenParams.tweenController = new Tween(this._tweenParams, this._state);
 			this._state.isAnimating = true;
 
