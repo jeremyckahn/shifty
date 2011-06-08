@@ -1,12 +1,12 @@
-Shifty
+Shifty - A super fun tweening engine for JavaScript
 ===
 
-Shifty is a tweening engine for JavaScript.  That's it.  Shifty is a low-level library that can be encapsulated by higher-level tools.  At the most basic level, it does:
+Shifty is a tweening engine for JavaScript.  That's it.  Shifty is a low-level library meant to be encapsulated by higher-level tools.  At the most basic level, it:
 
   * Tweening of `Number`s.
-  * Extensibility hooks for the tweening.
+  * Provides extensibility hooks for the tweening.
 
-Shifty is great because it focuses on doing one thing very well - tweening.  It is optimized to run many times a second with minimal processing and memory overhead, which is necessary for smooth animations.  To this end. the Shifty core doesn't do:
+Shifty is great because it focuses on doing one thing very well - tweening.  It is optimized to run many times a second with minimal processing and memory overhead, which is necessary for smooth animations.  To this end, the Shifty core doesn't do:
 
   * Keyframing.
   * Drawing.
@@ -16,7 +16,7 @@ If you need functionality like this and more, you can easily extend or wrap Shif
 
   * `shifty.color.js`: Color tweening (RGB/Hex strings).
   * `shifty.px.js`: `px` strings (so you can tween DOM elements).
-  * `shifty.queue.js`: Queuing tweens that execute sequentially.
+  * `shifty.queue.js`: Queuing up tweens that execute sequentially.
 
 There is also a file called `shifty.formulas.js` that contains a bunch of ready-to-use easing formulas.
 
@@ -25,16 +25,16 @@ Using Shifty
 
 If you just want raw tweening functionality, all you need is `shifty.core.js`.  This is in the `src` directory.  Just drop that in your page, and you are ready to go.  
 
-To use any Shifty extensions or additions, simply include them in the page after `shifty.core.js`.
+To use any Shifty extensions or additions, simply load them after `shifty.core.js`.
 
 API
 ===
 
 The section explains how to use the Shifty core.  For information on each extension, explore the `doc/` directory.
 
-__Makinging a `tweenable()` instance__
+__Making a `tweenable()` instance__
 
-The first thing you need to do is create an instance of `Tweenable` and `init()` it.  Here's a one-liner example:
+The first thing you need to do is create a `new` instance of `Tweenable` and `init()` it.  Here's a one-liner example:
 
 ````javascript
 var myTweenable = (new Tweenable()).init();
@@ -45,20 +45,20 @@ __Why do I make you call `init()`?__  Because I like to make you do mindless bus
 You can also supply some fun options to `init()`.  They are:
 
   * `fps`: This is the framerate (frames per second) at which the tween updates.  The default is `30`.
-  * `easing`: The default easing formula to use on a tween.  This can be overridden on a per-tween basis via the `tween` function's `easing` parameter (see below).
+  * `easing`: The default easing formula to use on a tween.  This can be overridden on a per-tween basis via the `tween` function's `easing` parameter (see below).  This value is `linear` by default.
   * `duration`: The default duration that a tween lasts for.  This can be overridden on a per-tween basis via the `tween` function's `duration` parameter (see below).
 
 ##Shifty core methods##
 
 __Tweening:__
 
-```javascript
+````javascript
 var aTween = myTweenable.tween( from, to );
 ````
 
 You can optionally add some fun extra parameters:
 
-```javascript
+````javascript
 var aTween = myTweenable.tween( from, to, duration, callback, easing );
 ````
 
@@ -66,16 +66,16 @@ Or you can use the configuration object syntax (recommended!):
 
 ````javascript
 var tween = myTweenable.tween({
-  from:       {  },            // Object.  Contains the properties to tween.  Note: This object's properties are modified by Tweenable(), internally.
+  from:       {  },            // Object.  Contains the properties to tween.  Must all be `Number`s.  Note: This object's properties are modified by the tween.
   to:         {  },            // Object.  The "destination" `Number`s that the properties in `from` will tween to.
   duration:   1000,            // Number.  How long the tween lasts for, in milliseconds.
-  easing:     'linear',        // String.  Easing equation to use.  "Linear" is the default.  You can specify any easing method that was attached to `Tweenable.prototype.formula`.
+  easing:     'linear',        // String.  Easing equation to use.  You can specify any easing method that was attached to `Tweenable.prototype.formula`.
   step:       function () {},  // Function.  Runs each "frame" that the tween is updated.
   callback:   function () {}   // Function.  Runs when the tween completes.
 });
 ````
 
-This starts a tween.  You can use either format, but the second, longer format give you more hooks and controls.  The method returns an object that you can use to control a tween, as described in the next section.
+This method starts a tween.  You can use either format, but the second, longer format give you more hooks and controls.  The method returns an object that you can use to control a tween, as described in the next section.
 
 __Important!__  The object that is passed as the `from` parameter, regardless of which syntax you use to invoke `tween()`, is modified.
 
@@ -95,7 +95,7 @@ Stops a tween.
 aTween.pause();
 ````
 
-Pauses a tween.  This is different from `stop()` as you are to resume from a `pause()`ed state.
+Pauses a tween.  This is different from `stop()`, as you are to resume from a `pause()`ed state.
 
 ````javascript
 aTween.resume();
@@ -111,19 +111,19 @@ Returns a tween's current values.
 
 ##Extending Tweenable()##
 
-Shifty's true power comes from it's extensibility.  Specifically, it is designed to be inherited, and to fit in easily to any prototypal inheritance chain.  A quick example of how to do that:
+Shifty's true power comes from it's extensibility.  Specifically, it is designed to be inherited, and to fit easily into any prototypal inheritance chain.  A quick example of how to do that:
 
 ````javascript
-function cartoon () {
+function Cartoon () {
 	this.init();
 	console.log('Whoop whoop!  This is my framerate: ' + this.fps);
 }
 
-cartoon.prototype = new Tweenable();
-var myCartoon = (new cartoon()).init();
+Cartoon.prototype = new Tweenable();
+var myCartoon = (new Cartoon()).init();
 ````
 
-This is awesome because any plugins or extensions that are present on the `Tweenable()` prototype are also available to `myCartoon`, and all instances of `cartoon` (and `Tweenable`).  You can define these inheritable functions by attaching them to the `Tweenable.prototype` object.  A full example of this:
+This is awesome because any plugins or extensions that are present on the `Tweenable()` prototype are also available to `myCartoon`, and all instances of `Cartoon` (and `Tweenable`).  You can define these inheritable functions by attaching them to the `Tweenable.prototype` object.  A full example of this:
 
 ````javascript
 // Add a new method to the `Tweenable` prototype
@@ -134,31 +134,29 @@ Tweenable.prototype.logMyProperties = function () {
 }
 
 // Define a constructor function
-function cartoon () {
+function Cartoon () {
 	this.init();
 	console.log('Whoop whoop!  This is my framerate: ' + this.fps);
 }
 
-// Set `cartoon`'s `prototype` to a `new` instance of `Tweenable`
-cartoon.prototype = new Tweenable();
+// Set `Cartoon`'s `prototype` to a `new` instance of `Tweenable`
+Cartoon.prototype = new Tweenable();
 
 // Make a new instance of `cartoon`
-var myCartoon = (new cartoon()).init();
+var myCartoon = (new Cartoon()).init();
 
 // Test the new prototype method
 myCartoon.logMyProperties();
 ````
 
-That's fun, but how do we inject some useful functionality into `Tweenable` instances?
+That's fun, but how do we hook functionality into `Tweenable` instances themselves?
 
 Hooks
 ---
 
-You can attach various hooks that get run at key points in a `Tweenable` instance's lifecycle.
+You can attach various hooks that get run at key points in a `Tweenable` instance's execution.  The API:
 
 ````javascript
-var myTweenable = (new Tweenable()).init();
-
 /**
  * @param {String} hookName The `Tweenable` hook to attach the `hookFunction` to.
  * @param {Function} hookFunction The function to execute.
@@ -169,17 +167,19 @@ tweenableInst.hookAdd( hookName, hookFunction )
 You can attach as many functions as you please to any hook.  Here's an example: 
 
 ````javascript
-function stepHook (state) {
+function limitX (state) {
 	// Limit x to 300
 	if (state.x > 300) {
 		state.x = 300;
 	}
 }
 
-myTweenable.hookAdd('step', stepHook);
+var myTweenable = (new Tweenable()).init();
+
+myTweenable.hookAdd('step', limitX);
 ````
 
-This snippet will set the anonymous function supplied for `hookFunction` to be called every frame.  You can also remove hooks:
+This snippet will set the function `limitX` for `hookFunction` to be called every frame, after the values have been computed.  You can also remove hooks.  The API:
 
 ````javascript
 /**
@@ -197,14 +197,14 @@ myTweenable.hookRemove('step', stepHook);
 
 The hooks you can currently attach functions to are:
 
-  * `step`:  Runs on every frame that a tween runs for.  Hook handler receives a tween's `currentState` for a parameter.
+  * `step`:  Runs on every frame that a tween runs for.  Hook handler function receives a tween's `currentState` for a parameter.
 
-... And that's it.  They're easy to add in, please make Github issue or make a pull request if you'd like more to be added.
+... And that's it.  They're easy to add in, please make Github issue or pull request if you'd like more to be added.
 
 Filters
 ---
 
-Filters are used for transforming the properties of a tween at various points in a `tweenable` instance's lifecycle.  Filters differ from hooks because they get executed for all `Tweenable` instances globally.  Just define a filter once, attach it to `Tweenable.prototype`, and all `new` instances of `Tweenable` will have access to it.
+Filters are used for transforming the properties of a tween at various points in a `tweenable` instance's lifecycle.  Filters differ from hooks because they get executed for all `Tweenable` instances globally.  Additionally, they are meant to convert non-`Number` datatypes to `Number`s so they can be tweened, and then back again. Just define a filter once, attach it to `Tweenable.prototype`, and all `new` instances of `Tweenable` will have access to it.
 
 Here's an annotated example of a filter:
 
