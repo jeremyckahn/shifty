@@ -23,19 +23,21 @@
 	 * @returns {Array} The converted Array of RGB values if `hex` is a valid string, or an Array of three 0's.
 	 */
 	function hexToRGBArr (hex) {
+		
 		hex = hex.replace(/#/g, '');
 		
 		// If the string is a shorthand three digit hex notation, normalize it to the standard six digit notation
 		if (hex.length === 3) {
+			hex = hex.split('');
 			hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
 		}
+		
 		return [hexToDec(hex.substr(0, 2)), hexToDec(hex.substr(2, 2)), hexToDec(hex.substr(4, 2))];
 	}
 	
 	function getRGBStringFromHex (str) {
 		var rgbArr,
 			convertedStr;
-		
 		rgbArr = hexToRGBArr(str);
 		convertedStr = 'rgb(' + rgbArr[0] + ',' + rgbArr[1] + ',' + rgbArr[2] + ')';
 		
