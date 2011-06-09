@@ -1,4 +1,15 @@
-(function tweenyColor (global) {
+/**
+Shifty Color Extension
+By Jeremy Kahn - jeremyckahn@gmail.com
+  v0.1.0
+
+For instructions on how to use Shifty, please consult the README: https://github.com/jeremyckahn/tweeny/blob/master/README.md
+
+MIT Lincense.  This code free to use, modify, distribute and enjoy.
+
+*/
+
+(function shiftyColor (global) {
 	var R_SHORTHAND_HEX = /^#([0-9]|[a-f]){3}$/i,
 		R_LONGHAND_HEX = /^#([0-9]|[a-f]){6}$/i,
 		R_RGB = /^rgb\(\d+\s*,\d+\s*,\d+\s*\)\s*$/i,

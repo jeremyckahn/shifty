@@ -1,6 +1,20 @@
-// All equations are copied from here: http://www.gizma.com/easing/
-// Originally written by Robert Penner, copied under BSD License (http://www.robertpenner.com/)
-//
+/**
+Shifty Easing Formulas
+Adapted for Shifty by Jeremy Kahn - jeremyckahn@gmail.com
+  v0.1.0
+
+================================
+All equations are copied from here: http://www.gizma.com/easing/
+Originally written by Robert Penner, copied under BSD License (http://www.robertpenner.com/)
+================================
+
+For instructions on how to use Shifty, please consult the README: https://github.com/jeremyckahn/tweeny/blob/master/README.md
+
+MIT Lincense.  This code free to use, modify, distribute and enjoy.
+
+*/
+
+
 // Params are as follows:
 // t = current time
 // b = start value

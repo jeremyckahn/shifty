@@ -1,4 +1,15 @@
-(function tweenyColor (global) {
+/**
+Shifty Pixel Extension
+By Jeremy Kahn - jeremyckahn@gmail.com
+  v0.1.0
+
+For instructions on how to use Shifty, please consult the README: https://github.com/jeremyckahn/tweeny/blob/master/README.md
+
+MIT Lincense.  This code free to use, modify, distribute and enjoy.
+
+*/
+
+(function shiftyPx (global) {
 	var R_PX = /px/i,
 		savedPxPropNames;
 	

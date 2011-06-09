@@ -1,7 +1,7 @@
 /*global setTimeout:true, clearTimeout:true */
 
 /**
-Tweeny Queue Extension
+Shifty Queue Extension
 By Jeremy Kahn - jeremyckahn@gmail.com
   v0.1.0
 
@@ -10,9 +10,11 @@ Dependencies: shifty.core.js
 Tweeny and all official extensions are freely available under an MIT license.
 For instructions on how to use Tweeny and this extension, please consult the manual: https://github.com/jeremyckahn/tweeny/blob/master/README.md
 
+MIT Lincense.  This code free to use, modify, distribute and enjoy.
+
 */
 
-(function tweenyQueue (global) {
+(function shiftyQueue (global) {
 	
 	if (!global.Tweenable) {
 		return;
@@ -70,9 +72,9 @@ For instructions on how to use Tweeny and this extension, please consult the man
 		this._tweenQueue.shift();
 		return this;
 	};
-
-	global.Tweenable.prototype.queueUnshift = function () {
-		this._tweenQueue.unshift();
+	
+	global.Tweenable.prototype.queuePop = function () {
+		this._tweenQueue.pop();
 		return this;
 	};
 

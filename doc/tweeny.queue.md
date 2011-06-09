@@ -1,46 +1,43 @@
-Tweeny Queue Extension
+Shifty Queue Extension
 ===
 
 To use queues, include `shifty.queue.js` on your page after `shifty.core.js`.
 
-You can define a list of tweens to be executed sequentially as each one completes.  The first thing you need to do, before working with queues, is define the queue you are working with:
+You can define a list of tweens to be executed sequentially as each one completes.  This is useful if you have a number of tweens to perform on an Object, each one starting immediately as the previous one completes.
+
+To queue up a tween, first make a `Tweenable()` instance:
 
 ````javascript
-// Changes which queue to use
-tweeny.queueName( 'queueName' );
+var myTweenable = (new Tweenable()).init();
 ````
 
-This is not required.  If you do not set a queue to work with, the `default` queue will be used.  Once a tween has begun, it is taken out of the queue.  _Tweens in the queue are tweens that have not yet been started._  Also important:
+And then call `queue()` on the instance to start tweening.  The API for `queue()` is identical to `tween()`, please consult the docs for that method if you need clarification.
 
 ````javascript
-// Omitting the parameter just returns the name of the current queue
-tweeny.queueName();
+myTweenable.queue( from, to, duration, callback, easing );
 ````
 
-To add a tween to the queue, do this:
-
-````javascript
-tweeny.queue( from, to, duration, callback, easing );
-````
-
-The function signature is identical to `tweeny.tween()`'s.  The longer syntax is also valid.  A few more important methods:
+The longer `tween()` syntax is also valid.  A few more important methods:
 
 ````javascript
 // Removes the next queued tween to be executed
+// Returns the `Tweenable()` instance for chainability
 tweeny.queueShift();
 ````
 
 ````javascript
 // Removes the tween at the end of the queue
-tweeny.queueUnshift();
+// Returns the `Tweenable()` instance for chainability
+tweeny.queuePop();
 ````
 
 ````javascript
 // Removes all tweens in the queue
+// Returns the `Tweenable()` instance for chainability
 tweeny.queueEmpty();
 ````
 
 ````javascript
-// Returns the number of tweens in the queue
+// Returns the `Number` of tweens in the queue
 tweeny.queueLength();
 ````

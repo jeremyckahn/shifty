@@ -1,12 +1,13 @@
 /*global setTimeout:true, clearTimeout:true */
 
 /**
-Tweeny - A teeny tiny JavaScript tweening engine
+Shifty - A teeny tiny tweening engine in JavaScript. 
 By Jeremy Kahn - jeremyckahn@gmail.com
   v0.1.0
 
-Tweeny and all official extensions are freely available under an MIT license.
-For instructions on how to use Tweeny, please consult the manual: https://github.com/jeremyckahn/tweeny/blob/master/README.md
+For instructions on how to use Shifty, please consult the README: https://github.com/jeremyckahn/tweeny/blob/master/README.md
+
+MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 */
 

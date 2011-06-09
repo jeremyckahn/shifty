@@ -1,4 +1,4 @@
-Shifty - A super fun tweening engine for JavaScript
+Shifty - A teeny tiny tweening engine in JavaScript. 
 ===
 
 Shifty is a tweening engine for JavaScript.  That's it.  Shifty is a low-level library meant to be encapsulated by higher-level tools.  At the most basic level, it:
