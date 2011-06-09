@@ -22,22 +22,22 @@ The longer `tween()` syntax is also valid.  A few more important methods:
 ````javascript
 // Removes the next queued tween to be executed
 // Returns the `Tweenable()` instance for chainability
-tweeny.queueShift();
+myTweenable.queueShift();
 ````
 
 ````javascript
 // Removes the tween at the end of the queue
 // Returns the `Tweenable()` instance for chainability
-tweeny.queuePop();
+myTweenable.queuePop();
 ````
 
 ````javascript
 // Removes all tweens in the queue
 // Returns the `Tweenable()` instance for chainability
-tweeny.queueEmpty();
+myTweenable.queueEmpty();
 ````
 
 ````javascript
 // Returns the `Number` of tweens in the queue
-tweeny.queueLength();
+myTweenable.queueLength();
 ````
