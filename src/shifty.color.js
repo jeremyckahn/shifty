@@ -86,17 +86,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	}
 	
 	function rgbToArr (str) {
-		var splitStr;
-		
-		splitStr = str.split(/\D+/g);
-		
-		// Really terrible workaround for the way IE handles the RegEx above.
-		// There's probably a better way to do this.
-		if (splitStr.length > 3) {
-			splitStr = splitStr.slice(1, 4);
-		}
-		
-		return splitStr;
+		return str.match(/(\d+)/g);
 	}
 	
 	function splitRGBChunks (obj, rgbPropNames) {
