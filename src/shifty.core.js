@@ -179,7 +179,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 			
 			scheduleUpdate(function () {
 				timeoutHandler(params, state);
-			});
+			}, params.owner.fps);
 			
 			return this;
 		};
