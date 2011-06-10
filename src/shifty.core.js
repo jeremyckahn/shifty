@@ -14,13 +14,18 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 (function Shifty (global) {
 	
 	/**
-	 * Get the current UNIX time as an integer
+	 * Get the current UNIX epoch time as an integer.  Exposed publicly as `Tweenable.util.now()`.
 	 * @returns {Number} An integer representing the current timestamp.
 	 */
 	function now () {
 		return +new Date();
 	}
 	
+	/**
+	 * Handy shortcut for doing a for-in loop.  Takes care of all of the `hasOwnProperty` wizardry for you.  This also exposed publicly, external code can access it as `Tweenable.util.each()`.
+	 * @param {Object} obj The object to iterate through.
+	 * @param {Function} func The function to pass the object and "own" property to.  This handler function receives the `obj` back as the first parameter, and a property name as the second.
+	 */
 	function each (obj, func) {
 		var prop;
 		
@@ -32,7 +37,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	}
 	
 	/**
-	 * Does a basic copy of one Object's properties to another.  This is not a robust `extend` function, nor is it recusrsive.  It is only appropriate to use on objects that have primitive properties (Numbers, Strings, Boolean, etc.)
+	 * Does a basic copy of one Object's properties to another.  This is not a robust `extend` function, nor is it recusrsive.  It is only appropriate to use on objects that have primitive properties (Numbers, Strings, Boolean, etc.).  Exposed publicly as `Tweenable.util.simpleCopy()`
 	 * @param {Object} targetObject The object to copy into
 	 * @param {Object} srcObject The object to copy from
 	 * @returns {Object} A reference to the augmented `targetObj` Object
@@ -45,7 +50,18 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		return targetObj;
 	}
 	
-	// Modifies the `from` object
+	/**
+	 * Calculates the interpolated tween values of an Object based on the current time.
+	 * @param {Number} currentTime The current time to evaluate the tween against.
+	 * @param {Object} params A configuration Object containing the values that this function requires.  The required properties in this Object are:
+	 *   @property {Object} originalState The original properties the Object is tweening from.
+	 *   @property {Object} to The destination properties the Object is tweening to.
+	 *   @property {Number} duration The length of the tween in milliseconds.
+	 *   @property {Number} timestamp The UNIX epoch time at which the tween began.
+	 *   @property {Function} easingFunc The function used to calculate the tween.  See the documentation for `Tweenable.prototype.formula` for more info on the appropriate function signature for this.
+	 * @param {Object} state A configuration object containing current state data of the tween.  Required properties:
+	 *   @property {Object} current The Object containing the current `Number` values of the tween.
+	 */
 	function tweenProps (currentTime, params, state) {
 		var prop;
 		
@@ -60,6 +76,13 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		return setTimeout(handler, 1000 / fps);
 	}
 	
+	/**
+	 * Calls all of the functions bound to a specified hook on a `Tweenable` instance.
+	 * @param {String} hookName The name of the hook to invoke the handlers of.
+	 * @param {Object} hooks The object containing the hook Arrays.
+	 * @param {Object} applyTo The `Tweenable` instance to call the hooks upon.
+	 * @param {Array} args The arguments to pass to each function in the specified hook.
+	 */
 	function invokeHook (hookName, hooks, applyTo, args) {
 		var i;
 		
@@ -68,6 +91,12 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		}
 	}
 	
+	/**
+	 * Applies a Shifty filter to `Tweenable` instance.
+	 * @param {String} filterName The name of the filter to apply.
+	 * @param {Object} applyTo The `Tweenable` instance to call the filter upon.
+	 * @param {Array} args The arguments to pass to the function in the specified filter.
+	 */
 	function applyFilter (filterName, applyTo, args) {
 		each(global.Tweenable.prototype.filter, function (filters, name) {
 			if (filters[name][filterName]) {
@@ -256,7 +285,9 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	
 	Tweenable.prototype.filter = {};
 	Tweenable.util = {
-		'each': each
+		'now': now
+		,'each': each
+		,'simpleCopy': simpleCopy
 	};
 	
 	/**
