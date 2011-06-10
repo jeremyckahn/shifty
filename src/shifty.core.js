@@ -105,6 +105,15 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		});
 	}
 	
+	/**
+	 * Handles the update logic for one step of a tween.
+	 * @param {Object} params The configuration containing all of a tween's properties.  This requires all of the `params` @properties required for `tweenProps`, so see that.  It also requires:
+	 *   @property {Object} owner The `Tweenable` instance that the tween this function is acting upon belongs to.
+	 *   @property {Object} hook The Object containing all of the `hook`s that belong to `owner
+	 * @param {Object} state The configuration Object containing all of the state properties for a `Tweenable` instance.  It requires all of the @properties listed for the `state` parameter of  `tweenProps`, so see that.  It also requires:
+	 *   @property {Boolean} isAnimating Whether or not this tween as actually running.
+	 *   @property {Number} loopId The property that the latest `setTimeout` invokation ID stored in.
+	 */
 	function timeoutHandler (params, state) {
 		var currentTime;
 		
@@ -133,8 +142,9 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	
 	function Tween (params, state) {
 		/**
-		 * Stops the tween.
-		 * @param {Boolean} gotoEnd If `false`, or omitted, the tween just stops at its current state, and the `callback` is not invoked.  If `true`, the tweened object's values are instantly set the the target values, and the `callbabk` is invoked.
+		 * Stops and cancels the tween.
+		 * @param {Boolean} gotoEnd If `false`, or omitted, the tween just stops at its current state, and the `callback` is not invoked.  If `true`, the tweened object's values are instantly set the the target "to" values, and the `callback` is invoked.
+		 * @returns {Object} The `Tween` instance for chaining.
 		 */
 		this.stop = function stop (gotoEnd) {
 			clearTimeout(state.loopId);
@@ -143,9 +153,14 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 				state.isAnimating = false;
 				params.callback.call(state.current);
 			}
+			
+			return this;
 		};
 		
-		// This needs an example file!
+		/**
+		 * Pauses a tween.  A `pause`d tween can be resumed with `resume()`.
+		 * @returns {Object} The `Tween` instance for chaining.
+		 */
 		this.pause = function pause () {
 			clearTimeout(state.loopId);
 			state.pausedAtTime = now();
@@ -153,6 +168,10 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 			return this;
 		};
 		
+		/**
+		 * Resumes a paused tween.  A tween must be `pause`d before is can be `resume`d.
+		 * @returns {Object} The `Tween` instance for chaining.
+		 */
 		this.resume = function play () {
 			if (state.isPaused) {
 				params.timestamp += state.pausedAtTime - params.timestamp;
@@ -166,7 +185,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		};
 		
 		/**
-		 * Returns a reference to the tweened object (the `from` object that wat passed to `tweeny.tween`).
+		 * Returns a reference to the tweened Object's current state (the `from` Object that wat passed to `tweenableInst.tween()`).
 		 * @returns {Object}
 		 */
 		this.get = function get () {
@@ -178,6 +197,14 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	
 	function Tweenable () {
 		
+		/**
+		 * Prepares a `Tweenable` instance for use.  This method basically just initializes all of the properties that a `Tweenable` instance will need.
+		 * @param {Object} options A configuration Object containing options for the `Tweenable` instance.  The following are valid:
+		 *   @property {Number} fps The frame rate (frames per second) at which the instance will update.  Default is 30.
+		 *   @property {String} easing The name of the default easing formula (attached to `Tweenable.prototype.formula`) to use for each `tween` made for this instance.  Default is `linear`.
+		 *   @property {Number} duration The default `duration` for each `tween` for this instance.  Default is 500 milliseconds.
+		 * returns {Object} `Tweenable` instance for chaining.
+		 */
 		this.init = function init (options) {
 			options = options || {};
 			
@@ -190,7 +217,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 			this._state = {};
 
-			// The framerate at which Tweeny updates.
+			// The framerate at which Shifty updates.
 			this.fps = options.fps || 30;
 
 			// The default easing formula.  This can be changed publicly.
