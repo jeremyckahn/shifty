@@ -15,6 +15,7 @@ Pink:
 This extension supports both shorthand and long formats.
 
 __RGB__
+
 ````javascript
 Pink:
 
