@@ -4,6 +4,7 @@ By Jeremy Kahn - jeremyckahn@gmail.com
   v0.1.0
 
 For instructions on how to use Shifty, please consult the README: https://github.com/jeremyckahn/tweeny/blob/master/README.md
+For instructions on how to use this extension, please see: https://github.com/jeremyckahn/shifty/blob/master/doc/shifty.color.md
 
 MIT Lincense.  This code free to use, modify, distribute and enjoy.
 

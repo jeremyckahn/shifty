@@ -1,7 +1,9 @@
 Shifty Pixel Extension
 ===
 
-This extension lets you tween values given as pixel strings with Shifty.  Like so:
+Just load this extension after `shifty.core.js` and you're set.
+
+The Shifty Pixel extension lets you tween values given as pixel strings with Shifty.  Like so:
 
 ````javascript
 var fivePixels = '5px';
