@@ -213,6 +213,7 @@ Tweenable.prototype.filter.doubler = {
 	// Gets called when a tween is created.  `fromState` is the state that the tween starts at, and `toState` contains the target values.
 	'tweenCreated': function tweenCreated (fromState, toState) {
 		Tweenable.util.each(obj, function (fromState, prop) {
+			// Double each initial state property value as soon as the tween is created.
 			obj[prop] *= 2;
 		});
 	},
@@ -220,7 +221,8 @@ Tweenable.prototype.filter.doubler = {
 	// Gets called right before a tween state is calculated.
 	// `currentState` is the current state of the tweened object, `fromState` is the state that the tween started at, and `toState` contains the target values.
 	'beforeTween': function beforeTween (currentState, fromState, toState) {
-		Tweenable.util.each(currentState, function (obj, prop) {
+		Tweenable.util.each(toState, function (obj, prop) {
+			// Double each target property right before the tween formula is applied.
 			obj[prop] *= 2;
 		});
 	},
@@ -228,8 +230,9 @@ Tweenable.prototype.filter.doubler = {
 	// Gets called right after a tween state is calculated.
 	// `currentState` is the current state of the tweened object, `fromState` is the state that the tween started at, and `toState` contains the target values.
 	'afterTween': function afterTween (currentState, fromState, toState) {
-		Tweenable.util.each(currentState, function (obj, prop) {
-			obj[prop] *= 2;
+		Tweenable.util.each(toState, function (obj, prop) {
+			// Return the target properties back to their pre-doubled values.
+			obj[prop] /= 2;
 		});
 	}
 }
