@@ -10,7 +10,7 @@ cat src/shifty.core.js \
 
 
 in=builds/shifty.full.js
-out=builds/shifty.min.js
+out=builds/shifty.minsrc.js
 
 curl -s \
         -d compilation_level=SIMPLE_OPTIMIZATIONS \
@@ -22,3 +22,7 @@ curl -s \
 
 # Remove the full concatenated script
 rm builds/shifty.full.js
+
+cat src/build_header.js builds/shifty.minsrc.js > builds/shifty.min.js
+
+rm builds/shifty.minsrc.js
