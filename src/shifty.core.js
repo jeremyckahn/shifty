@@ -302,6 +302,14 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 			return this._tweenParams.tweenController;
 		};
 		
+		/**
+		 * Add a hook to the `Tweenable` instance.  Hooks are functions that are invoked at key points in a `Tweenable` instance's lifecycle.  A hook that is related to the tweening process (like `step`), for example, will occur for every tween that is performed by the `Tweenable` instance.  You just have to set it once.  You can attach as many functions to any given hook as you like.  The available hooks are as follows:
+		 *
+		 *   - `step`:  Runs on every frame that a tween runs for.  Hook handler function receives a tween's `currentState` for a parameter.
+		 *
+		 * @param {String} hookName The name of the hook to attach `hookFunc` to.
+		 * @param {Function} hookFunc The hook handler function.  This function will receive parameters based on what hook it is being attached to.
+		 */
 		this.hookAdd = function hookAdd (hookName, hookFunc) {
 			if (!this._hook.hasOwnProperty(hookName)) {
 				this._hook[hookName] = [];
@@ -310,6 +318,12 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 			this._hook[hookName].push(hookFunc);
 		};
 		
+		/**
+		 * Unattach a function from a hook, or all functions.
+		 *
+		 * @param {String} hookName The hook to remove a function or functions from.
+		 * @param {String|undefined} hookFunc The function to matched against and remove from the hook handler list.  If omitted, all functions are removed for the hook specified by `hookName`.
+		 */
 		this.hookRemove = function hookRemove (hookName, hookFunc) {
 			var i;
 			
@@ -332,7 +346,14 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		return this;
 	}
 	
+	/**
+	 * Globally exposed static property to attach filters to.  Filters are used for transforming the properties of a tween at various points in a `Tweenable` instance's lifecycle.  Please consult the README for more info on this.
+	 */
 	Tweenable.prototype.filter = {};
+	
+	/**
+	 * Globally exposed static helper methods.  These methods are used internally and could be helpful in a global context as well.
+	 */
 	Tweenable.util = {
 		'now': now
 		,'each': each
@@ -340,9 +361,9 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	};
 	
 	/**
-	 * This object contains all of the tweens available to Tweeny.  It is extendable - simply attach properties to the Tweenable.prototype.formula Object following the same format at `linear`.
+	 * This object contains all of the tweens available to Shifty.  It is extendable - simply attach properties to the Tweenable.prototype.formula Object following the same format at `linear`.
 	 * 
-	 * This pattern was copied from Robert Penner, under BSD License (http://www.robertpenner.com/)
+	 * This format was copied from Robert Penner, under BSD License (http://www.robertpenner.com/)
 	 * 
 	 * @param t The current time
 	 * @param b Start value
@@ -356,6 +377,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		}
 	};
 	
+	// Make `Tweenable` globally accessible.
 	global.Tweenable = Tweenable;
 	
 }(this));

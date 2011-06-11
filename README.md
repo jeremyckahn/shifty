@@ -204,7 +204,7 @@ The hooks you can currently attach functions to are:
 Filters
 ---
 
-Filters are used for transforming the properties of a tween at various points in a `tweenable` instance's lifecycle.  Filters differ from hooks because they get executed for all `Tweenable` instances globally.  Additionally, they are meant to convert non-`Number` datatypes to `Number`s so they can be tweened, and then back again. Just define a filter once, attach it to `Tweenable.prototype`, and all `new` instances of `Tweenable` will have access to it.
+Filters are used for transforming the properties of a tween at various points in a `Tweenable` instance's lifecycle.  Filters differ from hooks because they get executed for all `Tweenable` instances globally.  Additionally, they are meant to convert non-`Number` datatypes to `Number`s so they can be tweened, and then back again. Just define a filter once, attach it to `Tweenable.prototype`, and all `new` instances of `Tweenable` will have access to it.
 
 Here's an annotated example of a filter:
 
