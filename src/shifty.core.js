@@ -200,9 +200,10 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		/**
 		 * Prepares a `Tweenable` instance for use.  This method basically just initializes all of the properties that a `Tweenable` instance will need.
 		 * @param {Object} options A configuration Object containing options for the `Tweenable` instance.  The following are valid:
+		 *   @property {Object} initialState The state at which the first tween shoudl begin at.  This is an experimental feature!
+		 *   @property {Number} duration The default `duration` for each `tween` for this instance.  Default is 500 milliseconds.
 		 *   @property {Number} fps The frame rate (frames per second) at which the instance will update.  Default is 30.
 		 *   @property {String} easing The name of the default easing formula (attached to `Tweenable.prototype.formula`) to use for each `tween` made for this instance.  Default is `linear`.
-		 *   @property {Number} duration The default `duration` for each `tween` for this instance.  Default is 500 milliseconds.
 		 * returns {Object} `Tweenable` instance for chaining.
 		 */
 		this.init = function init (options) {
@@ -216,24 +217,46 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 			};
 
 			this._state = {};
+			
+			// The state that the tween begins at.  Experimental!
+			this._state.current = options.initialState || {};
 
-			// The framerate at which Shifty updates.
+			// The framerate at which Shifty updates.  This is exposed publicly as `tweenableInst.fps`.
 			this.fps = options.fps || 30;
 
-			// The default easing formula.  This can be changed publicly.
+			// The default easing formula.  This is exposed publicly as `tweenableInst.easing`.
 			this.easing = options.easing || 'linear';
 
-			// The default `duration`.  This can be changed publicly.
+			// The default `duration`.  This is exposed publicly as `tweenableInst.duration`.
 			this.duration = options.duration || 500;
 			
 			return this;
 		};
 		
 		/**
-		 * @param {Object} from 
-		 * @param {Object} to
-		 * @param {Number} duration
-		 * @param {String} easing
+		 * Start a tween.  This method can be called two ways:
+		 * 
+		 *   tweenableInst.tween (from, to, [duration], [callback], [easing]);
+		 *
+		 * or
+		 *
+		 *   tweenableInst.tween ( {
+		 *     from:       Object,
+	     *     to:         Object,
+	     *     duration:   [Number],
+	     *     callback:   [Function],
+	     *     easing:     [String],
+	     *     step:       [Function]
+		 *   });
+		 *
+		 * Regardless of how you invoke this method, the only required parameters are `from` and `to`.
+		 *
+		 * @param {Object} from The beginning state Object containing the properties to tween from.  NOTE:  The properties of this Object are modified over time (to reflect the values in `to`).
+		 * @param {Object} to The target state Object containing the properties to tween to.
+		 * @param {Number} duration The amount of time in milliseconds that the tween should run for.
+		 * @param {Function} callback The function to invoke as soon as this tween completes.  This function is given the tween's current state Object as the first parameter.
+		 * @param {String} easing The name of the easing formula to use for this tween.  You can specify any easing fomula that was attached to `Tweenable.prototype.formula`.  If ommitted, the easing formula specified when the instance was `init`ed is used, or `linear` if that was omitted.
+		 * @param {Function} step A function to call for each step of the tween.  A "step" is defined as one update cycle (frame) of the tween.  Many update cycles occur to create the illusion of motion, so this function will likely be called quite a bit.
 		 */
 		this.tween = function tween (from, to, duration, callback, easing) {
 			var self;
@@ -244,10 +267,9 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 				
 			self = this;
 			this._state.loopId = 0;
-			this._state.current = {};
 			this._state.pausedAtTime = null;
 			
-			// Normalize some internal values depending on how `Tweenable.tween` was invoked
+			// Normalize some internal values depending on how `tweenableInst.tween` was invoked
 			if (to) {
 				// Assume the shorthand syntax is being used.
 				this._tweenParams.step = function () {};
