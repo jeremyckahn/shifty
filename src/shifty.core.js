@@ -195,6 +195,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		return this;
 	}
 	
+	// Note:  This is not a public function.  It is used internally by `Tweenable`, which is public, below.
 	function Tweenable () {
 		
 		/**

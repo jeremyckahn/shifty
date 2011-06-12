@@ -65,7 +65,7 @@ var aTween = myTweenable.tween( from, to, duration, callback, easing );
 Or you can use the configuration object syntax (recommended!):
 
 ````javascript
-var tween = myTweenable.tween({
+var aTween = myTweenable.tween({
   from:       {  },            // Object.  Contains the properties to tween.  Must all be `Number`s.  Note: This object's properties are modified by the tween.
   to:         {  },            // Object.  The "destination" `Number`s that the properties in `from` will tween to.
   duration:   1000,            // Number.  How long the tween lasts for, in milliseconds.
