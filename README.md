@@ -239,3 +239,14 @@ Tweenable.prototype.filter.doubler = {
 ````
 
 Yes, having `doubler` filter is useless.  A more practical use of filters is to add support for more data types.  __Remember, `Tweenable()` only supports `Numbers` out of the box__, but you can add support for strings, functions, or whatever else you might need.  The `px` and `color` extensions work by filtering string values into numbers before each tween step, and then back again after the tween step.
+
+Building Shifty
+---
+
+In the root directory, there is a file called build.sh.  Just do this to build the project on the command line:
+
+````shell
+$: sh build.sh
+````
+
+The only requirement is `curl` and an internet connection (the script calls out to Google's Closure Compiler API).  In English:  If you are on a Mac, you're good to go.  You can find a ready-to-use build of the project at `builds/shifty.min.js`.  This build includes the core and all extensions.  Feel free to customize the build for your own needs.
