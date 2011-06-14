@@ -30,26 +30,27 @@
 	
 	<script type="text/javascript" charset="utf-8">
 		
-		var myTweenable = (new Tweenable()).init(),
-				tween = myTweenable.tween({
-					from: {
-						'test': 0
-					},
-					to: {
-						'test': 10
-					},
-					'duration': 3000,
-					'step': function () {
-						console.log(this.test);
-					},
-					'callback': function () {
-						console.log('Done!  Final value: ' + this.test);
-					}
-				});
+		var myTweenable = (new Tweenable()).init();
+
+			myTweenable.tween({
+				from: {
+					'test': 0
+				},
+				to: {
+					'test': 10
+				},
+				'duration': 3000,
+				'step': function () {
+					console.log(this.test);
+				},
+				'callback': function () {
+					console.log('Done!  Final value: ' + this.test);
+				}
+			});
 		
 		setTimeout(function () {
 			console.log('Stopping early...');
-			tween.stop(true);
+			myTweenable.stop(true);
 		}, 500);
 	</script>
 

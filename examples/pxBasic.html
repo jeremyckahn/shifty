@@ -48,7 +48,7 @@
 
 		window.myTweenable = myTweenable;
 	
-		window.tween = myTweenable.tween({
+		myTweenable.tween({
 			from: {
 				'left': '0px',
 				'color': '#0f0'
@@ -59,12 +59,8 @@
 			},
 			'duration': 2500,
 			'step': function () {
-				//console.log(this.left);
 				div.style.left = this.left;
 				div.style.background = this.color;
-			},
-			'callback': function () {
-				//console.log('Done!  Final value: ' + this.left);
 			},
 			'easing': 'easeOutQuint'
 		});

@@ -30,31 +30,30 @@
 	
 	<script type="text/javascript" charset="utf-8">
 	
-		var myTweenable = (new Tweenable()).init(),
-			tween = myTweenable.tween({
-				from: {
-					'test': 0
-				},
-				to: {
-					'test': 10
-				},
-				'duration': 3000,
-				'step': function () {
-					console.log(this.test);
-				},
-				'callback': function () {
-					console.log('Done!  Final value: ' + this.test);
-				}
-			});
-		
-		window.tween = tween;
+		var myTweenable = (new Tweenable()).init();
+
+		myTweenable.tween({
+			from: {
+				'test': 0
+			},
+			to: {
+				'test': 10
+			},
+			'duration': 3000,
+			'step': function () {
+				console.log(this.test);
+			},
+			'callback': function () {
+				console.log('Done!  Final value: ' + this.test);
+			}
+		});
 		
 		setTimeout(function () {
-			tween.pause();
+			myTweenable.pause();
 			console.log("The tween is paused...");
 			setTimeout(function () {
 				console.log("Resume!");
-				tween.resume();
+				myTweenable.resume();
 			}, 1250);
 		}, 500);
 	</script>
