@@ -44,7 +44,11 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 				context.tween(from, to, duration, callback, easing);
 			} else {
 				from.callback = callback;
-				context.tween(from);
+				if (from.from) {
+					context.tween(from);
+				} else {
+					context.to(from);
+				}
 			}
 		};
 	}

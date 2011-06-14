@@ -230,7 +230,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 				this._tweenParams.step = from.step || function () {};
 				this._tweenParams.callback = from.callback || function () {};
 				this._state.current = from.from || {};
-				this._tweenParams.to = from.to || {};
+				this._tweenParams.to = from.to || from.target || {};
 				this._tweenParams.duration = from.duration || this.duration;
 				this._tweenParams.easing = from.easing || this.easing;
 			}
