@@ -248,6 +248,18 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 			return this;
 		};
 		
+		// Experimental!
+		this.to = function to (target, duration, callback, easing) {
+			if (typeof duration === 'undefined') {
+				target.from = this._state.current;
+				this.tween(target);
+			} else {
+				this.tween(this._state.current, target, duration, callback, easing);
+			}
+			
+			return this;
+		};
+		
 		this.get = function get () {
 			return this._state.current;
 		};
@@ -271,7 +283,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 			return this;
 		};
 		
-		this.resume = function play () {
+		this.resume = function resume () {
 			var self = this;
 			
 			if (this._state.isPaused) {
