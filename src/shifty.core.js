@@ -136,63 +136,8 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 			}, params.fps);
 		} else {
 			// The duration of the tween has expired
-			params.tweenController.stop(true);
+			params.owner.stop(true);
 		}
-	}
-	
-	function Tween (params, state) {
-		/**
-		 * Stops and cancels the tween.
-		 * @param {Boolean} gotoEnd If `false`, or omitted, the tween just stops at its current state, and the `callback` is not invoked.  If `true`, the tweened object's values are instantly set the the target "to" values, and the `callback` is invoked.
-		 * @returns {Object} The `Tween` instance for chaining.
-		 */
-		this.stop = function stop (gotoEnd) {
-			clearTimeout(state.loopId);
-			if (gotoEnd) {
-				simpleCopy(state.current, params.to);
-				state.isAnimating = false;
-				params.callback.call(state.current);
-			}
-			
-			return this;
-		};
-		
-		/**
-		 * Pauses a tween.  A `pause`d tween can be resumed with `resume()`.
-		 * @returns {Object} The `Tween` instance for chaining.
-		 */
-		this.pause = function pause () {
-			clearTimeout(state.loopId);
-			state.pausedAtTime = now();
-			state.isPaused = true;
-			return this;
-		};
-		
-		/**
-		 * Resumes a paused tween.  A tween must be `pause`d before is can be `resume`d.
-		 * @returns {Object} The `Tween` instance for chaining.
-		 */
-		this.resume = function play () {
-			if (state.isPaused) {
-				params.timestamp += state.pausedAtTime - params.timestamp;
-			}
-			
-			scheduleUpdate(function () {
-				timeoutHandler(params, state);
-			}, params.owner.fps);
-			
-			return this;
-		};
-		
-		/**
-		 * Returns a reference to the tweened Object's current state (the `from` Object that wat passed to `tweenableInst.tween()`).
-		 * @returns {Object}
-		 */
-		this.get = function get () {
-			return state.current;
-		};
-		
-		return this;
 	}
 	
 	// Note:  This is not a public function.  It is used internally by `Tweenable`, which is public, below.
@@ -208,6 +153,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		 * returns {Object} `Tweenable` instance for chaining.
 		 */
 		this.init = function init (options) {
+			
 			options = options || {};
 			
 			this._hook = {};
@@ -260,13 +206,13 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		 * @param {Function} step A function to call for each step of the tween.  A "step" is defined as one update cycle (frame) of the tween.  Many update cycles occur to create the illusion of motion, so this function will likely be called quite a bit.
 		 */
 		this.tween = function tween (from, to, duration, callback, easing) {
-			var self;
-			
+
+			var self = this;
+
 			if (this._state.isAnimating) {
 				return;
 			}
-				
-			self = this;
+			
 			this._state.loopId = 0;
 			this._state.pausedAtTime = null;
 			
@@ -293,14 +239,51 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 			this._tweenParams.easingFunc = this.formula[this._tweenParams.easing] || this.formula.linear;
 			applyFilter('tweenCreated', this._tweenParams.owner, [this._state.current, this._tweenParams.originalState, this._tweenParams.to]);
 			this._tweenParams.originalState = simpleCopy({}, this._state.current);
-			this._tweenParams.tweenController = new Tween(this._tweenParams, this._state);
 			this._state.isAnimating = true;
 
 			scheduleUpdate(function () {
 				timeoutHandler(self._tweenParams, self._state);
 			}, this.fps);
 			
-			return this._tweenParams.tweenController;
+			//return this._tweenParams.tweenController;
+			return this;
+		};
+		
+		this.get = function get () {
+			return this._state.current;
+		};
+		
+		this.stop = function stop (gotoEnd) {
+			clearTimeout(this._state.loopId);
+			this._state.isAnimating = false;
+			
+			if (gotoEnd) {
+				simpleCopy(this._state.current, this._tweenParams.to);
+				this._tweenParams.callback.call(this._state.current);
+			}
+			
+			return this;
+		};
+		
+		this.pause = function pause () {
+			clearTimeout(this._state.loopId);
+			this._state.pausedAtTime = now();
+			this._state.isPaused = true;
+			return this;
+		};
+		
+		this.resume = function play () {
+			var self = this;
+			
+			if (this._state.isPaused) {
+				this._tweenParams.timestamp += this._state.pausedAtTime - this._tweenParams.timestamp;
+			}
+			
+			scheduleUpdate(function () {
+				timeoutHandler(self._tweenParams, self._state);
+			}, this.fps);
+			
+			return this;
 		};
 		
 		/**
