@@ -245,7 +245,6 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 				timeoutHandler(self._tweenParams, self._state);
 			}, this.fps);
 			
-			//return this._tweenParams.tweenController;
 			return this;
 		};
 		

@@ -53,19 +53,19 @@ You can also supply some fun options to `init()`.  They are:
 __Tweening:__
 
 ````javascript
-var aTween = myTweenable.tween( from, to );
+myTweenable.tween( from, to );
 ````
 
 You can optionally add some fun extra parameters:
 
 ````javascript
-var aTween = myTweenable.tween( from, to, duration, callback, easing );
+myTweenable.tween( from, to, duration, callback, easing );
 ````
 
 Or you can use the configuration object syntax (recommended!):
 
 ````javascript
-var aTween = myTweenable.tween({
+myTweenable.tween({
   from:       {  },            // Object.  Contains the properties to tween.  Must all be `Number`s.  Note: This object's properties are modified by the tween.
   to:         {  },            // Object.  The "destination" `Number`s that the properties in `from` will tween to.
   duration:   1000,            // Number.  How long the tween lasts for, in milliseconds.
@@ -75,7 +75,7 @@ var aTween = myTweenable.tween({
 });
 ````
 
-This method starts a tween.  You can use either format, but the second, longer format give you more hooks and controls.  The method returns an object that you can use to control a tween, as described in the next section.
+This method starts a tween.  You can use either format, but the second, longer format give you more hooks and controls.  `Tweenable` also has some methods that you can use to control a tween, as described in the next section.
 
 __Important!__  The object that is passed as the `from` parameter, regardless of which syntax you use to invoke `tween()`, is modified.
 
@@ -84,7 +84,7 @@ __Important!__  The object that is passed as the `from` parameter, regardless of
 Continuing from above...
 
 ````javascript
-aTween.stop( gotoEnd );
+myTweenable.stop( gotoEnd );
 ````
 
 Stops a tween.
@@ -92,19 +92,19 @@ Stops a tween.
   * `gotoEnd`: Boolean.  Controls whether to jump to the end "to" state or just stop where the tweened values currently are.
 
 ````javascript
-aTween.pause();
+myTweenable.pause();
 ````
 
 Pauses a tween.  This is different from `stop()`, as you are to resume from a `pause()`ed state.
 
 ````javascript
-aTween.resume();
+myTweenable.resume();
 ````
 
 Resumes a `pause()`ed tween.
 
 ````javascript
-aTween.get();
+myTweenable.get();
 ````
 
 Returns a tween's current values.
@@ -238,12 +238,12 @@ Tweenable.prototype.filter.doubler = {
 }
 ````
 
-Yes, having `doubler` filter is useless.  A more practical use of filters is to add support for more data types.  __Remember, `Tweenable()` only supports `Numbers` out of the box__, but you can add support for strings, functions, or whatever else you might need.  The `px` and `color` extensions work by filtering string values into numbers before each tween step, and then back again after the tween step.
+Yes, having `doubler` filter is useless.  A more practical use of filters is to add support for more data types.  __Remember, `Tweenable` only supports `Numbers` out of the box__, but you can add support for strings, functions, or whatever else you might need.  The `px` and `color` extensions work by filtering string values into numbers before each tween step, and then back again after the tween step.
 
 Building Shifty
 ---
 
-In the root directory, there is a file called build.sh.  Just do this to build the project on the command line:
+In the root directory, there is a file called `build.sh`.  Just do this to build the project on the command line:
 
 ````shell
 $: sh build.sh
