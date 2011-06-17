@@ -260,10 +260,19 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 			return this;
 		};
 		
+		/**
+		 * Returns a reference to the tweened Object's current state (the `from` Object that wat passed to `tweenableInst.tween()`).
+		 * @returns {Object}
+		 */
 		this.get = function get () {
 			return this._state.current;
 		};
-		
+
+		/**
+		 * Stops and cancels a tween.
+		 * @param {Boolean} gotoEnd If `false`, or omitted, the tween just stops at its current state, and the `callback` is not invoked.  If `true`, the tweened object's values are instantly set the the target "to" values, and the `callback` is invoked.
+		 * @returns {Object} The `Tweenable` instance for chaining.
+		 */
 		this.stop = function stop (gotoEnd) {
 			clearTimeout(this._state.loopId);
 			this._state.isAnimating = false;
@@ -276,6 +285,10 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 			return this;
 		};
 		
+		/**
+		 * Pauses a tween.  A `pause`d tween can be resumed with `resume()`.
+		 * @returns {Object} The `Tween` instance for chaining.
+		 */
 		this.pause = function pause () {
 			clearTimeout(this._state.loopId);
 			this._state.pausedAtTime = now();
@@ -283,6 +296,10 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 			return this;
 		};
 		
+		/**
+		 * Resumes a paused tween.  A tween must be `pause`d before is can be `resume`d.
+		 * @returns {Object} The `Tweenable` instance for chaining.
+		 */
 		this.resume = function resume () {
 			var self = this;
 			
