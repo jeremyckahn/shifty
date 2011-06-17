@@ -50,6 +50,16 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		return targetObj;
 	}
 	
+	function weakCopy (targetObj, srcObj) {
+		each(srcObj, function (srcObj, prop) {
+			if (typeof targetObj[prop] === 'undefined') {
+				targetObj[prop] = srcObj[prop];
+			}
+		});
+		
+		return targetObj;
+	}
+	
 	/**
 	 * Calculates the interpolated tween values of an Object based on the current time.
 	 * @param {Number} currentTime The current time to evaluate the tween against.
@@ -237,6 +247,11 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 			
 			this._tweenParams.timestamp = now();
 			this._tweenParams.easingFunc = this.formula[this._tweenParams.easing] || this.formula.linear;
+			
+			// Ensure that there is always something to tween to.
+			weakCopy(this._state.current, this._tweenParams.to);
+			weakCopy(this._tweenParams.to, this._state.current);
+			
 			applyFilter('tweenCreated', this._tweenParams.owner, [this._state.current, this._tweenParams.originalState, this._tweenParams.to]);
 			this._tweenParams.originalState = simpleCopy({}, this._state.current);
 			this._state.isAnimating = true;
