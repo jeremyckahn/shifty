@@ -189,11 +189,11 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		 *
 		 *   tweenableInst.tween ( {
 		 *     from:       Object,
-	     *     to:         Object,
-	     *     duration:   [Number],
-	     *     callback:   [Function],
-	     *     easing:     [String],
-	     *     step:       [Function]
+		 *     to:         Object,
+		 *     duration:   [Number],
+		 *     callback:   [Function],
+		 *     easing:     [String],
+		 *     step:       [Function]
 		 *   });
 		 *
 		 * Regardless of how you invoke this method, the only required parameters are `from` and `to`.
