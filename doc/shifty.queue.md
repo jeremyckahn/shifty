@@ -1,7 +1,7 @@
 Shifty Queue Extension
 ===
 
-To use queues, include `shifty.queue.js` on your page after `shifty.core.js`.
+To use queues, include `shifty.queue.js` on your page after `shifty.core.js`.  `shifty.queue.js` is also included in `shifty.min.js` for your convenience.
 
 You can define a list of tweens to be executed sequentially as each one completes.  This is useful if you have a number of tweens to perform on an Object, each one starting immediately as the previous one completes.
 
