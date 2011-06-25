@@ -45,7 +45,7 @@ var interpolatedValues = Tweenable.util.interpolate({
     color: '#000'
 }, 0.5);
 
-console.log(interpolatedValues);
+console.dir(interpolatedValues);
 ````
 
 This would log out the following Object:
@@ -57,3 +57,40 @@ This would log out the following Object:
 ````
 
 Note:  This example assumes that the `px` and `color` extensions are available.
+
+##tweenableInst.interpolate##
+
+All `Tweenable` instances have an `interpolate` method as well.  This is chiefly a convenience method that wraps the static `Tweenable.util.interpolate` method.  The advantage here is that you don't need to supply the `from` parameter, because `tweenableInst.interpolate` just uses the instance's current state as the `from` parameter.  This is best illustrated with an example:
+
+````javascript
+var myTweenable = (new Tweenable()).init(),
+    endObj;
+
+// Where to start from.  This also sets the current state of the instance.
+myTweenable.set({
+  'top': '100px',
+  'left': 0,
+  'color': '#000'
+});
+
+// Where to end up
+endObj = {
+  'top': '200px',
+  'left': 50,
+  'color': '#fff'
+};
+
+// Call `interpolate` on an instance of `Tweenable`.
+myTweenable.interpolate(endObj, 0.5, 'linear');
+console.dir(myTweenable.get());
+````
+
+This will log out the following:
+
+````javascript
+{ color: "rgb(127,127,127)"
+	left: 25,
+	top: "150px" }
+````
+
+This also becomes the current state of `myTweenable`.
