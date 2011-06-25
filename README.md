@@ -107,7 +107,15 @@ Resumes a `pause()`ed tween.
 myTweenable.get();
 ````
 
-Returns a tween's current values.
+Returns a `Tweenable`'s current internal state values.
+
+````javascript
+myTweenable.set(state);
+````
+
+Sets (and overwrites) the `Tweenable` instance's current internal state properties.
+
+  * `state`: An Object containing the properties that the state should have.  Any properties not present in this Object will be erased form the current state.
 
 ##Extending Tweenable()##
 
