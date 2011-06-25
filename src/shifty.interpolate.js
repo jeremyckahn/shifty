@@ -1,7 +1,7 @@
 /*global setTimeout:true, clearTimeout:true */
 
 /**
-Shifty Interplate Extension
+Shifty Interpolate Extension
 By Jeremy Kahn - jeremyckahn@gmail.com
   v0.1.0
 
@@ -20,8 +20,8 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	if (!global.Tweenable) {
 		return;
 	}
-
-	global.Tweenable.prototype.interpolate = function (from, to, position, easing) {
+	
+	function getInterplatedValues (from, to, position, easing) {
 		return Tweenable.util.tweenProps(position, {
 			'originalState': from
 			,'to': to
@@ -31,6 +31,19 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		}, {
 			'current': Tweenable.util.simpleCopy({}, startObj)
 		});
+	}
+
+	// This is the static utility version of the function.
+	global.Tweenable.util.interpolate = function (from, to, position, easing) {
+		// Function was passed a configuration object, extract the values
+		if (from && from.from) {
+			to = from.to
+			position = from.position;
+			easing = from.easing;
+			from = from.from;
+		}
+		
+		return getInterplatedValues (from, to, position, easing);
 	};
 
 }(this));

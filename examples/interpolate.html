@@ -48,8 +48,15 @@
 			,left: 50
 		};
 		
-		interpolatedVals = myTweenable.interpolate(startObj, endObj, .5, 'linear');
+		interpolatedVals = Tweenable.util.interpolate({
+			'from': startObj
+			,'to': endObj
+			,'position': .5
+			,'easing': 'linear'
+		});
+			
 		console.dir(interpolatedVals);
+		console.dir(Tweenable.util.interpolate(startObj, endObj, .5, 'linear'));
 		
 	</script>
 
