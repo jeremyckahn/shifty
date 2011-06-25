@@ -98,7 +98,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 			limit = rgbPropNames.length;
 			
 			for (i = 0; i < limit; i++) {
-				rgbParts = rgbToArr(obj[rgbPropNames[i]]);
+				rgbParts = rgbToArr( isHexString( obj[rgbPropNames[i]] ) ? getRGBStringFromHex( obj[rgbPropNames[i]] ) : obj[rgbPropNames[i]] );
 				obj['__r__' + rgbPropNames[i]] = +rgbParts[0];
 				obj['__g__' + rgbPropNames[i]] = +rgbParts[1];
 				obj['__b__' + rgbPropNames[i]] = +rgbParts[2];
