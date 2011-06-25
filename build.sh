@@ -6,6 +6,7 @@ cat src/shifty.core.js \
 	src/shifty.queue.js \
 	src/shifty.color.js \
 	src/shifty.px.js \
+	src/shifty.interpolate.js \
 	> builds/shifty.full.js
 
 
