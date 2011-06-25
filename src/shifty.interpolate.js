@@ -21,20 +21,23 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		return;
 	}
 	
-	function getInterplatedValues (from, to, position, easing) {
-		return Tweenable.util.tweenProps(position, {
+	function getInterplatedValues (from, current, to, position, easing) {
+		return global.Tweenable.util.tweenProps(position, {
 			'originalState': from
 			,'to': to
 			,'timestamp': 0
 			,'duration': 1
 			,'easingFunc': Tweenable.prototype.formula[easing] || Tweenable.prototype.formula.linear
 		}, {
-			'current': Tweenable.util.simpleCopy({}, startObj)
+			'current': current
 		});
 	}
 
 	// This is the static utility version of the function.
 	global.Tweenable.util.interpolate = function (from, to, position, easing) {
+		var current,
+			interpolatedValues;
+		
 		// Function was passed a configuration object, extract the values
 		if (from && from.from) {
 			to = from.to
@@ -43,7 +46,13 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 			from = from.from;
 		}
 		
-		return getInterplatedValues (from, to, position, easing);
+		current = Tweenable.util.simpleCopy({}, from);
+		
+		global.Tweenable.util.applyFilter('beforeTween', current, [current, from, to]);
+		interpolatedValues = getInterplatedValues (from, current, to, position, easing);
+		global.Tweenable.util.applyFilter('afterTween', interpolatedValues, [interpolatedValues, from, to]);
+		
+		return interpolatedValues;
 	};
-
+	
 }(this));

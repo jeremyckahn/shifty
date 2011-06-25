@@ -387,6 +387,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		'now': now
 		,'each': each
 		,'tweenProps': tweenProps
+		,'applyFilter': applyFilter
 		,'simpleCopy': simpleCopy
 	};
 	
