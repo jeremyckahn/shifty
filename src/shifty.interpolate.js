@@ -27,7 +27,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 			,'to': to
 			,'timestamp': 0
 			,'duration': 1
-			,'easingFunc': Tweenable.prototype.formula[easing] || Tweenable.prototype.formula.linear
+			,'easingFunc': global.Tweenable.prototype.formula[easing] || global.Tweenable.prototype.formula.linear
 		}, {
 			'current': current
 		});
@@ -40,13 +40,13 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		
 		// Function was passed a configuration object, extract the values
 		if (from && from.from) {
-			to = from.to
+			to = from.to;
 			position = from.position;
 			easing = from.easing;
 			from = from.from;
 		}
 		
-		current = Tweenable.util.simpleCopy({}, from);
+		current = global.Tweenable.util.simpleCopy({}, from);
 		global.Tweenable.util.applyFilter('beforeTween', current, [current, from, to]);
 		interpolatedValues = getInterplatedValues (from, current, to, position, easing);
 		global.Tweenable.util.applyFilter('afterTween', interpolatedValues, [interpolatedValues, from, to]);
@@ -56,9 +56,9 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	
 	// This is the inheritable instance-method version of the function.
 	global.Tweenable.prototype.interpolate = function (to, position, easing) {
-		var current;
+		var interpolatedValues;
 		
-		interpolatedValues = global.Tweenable.util.interpolate(this.get(), to, position, easing)
+		interpolatedValues = global.Tweenable.util.interpolate(this.get(), to, position, easing);
 		this.set(interpolatedValues);
 		
 		return interpolatedValues;
