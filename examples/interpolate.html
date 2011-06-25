@@ -28,6 +28,7 @@
 
 	<script type="text/javascript" charset="utf-8" src="../src/shifty.core.js"></script>
 	<script type="text/javascript" charset="utf-8" src="../src/shifty.px.js"></script>
+	<script type="text/javascript" charset="utf-8" src="../src/shifty.color.js"></script>
 	<script type="text/javascript" charset="utf-8" src="../src/shifty.interpolate.js"></script>
 	<script type="text/javascript" charset="utf-8" src="../src/shifty.formulas.js"></script>
 	
@@ -40,13 +41,15 @@
 			interpolatedVals;
 			
 		startObj = {
-			top: '100px'
-			,left: 0
+			'top': '100px'
+			,'left': 0
+			,'color': '#000'
 		};
 		
 		endObj = {
-			top: '200px'
-			,left: 50
+			'top': '200px'
+			,'left': 50
+			,'color': '#fff'
 		};
 		
 		interpolatedVals = Tweenable.util.interpolate({
@@ -56,15 +59,18 @@
 			,'easing': 'linear'
 		});
 			
+		console.log('All of the following logged outputs should be identical.  This is a test of the different ways to call `interpolate`.');
 		console.dir(interpolatedVals);
 		console.dir(Tweenable.util.interpolate(startObj, endObj, .5, 'linear'));
 		
 		// Reset the state to the initial value.
 		myTweenable.set({
-			top: '100px'
-			,left: 0
+			'top': '100px'
+			,'left': 0
+			,'color': '#000'
 		});
 		
+		// Call `interpolate` on an instance of `Tweenable`.
 		myTweenable.interpolate(endObj, 0.5, 'linear');
 		console.dir(myTweenable.get());
 		

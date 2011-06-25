@@ -47,6 +47,9 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		}
 		
 		current = global.Tweenable.util.simpleCopy({}, from);
+		
+		// Call any data type filters
+		global.Tweenable.util.applyFilter('tweenCreated', current, [current, from, to]);
 		global.Tweenable.util.applyFilter('beforeTween', current, [current, from, to]);
 		interpolatedValues = getInterpolatedValues (from, current, to, position, easing);
 		global.Tweenable.util.applyFilter('afterTween', interpolatedValues, [interpolatedValues, from, to]);
@@ -63,5 +66,4 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		
 		return interpolatedValues;
 	};
-	
 }(this));

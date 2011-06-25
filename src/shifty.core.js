@@ -291,7 +291,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		 */
 		this.set = function (state) {
 			this._state.current = state || {};
-		}
+		};
 
 		/**
 		 * Stops and cancels a tween.
