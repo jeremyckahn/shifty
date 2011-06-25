@@ -384,6 +384,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	Tweenable.util = {
 		'now': now
 		,'each': each
+		,'tweenProps': tweenProps
 		,'simpleCopy': simpleCopy
 	};
 	

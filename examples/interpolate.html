@@ -1,0 +1,67 @@
+<!doctype html>
+<!--[if lt IE 9]>			 <html class="no-js oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+
+	<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+			 Remove this if you use the .htaccess -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title></title>
+
+</head>
+
+<body id="root">
+
+	<div id="container">
+		<header>
+
+		</header>
+		<div id="main" role="main">
+
+		</div>
+		<footer>
+
+		</footer>
+	</div> <!--! end of #container -->
+
+	<script type="text/javascript" charset="utf-8" src="../src/shifty.core.js"></script>
+	<script type="text/javascript" charset="utf-8" src="../src/shifty.formulas.js"></script>
+	
+	<script type="text/javascript" charset="utf-8">
+	
+		var myTweenable = (new Tweenable()).init(),
+			startObj,
+			endObj,
+			fakeCurrentVals,
+			interpolatedVals;
+			
+		startObj = {
+			top: 100
+			,left: 0
+		};
+		
+		endObj = {
+			top: 200
+			,left: 50
+		};
+		
+		fakeCurrentVals = Tweenable.util.simpleCopy({}, startObj);
+		interpolatedVals = Tweenable.util.tweenProps(.5, {
+			'originalState': startObj
+			,'to': endObj
+			,'timestamp': 0
+			,'duration': 1
+			,'easingFunc': Tweenable.prototype.formula.linear
+		}, {
+			'current': fakeCurrentVals
+		});
+		
+		interpolatedVals = Tweenable.util.simpleCopy({}, fakeCurrentVals);
+		console.dir(interpolatedVals);
+		
+	</script>
+
+</body>
+</html>
