@@ -59,6 +59,15 @@
 		console.dir(interpolatedVals);
 		console.dir(Tweenable.util.interpolate(startObj, endObj, .5, 'linear'));
 		
+		// Reset the state to the initial value.
+		myTweenable.set({
+			top: '100px'
+			,left: 0
+		});
+		
+		myTweenable.interpolate(endObj, 0.5, 'linear');
+		console.dir(myTweenable.get());
+		
 	</script>
 
 </body>

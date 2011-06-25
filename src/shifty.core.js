@@ -286,6 +286,14 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		};
 
 		/**
+		 Force the `Tweenable` instance's current state.
+		 @param {Object} state The state the instance shall have.
+		 */
+		this.set = function (state) {
+			this._state.current = state || {};
+		}
+
+		/**
 		 * Stops and cancels a tween.
 		 * @param {Boolean} gotoEnd If `false`, or omitted, the tween just stops at its current state, and the `callback` is not invoked.  If `true`, the tweened object's values are instantly set the the target "to" values, and the `callback` is invoked.
 		 * @returns {Object} The `Tweenable` instance for chaining.
