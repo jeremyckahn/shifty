@@ -21,7 +21,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		return;
 	}
 	
-	function getInterplatedValues (from, current, to, position, easing) {
+	function getInterpolatedValues (from, current, to, position, easing) {
 		return global.Tweenable.util.tweenProps(position, {
 			'originalState': from
 			,'to': to
@@ -48,7 +48,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		
 		current = global.Tweenable.util.simpleCopy({}, from);
 		global.Tweenable.util.applyFilter('beforeTween', current, [current, from, to]);
-		interpolatedValues = getInterplatedValues (from, current, to, position, easing);
+		interpolatedValues = getInterpolatedValues (from, current, to, position, easing);
 		global.Tweenable.util.applyFilter('afterTween', interpolatedValues, [interpolatedValues, from, to]);
 		
 		return interpolatedValues;
