@@ -56,16 +56,9 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	
 	// This is the inheritable instance-method version of the function.
 	global.Tweenable.prototype.interpolate = function (to, position, easing) {
-		var current,
-			interpolatedValues;
+		var current;
 		
-		current = this.get();
-		interpolatedValues = Tweenable.util.simpleCopy({}, current);
-		global.Tweenable.util.applyFilter('beforeTween', current, [interpolatedValues, current, to]);
-		interpolatedValues = getInterplatedValues (interpolatedValues, current, to, position, easing);
-		
-		// Fake the second value in the array this time, it screws up the returned value otherwise
-		global.Tweenable.util.applyFilter('afterTween', interpolatedValues, [interpolatedValues, {}, to]);
+		interpolatedValues = global.Tweenable.util.interpolate(this.get(), to, position, easing)
 		this.set(interpolatedValues);
 		
 		return interpolatedValues;
