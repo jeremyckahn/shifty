@@ -27,6 +27,7 @@
 	</div> <!--! end of #container -->
 
 	<script type="text/javascript" charset="utf-8" src="../src/shifty.core.js"></script>
+	<script type="text/javascript" charset="utf-8" src="../src/shifty.interpolate.js"></script>
 	<script type="text/javascript" charset="utf-8" src="../src/shifty.formulas.js"></script>
 	
 	<script type="text/javascript" charset="utf-8">
@@ -47,18 +48,7 @@
 			,left: 50
 		};
 		
-		fakeCurrentVals = Tweenable.util.simpleCopy({}, startObj);
-		interpolatedVals = Tweenable.util.tweenProps(.5, {
-			'originalState': startObj
-			,'to': endObj
-			,'timestamp': 0
-			,'duration': 1
-			,'easingFunc': Tweenable.prototype.formula.linear
-		}, {
-			'current': fakeCurrentVals
-		});
-		
-		interpolatedVals = Tweenable.util.simpleCopy({}, fakeCurrentVals);
+		interpolatedVals = myTweenable.interpolate(startObj, endObj, .5, 'linear');
 		console.dir(interpolatedVals);
 		
 	</script>

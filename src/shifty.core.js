@@ -62,7 +62,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	
 	/**
 	 * Calculates the interpolated tween values of an Object based on the current time.
-	 * @param {Number} currentTime The current time to evaluate the tween against.
+	 * @param {Number} currentPosition The current position to evaluate the tween against.
 	 * @param {Object} params A configuration Object containing the values that this function requires.  The required properties in this Object are:
 	 *   @property {Object} originalState The original properties the Object is tweening from.
 	 *   @property {Object} to The destination properties the Object is tweening to.
@@ -72,14 +72,16 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	 * @param {Object} state A configuration object containing current state data of the tween.  Required properties:
 	 *   @property {Object} current The Object containing the current `Number` values of the tween.
 	 */
-	function tweenProps (currentTime, params, state) {
+	function tweenProps (currentPosition, params, state) {
 		var prop;
 		
 		for (prop in state.current) {
 			if (state.current.hasOwnProperty(prop) && params.to.hasOwnProperty(prop)) {
-				state.current[prop] = params.easingFunc(currentTime - params.timestamp, params.originalState[prop], params.to[prop] - params.originalState[prop], params.duration);
+				state.current[prop] = params.easingFunc(currentPosition - params.timestamp, params.originalState[prop], params.to[prop] - params.originalState[prop], params.duration);
 			}
 		}
+		
+		return state.current;
 	}
 	
 	function scheduleUpdate (handler, fps) {
