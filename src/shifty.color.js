@@ -13,7 +13,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 (function shiftyColor (global) {
 	var R_SHORTHAND_HEX = /^#([0-9]|[a-f]){3}$/i,
 		R_LONGHAND_HEX = /^#([0-9]|[a-f]){6}$/i,
-		R_RGB = /^rgb\(\d+\s*,\d+\s*,\d+\s*\)\s*$/i,
+		R_RGB = /^rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)\s*$/i,
 		savedRGBPropNames;
 	
 	if (!global.Tweenable) {
