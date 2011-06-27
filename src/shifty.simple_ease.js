@@ -17,12 +17,14 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 (function shiftySimpleEase (global) {
 	
+	var formulas = global.Tweenable.prototype.formula;
+	
 	global.Tweenable.util.simpleEase = function (easing, position) {
 		var easingMethod;
 		
-		easingMethod = Tweenable.prototype.formula[easing] || Tweenable.prototype.formula.linear;
+		easingMethod = formulas[easing] || formulas.linear;
 		
 		// Fake some values and return the result.
-		return easingMethod(position, 0, 1, 1)
+		return easingMethod(position, 0, 1, 1);
 	};
 }(this));
