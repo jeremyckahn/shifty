@@ -17,7 +17,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 (function (global) {
 	global.Tweenable.util.simpleCopy(global.Tweenable.prototype.formula, {
-			easeInQuad: function(pos){
+		easeInQuad: function(pos){
 			 return Math.pow(pos, 2);
 		},
 

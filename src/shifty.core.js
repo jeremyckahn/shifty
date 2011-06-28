@@ -73,11 +73,14 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	 *   @property {Object} current The Object containing the current `Number` values of the tween.
 	 */
 	function tweenProps (currentPosition, params, state) {
-		var prop;
+		var prop,
+			normalizedPosition;
+		
+		normalizedPosition = (currentPosition - params.timestamp) / params.duration;
 		
 		for (prop in state.current) {
 			if (state.current.hasOwnProperty(prop) && params.to.hasOwnProperty(prop)) {
-				state.current[prop] = params.easingFunc(currentPosition - params.timestamp, params.originalState[prop], params.to[prop] - params.originalState[prop], params.duration);
+				state.current[prop] = params.originalState[prop] + ((params.to[prop] - params.originalState[prop]) * params.easingFunc(normalizedPosition));
 			}
 		}
 		
@@ -410,9 +413,8 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	 * @param d Duration of the tween
 	 */
 	Tweenable.prototype.formula = {
-		linear: function (t, b, c, d) {
-			// no easing, no acceleration
-			return c * t / d + b;
+		linear: function (pos) {
+			return pos;
 		}
 	};
 	
