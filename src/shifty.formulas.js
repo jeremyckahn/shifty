@@ -4,8 +4,9 @@ Adapted for Shifty by Jeremy Kahn - jeremyckahn@gmail.com
   v0.1.0
 
 ================================
-All equations are copied from here: http://www.gizma.com/easing/
-Originally written by Robert Penner, copied under BSD License (http://www.robertpenner.com/)
+All equations are adapted from here: https://raw.github.com/madrobby/scripty2/master/src/effects/transitions/penner.js
+Based on Easing Equations (c) 2003 Robert Penner, all rights reserved. (http://www.robertpenner.com/)
+This work is subject to the terms in http://www.robertpenner.com/easing_terms_of_use.html
 ================================
 
 For instructions on how to use Shifty, please consult the README: https://github.com/jeremyckahn/tweeny/blob/master/README.md
@@ -14,156 +15,183 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 */
 
+(function (global) {
+	global.Tweenable.util.simpleCopy(global.Tweenable.prototype.formula, {
+		easeInQuad: function(pos){
+			 return Math.pow(pos, 2);
+		},
 
-// Params are as follows:
-// t = current time
-// b = start value
-// c = change in value
-// d = duration
-Tweenable.prototype.formula.easeInQuad = function (t, b, c, d) {
-	t /= d;
-	return c * t * t + b;
-};
+		easeOutQuad: function(pos){
+			return -(Math.pow((pos-1), 2) -1);
+		},
 
-// decelerating to zero velocity
-Tweenable.prototype.formula.easeOutQuad = function (t, b, c, d) {
-	t /= d;
-	return -c * t * (t - 2) + b;
-};
+		easeInOutQuad: function(pos){
+			if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,2);
+			return -0.5 * ((pos-=2)*pos - 2);
+		},
 
-// acceleration until halfway, then deceleration
-Tweenable.prototype.formula.easeInOutQuad = function (t, b, c, d) {
-	t /= d / 2;
-	if (t < 1) {
-		return c / 2 * t * t + b;
-	}
-	t--;
-	return -c / 2 * (t * (t - 2) - 1) + b;
-};
+		easeInCubic: function(pos){
+			return Math.pow(pos, 3);
+		},
 
-// accelerating from zero velocity
-Tweenable.prototype.formula.easeInCubic = function (t, b, c, d) {
-	t /= d;
-	return c * t * t * t + b;
-};
+		easeOutCubic: function(pos){
+			return (Math.pow((pos-1), 3) +1);
+		},
 
-// decelerating to zero velocity
-Tweenable.prototype.formula.easeOutCubic = function (t, b, c, d) {
-	t /= d;
-	t--;
-	return c * (t * t * t + 1) + b;
-};
+		easeInOutCubic: function(pos){
+			if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,3);
+			return 0.5 * (Math.pow((pos-2),3) + 2);
+		},
 
-// acceleration until halfway, then deceleration
-Tweenable.prototype.formula.easeInOutCubic = function (t, b, c, d) {
-	t /= d / 2;
-	if (t < 1) {
-		return c / 2 * t * t * t + b;
-	}
-	t -= 2;
-	return c / 2 * (t * t * t + 2) + b;
-};
+		easeInQuart: function(pos){
+			return Math.pow(pos, 4);
+		},
 
-// accelerating from zero velocity
-Tweenable.prototype.formula.easeInQuart = function (t, b, c, d) {
-	t /= d;
-	return c * t * t * t * t + b;
-};
+		easeOutQuart: function(pos){
+			return -(Math.pow((pos-1), 4) -1)
+		},
 
-// decelerating to zero velocity
-Tweenable.prototype.formula.easeOutQuart = function (t, b, c, d) {
-	t /= d;
-	t--;
-	return -c * (t * t * t * t - 1) + b;
-};
+		easeInOutQuart: function(pos){
+			if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,4);
+			return -0.5 * ((pos-=2)*Math.pow(pos,3) - 2);
+		},
 
-// acceleration until halfway, then deceleration
-Tweenable.prototype.formula.easeInOutQuart = function (t, b, c, d) {
-	t /= d / 2;
-	if (t < 1) {
-		return c / 2 * t * t * t * t + b;
-	}
-	t -= 2;
-	return -c / 2 * (t * t * t * t - 2) + b;
-};
+		easeInQuint: function(pos){
+			return Math.pow(pos, 5);
+		},
 
-// accelerating from zero velocity
-Tweenable.prototype.formula.easeInQuint = function (t, b, c, d) {
-	t /= d;
-	return c * t * t * t * t * t + b;
-};
+		easeOutQuint: function(pos){
+			return (Math.pow((pos-1), 5) +1);
+		},
 
-// decelerating to zero velocity
-Tweenable.prototype.formula.easeOutQuint = function (t, b, c, d) {
-	t /= d;
-	t--;
-	return c * (t * t * t * t * t + 1) + b;
-};
+		easeInOutQuint: function(pos){
+			if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,5);
+			return 0.5 * (Math.pow((pos-2),5) + 2);
+		},
 
-// acceleration until halfway, then deceleration
-Tweenable.prototype.formula.easeInOutQuint = function (t, b, c, d) {
-	t /= d / 2;
-	if (t < 1) {
-		return c / 2 * t * t * t * t * t + b;
-	}
-	t -= 2;
-	return c / 2 * (t * t * t * t * t + 2) + b;
-};
+		easeInSine: function(pos){
+			return -Math.cos(pos * (Math.PI/2)) + 1;
+		},
 
-// accelerating from zero velocity
-Tweenable.prototype.formula.easeInSine = function (t, b, c, d) {
-	return -c * Math.cos(t / d * (Math.PI / 2)) + c + b;
-};
+		easeOutSine: function(pos){
+			return Math.sin(pos * (Math.PI/2));
+		},
 
-// decelerating to zero velocity
-Tweenable.prototype.formula.easeOutSine = function (t, b, c, d) {
-	return c * Math.sin(t / d * (Math.PI / 2)) + b;
-};
+		easeInOutSine: function(pos){
+			return (-.5 * (Math.cos(Math.PI*pos) -1));
+		},
 
-// accelerating until halfway, then decelerating
-Tweenable.prototype.formula.easeInOutSine = function (t, b, c, d) {
-	return -c / 2 * (Math.cos(Math.PI * t / d) - 1) + b;
-};
+		easeInExpo: function(pos){
+			return (pos==0) ? 0 : Math.pow(2, 10 * (pos - 1));
+		},
 
-// accelerating from zero velocity
-Tweenable.prototype.formula.easeInExpo = function (t, b, c, d) {
-	return c * Math.pow(2, 10 * (t / d - 1)) + b;
-};
+		easeOutExpo: function(pos){
+			return (pos==1) ? 1 : -Math.pow(2, -10 * pos) + 1;
+		},
 
-// decelerating to zero velocity
-Tweenable.prototype.formula.easeOutExpo = function (t, b, c, d) {
-	return c * (-Math.pow(2, -10 * t / d) + 1) + b;
-};
+		easeInOutExpo: function(pos){
+			if(pos==0) return 0;
+			if(pos==1) return 1;
+			if((pos/=0.5) < 1) return 0.5 * Math.pow(2,10 * (pos-1));
+			return 0.5 * (-Math.pow(2, -10 * --pos) + 2);
+		},
 
-// accelerating until halfway, then decelerating
-Tweenable.prototype.formula.easeInOutExpo = function (t, b, c, d) {
-	t /= d / 2;
-	if (t < 1) {
-		return c / 2 * Math.pow(2, 10 * (t - 1)) + b;
-	}
-	t--;
-	return c / 2 * (-Math.pow(2, -10 * t) + 2) + b;
-};
+		easeInCirc: function(pos){
+			return -(Math.sqrt(1 - (pos*pos)) - 1);
+		},
 
-// accelerating from zero velocity
-Tweenable.prototype.formula.easeInCirc = function (t, b, c, d) {
-	t /= d;
-	return -c * (Math.sqrt(1 - t * t) - 1) + b;
-};
+		easeOutCirc: function(pos){
+			return Math.sqrt(1 - Math.pow((pos-1), 2))
+		},
 
-// decelerating to zero velocity
-Tweenable.prototype.formula.easeOutCirc = function (t, b, c, d) {
-	t /= d;
-	t--;
-	return c * Math.sqrt(1 - t * t) + b;
-};
+		easeInOutCirc: function(pos){
+			if((pos/=0.5) < 1) return -0.5 * (Math.sqrt(1 - pos*pos) - 1);
+			return 0.5 * (Math.sqrt(1 - (pos-=2)*pos) + 1);
+		},
 
-// acceleration until halfway, then deceleration
-Tweenable.prototype.formula.easeInOutCirc = function (t, b, c, d) {
-	t /= d / 2;
-	if (t < 1) {
-		return -c / 2 * (Math.sqrt(1 - t * t) - 1) + b;
-	}
-	t -= 2;
-	return c / 2 * (Math.sqrt(1 - t * t) + 1) + b;
-};
+		easeOutBounce: function(pos){
+			if ((pos) < (1/2.75)) {
+			return (7.5625*pos*pos);
+			} else if (pos < (2/2.75)) {
+			return (7.5625*(pos-=(1.5/2.75))*pos + .75);
+			} else if (pos < (2.5/2.75)) {
+			return (7.5625*(pos-=(2.25/2.75))*pos + .9375);
+			} else {
+			return (7.5625*(pos-=(2.625/2.75))*pos + .984375);
+			}
+		},
+
+		easeInBack: function(pos){
+			var s = 1.70158;
+			return (pos)*pos*((s+1)*pos - s);
+		},
+
+		easeOutBack: function(pos){
+			var s = 1.70158;
+			return (pos=pos-1)*pos*((s+1)*pos + s) + 1;
+		},
+
+		easeInOutBack: function(pos){
+			var s = 1.70158;
+			if((pos/=0.5) < 1) return 0.5*(pos*pos*(((s*=(1.525))+1)*pos -s));
+			return 0.5*((pos-=2)*pos*(((s*=(1.525))+1)*pos +s) +2);
+		},
+
+		elastic: function(pos) {
+			return -1 * Math.pow(4,-8*pos) * Math.sin((pos*6-1)*(2*Math.PI)/2) + 1;
+		},
+
+		swingFromTo: function(pos) {
+			var s = 1.70158;
+			return ((pos/=0.5) < 1) ? 0.5*(pos*pos*(((s*=(1.525))+1)*pos - s)) :
+			0.5*((pos-=2)*pos*(((s*=(1.525))+1)*pos + s) + 2);
+		},
+
+		swingFrom: function(pos) {
+			var s = 1.70158;
+			return pos*pos*((s+1)*pos - s);
+		},
+
+		swingTo: function(pos) {
+			var s = 1.70158;
+			return (pos-=1)*pos*((s+1)*pos + s) + 1;
+		},
+
+		bounce: function(pos) {
+			if (pos < (1/2.75)) {
+				return (7.5625*pos*pos);
+			} else if (pos < (2/2.75)) {
+				return (7.5625*(pos-=(1.5/2.75))*pos + .75);
+			} else if (pos < (2.5/2.75)) {
+				return (7.5625*(pos-=(2.25/2.75))*pos + .9375);
+			} else {
+				return (7.5625*(pos-=(2.625/2.75))*pos + .984375);
+			}
+		},
+
+		bouncePast: function(pos) {
+			if (pos < (1/2.75)) {
+				return (7.5625*pos*pos);
+			} else if (pos < (2/2.75)) {
+				return 2 - (7.5625*(pos-=(1.5/2.75))*pos + .75);
+			} else if (pos < (2.5/2.75)) {
+				return 2 - (7.5625*(pos-=(2.25/2.75))*pos + .9375);
+			} else {
+				return 2 - (7.5625*(pos-=(2.625/2.75))*pos + .984375);
+			}
+		},
+
+		easeFromTo: function(pos) {
+			if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,4);
+			return -0.5 * ((pos-=2)*Math.pow(pos,3) - 2);
+		},
+
+		easeFrom: function(pos) {
+			return Math.pow(pos,4);
+		},
+
+		easeTo: function(pos) {
+			return Math.pow(pos,0.25);
+		}
+	});
+} (this));
