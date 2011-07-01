@@ -4,76 +4,63 @@ By Jeremy Kahn - jeremyckahn@gmail.com
   v0.1.0
 
 For instructions on how to use Shifty, please consult the README: https://github.com/jeremyckahn/tweeny/blob/master/README.md
-For instructions on how to use this extension, please see: https://github.com/jeremyckahn/shifty/blob/master/doc/shifty.px.md
+For instructions on how to use this extension, please see: https://github.com/jeremyckahn/shifty/blob/master/doc/shifty.token.md
 
 MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 */
 
-/*
-What needs to happen:
-
-Before the tween, evaluate all tween props and determine if they match a token string pattern.  If so, convert them to numbers.  After the tween, restore the saved props to their original format.
-
-*/
-
 (function shiftyPx (global) {
-	var R_VALID_FORMATS = /(px$|em$|%$|pc$|pt$|mm$|cm$|in$|ex$)/i,
-		savedPxPropNames;
+	var R_VALID_FORMATS = /(px|em|%|pc|pt|mm|cm|in|ex)/i,
+		R_NON_NUMBER_CHARS = /([^\.|^\d])/g,
+		savedTokenProps;
 	
 	function isValidString (str) {
 		return typeof str === 'string' && R_VALID_FORMATS.test(str);
 	}
 	
-	function getPxProps (obj) {
-		var list;
-		
-		list = [];
+	function getTokenProps (obj) {
+		var collection;
+
+		collection = {};
 		
 		global.Tweenable.util.each(obj, function (obj, prop) {
 			if (isValidString(obj[prop])) {
-				list.push(prop);
+				collection[prop] = {
+					'suffix': obj[prop].match(R_VALID_FORMATS)[0]
+				}
 			}
 		});
 		
-		return list;
+		return collection;
 	}
 	
-	function dePxify (obj, pxPropNames) {
-		var i,
-			limit;
-			
-			limit = pxPropNames.length;
-			
-		for (i = 0; i < limit; i++) {
-			obj[pxPropNames[i]] = +obj[pxPropNames[i]].replace(R_VALID_FORMATS, '');
-		}
+	function deTokenize (obj, tokenProps) {
+		Tweenable.util.each(tokenProps, function (collection, token) {
+			// Extract the value from the string
+			obj[token] = +(obj[token].replace(R_NON_NUMBER_CHARS, ''));
+		});
 	}
 	
-	function rePxify (obj, pxPropNames) {
-		var i,
-			limit;
-			
-			limit = pxPropNames.length;
-			
-		for (i = 0; i < limit; i++) {
-			obj[pxPropNames[i]] = Math.floor(obj[pxPropNames[i]]) + 'px';
-		}
+	function reTokenize (obj, tokenProps) {
+		Tweenable.util.each(tokenProps, function (collection, token) {
+			obj[token] = obj[token] + collection[token].suffix;
+		});
 	}
 	
 	global.Tweenable.prototype.filter.px = {
 		'beforeTween': function beforeTween (currentState, fromState, toState) {
-			savedPxPropNames = getPxProps(fromState);
+			savedTokenProps = getTokenProps(fromState);
 			
-			dePxify(currentState, savedPxPropNames);
-			dePxify(fromState, savedPxPropNames);
-			dePxify(toState, savedPxPropNames);
+			deTokenize(currentState, savedTokenProps);
+			deTokenize(fromState, savedTokenProps);
+			deTokenize(toState, savedTokenProps);
 		},
 		
 		'afterTween': function afterTween (currentState, fromState, toState) {
-			rePxify(currentState, savedPxPropNames);
-			rePxify(fromState, savedPxPropNames);
-			rePxify(toState, savedPxPropNames);
+			reTokenize(currentState, savedTokenProps);
+			reTokenize(fromState, savedTokenProps);
+			reTokenize(toState, savedTokenProps);
 		}
 	};
 	
