@@ -15,7 +15,7 @@ Shifty is great because it focuses on doing one thing very well - tweening.  It 
 If you need functionality like this and more, you can easily extend or wrap Shifty's core with whatever you need.  In fact, there are some extensions included in this repo to do just that.  Currently, there are Shifty extensions for:
 
   * `shifty.color.js`: Color tweening (RGB/Hex strings).
-  * `shifty.px.js`: `px` strings (so you can tween DOM elements).
+  * `shifty.css_units.js`: CSS Unit strings ("px", "em", "%", etc.), so you can tween DOM elements.
   * `shifty.queue.js`: Queuing up tweens that execute sequentially.
 
 There is also a file called `shifty.formulas.js` that contains a bunch of ready-to-use easing formulas.
