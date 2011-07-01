@@ -9,7 +9,7 @@ Based on Easing Equations (c) 2003 Robert Penner, all rights reserved. (http://w
 This work is subject to the terms in http://www.robertpenner.com/easing_terms_of_use.html
 ================================
 
-For instructions on how to use Shifty, please consult the README: https://github.com/jeremyckahn/tweeny/blob/master/README.md
+For instructions on how to use Shifty, please consult the README: https://github.com/jeremyckahn/shifty/blob/master/README.md
 
 MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
