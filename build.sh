@@ -7,22 +7,19 @@ cat src/shifty.core.js \
 	src/shifty.color.js \
 	src/shifty.css_units.js \
 	src/shifty.interpolate.js \
-	> builds/shifty.full.js
+	> shifty.js
 
 
-in=builds/shifty.full.js
+in=shifty.js
 out=builds/shifty.minsrc.js
 
 curl -s \
-        -d compilation_level=SIMPLE_OPTIMIZATIONS \
+	-d compilation_level=SIMPLE_OPTIMIZATIONS \
 	-d output_format=text \
 	-d output_info=compiled_code \
 	--data-urlencode "js_code@${in}" \
 	http://closure-compiler.appspot.com/compile \
 	 > $out
-
-# Remove the full concatenated script
-rm builds/shifty.full.js
 
 cat src/build_header.js builds/shifty.minsrc.js > builds/shifty.min.js
 
