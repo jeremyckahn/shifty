@@ -1,5 +1,5 @@
 /**
-Shifty Token Extension
+Shifty CSS Unit Extension
 By Jeremy Kahn - jeremyckahn@gmail.com
   v0.1.0
 
@@ -11,12 +11,12 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 */
 
 (function shiftyPx (global) {
-	var R_VALID_FORMATS = /(px|em|%|pc|pt|mm|cm|in|ex)/i,
-		R_NON_NUMBER_CHARS = /([^\.|^\d])/g,
+	var R_CSS_UNITS = /(px|em|%|pc|pt|mm|cm|in|ex)/i,
+		R_QUICK_CSS_UNITS = /([a-z]|%)/i,
 		savedTokenProps;
 	
 	function isValidString (str) {
-		return typeof str === 'string' && R_VALID_FORMATS.test(str);
+		return typeof str === 'string' && R_CSS_UNITS.test(str);
 	}
 	
 	function getTokenProps (obj) {
@@ -27,8 +27,8 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		global.Tweenable.util.each(obj, function (obj, prop) {
 			if (isValidString(obj[prop])) {
 				collection[prop] = {
-					'suffix': obj[prop].match(R_VALID_FORMATS)[0]
-				}
+					'suffix': obj[prop].match(R_CSS_UNITS)[0]
+				};
 			}
 		});
 		
@@ -36,14 +36,14 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	}
 	
 	function deTokenize (obj, tokenProps) {
-		Tweenable.util.each(tokenProps, function (collection, token) {
+		global.Tweenable.util.each(tokenProps, function (collection, token) {
 			// Extract the value from the string
-			obj[token] = +(obj[token].replace(R_NON_NUMBER_CHARS, ''));
+			obj[token] = +(obj[token].replace(R_QUICK_CSS_UNITS, ''));
 		});
 	}
 	
 	function reTokenize (obj, tokenProps) {
-		Tweenable.util.each(tokenProps, function (collection, token) {
+		global.Tweenable.util.each(tokenProps, function (collection, token) {
 			obj[token] = obj[token] + collection[token].suffix;
 		});
 	}
