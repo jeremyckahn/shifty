@@ -264,4 +264,4 @@ Shifty in Use
 
 Shifty is in known to be use in the following projects:
 
-  * Morf.js, by @joelambert.  Morf.js is a CSS3 Transition utility.  It lets you define your own easing formulas, but also take advantage of hardware acceleration provided by Webkit browsers.  Morf.js uses Shifty to calculate keyframe states.
+  * [Morf.js](https://github.com/joelambert/morf), by [@joelambert](https://github.com/joelambert).  Morf.js is a CSS3 Transition utility.  It lets you define your own easing formulas, but also take advantage of hardware acceleration provided by Webkit browsers.  Morf.js uses Shifty to calculate keyframe states.
