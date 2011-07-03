@@ -17,10 +17,6 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 (function shiftyQueue (global) {
 	
-	if (!global.Tweenable) {
-		return;
-	}
-
 	function iterateQueue (queue) {
 		queue.shift();
 
@@ -39,14 +35,21 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	}
 	
 	function tweenInit (context, from, to, duration, callback, easing) {
+		// Duck typing!  This method infers some info from the parameters above to determine which method to call,
+		// and what paramters to pass to it.
 		return function () {
 			if (to) {
+				// Longhand notation was used, call `tween`
 				context.tween(from, to, duration, callback, easing);
 			} else {
+				// Shorthand notation was used
+				
+				// Ensure that that `wrappedCallback` (from `queue`) gets passed along.
 				from.callback = callback;
 				if (from.from) {
 					context.tween(from);
 				} else {
+					// `from` data was omitted, call `to`
 					context.to(from);
 				}
 			}

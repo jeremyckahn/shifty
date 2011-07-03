@@ -196,11 +196,11 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		};
 		
 		/**
-		 * Start a tween.  This method can be called two ways:
+		 * Start a tween.  This method can be called two ways.  The shorthand way:
 		 * 
 		 *   tweenableInst.tween (from, to, [duration], [callback], [easing]);
 		 *
-		 * or
+		 * or the longhand way:
 		 *
 		 *   tweenableInst.tween ( {
 		 *     from:       Object,
@@ -254,6 +254,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 			this._tweenParams.easingFunc = this.formula[this._tweenParams.easing] || this.formula.linear;
 			
 			// Ensure that there is always something to tween to.
+			// Kinda dumb and slow, but makes this code way more flexible.
 			weakCopy(this._state.current, this._tweenParams.to);
 			weakCopy(this._tweenParams.to, this._state.current);
 			
@@ -268,13 +269,21 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 			return this;
 		};
 		
-		// Experimental!
+		/**
+		 * Convenience method for tweening from the current position.  This method functions identically to `tween()` (it's just a wrapper function), but implicitly passes the `Tweenable` instance's current state (what you get from `get()`) as the `from` parameter.  This supports both the longhand and shorthand syntax that `tween()` does, just omitting the `from` paramter in both cases.
+		 * @param {Object} target If the other parameters are omitted, this Object should contain the longhand parameters outlined in `tween()`.  If at least one other formal parameter is specified, then this Object should contain the target values to tween to.
+		 * @param {Number} duration Duration of the tween, in milliseconds.
+		 * @param {Function} callback The callback function to pass along to `tween()`.
+		 * @param {String} easing The easing formula to use.
+		 */
 		this.to = function to (target, duration, callback, easing) {
 			if (typeof duration === 'undefined') {
-				target.from = this._state.current;
+				// Shorthand notation is being used
+				target.from = this.get();
 				this.tween(target);
 			} else {
-				this.tween(this._state.current, target, duration, callback, easing);
+				// Longhand notation is bein used
+				this.tween(this.get(), target, duration, callback, easing);
 			}
 			
 			return this;
@@ -294,6 +303,8 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		 */
 		this.set = function (state) {
 			this._state.current = state || {};
+			
+			return this;
 		};
 
 		/**
