@@ -258,3 +258,10 @@ $: sh build.sh
 ````
 
 The only requirement is `curl` and an internet connection (the script calls out to Google's Closure Compiler API).  In English:  If you are on a Mac, you're good to go.  You can find a ready-to-use build of the project at `builds/shifty.min.js`.  This build includes the core and all extensions.  Feel free to customize the build for your own needs.
+
+Shifty in Use
+---
+
+Shifty is in known to be use in the following projects:
+
+  * Morf.js, by @joelambert.  Morf.js is a CSS3 Transition utility.  It lets you define your own easing formulas, but also take advantage of hardware acceleration provided by Webkit browsers.  Morf.js uses Shifty to calculate keyframe states.
