@@ -48,9 +48,11 @@ You can also supply some fun options to `init()`.  They are:
   * `easing`: The default easing formula to use on a tween.  This can be overridden on a per-tween basis via the `tween` function's `easing` parameter (see below).  This value is `linear` by default.
   * `duration`: The default duration that a tween lasts for.  This can be overridden on a per-tween basis via the `tween` function's `duration` parameter (see below).
 
-##Shifty core methods##
+##Starting a tween##
 
-__Tweening:__
+__tween()__
+
+Make a basic tween:
 
 ````javascript
 myTweenable.tween( from, to );
@@ -62,7 +64,7 @@ You can optionally add some fun extra parameters:
 myTweenable.tween( from, to, duration, callback, easing );
 ````
 
-Or you can use the configuration object syntax (recommended!):
+The previous examples used the shorthand syntax.  You can also use the longhand configuration object syntax (recommended!):
 
 ````javascript
 myTweenable.tween({
@@ -78,6 +80,33 @@ myTweenable.tween({
 This method starts a tween.  You can use either format, but the second, longer format give you more hooks and controls.  `Tweenable` also has some methods that you can use to control a tween, as described in the next section.
 
 __Important!__  The object that is passed as the `from` parameter, regardless of which syntax you use to invoke `tween()`, is modified.
+
+__to()__
+
+Another handy way to tween is to use the `to`  method.  `to()` is nearly identical to `tween()` - in fact, `to()` just wraps `tween()` internally.  The only difference is that you can omit the `from` parameter.  `to()` simply assumes that you want to tween from the `Tweenable` instance's current position.  Like tween, the shorthand and longhand syntaxes are supported.  Shorthand:
+
+````javascript
+myTweenable.to( to );
+````
+
+````javascript
+myTweenable.to( to, duration, callback, easing );
+````
+
+Longhand:
+
+````javascript
+myTweenable.to({
+  to:         {  },            // Object.  The "destination" `Number`s that the properties in `from` will tween to.
+  duration:   1000,            // Number.  How long the tween lasts for, in milliseconds.
+  easing:     'linear',        // String.  Easing equation to use.  You can specify any easing method that was attached to `Tweenable.prototype.formula`.
+  step:       function () {},  // Function.  Runs each "frame" that the tween is updated.
+  callback:   function () {}   // Function.  Runs when the tween completes.
+});
+
+However you call `to()` the only required parameter is `to`.
+
+And yes... I should probably come up with a better naming scheme.
 
 ##Controlling a tween##
 
