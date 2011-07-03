@@ -282,7 +282,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 				target.from = this.get();
 				this.tween(target);
 			} else {
-				// Longhand notation is bein used
+				// Longhand notation is being used
 				this.tween(this.get(), target, duration, callback, easing);
 			}
 			
