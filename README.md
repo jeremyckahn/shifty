@@ -1,10 +1,10 @@
 Shifty - A teeny tiny tweening engine in JavaScript. 
 ===
 
-Shifty is a tweening engine for JavaScript.  That's it.  Shifty is a low-level library meant to be encapsulated by higher-level tools.  At the most basic level, it:
+Shifty is a tweening engine for JavaScript.  That's it.  Shifty is a low-level library meant to be encapsulated by higher-level tools.  At the most basic level, it provides:
 
   * Tweening of `Number`s.
-  * Provides extensibility hooks for the tweening.
+  * Extensibility hooks for the tweening.
 
 Shifty is great because it focuses on doing one thing very well - tweening.  It is optimized to run many times a second with minimal processing and memory overhead, which is necessary for smooth animations.  To this end, the Shifty core doesn't do:
 
@@ -18,14 +18,14 @@ If you need functionality like this and more, you can easily extend or wrap Shif
   * `shifty.css_units.js`: CSS Unit strings ("px", "em", "%", etc.), so you can tween DOM elements.
   * `shifty.queue.js`: Queuing up tweens that execute sequentially.
 
-There is also a file called `shifty.formulas.js` that contains a bunch of ready-to-use easing formulas.
+There is also a file called `shifty.formulas.js` that contains a bunch of ready-to-use easing formulas, adapted from [Scripty2](https://github.com/madrobby/scripty2) and [Robert Penner](http://robertpenner.com/).
 
 Using Shifty
 ---
 
-If you just want raw tweening functionality, all you need is `shifty.core.js`.  This is in the `src` directory.  Just drop that in your page, and you are ready to go.  
+If you just want raw tweening functionality, all you need is `shifty.core.js`.  This is in the `src` directory.  Just drop that in your page, and you are ready to go.  To use any Shifty extensions or additions, simply load them after `shifty.core.js`.
 
-To use any Shifty extensions or additions, simply load them after `shifty.core.js`.
+Shifty, with all extensions come prepackaged in `shifty.js` in the root of the project directory, and also minified in the `builds` directory as `shifty.min.js`.
 
 API
 ===
@@ -34,19 +34,18 @@ The section explains how to use the Shifty core.  For information on each extens
 
 __Making a `tweenable()` instance__
 
-The first thing you need to do is create a `new` instance of `Tweenable` and `init()` it.  Here's a one-liner example:
+The first thing you need to do is create a `new` instance of `Tweenable`.  Example:
 
 ````javascript
-var myTweenable = (new Tweenable()).init();
+var myTweenable = new Tweenable();
 ````
 
-__Why do I make you call `init()`?__  Because I like to make you do mindless busy work.  More importantly, `Tweenable()` is meant to be inherited - properly, in context of JavaScript's prototypal inheritance model - and `Tweenable()` objects need to maintain individual state.  In plain English, they need their own properties that are not shared across instances.  In even plainer English, calling `init()` ensures that multiple `Tweenable()` instances do not share data that they shouldn't be sharing, and your stuff won't break mysteriously.
+You can also supply some fun options to `init()` via an Object.  They are:
 
-You can also supply some fun options to `init()`.  They are:
-
-  * `fps`: This is the framerate (frames per second) at which the tween updates.  The default is `30`.
-  * `easing`: The default easing formula to use on a tween.  This can be overridden on a per-tween basis via the `tween` function's `easing` parameter (see below).  This value is `linear` by default.
-  * `duration`: The default duration that a tween lasts for.  This can be overridden on a per-tween basis via the `tween` function's `duration` parameter (see below).
+  * `fps`: A Number.  This is the framerate (frames per second) at which the tween animation updates.  The default is `30`.
+  * `easing`: A String.  The default easing formula to use on a tween.  This can be overridden on a per-tween basis via the `tween` function's `easing` parameter (see below).  This value is `linear` by default.
+  * `duration`: A Number.  The default duration that a tween lasts for.  This can be overridden on a per-tween basis via the `tween` function's `duration` parameter (see below).
+  * `intialState`: An Object.  The state at which the first tween should begin at.
 
 ##Starting a tween##
 
@@ -153,12 +152,11 @@ Shifty's true power comes from it's extensibility.  Specifically, it is designed
 
 ````javascript
 function Cartoon () {
-	this.init();
-	console.log('Whoop whoop!  This is my framerate: ' + this.fps);
+	console.log('Whoop whoop!  This is my framerate: ', this.fps);
 }
 
 Cartoon.prototype = new Tweenable();
-var myCartoon = (new Cartoon()).init();
+var myCartoon = new Cartoon();
 ````
 
 This is awesome because any plugins or extensions that are present on the `Tweenable()` prototype are also available to `myCartoon`, and all instances of `Cartoon` (and `Tweenable`).  You can define these inheritable functions by attaching them to the `Tweenable.prototype` object.  A full example of this:
@@ -167,21 +165,21 @@ This is awesome because any plugins or extensions that are present on the `Tween
 // Add a new method to the `Tweenable` prototype
 Tweenable.prototype.logMyProperties = function () {
 	Tweenable.util.each(this, function (obj, prop) {
-		console.log(prop + ': ' + obj[prop]);
+		console.log(prop + ': ', obj[prop]);
 	});
 }
 
 // Define a constructor function
 function Cartoon () {
-	this.init();
-	console.log('Whoop whoop!  This is my framerate: ' + this.fps);
+	Tweenable.call(this);
+	console.log('Whoop whoop!  This is my framerate: ', this.fps);
 }
 
 // Set `Cartoon`'s `prototype` to a `new` instance of `Tweenable`
 Cartoon.prototype = new Tweenable();
 
 // Make a new instance of `cartoon`
-var myCartoon = (new Cartoon()).init();
+var myCartoon = new Cartoon();
 
 // Test the new prototype method
 myCartoon.logMyProperties();
@@ -212,7 +210,7 @@ function limitX (state) {
 	}
 }
 
-var myTweenable = (new Tweenable()).init();
+var myTweenable = new Tweenable();
 
 myTweenable.hookAdd('step', limitX);
 ````
@@ -295,3 +293,8 @@ Shifty in Use
 Shifty is in known to be use in the following projects:
 
   * [Morf.js](https://github.com/joelambert/morf), by [@joelambert](https://github.com/joelambert).  Morf.js is a CSS3 Transition utility.  It lets you define your own easing formulas, but also take advantage of hardware acceleration provided by Webkit browsers.  Morf.js uses Shifty to calculate keyframe states.
+
+Upgrading from pre-0.4.0
+---
+
+Earlier versions of Shifty require a call to a `Tweenable`'s `init()`.  This requirement has been removed, and so has the `init()` method.  Simply remove any calls to `init()` and you should be fine.

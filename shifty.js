@@ -3,7 +3,7 @@
 /**
 Shifty - A teeny tiny tweening engine in JavaScript. 
 By Jeremy Kahn - jeremyckahn@gmail.com
-  v0.3.0
+  v0.4.0
 
 For instructions on how to use Shifty, please consult the README: https://github.com/jeremyckahn/shifty/blob/master/README.md
 
@@ -156,246 +156,247 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	}
 	
 	// Note:  This is not a public function.  It is used internally by `Tweenable`, which is public, below.
-	function Tweenable () {
+	function Tweenable (options) {
 		
 		/**
-		 * Prepares a `Tweenable` instance for use.  This method basically just initializes all of the properties that a `Tweenable` instance will need.
+		 * This is the `Tweenable` constructor.  Do this for fun tweeny goodness:
+		 * @codestart
+		 * var tweenableInst = new Tweenable({});
+		 * @codeend
+		 * 
+		 * You can also add a configuration Object containing some options.
+		 *
 		 * @param {Object} options A configuration Object containing options for the `Tweenable` instance.  The following are valid:
-		 *   @property {Object} initialState The state at which the first tween shoudl begin at.  This is an experimental feature!
-		 *   @property {Number} duration The default `duration` for each `tween` for this instance.  Default is 500 milliseconds.
+		 *   @property {Object} initialState The state at which the first tween should begin at.
+		 *   @property {Number} duration The default `duration` for each `tween` made by this instance.  Default is 500 milliseconds.
 		 *   @property {Number} fps The frame rate (frames per second) at which the instance will update.  Default is 30.
 		 *   @property {String} easing The name of the default easing formula (attached to `Tweenable.prototype.formula`) to use for each `tween` made for this instance.  Default is `linear`.
 		 * returns {Object} `Tweenable` instance for chaining.
-		 */
-		this.init = function init (options) {
-			
-			options = options || {};
-			
-			this._hook = {};
-
-			this._tweenParams = {
-				owner: this,
-				hook: this._hook
-			};
-
-			this._state = {};
-			
-			// The state that the tween begins at.  Experimental!
-			this._state.current = options.initialState || {};
-
-			// The framerate at which Shifty updates.  This is exposed publicly as `tweenableInst.fps`.
-			this.fps = options.fps || 30;
-
-			// The default easing formula.  This is exposed publicly as `tweenableInst.easing`.
-			this.easing = options.easing || 'linear';
-
-			// The default `duration`.  This is exposed publicly as `tweenableInst.duration`.
-			this.duration = options.duration || 500;
-			
-			return this;
-		};
+		 */			
+		options = options || {};
 		
-		/**
-		 * Start a tween.  This method can be called two ways.  The shorthand way:
-		 * 
-		 *   tweenableInst.tween (from, to, [duration], [callback], [easing]);
-		 *
-		 * or the longhand way:
-		 *
-		 *   tweenableInst.tween ( {
-		 *     from:       Object,
-		 *     to:         Object,
-		 *     duration:   [Number],
-		 *     callback:   [Function],
-		 *     easing:     [String],
-		 *     step:       [Function]
-		 *   });
-		 *
-		 * Regardless of how you invoke this method, the only required parameters are `from` and `to`.
-		 *
-		 * @param {Object} from The beginning state Object containing the properties to tween from.  NOTE:  The properties of this Object are modified over time (to reflect the values in `to`).
-		 * @param {Object} to The target state Object containing the properties to tween to.
-		 * @param {Number} duration The amount of time in milliseconds that the tween should run for.
-		 * @param {Function} callback The function to invoke as soon as this tween completes.  This function is given the tween's current state Object as the first parameter.
-		 * @param {String} easing The name of the easing formula to use for this tween.  You can specify any easing fomula that was attached to `Tweenable.prototype.formula`.  If ommitted, the easing formula specified when the instance was `init`ed is used, or `linear` if that was omitted.
-		 * @param {Function} step A function to call for each step of the tween.  A "step" is defined as one update cycle (frame) of the tween.  Many update cycles occur to create the illusion of motion, so this function will likely be called quite a bit.
-		 */
-		this.tween = function tween (from, to, duration, callback, easing) {
+		this._hook = {};
 
-			var self = this;
-
-			if (this._state.isAnimating) {
-				return;
-			}
-			
-			this._state.loopId = 0;
-			this._state.pausedAtTime = null;
-			
-			// Normalize some internal values depending on how `tweenableInst.tween` was invoked
-			if (to) {
-				// Assume the shorthand syntax is being used.
-				this._tweenParams.step = function () {};
-				this._state.current = from || {};
-				this._tweenParams.to = to || {};
-				this._tweenParams.duration = duration || this.duration;
-				this._tweenParams.callback = callback || function () {};
-				this._tweenParams.easing = easing || this.easing;
-			} else {
-				// If the second argument is not present, assume the longhand syntax is being used.
-				this._tweenParams.step = from.step || function () {};
-				this._tweenParams.callback = from.callback || function () {};
-				this._state.current = from.from || {};
-				this._tweenParams.to = from.to || from.target || {};
-				this._tweenParams.duration = from.duration || this.duration;
-				this._tweenParams.easing = from.easing || this.easing;
-			}
-			
-			this._tweenParams.timestamp = now();
-			this._tweenParams.easingFunc = this.formula[this._tweenParams.easing] || this.formula.linear;
-			
-			// Ensure that there is always something to tween to.
-			// Kinda dumb and slow, but makes this code way more flexible.
-			weakCopy(this._state.current, this._tweenParams.to);
-			weakCopy(this._tweenParams.to, this._state.current);
-			
-			applyFilter('tweenCreated', this._tweenParams.owner, [this._state.current, this._tweenParams.originalState, this._tweenParams.to]);
-			this._tweenParams.originalState = simpleCopy({}, this._state.current);
-			this._state.isAnimating = true;
-
-			scheduleUpdate(function () {
-				timeoutHandler(self._tweenParams, self._state);
-			}, this.fps);
-			
-			return this;
-		};
-		
-		/**
-		 * Convenience method for tweening from the current position.  This method functions identically to `tween()` (it's just a wrapper function), but implicitly passes the `Tweenable` instance's current state (what you get from `get()`) as the `from` parameter.  This supports both the longhand and shorthand syntax that `tween()` does, just omitting the `from` paramter in both cases.
-		 * @param {Object} target If the other parameters are omitted, this Object should contain the longhand parameters outlined in `tween()`.  If at least one other formal parameter is specified, then this Object should contain the target values to tween to.
-		 * @param {Number} duration Duration of the tween, in milliseconds.
-		 * @param {Function} callback The callback function to pass along to `tween()`.
-		 * @param {String} easing The easing formula to use.
-		 */
-		this.to = function to (target, duration, callback, easing) {
-			if (typeof duration === 'undefined') {
-				// Shorthand notation is being used
-				target.from = this.get();
-				this.tween(target);
-			} else {
-				// Longhand notation is being used
-				this.tween(this.get(), target, duration, callback, easing);
-			}
-			
-			return this;
-		};
-		
-		/**
-		 * Returns a reference to the tweened Object's current state (the `from` Object that wat passed to `tweenableInst.tween()`).
-		 * @returns {Object}
-		 */
-		this.get = function get () {
-			return this._state.current;
+		this._tweenParams = {
+			owner: this,
+			hook: this._hook
 		};
 
-		/**
-		 Force the `Tweenable` instance's current state.
-		 @param {Object} state The state the instance shall have.
-		 */
-		this.set = function (state) {
-			this._state.current = state || {};
-			
-			return this;
-		};
+		this._state = {};
+		
+		// The state that the tween begins at.  Experimental!
+		this._state.current = options.initialState || {};
 
-		/**
-		 * Stops and cancels a tween.
-		 * @param {Boolean} gotoEnd If `false`, or omitted, the tween just stops at its current state, and the `callback` is not invoked.  If `true`, the tweened object's values are instantly set the the target "to" values, and the `callback` is invoked.
-		 * @returns {Object} The `Tweenable` instance for chaining.
-		 */
-		this.stop = function stop (gotoEnd) {
-			clearTimeout(this._state.loopId);
-			this._state.isAnimating = false;
-			
-			if (gotoEnd) {
-				simpleCopy(this._state.current, this._tweenParams.to);
-				this._tweenParams.callback.call(this._state.current);
-			}
-			
-			return this;
-		};
-		
-		/**
-		 * Pauses a tween.  A `pause`d tween can be resumed with `resume()`.
-		 * @returns {Object} The `Tween` instance for chaining.
-		 */
-		this.pause = function pause () {
-			clearTimeout(this._state.loopId);
-			this._state.pausedAtTime = now();
-			this._state.isPaused = true;
-			return this;
-		};
-		
-		/**
-		 * Resumes a paused tween.  A tween must be `pause`d before is can be `resume`d.
-		 * @returns {Object} The `Tweenable` instance for chaining.
-		 */
-		this.resume = function resume () {
-			var self = this;
-			
-			if (this._state.isPaused) {
-				this._tweenParams.timestamp += this._state.pausedAtTime - this._tweenParams.timestamp;
-			}
-			
-			scheduleUpdate(function () {
-				timeoutHandler(self._tweenParams, self._state);
-			}, this.fps);
-			
-			return this;
-		};
-		
-		/**
-		 * Add a hook to the `Tweenable` instance.  Hooks are functions that are invoked at key points in a `Tweenable` instance's lifecycle.  A hook that is related to the tweening process (like `step`), for example, will occur for every tween that is performed by the `Tweenable` instance.  You just have to set it once.  You can attach as many functions to any given hook as you like.  The available hooks are as follows:
-		 *
-		 *   - `step`:  Runs on every frame that a tween runs for.  Hook handler function receives a tween's `currentState` for a parameter.
-		 *
-		 * @param {String} hookName The name of the hook to attach `hookFunc` to.
-		 * @param {Function} hookFunc The hook handler function.  This function will receive parameters based on what hook it is being attached to.
-		 */
-		this.hookAdd = function hookAdd (hookName, hookFunc) {
-			if (!this._hook.hasOwnProperty(hookName)) {
-				this._hook[hookName] = [];
-			}
-			
-			this._hook[hookName].push(hookFunc);
-		};
-		
-		/**
-		 * Unattach a function from a hook, or all functions.
-		 *
-		 * @param {String} hookName The hook to remove a function or functions from.
-		 * @param {String|undefined} hookFunc The function to matched against and remove from the hook handler list.  If omitted, all functions are removed for the hook specified by `hookName`.
-		 */
-		this.hookRemove = function hookRemove (hookName, hookFunc) {
-			var i;
-			
-			if (!this._hook.hasOwnProperty(hookName)) {
-				return;
-			}
-			
-			if (!hookFunc) {
-				this._hook[hookName] = [];
-				return;
-			}
-			
-			for (i = this._hook[hookName].length; i >= 0; i++) {
-				if (this._hook[hookName][i] === hookFunc) {
-					this._hook[hookName].splice(i, 1);
-				}
-			}
-		};
+		// The framerate at which Shifty updates.  This is exposed publicly as `tweenableInst.fps`.
+		this.fps = options.fps || 30;
+
+		// The default easing formula.  This is exposed publicly as `tweenableInst.easing`.
+		this.easing = options.easing || 'linear';
+
+		// The default `duration`.  This is exposed publicly as `tweenableInst.duration`.
+		this.duration = options.duration || 500;
 		
 		return this;
 	}
+	
+	/**
+	 * Start a tween.  This method can be called two ways.  The shorthand way:
+	 * 
+	 *   tweenableInst.tween (from, to, [duration], [callback], [easing]);
+	 *
+	 * or the longhand way:
+	 *
+	 *   tweenableInst.tween ( {
+	 *     from:       Object,
+	 *     to:         Object,
+	 *     duration:   [Number],
+	 *     callback:   [Function],
+	 *     easing:     [String],
+	 *     step:       [Function]
+	 *   });
+	 *
+	 * Regardless of how you invoke this method, the only required parameters are `from` and `to`.
+	 *
+	 * @param {Object} from The beginning state Object containing the properties to tween from.  NOTE:  The properties of this Object are modified over time (to reflect the values in `to`).
+	 * @param {Object} to The target state Object containing the properties to tween to.
+	 * @param {Number} duration The amount of time in milliseconds that the tween should run for.
+	 * @param {Function} callback The function to invoke as soon as this tween completes.  This function is given the tween's current state Object as the first parameter.
+	 * @param {String} easing The name of the easing formula to use for this tween.  You can specify any easing fomula that was attached to `Tweenable.prototype.formula`.  If ommitted, the easing formula specified when the instance was `init`ed is used, or `linear` if that was omitted.
+	 * @param {Function} step A function to call for each step of the tween.  A "step" is defined as one update cycle (frame) of the tween.  Many update cycles occur to create the illusion of motion, so this function will likely be called quite a bit.
+	 */
+	Tweenable.prototype.tween = function tween (from, to, duration, callback, easing) {
+
+		var self = this;
+
+		if (this._state.isAnimating) {
+			return;
+		}
+		
+		this._state.loopId = 0;
+		this._state.pausedAtTime = null;
+		
+		// Normalize some internal values depending on how `tweenableInst.tween` was invoked
+		if (to) {
+			// Assume the shorthand syntax is being used.
+			this._tweenParams.step = function () {};
+			this._state.current = from || {};
+			this._tweenParams.to = to || {};
+			this._tweenParams.duration = duration || this.duration;
+			this._tweenParams.callback = callback || function () {};
+			this._tweenParams.easing = easing || this.easing;
+		} else {
+			// If the second argument is not present, assume the longhand syntax is being used.
+			this._tweenParams.step = from.step || function () {};
+			this._tweenParams.callback = from.callback || function () {};
+			this._state.current = from.from || {};
+			this._tweenParams.to = from.to || from.target || {};
+			this._tweenParams.duration = from.duration || this.duration;
+			this._tweenParams.easing = from.easing || this.easing;
+		}
+		
+		this._tweenParams.timestamp = now();
+		this._tweenParams.easingFunc = this.formula[this._tweenParams.easing] || this.formula.linear;
+		
+		// Ensure that there is always something to tween to.
+		// Kinda dumb and slow, but makes this code way more flexible.
+		weakCopy(this._state.current, this._tweenParams.to);
+		weakCopy(this._tweenParams.to, this._state.current);
+		
+		applyFilter('tweenCreated', this._tweenParams.owner, [this._state.current, this._tweenParams.originalState, this._tweenParams.to]);
+		this._tweenParams.originalState = simpleCopy({}, this._state.current);
+		this._state.isAnimating = true;
+
+		scheduleUpdate(function () {
+			timeoutHandler(self._tweenParams, self._state);
+		}, this.fps);
+		
+		return this;
+	};
+	
+	/**
+	 * Convenience method for tweening from the current position.  This method functions identically to `tween()` (it's just a wrapper function), but implicitly passes the `Tweenable` instance's current state (what you get from `get()`) as the `from` parameter.  This supports both the longhand and shorthand syntax that `tween()` does, just omitting the `from` paramter in both cases.
+	 * @param {Object} target If the other parameters are omitted, this Object should contain the longhand parameters outlined in `tween()`.  If at least one other formal parameter is specified, then this Object should contain the target values to tween to.
+	 * @param {Number} duration Duration of the tween, in milliseconds.
+	 * @param {Function} callback The callback function to pass along to `tween()`.
+	 * @param {String} easing The easing formula to use.
+	 */
+	Tweenable.prototype.to = function to (target, duration, callback, easing) {
+		if (typeof duration === 'undefined') {
+			// Shorthand notation is being used
+			target.from = this.get();
+			this.tween(target);
+		} else {
+			// Longhand notation is being used
+			this.tween(this.get(), target, duration, callback, easing);
+		}
+		
+		return this;
+	};
+	
+	/**
+	 * Returns a reference to the `Tweenable`'s current state (the `from` Object that wat passed to `tweenableInst.tween()`).
+	 * @returns {Object}
+	 */
+	Tweenable.prototype.get = function get () {
+		return this._state.current;
+	};
+
+	/**
+	 * Force the `Tweenable` instance's current state.
+	 * @param {Object} state The state the instance shall have.
+	 */
+	Tweenable.prototype.set = function set (state) {
+		this._state.current = state || {};
+		
+		return this;
+	};
+
+	/**
+	 * Stops and cancels a tween.
+	 * @param {Boolean} gotoEnd If `false`, or omitted, the tween just stops at its current state, and the `callback` is not invoked.  If `true`, the tweened object's values are instantly set the the target "to" values, and the `callback` is invoked.
+	 * @returns {Object} The `Tweenable` instance for chaining.
+	 */
+	Tweenable.prototype.stop = function stop (gotoEnd) {
+		clearTimeout(this._state.loopId);
+		this._state.isAnimating = false;
+		
+		if (gotoEnd) {
+			simpleCopy(this._state.current, this._tweenParams.to);
+			this._tweenParams.callback.call(this._state.current);
+		}
+		
+		return this;
+	};
+	
+	/**
+	 * Pauses a tween.  A `pause`d tween can be resumed with `resume()`.
+	 * @returns {Object} The `Tween` instance for chaining.
+	 */
+	Tweenable.prototype.pause = function pause () {
+		clearTimeout(this._state.loopId);
+		this._state.pausedAtTime = now();
+		this._state.isPaused = true;
+		return this;
+	};
+	
+	/**
+	 * Resumes a paused tween.  A tween must be `pause`d before is can be `resume`d.
+	 * @returns {Object} The `Tweenable` instance for chaining.
+	 */
+	Tweenable.prototype.resume = function resume () {
+		var self = this;
+		
+		if (this._state.isPaused) {
+			this._tweenParams.timestamp += this._state.pausedAtTime - this._tweenParams.timestamp;
+		}
+		
+		scheduleUpdate(function () {
+			timeoutHandler(self._tweenParams, self._state);
+		}, this.fps);
+		
+		return this;
+	};
+	
+	/**
+	 * Add a hook to the `Tweenable` instance.  Hooks are functions that are invoked at key points in a `Tweenable` instance's lifecycle.  A hook that is related to the tweening process (like `step`), for example, will occur for every tween that is performed by the `Tweenable` instance.  You just have to set it once.  You can attach as many functions to any given hook as you like.  The available hooks are as follows:
+	 *
+	 *   - `step`:  Runs on every frame that a tween runs for.  Hook handler function receives a tween's `currentState` for a parameter.
+	 *
+	 * @param {String} hookName The name of the hook to attach `hookFunc` to.
+	 * @param {Function} hookFunc The hook handler function.  This function will receive parameters based on what hook it is being attached to.
+	 */
+	Tweenable.prototype.hookAdd = function hookAdd (hookName, hookFunc) {
+		if (!this._hook.hasOwnProperty(hookName)) {
+			this._hook[hookName] = [];
+		}
+		
+		this._hook[hookName].push(hookFunc);
+	};
+	
+	/**
+	 * Unattach a function from a hook, or all functions.
+	 *
+	 * @param {String} hookName The hook to remove a function or functions from.
+	 * @param {String|undefined} hookFunc The function to matched against and remove from the hook handler list.  If omitted, all functions are removed for the hook specified by `hookName`.
+	 */
+	Tweenable.prototype.hookRemove = function hookRemove (hookName, hookFunc) {
+		var i;
+		
+		if (!this._hook.hasOwnProperty(hookName)) {
+			return;
+		}
+		
+		if (!hookFunc) {
+			this._hook[hookName] = [];
+			return;
+		}
+		
+		for (i = this._hook[hookName].length; i >= 0; i++) {
+			if (this._hook[hookName][i] === hookFunc) {
+				this._hook[hookName].splice(i, 1);
+			}
+		}
+	};
 	
 	/**
 	 * Globally exposed static property to attach filters to.  Filters are used for transforming the properties of a tween at various points in a `Tweenable` instance's lifecycle.  Please consult the README for more info on this.
@@ -415,13 +416,6 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	
 	/**
 	 * This object contains all of the tweens available to Shifty.  It is extendable - simply attach properties to the Tweenable.prototype.formula Object following the same format at `linear`.
-	 * 
-	 * This format was copied from Robert Penner, under BSD License (http://www.robertpenner.com/)
-	 * 
-	 * @param t The current time
-	 * @param b Start value
-	 * @param c Change in value (delta)
-	 * @param d Duration of the tween
 	 */
 	Tweenable.prototype.formula = {
 		linear: function (pos) {
