@@ -22,7 +22,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	}
 	
 	/**
-	 * Handy shortcut for doing a for-in loop.  Takes care of all of the `hasOwnProperty` wizardry for you.  This also exposed publicly, external code can access it as `Tweenable.util.each()`.
+	 * Handy shortcut for doing a for-in loop.  Takes care of all of the `hasOwnProperty` wizardry for you.  This is also exposed publicly, you can access it as `Tweenable.util.each()`.
 	 * @param {Object} obj The object to iterate through.
 	 * @param {Function} func The function to pass the object and "own" property to.  This handler function receives the `obj` back as the first parameter, and a property name as the second.
 	 */
