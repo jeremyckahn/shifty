@@ -22,7 +22,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	}
 	
 	/**
-	 * Handy shortcut for doing a for-in loop.  Takes care of all of the `hasOwnProperty` wizardry for you.  This also exposed publicly, external code can access it as `Tweenable.util.each()`.
+	 * Handy shortcut for doing a for-in loop.  Takes care of all of the `hasOwnProperty` wizardry for you.  This is also exposed publicly, you can access it as `Tweenable.util.each()`.
 	 * @param {Object} obj The object to iterate through.
 	 * @param {Function} func The function to pass the object and "own" property to.  This handler function receives the `obj` back as the first parameter, and a property name as the second.
 	 */
@@ -155,24 +155,22 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		}
 	}
 	
-	// Note:  This is not a public function.  It is used internally by `Tweenable`, which is public, below.
+	/**
+	 * This is the `Tweenable` constructor.  Do this for fun tweeny goodness:
+	 * @codestart
+	 * var tweenableInst = new Tweenable({});
+	 * @codeend
+	 * 
+	 * It accepts one parameter:
+	 *
+	 * @param {Object} options A configuration Object containing options for the `Tweenable` instance.  The following are valid:
+	 *   @property {Object} initialState The state at which the first tween should begin at.
+	 *   @property {Number} duration The default `duration` for each `tween` made by this instance.  Default is 500 milliseconds.
+	 *   @property {Number} fps The frame rate (frames per second) at which the instance will update.  Default is 30.
+	 *   @property {String} easing The name of the default easing formula (attached to `Tweenable.prototype.formula`) to use for each `tween` made for this instance.  Default is `linear`.
+	 * returns {Object} `Tweenable` instance for chaining.
+	 */
 	function Tweenable (options) {
-		
-		/**
-		 * This is the `Tweenable` constructor.  Do this for fun tweeny goodness:
-		 * @codestart
-		 * var tweenableInst = new Tweenable({});
-		 * @codeend
-		 * 
-		 * You can also add a configuration Object containing some options.
-		 *
-		 * @param {Object} options A configuration Object containing options for the `Tweenable` instance.  The following are valid:
-		 *   @property {Object} initialState The state at which the first tween should begin at.
-		 *   @property {Number} duration The default `duration` for each `tween` made by this instance.  Default is 500 milliseconds.
-		 *   @property {Number} fps The frame rate (frames per second) at which the instance will update.  Default is 30.
-		 *   @property {String} easing The name of the default easing formula (attached to `Tweenable.prototype.formula`) to use for each `tween` made for this instance.  Default is `linear`.
-		 * returns {Object} `Tweenable` instance for chaining.
-		 */			
 		options = options || {};
 		
 		this._hook = {};
@@ -221,7 +219,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	 * @param {Object} to The target state Object containing the properties to tween to.
 	 * @param {Number} duration The amount of time in milliseconds that the tween should run for.
 	 * @param {Function} callback The function to invoke as soon as this tween completes.  This function is given the tween's current state Object as the first parameter.
-	 * @param {String} easing The name of the easing formula to use for this tween.  You can specify any easing fomula that was attached to `Tweenable.prototype.formula`.  If ommitted, the easing formula specified when the instance was `init`ed is used, or `linear` if that was omitted.
+	 * @param {String} easing The name of the easing formula to use for this tween.  You can specify any easing fomula that was attached to `Tweenable.prototype.formula`.  If ommitted, the easing formula specified when the instance was created is used, or `linear` if that was omitted.
 	 * @param {Function} step A function to call for each step of the tween.  A "step" is defined as one update cycle (frame) of the tween.  Many update cycles occur to create the illusion of motion, so this function will likely be called quite a bit.
 	 */
 	Tweenable.prototype.tween = function tween (from, to, duration, callback, easing) {

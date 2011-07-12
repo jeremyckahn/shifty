@@ -155,24 +155,22 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		}
 	}
 	
-	// Note:  This is not a public function.  It is used internally by `Tweenable`, which is public, below.
+	/**
+	 * This is the `Tweenable` constructor.  Do this for fun tweeny goodness:
+	 * @codestart
+	 * var tweenableInst = new Tweenable({});
+	 * @codeend
+	 * 
+	 * It accepts one parameter:
+	 *
+	 * @param {Object} options A configuration Object containing options for the `Tweenable` instance.  The following are valid:
+	 *   @property {Object} initialState The state at which the first tween should begin at.
+	 *   @property {Number} duration The default `duration` for each `tween` made by this instance.  Default is 500 milliseconds.
+	 *   @property {Number} fps The frame rate (frames per second) at which the instance will update.  Default is 30.
+	 *   @property {String} easing The name of the default easing formula (attached to `Tweenable.prototype.formula`) to use for each `tween` made for this instance.  Default is `linear`.
+	 * returns {Object} `Tweenable` instance for chaining.
+	 */
 	function Tweenable (options) {
-		
-		/**
-		 * This is the `Tweenable` constructor.  Do this for fun tweeny goodness:
-		 * @codestart
-		 * var tweenableInst = new Tweenable({});
-		 * @codeend
-		 * 
-		 * You can also add a configuration Object containing some options.
-		 *
-		 * @param {Object} options A configuration Object containing options for the `Tweenable` instance.  The following are valid:
-		 *   @property {Object} initialState The state at which the first tween should begin at.
-		 *   @property {Number} duration The default `duration` for each `tween` made by this instance.  Default is 500 milliseconds.
-		 *   @property {Number} fps The frame rate (frames per second) at which the instance will update.  Default is 30.
-		 *   @property {String} easing The name of the default easing formula (attached to `Tweenable.prototype.formula`) to use for each `tween` made for this instance.  Default is `linear`.
-		 * returns {Object} `Tweenable` instance for chaining.
-		 */			
 		options = options || {};
 		
 		this._hook = {};
