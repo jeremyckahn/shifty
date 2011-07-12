@@ -53,6 +53,8 @@
 			'font-size': originalFontSize
 			,'color': originalColor
 		}
+		
+		,'fps': 60
 	});
 	
 	grow(function () {

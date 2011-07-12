@@ -148,7 +148,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 			// The tween is still running, schedule an update
 			state.loopId = scheduleUpdate(function () {
 				timeoutHandler(params, state);
-			}, params.fps);
+			}, params.owner.fps);
 		} else {
 			// The duration of the tween has expired
 			params.owner.stop(true);
