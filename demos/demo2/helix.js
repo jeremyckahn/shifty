@@ -11,12 +11,12 @@
 			,originalLeft
 			
 		function toTheLeftToTheLeft (callback) {
-			tweenable.to({
+			tweenable.queue({
 				'to': {
 					'left': '300px'
 				}
 
-				,'duration': 1000
+				,'duration': 1500
 
 				,'easing': 'easeInOutSine'
 
@@ -25,16 +25,12 @@
 				}
 
 				,'callback': callback
-			});
-		}
-		
-		function toTheRightToTheRight (callback) {
-			tweenable.to({
+			}).queue({
 				'to': {
 					'left': originalLeft
 				}
 
-				,'duration': 1000
+				,'duration': 1500
 
 				,'easing': 'easeInOutSine'
 
@@ -43,13 +39,7 @@
 				}
 
 				,'callback': callback
-			});
-		}
-		
-		function loop () {
-			toTheLeftToTheLeft(function () {
-				toTheRightToTheRight(loop);
-			});
+			})
 		}
 		
 		originalLeft = getStyle(el, 'left');
@@ -61,7 +51,7 @@
 			,'fps': 30
 		});
 		
-		loop();
+		toTheLeftToTheLeft();
 	}
 	
 	segments = document.getElementsByClassName('segment');
@@ -70,7 +60,7 @@
 		(function (i) {
 			setTimeout(function () {
 				cycle(segments[i]);
-			}, 30 * i);
+			}, (30 * i));
 		} (i));
 	}
 	
