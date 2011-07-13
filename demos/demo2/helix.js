@@ -1,5 +1,5 @@
 (function (global) {
-	var STEP_STATE_LIMIT = 8
+	var STEP_STATE_LIMIT = 16
 		,CYCLE_SPEED = 2500
 		,segments
 		,stepStateLists
@@ -81,7 +81,7 @@
 			'initialState': {
 				'left': originalLeft
 			}
-			,'fps': 30
+			,'fps': 60
 		});
 		
 		function loop () {
