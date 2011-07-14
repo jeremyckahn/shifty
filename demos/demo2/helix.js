@@ -1,94 +1,80 @@
 (function (global) {
-	var STEP_STATE_LIMIT = 16
-		,CYCLE_SPEED = 2500
+	var START_TIME = +(new Date())
+		,STEP_STATE_LIMIT = 16
+		,CYCLE_SPEED = 1500
+		,HELIX_WIDTH = 300
+		,SEGMENT_BUFFER = .2
 		,segments
 		,stepStateLists
 		,i;
 	
-	function getStyle(el, style) {
+	function getStyle (el, style) {
 		return window.getComputedStyle(el).getPropertyCSSValue(style).cssText;
 	}
 	
-	function updateStepStateList (newState, stepStateList) {
-		if (stepStateList.length === STEP_STATE_LIMIT) {
-			stepStateList.shift();
-		}
-		
-		stepStateList.push(newState);
+	function now () {
+		return +(new Date());
 	}
 	
-	function updateSegment (index, tweenState) {
-		var segment
-			,stepStateList
-			,guideStateList;
+	function getPosition (loopPosition, startBuffer) {
+		var moddedLoopPosition
+			,interpolator
+			,interpolatedValue;
 		
-		segment = segments[index];
-		stepStateList = stepStateLists[index];
-		
-		if (typeof tweenState === 'undefined') {
-			guideStateList = stepStateLists[index - 1];
-			tweenState = guideStateList[0];
+		if ((loopPosition - startBuffer) < 0) {
+			return 0;
 		}
 		
-		updateStepStateList(tweenState, stepStateList);
-		segment.style.left = tweenState;
+		interpolator = moddedLoopPosition = ((loopPosition - startBuffer) % 2);
 		
-		if (index < segments.length - 1) {
-			updateSegment (index + 1);
-		}
-	}
-	
-	function cycle (el, callback) {
-		var tweenable
-			,originalLeft
-			
-		function toTheLeftToTheLeft (callback) {
-			
-			tweenable.queue({
-				'to': {
-					'left': '300px'
-				}
-
-				,'duration': CYCLE_SPEED / 2
-
-				,'easing': 'easeInOutSine'
-
-				,'step': function step () {
-					updateSegment (0, this.left);
-				}
-
-				,'callback': callback
-			}).queue({
-				'to': {
-					'left': originalLeft
-				}
-
-				,'duration': CYCLE_SPEED / 2
-
-				,'easing': 'easeInOutSine'
-
-				,'step': function step () {
-					updateSegment (0, this.left);
-				}
-
-				,'callback': callback
-			})
-		}
+		if (moddedLoopPosition > 1) {
+			interpolator = moddedLoopPosition - 1;
+		}	
 		
-		originalLeft = getStyle(el, 'left');
-		
-		tweenable = new Tweenable({
-			'initialState': {
-				'left': originalLeft
-			}
-			,'fps': 60
+		interpolatedValue = Tweenable.util.interpolate({
+		    from: { 'left': 0 },
+		    to: { 'left': HELIX_WIDTH },
+		    position: interpolator,
+		    easing: 'easeInOutSine'
 		});
 		
-		function loop () {
-			toTheLeftToTheLeft(loop);
+		if (moddedLoopPosition > 1) {
+			return {
+				'left': HELIX_WIDTH - interpolatedValue.left
+			}
+		} else {
+			return interpolatedValue;
+		}
+	}
+	
+	function updateSegment (index, loopPosition) {
+		var segment
+			,calculated;
+		
+		segment = segments[index];
+		calculated = getPosition (loopPosition, index * SEGMENT_BUFFER);
+		segment.style.left = calculated.left + 'px';
+	}
+	
+	function updateSegments (timeSinceStart, callback) {
+		var i
+			,timeDelta
+			,normalizedTime;
+		
+		timeDelta = now() - timeSinceStart;
+		normalizedTime = timeDelta / CYCLE_SPEED;
+		
+		for (i = 0; i < segments.length; i++) {
+			updateSegment(i, normalizedTime);
 		}
 		
-		loop();
+		callback();
+	}
+	
+	function loop () {
+		setTimeout(function () {
+			updateSegments(START_TIME, loop);
+		}, 1000 / 60);
 	}
 	
 	segments = document.getElementsByClassName('segment');
@@ -98,6 +84,6 @@
 		stepStateLists.push([]);
 	}
 	
-	cycle(segments[0]);
+	loop();
 	
 } (this));
