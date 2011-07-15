@@ -1,16 +1,12 @@
+/*global window:true, setTimeout:true */
 (function (global) {
 	var START_TIME = +(new Date())
-		,STEP_STATE_LIMIT = 16
 		,CYCLE_SPEED = 1500
 		,HELIX_WIDTH = 300
-		,SEGMENT_BUFFER = .2
+		,SEGMENT_BUFFER = 0.2
 		,segments
 		,stepStateLists
 		,i;
-	
-	function getStyle (el, style) {
-		return window.getComputedStyle(el).getPropertyCSSValue(style).cssText;
-	}
 	
 	function now () {
 		return +(new Date());
@@ -31,17 +27,15 @@
 			interpolator = moddedLoopPosition - 1;
 		}	
 		
-		interpolatedValue = Tweenable.util.interpolate({
+		interpolatedValue = global.Tweenable.util.interpolate({
 		    from: { 'left': 0 },
 		    to: { 'left': HELIX_WIDTH },
 		    position: interpolator,
 		    easing: 'easeInOutSine'
-		});
+		}).left;
 		
 		if (moddedLoopPosition > 1) {
-			return {
-				'left': HELIX_WIDTH - interpolatedValue.left
-			}
+			return HELIX_WIDTH - interpolatedValue;
 		} else {
 			return interpolatedValue;
 		}
@@ -52,8 +46,8 @@
 			,calculated;
 		
 		segment = segments[index];
-		calculated = getPosition (loopPosition, index * SEGMENT_BUFFER);
-		segment.style.left = calculated.left + 'px';
+		calculated = getPosition(loopPosition, index * SEGMENT_BUFFER);
+		segment.style.left = calculated + 'px';
 	}
 	
 	function updateSegments (timeSinceStart, callback) {
