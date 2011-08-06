@@ -171,7 +171,6 @@ Tweenable.prototype.logMyProperties = function () {
 
 // Define a constructor function
 function Cartoon () {
-	Tweenable.call(this);
 	console.log('Whoop whoop!  This is my framerate: ', this.fps);
 }
 
