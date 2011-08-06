@@ -171,6 +171,7 @@ Tweenable.prototype.logMyProperties = function () {
 
 // Define a constructor function
 function Cartoon () {
+	this.cartoonProp = "I am a property of Cartoon!  And not the Tweenable prototype!";
 	console.log('Whoop whoop!  This is my framerate: ', this.fps);
 }
 
