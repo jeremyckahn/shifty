@@ -41,14 +41,16 @@ For each clamp method, there is a static and instance version.  Each have the sa
 API
 ---
 
-Instance method: tweenableInst.setClamp( propertyName, bottomRange, topRange )
-Static method: Tweenable.util.setClamp( propertyName, bottomRange, topRange )
+__Instance method__: tweenableInst.setClamp( propertyName, bottomRange, topRange )
+
+__Static method__: Tweenable.util.setClamp( propertyName, bottomRange, topRange )
 
   * `propertyName`: The name of the `from`/`to` to clamp.
   * `bottomRange`: The lowest amount the frame's value can be.  The value for `propertyName` will never be less than this.
   * `topRange`: The highest amount the frame's value can be.  The value for `propertyName` will never be more than this.
 
-Instance method: tweenableInst.removeClamp( propertyName )
-Instance method: Tweenable.util.removeClamp( propertyName )
+__Instance method__: tweenableInst.removeClamp( propertyName )
+
+__Instance method__: Tweenable.util.removeClamp( propertyName )
 
   * `propertyName`: The name of the `from`/`to` to stop clamping.
