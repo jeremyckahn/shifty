@@ -3,7 +3,7 @@
 /**
 Shifty - A teeny tiny tweening engine in JavaScript. 
 By Jeremy Kahn - jeremyckahn@gmail.com
-  v0.4.1
+  v0.4.2
 
 For instructions on how to use Shifty, please consult the README: https://github.com/jeremyckahn/shifty/blob/master/README.md
 
@@ -176,8 +176,9 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		this._hook = {};
 
 		this._tweenParams = {
-			owner: this,
-			hook: this._hook
+			'owner': this
+			,'hook': this._hook
+			,'data': {} // holds arbitrary data
 		};
 
 		this._state = {};
@@ -320,6 +321,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		
 		if (gotoEnd) {
 			simpleCopy(this._state.current, this._tweenParams.to);
+			applyFilter('afterTweenEnd', this, [this._state.current, this._tweenParams.originalState, this._tweenParams.to]);
 			this._tweenParams.callback.call(this._state.current);
 		}
 		
@@ -410,6 +412,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		,'tweenProps': tweenProps
 		,'applyFilter': applyFilter
 		,'simpleCopy': simpleCopy
+		,'weakCopy': weakCopy
 	};
 	
 	/**
@@ -421,7 +424,9 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		}
 	};
 	
-	// Make `Tweenable` globally accessible.
-	global.Tweenable = Tweenable;
+	if (typeof global.Tweenable === 'undefined') {
+		// Make `Tweenable` globally accessible.
+		global.Tweenable = Tweenable;
+	}
 	
 }(this));
