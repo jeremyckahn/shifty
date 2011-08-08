@@ -4,6 +4,7 @@
 		,CYCLE_SPEED = 1500
 		,HELIX_WIDTH = 300
 		,SEGMENT_BUFFER = 0.2
+		,segmentContainer
 		,segments
 		,stepStateLists
 		,i;
@@ -71,7 +72,9 @@
 		}, 1000 / 60);
 	}
 	
-	segments = document.getElementsByClassName('segment');
+	segmentContainer = document.getElementById('segment-container');
+	//alert(segmentContainer.children.length)
+	segments = segmentContainer.children;
 	stepStateLists = [];
 	
 	for (i = 0; i < segments.length; i++) {
