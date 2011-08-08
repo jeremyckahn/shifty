@@ -4,8 +4,16 @@
 		,originalColor
 		,originalFontSize;
 	
-	function getStyle(el, style) {
-		return window.getComputedStyle(el).getPropertyCSSValue(style).cssText;
+	function getStyle (el, style) {
+		var ret;
+		
+		if (window.getComputedStyle) {
+			ret = window.getComputedStyle(el).getPropertyCSSValue(style).cssText;
+		} else {
+			ret = el.currentStyle[style];
+		}
+		
+		return ret;
 	}
 
 	function grow (callback) {
@@ -45,7 +53,7 @@
 	}
 	
 	me = document.getElementById('shift-me');
-	originalFontSize = originalColor = getStyle(me, 'font-size');
+	originalFontSize = originalColor = getStyle(me, 'fontSize');
 	originalColor = getStyle(me, 'color');
 
 	tweener = new Tweenable({
