@@ -1,12 +1,15 @@
 /*global window:true, setTimeout:true */
 (function (global) {
-	var START_TIME = +(new Date())
-		,CYCLE_SPEED = 1500
+	var CYCLE_SPEED = 1500
 		,HELIX_WIDTH = 300
 		,SEGMENT_BUFFER = 0.2
+		,startTime
+		,pausedAtTime
 		,segmentContainer
 		,segments
 		,stepStateLists
+		,updateHandle
+		,isPlaying
 		,i;
 	
 	function now () {
@@ -51,12 +54,12 @@
 		segment.style.left = calculated + 'px';
 	}
 	
-	function updateSegments (timeSinceStart, callback) {
+	function updateSegments (startTime, callback) {
 		var i
 			,timeDelta
 			,normalizedTime;
 		
-		timeDelta = now() - timeSinceStart;
+		timeDelta = now() - startTime;
 		normalizedTime = timeDelta / CYCLE_SPEED;
 		
 		for (i = 0; i < segments.length; i++) {
@@ -67,20 +70,43 @@
 	}
 	
 	function loop () {
-		setTimeout(function () {
-			updateSegments(START_TIME, loop);
+		updateHandle = setTimeout(function () {
+			updateSegments(startTime, loop);
 		}, 1000 / 60);
 	}
 	
+	function pause () {
+		if (isPlaying === false) {
+			return;
+		}
+		
+		isPlaying = false;
+		pausedAtTime = Tweenable.util.now();
+		clearTimeout(updateHandle);
+	}
+	
+	function play () {
+		if (isPlaying === true) {
+			return;
+		}
+		
+		isPlaying = true;
+		startTime = Tweenable.util.now() - (pausedAtTime - startTime);
+		loop();
+	}
+	
+	pausedAtTime = startTime = Tweenable.util.now();
 	segmentContainer = document.getElementById('segment-container');
-	//alert(segmentContainer.children.length)
 	segments = segmentContainer.children;
 	stepStateLists = [];
 	
 	for (i = 0; i < segments.length; i++) {
-		stepStateLists.push([]);
+		stepStateLists.push([]);	
 	}
 	
-	loop();
+	window.pause = pause;
+	window.play = play;
+	
+	play();
 	
 } (this));
