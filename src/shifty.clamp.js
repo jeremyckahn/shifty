@@ -26,7 +26,9 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		var clamps;
 		
 		// Combine both the static clamps and instance clamps.  Instance clamps trump Static clamps, if there is a conflict.
-		clamps = global.Tweenable.util.weakCopy( (this._tweenParams.data.clamps || {}), staticClamp.clamps);
+		// The first part of the check is ugly, because this may have been called statically.
+		clamps = global.Tweenable.util.weakCopy( 
+			((this._tweenParams && this._tweenParams.data.clamps) || {}), staticClamp.clamps);
 		
 		global.Tweenable.util.each(clamps, function (obj, prop) {
 			if (state.hasOwnProperty(prop)) {
