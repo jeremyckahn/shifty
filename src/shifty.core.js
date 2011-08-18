@@ -50,6 +50,9 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		return targetObj;
 	}
 	
+	/**
+	 * Copies each property from `srcObj` onto `targetObj`, but only if the property to copy to `targetObj` is `undefined`.
+	 */
 	function weakCopy (targetObj, srcObj) {
 		each(srcObj, function (srcObj, prop) {
 			if (typeof targetObj[prop] === 'undefined') {
@@ -183,7 +186,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 		this._state = {};
 		
-		// The state that the tween begins at.  Experimental!
+		// The state that the tween begins at.
 		this._state.current = options.initialState || {};
 
 		// The framerate at which Shifty updates.  This is exposed publicly as `tweenableInst.fps`.
@@ -344,8 +347,10 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	 * @returns {Object} The `Tweenable` instance for chaining.
 	 */
 	Tweenable.prototype.resume = function resume () {
-		var self = this;
+		var self;
 		
+		self = this;
+
 		if (this._state.isPaused) {
 			this._tweenParams.timestamp += this._state.pausedAtTime - this._tweenParams.timestamp;
 		}
