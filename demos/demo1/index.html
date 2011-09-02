@@ -37,6 +37,19 @@
 	<!--<script type="text/javascript" charset="utf-8" src="../../builds/shifty.min.js"></script>-->
 	<script type="text/javascript" charset="utf-8" src="../../shifty.js"></script>
 	<script type="text/javascript" charset="utf-8" src="shiftme.js"></script>
+        
+	<script type="text/javascript" charset="utf-8">
+        (function (global) {
+
+            var header = document.getElementById('shift-me'); 
+
+            global.shiftyDemo.introInit(header);
+
+            global.shiftyDemo.introGrow(header, 200, function () {
+                global.shiftyDemo.introFade(header);
+            });
+        } (this));
+        </script>
 
 </body>
 </html>

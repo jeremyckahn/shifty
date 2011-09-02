@@ -94,19 +94,26 @@
 		startTime = Tweenable.util.now() - (pausedAtTime - startTime);
 		loop();
 	}
-	
-	pausedAtTime = startTime = Tweenable.util.now();
-	segmentContainer = document.getElementById('segment-container');
-	segments = segmentContainer.children;
-	stepStateLists = [];
-	
-	for (i = 0; i < segments.length; i++) {
-		stepStateLists.push([]);	
-	}
-	
-	window.pause = pause;
-	window.play = play;
-	
-	play();
-	
+
+        function init (containerId) {
+            pausedAtTime = startTime = Tweenable.util.now();
+            segmentContainer = document.getElementById(containerId);
+            segments = segmentContainer.children;
+            stepStateLists = [];
+            
+            for (i = 0; i < segments.length; i++) {
+                    stepStateLists.push([]);	
+            }
+            
+            window.pause = pause;
+            window.play = play;
+        }
+
+	global.shiftyDemo = global.shiftyDemo || {};
+
+	Tweenable.util.simpleCopy(global.shiftyDemo, {
+            'helixInit': init
+            ,'helixPlay': play
+            ,'helixPause': pause
+        });
 } (this));
