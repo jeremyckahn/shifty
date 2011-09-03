@@ -3,7 +3,7 @@
 /**
 Shifty - A teeny tiny tweening engine in JavaScript. 
 By Jeremy Kahn - jeremyckahn@gmail.com
-  v0.4.3
+  v0.4.4
 
 For instructions on how to use Shifty, please consult the README: https://github.com/jeremyckahn/shifty/blob/master/README.md
 
@@ -50,6 +50,9 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		return targetObj;
 	}
 	
+	/**
+	 * Copies each property from `srcObj` onto `targetObj`, but only if the property to copy to `targetObj` is `undefined`.
+	 */
 	function weakCopy (targetObj, srcObj) {
 		each(srcObj, function (srcObj, prop) {
 			if (typeof targetObj[prop] === 'undefined') {
@@ -183,7 +186,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 		this._state = {};
 		
-		// The state that the tween begins at.  Experimental!
+		// The state that the tween begins at.
 		this._state.current = options.initialState || {};
 
 		// The framerate at which Shifty updates.  This is exposed publicly as `tweenableInst.fps`.
@@ -264,10 +267,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		applyFilter('tweenCreated', this._tweenParams.owner, [this._state.current, this._tweenParams.originalState, this._tweenParams.to]);
 		this._tweenParams.originalState = simpleCopy({}, this._state.current);
 		this._state.isAnimating = true;
-
-		scheduleUpdate(function () {
-			timeoutHandler(self._tweenParams, self._state);
-		}, this.fps);
+                this.resume();
 		
 		return this;
 	};
@@ -344,13 +344,15 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	 * @returns {Object} The `Tweenable` instance for chaining.
 	 */
 	Tweenable.prototype.resume = function resume () {
-		var self = this;
+		var self;
 		
+		self = this;
+
 		if (this._state.isPaused) {
 			this._tweenParams.timestamp += this._state.pausedAtTime - this._tweenParams.timestamp;
 		}
 		
-		scheduleUpdate(function () {
+		this._state.loopId = scheduleUpdate(function () {
 			timeoutHandler(self._tweenParams, self._state);
 		}, this.fps);
 		
