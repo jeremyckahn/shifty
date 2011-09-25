@@ -15,11 +15,29 @@
 <script src="utils/loadlist.js"></script>
 
 <script>
-(function (global) {
+require.ready(function () {
 
   var myTweenable
-      ,quickTestDuration;
+      ,quickTestDuration
+      ,QUICK_TEST_DURATION = 250
+      ,START_TEST_VAL = 0
+      ,END_TEST_VAL = 10;
 
+  function simpleTestTween (step, callback) {
+    myTweenable.tween({
+      'from': {
+        'testVal': START_TEST_VAL
+      }
+      ,'to': {
+        'testVal': END_TEST_VAL
+      }
+      ,'duration': QUICK_TEST_DURATION
+      ,'step': step 
+      ,'callback': callback
+    });
+  }
+
+  myTweenable = new Tweenable();
   quickTestDuration = 250
   module('Basic smoke tests');
 
@@ -33,38 +51,30 @@
     generatedVals = [];
     lastGeneratedVal = 0;
     valsAreInOrder = true;
-    myTweenable = new Tweenable();
     startVal = 0;
     endVal = 10;
-
-    myTweenable.tween({
-      'from': {
-        'testVal': startVal
-      }
-      ,'to': {
-        'testVal': endVal
-      }
-      ,'duration': quickTestDuration
-      ,'step': function () {
+      
+    simpleTestTween(
+      function step () {
+        
         if (this.testVal >= lastGeneratedVal
           && valsAreInOrder === true) {
           
-          // We're good!
+          // we're good!
         } else {
-          // We're bad!  :(
+          // we're bad!  :(
           valsAreInOrder = false;
         }
         lastGeneratedVal = this.testVal;
-      }
-      ,'callback': function () {
+      }, function callback () {
+
         ok(valsAreInOrder, 'Values were generated in order.');
         equals(this.testVal, endVal, 'Final generated value equals the target value.');
         start();
-      }
-    });
+      });
+    
   });
-
-} (this));
+});
 
 </script>
 </body>
