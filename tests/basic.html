@@ -44,15 +44,11 @@ require.ready(function () {
   asyncTest('Generate a series of consecutively larger numbers.', function () {
     var generatedVals
         ,lastGeneratedVal
-        ,valsAreInOrder
-        ,startVal
-        ,endVal;
+        ,valsAreInOrder;
 
     generatedVals = [];
     lastGeneratedVal = 0;
     valsAreInOrder = true;
-    startVal = 0;
-    endVal = 10;
       
     simpleTestTween(
       function step () {
@@ -69,11 +65,24 @@ require.ready(function () {
       }, function callback () {
 
         ok(valsAreInOrder, 'Values were generated in order.');
-        equals(this.testVal, endVal, 'Final generated value equals the target value.');
+        equal(this.testVal, END_TEST_VAL, 'Final generated value equals the target value.');
         start();
       });
-    
   });
+
+  asyncTest('`.get` method gets an instance\'s current values.', function () {
+    var retrievedVal;
+
+    simpleTestTween(
+      function step () {
+        retrievedVal = myTweenable.get().testVal;
+      }, function callback () {
+        equal(typeof retrievedVal, 'number', 'Sampled value is a number.');
+        equal(myTweenable.get().testVal, END_TEST_VAL, 'Final retrieved value equals the target value.');
+        start();
+      });
+  });
+
 });
 
 </script>
