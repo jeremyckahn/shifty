@@ -15,7 +15,56 @@
 <script src="utils/loadlist.js"></script>
 
 <script>
+(function (global) {
 
+  var myTweenable
+      ,quickTestDuration;
+
+  quickTestDuration = 250
+  module('Basic smoke tests');
+
+  asyncTest('Generate a series of consecutively larger numbers.', function () {
+    var generatedVals
+        ,lastGeneratedVal
+        ,valsAreInOrder
+        ,startVal
+        ,endVal;
+
+    generatedVals = [];
+    lastGeneratedVal = 0;
+    valsAreInOrder = true;
+    myTweenable = new Tweenable();
+    startVal = 0;
+    endVal = 10;
+
+    myTweenable.tween({
+      'from': {
+        'testVal': startVal
+      }
+      ,'to': {
+        'testVal': endVal
+      }
+      ,'duration': quickTestDuration
+      ,'step': function () {
+        if (this.testVal >= lastGeneratedVal
+          && valsAreInOrder === true) {
+          
+          // We're good!
+        } else {
+          // We're bad!  :(
+          valsAreInOrder = false;
+        }
+        lastGeneratedVal = this.testVal;
+      }
+      ,'callback': function () {
+        ok(valsAreInOrder, 'Values were generated in order.');
+        equals(this.testVal, endVal, 'Final generated value equals the target value.');
+        start();
+      }
+    });
+  });
+
+} (this));
 
 </script>
 </body>
