@@ -17,14 +17,13 @@
 <script>
 require.ready(function () {
 
-  var myTweenable
-      ,quickTestDuration
+  var quickTestDuration
       ,QUICK_TEST_DURATION = 250
       ,START_TEST_VAL = 0
       ,END_TEST_VAL = 10;
 
-  function simpleTestTween (step, callback) {
-    myTweenable.tween({
+  function simpleTestTween (inst, step, callback) {
+    inst.tween({
       'from': {
         'testVal': START_TEST_VAL
       }
@@ -37,21 +36,25 @@ require.ready(function () {
     });
   }
 
-  myTweenable = new Tweenable();
+  //myTweenable = new Tweenable();
   quickTestDuration = 250
   module('Basic smoke tests');
 
-  asyncTest('Generate a series of consecutively larger numbers.', function () {
-    var generatedVals
+  test('Generate a series of consecutively larger numbers.', function () {
+    var myTweenable
+        ,generatedVals
         ,lastGeneratedVal
         ,valsAreInOrder;
-
+   
+    stop();
+    myTweenable = new Tweenable();
     generatedVals = [];
     lastGeneratedVal = 0;
     valsAreInOrder = true;
       
     simpleTestTween(
-      function step () {
+      myTweenable
+      ,function step () {
         
         if (this.testVal >= lastGeneratedVal
           && valsAreInOrder === true) {
@@ -70,17 +73,53 @@ require.ready(function () {
       });
   });
 
-  asyncTest('`.get` method gets an instance\'s current values.', function () {
-    var retrievedVal;
+
+  test('<code>.get</code> method gets an instance\'s current values.', 2, function () {
+    var myTweenable
+        ,retrievedVal;
+    
+    myTweenable = new Tweenable(); 
+    stop();
 
     simpleTestTween(
-      function step () {
+      myTweenable
+      ,function step () {
         retrievedVal = myTweenable.get().testVal;
       }, function callback () {
         equal(typeof retrievedVal, 'number', 'Sampled value is a number.');
         equal(myTweenable.get().testVal, END_TEST_VAL, 'Final retrieved value equals the target value.');
         start();
       });
+  });
+
+  test('<code>.pause</code> temporarily stops the animation calculation.', function () {
+    var myTweenable
+        ,testValRightBeforePause
+        ,testValRightBeforeResume;
+    
+    function step () {
+      // Redefine this method so it noops everytime it is called after the first invokation.
+      step = function () {};
+      
+      testValRightBeforePause = myTweenable.get().testVal;
+      myTweenable.pause();
+        
+      setTimeout(function () {
+        testValRightBeforeResume = myTweenable.get().testVal;
+        myTweenable.resume();
+      }, 200);
+    }
+    
+    stop();
+    myTweenable = new Tweenable();
+    simpleTestTween(
+      myTweenable
+      ,function () { step() },
+      function callback () {
+        equal(testValRightBeforePause, testValRightBeforeResume, 'Test value did not change in the time it was changed and the time that the tween was <code>pause</code>d and when it was <code>resume</code>d.');
+        start(); 
+      }
+    );
   });
 
 });
