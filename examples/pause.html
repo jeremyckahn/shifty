@@ -30,7 +30,8 @@
 	
 	<script type="text/javascript" charset="utf-8">
 	
-		var myTweenable = new Tweenable();
+		var myTweenable = new Tweenable()
+                    ,start = Tweenable.util.now();
 
 		myTweenable.tween({
 			from: {
@@ -45,6 +46,7 @@
 			},
 			'callback': function () {
 				console.log('Done!  Final value: ' + this.test);
+                                console.log('Actual duration: ' + (Tweenable.util.now() - start));
 			}
 		});
 		

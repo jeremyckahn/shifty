@@ -138,7 +138,12 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		currentTime = now();
 		
 		if (currentTime < params.timestamp + params.duration && state.isAnimating) {
-			applyFilter('beforeTween', params.owner, [state.current, params.originalState, params.to]);
+			// The tween is still running, schedule an update
+			state.loopId = scheduleUpdate(function () {
+				timeoutHandler(params, state);
+			}, params.owner.fps);
+			
+                        applyFilter('beforeTween', params.owner, [state.current, params.originalState, params.to]);
 			tweenProps (currentTime, params, state);		
 			applyFilter('afterTween', params.owner, [state.current, params.originalState, params.to]);
 			
@@ -148,10 +153,6 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 			
 			params.step.call(state.current);
 			
-			// The tween is still running, schedule an update
-			state.loopId = scheduleUpdate(function () {
-				timeoutHandler(params, state);
-			}, params.owner.fps);
 		} else {
 			// The duration of the tween has expired
 			params.owner.stop(true);
@@ -352,9 +353,9 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 			this._tweenParams.timestamp += this._state.pausedAtTime - this._tweenParams.timestamp;
 		}
 		
-		this._state.loopId = scheduleUpdate(function () {
+		//this._state.loopId = scheduleUpdate(function () {
 			timeoutHandler(self._tweenParams, self._state);
-		}, this.fps);
+		//}, this.fps);
 		
 		return this;
 	};

@@ -36,7 +36,6 @@ require.ready(function () {
     });
   }
 
-  //myTweenable = new Tweenable();
   quickTestDuration = 250
   module('Basic smoke tests');
 
@@ -95,28 +94,38 @@ require.ready(function () {
   test('<code>.pause</code> temporarily stops the animation calculation.', function () {
     var myTweenable
         ,testValRightBeforePause
-        ,testValRightBeforeResume;
+        ,testValRightBeforeResume
+        ,stepCallCount
+        ,startTimestamp
+        ,endTimestamp;
     
-    function step () {
-      // Redefine this method so it noops everytime it is called after the first invokation.
-      step = function () {};
-      
-      testValRightBeforePause = myTweenable.get().testVal;
-      myTweenable.pause();
-        
-      setTimeout(function () {
-        testValRightBeforeResume = myTweenable.get().testVal;
-        myTweenable.resume();
-      }, 200);
+    function step () { 
+      if (stepCallCount === 2) {
+        testValRightBeforePause = myTweenable.get().testVal;
+        myTweenable.pause();
+          
+        setTimeout(function () {
+          testValRightBeforeResume = myTweenable.get().testVal;
+          myTweenable.resume();
+        }, 500);
+      }
+
+      stepCallCount++;
     }
     
     stop();
+    stepCallCount = 0;
     myTweenable = new Tweenable();
+    startTimestamp = Tweenable.util.now();
+    
     simpleTestTween(
       myTweenable
-      ,function () { step() },
-      function callback () {
+      ,step
+      ,function callback () {
+        endTimestamp = Tweenable.util.now();
+
         equal(testValRightBeforePause, testValRightBeforeResume, 'Test value did not change in the time it was changed and the time that the tween was <code>pause</code>d and when it was <code>resume</code>d.');
+        ok( (endTimestamp - startTimestamp) < (QUICK_TEST_DURATION + 150), 'Tween completed within 150 ms of target duration.' );
         start(); 
       }
     );
