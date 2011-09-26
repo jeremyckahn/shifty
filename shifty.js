@@ -3,7 +3,7 @@
 /**
 Shifty - A teeny tiny tweening engine in JavaScript. 
 By Jeremy Kahn - jeremyckahn@gmail.com
-  v0.4.4
+  v0.4.5
 
 For instructions on how to use Shifty, please consult the README: https://github.com/jeremyckahn/shifty/blob/master/README.md
 
@@ -138,7 +138,12 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		currentTime = now();
 		
 		if (currentTime < params.timestamp + params.duration && state.isAnimating) {
-			applyFilter('beforeTween', params.owner, [state.current, params.originalState, params.to]);
+			// The tween is still running, schedule an update
+			state.loopId = scheduleUpdate(function () {
+				timeoutHandler(params, state);
+			}, params.owner.fps);
+			
+                        applyFilter('beforeTween', params.owner, [state.current, params.originalState, params.to]);
 			tweenProps (currentTime, params, state);		
 			applyFilter('afterTween', params.owner, [state.current, params.originalState, params.to]);
 			
@@ -148,10 +153,6 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 			
 			params.step.call(state.current);
 			
-			// The tween is still running, schedule an update
-			state.loopId = scheduleUpdate(function () {
-				timeoutHandler(params, state);
-			}, params.owner.fps);
 		} else {
 			// The duration of the tween has expired
 			params.owner.stop(true);
@@ -349,12 +350,10 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		self = this;
 
 		if (this._state.isPaused) {
-			this._tweenParams.timestamp += this._state.pausedAtTime - this._tweenParams.timestamp;
+			this._tweenParams.timestamp += now() - this._state.pausedAtTime;
 		}
 		
-		this._state.loopId = scheduleUpdate(function () {
-			timeoutHandler(self._tweenParams, self._state);
-		}, this.fps);
+		timeoutHandler(self._tweenParams, self._state);
 		
 		return this;
 	};

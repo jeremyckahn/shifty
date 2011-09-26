@@ -97,7 +97,8 @@ require.ready(function () {
         ,testValRightBeforeResume
         ,stepCallCount
         ,startTimestamp
-        ,endTimestamp;
+        ,endTimestamp
+        ,pauseTime;
     
     function step () { 
       if (stepCallCount === 2) {
@@ -107,7 +108,7 @@ require.ready(function () {
         setTimeout(function () {
           testValRightBeforeResume = myTweenable.get().testVal;
           myTweenable.resume();
-        }, 500);
+        }, pauseTime);
       }
 
       stepCallCount++;
@@ -115,6 +116,7 @@ require.ready(function () {
     
     stop();
     stepCallCount = 0;
+    pauseTime = 500;
     myTweenable = new Tweenable();
     startTimestamp = Tweenable.util.now();
     
@@ -124,8 +126,8 @@ require.ready(function () {
       ,function callback () {
         endTimestamp = Tweenable.util.now();
 
-        equal(testValRightBeforePause, testValRightBeforeResume, 'Test value did not change in the time it was changed and the time that the tween was <code>pause</code>d and when it was <code>resume</code>d.');
-        ok( (endTimestamp - startTimestamp) < (QUICK_TEST_DURATION + 150), 'Tween completed within 150 ms of target duration.' );
+        equal(testValRightBeforePause, testValRightBeforeResume, 'Test value did not change in the time it was changed and the time that the tween was `pause`d and when it was `resume`d.');
+        ok( (endTimestamp - startTimestamp) >= (QUICK_TEST_DURATION + pauseTime), 'The duration of the pause is added to the actual duration of the tween.' );
         start(); 
       }
     );
