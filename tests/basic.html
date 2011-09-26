@@ -98,7 +98,9 @@ require.ready(function () {
         ,stepCallCount
         ,startTimestamp
         ,endTimestamp
-        ,pauseTime;
+        ,pauseTime
+        ,previousTestVal
+        ,deltaSum;
     
     function step () { 
       if (stepCallCount === 2) {
@@ -112,11 +114,15 @@ require.ready(function () {
       }
 
       stepCallCount++;
+      deltaSum += (myTweenable.get().testVal - previousTestVal);
+      previousTestVal = myTweenable.get().testVal;
     }
     
     stop();
     stepCallCount = 0;
     pauseTime = 500;
+    deltaSum = 0;
+    previousTestVal = START_TEST_VAL;
     myTweenable = new Tweenable();
     startTimestamp = Tweenable.util.now();
     
@@ -125,9 +131,9 @@ require.ready(function () {
       ,step
       ,function callback () {
         endTimestamp = Tweenable.util.now();
-
         equal(testValRightBeforePause, testValRightBeforeResume, 'Test value did not change in the time it was changed and the time that the tween was `pause`d and when it was `resume`d.');
         ok( (endTimestamp - startTimestamp) >= (QUICK_TEST_DURATION + pauseTime), 'The duration of the pause is added to the actual duration of the tween.' );
+        ok( Math.abs((END_TEST_VAL - START_TEST_VAL) - deltaSum) < 1, 'Total step deltas were within 1.0 of the target amount.' );
         start(); 
       }
     );
