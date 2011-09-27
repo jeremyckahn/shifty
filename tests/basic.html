@@ -22,6 +22,16 @@ require.ready(function () {
       ,START_TEST_VAL = 0
       ,END_TEST_VAL = 10;
 
+  function getTestInst () {
+    var inst;
+
+    inst = new Tweenable();
+    inst.__deltaSum = 0;
+    inst.__previousTestVal = START_TEST_VAL;
+
+    return inst;
+  }
+
   function simpleTestTween (inst, step, callback) {
     inst.tween({
       'from': {
@@ -31,28 +41,40 @@ require.ready(function () {
         'testVal': END_TEST_VAL
       }
       ,'duration': QUICK_TEST_DURATION
-      ,'step': step 
+      ,'step': function () {
+        inst.__deltaSum += inst.get().testVal - inst.__previousTestVal;
+        inst.__previousTestVal = inst.get().testVal;
+        
+        // Faking the context of the `step` call
+        step.call(inst._state.current);
+
+        return inst;
+      } 
       ,'callback': callback
     });
+  }
+
+  function runDeltaTest (inst) {
+        ok( Math.abs((END_TEST_VAL - START_TEST_VAL) - inst.__deltaSum) < 1, 'Total step deltas were within 1.0 of the target amount.' );
   }
 
   quickTestDuration = 250
   module('Basic smoke tests');
 
   test('Generate a series of consecutively larger numbers.', function () {
-    var myTweenable
+    var inst
         ,generatedVals
         ,lastGeneratedVal
         ,valsAreInOrder;
    
     stop();
-    myTweenable = new Tweenable();
+    inst = getTestInst();
     generatedVals = [];
     lastGeneratedVal = 0;
     valsAreInOrder = true;
       
     simpleTestTween(
-      myTweenable
+      inst
       ,function step () {
         
         if (this.testVal >= lastGeneratedVal
@@ -68,54 +90,52 @@ require.ready(function () {
 
         ok(valsAreInOrder, 'Values were generated in order.');
         equal(this.testVal, END_TEST_VAL, 'Final generated value equals the target value.');
+        runDeltaTest(inst);
         start();
       });
   });
 
 
-  test('<code>.get</code> method gets an instance\'s current values.', 2, function () {
-    var myTweenable
+  test('<code>.get</code> method gets an instance\'s current values.', function () {
+    var inst
         ,retrievedVal;
     
-    myTweenable = new Tweenable(); 
+    inst = getTestInst(); 
     stop();
 
     simpleTestTween(
-      myTweenable
+      inst
       ,function step () {
-        retrievedVal = myTweenable.get().testVal;
+        retrievedVal = inst.get().testVal;
       }, function callback () {
         equal(typeof retrievedVal, 'number', 'Sampled value is a number.');
-        equal(myTweenable.get().testVal, END_TEST_VAL, 'Final retrieved value equals the target value.');
+        equal(inst.get().testVal, END_TEST_VAL, 'Final retrieved value equals the target value.');
+        runDeltaTest(inst);
         start();
       });
   });
 
   test('<code>.pause</code> temporarily stops the animation calculation.', function () {
-    var myTweenable
+    var inst
         ,testValRightBeforePause
         ,testValRightBeforeResume
         ,stepCallCount
         ,startTimestamp
         ,endTimestamp
-        ,pauseTime
-        ,previousTestVal
-        ,deltaSum;
+        ,pauseTime;
     
     function step () { 
       if (stepCallCount === 2) {
-        testValRightBeforePause = myTweenable.get().testVal;
-        myTweenable.pause();
+        testValRightBeforePause = inst.get().testVal;
+        inst.pause();
           
         setTimeout(function () {
-          testValRightBeforeResume = myTweenable.get().testVal;
-          myTweenable.resume();
+          testValRightBeforeResume = inst.get().testVal;
+          inst.resume();
         }, pauseTime);
       }
 
       stepCallCount++;
-      deltaSum += (myTweenable.get().testVal - previousTestVal);
-      previousTestVal = myTweenable.get().testVal;
     }
     
     stop();
@@ -123,17 +143,17 @@ require.ready(function () {
     pauseTime = 500;
     deltaSum = 0;
     previousTestVal = START_TEST_VAL;
-    myTweenable = new Tweenable();
+    inst = getTestInst();
     startTimestamp = Tweenable.util.now();
     
     simpleTestTween(
-      myTweenable
+      inst
       ,step
       ,function callback () {
         endTimestamp = Tweenable.util.now();
         equal(testValRightBeforePause, testValRightBeforeResume, 'Test value did not change in the time it was changed and the time that the tween was `pause`d and when it was `resume`d.');
         ok( (endTimestamp - startTimestamp) >= (QUICK_TEST_DURATION + pauseTime), 'The duration of the pause is added to the actual duration of the tween.' );
-        ok( Math.abs((END_TEST_VAL - START_TEST_VAL) - deltaSum) < 1, 'Total step deltas were within 1.0 of the target amount.' );
+        runDeltaTest(inst);
         start(); 
       }
     );
