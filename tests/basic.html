@@ -115,7 +115,7 @@ require.ready(function () {
       });
   });
 
-  test('<code>.pause</code> temporarily stops the animation calculation.', function () {
+  test('<code>.pause</code> temporarily stops the animation calculation, and <code>resume</code> starts it from where it left off.', function () {
     var inst
         ,testValRightBeforePause
         ,testValRightBeforeResume
@@ -141,8 +141,6 @@ require.ready(function () {
     stop();
     stepCallCount = 0;
     pauseTime = 500;
-    deltaSum = 0;
-    previousTestVal = START_TEST_VAL;
     inst = getTestInst();
     startTimestamp = Tweenable.util.now();
     
@@ -157,6 +155,39 @@ require.ready(function () {
         start(); 
       }
     );
+  });
+
+  test('<code>stop</code> cancels a tween and brings it right to the end.', function () {
+    var inst
+        ,stepCallCount
+        ,startTimestamp
+        ,endTimestamp;
+    
+    function step () { 
+      if (stepCallCount === 2) {
+         inst.stop(true); 
+      }
+
+      stepCallCount++;
+    }
+    
+    stop();
+    stepCallCount = 0;
+    previousTestVal = START_TEST_VAL;
+    inst = getTestInst();
+    startTimestamp = Tweenable.util.now();
+    
+    simpleTestTween(
+      inst
+      ,step
+      ,function callback () {
+        endTimestamp = Tweenable.util.now();
+        ok( (endTimestamp - startTimestamp) < QUICK_TEST_DURATION, '`Stop`ped test did not last the full duration of the planned tween (it was successfully cancelled).');
+        equal(inst.get().testVal, END_TEST_VAL, 'The value of the canceled tween parameter equals the target final value.');
+        start(); 
+      }
+    );
+  
   });
 
   test('Hook functions are executed in every step through an animation.', function () {
