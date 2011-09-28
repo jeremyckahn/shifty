@@ -55,7 +55,7 @@ require.ready(function () {
   }
 
   function runDeltaTest (inst) {
-        ok( Math.abs((END_TEST_VAL - START_TEST_VAL) - inst.__deltaSum) < 1, 'Total step deltas were within 1.0 of the target amount.' );
+    ok( Math.abs((END_TEST_VAL - START_TEST_VAL) - inst.__deltaSum) < 1, 'Total step deltas were within 1.0 of the target amount.' );
   }
 
   quickTestDuration = 250

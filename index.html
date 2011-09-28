@@ -179,6 +179,7 @@
     </footer>
   </div> <!--! end of #container -->
   <script type="text/javascript" src="builds/shifty.min.js" charset="utf-8"></script>
+  <script type="text/javascript" src="src/shifty.simple_ease.js" charset="utf-8"></script>
   <script type="text/javascript" src="demos/demo1/shiftme.js" charset="utf-8"></script>
   <script type="text/javascript" src="demos/demo2/helix.js" charset="utf-8"></script>
   <script type="text/javascript">
@@ -239,6 +240,24 @@
       btnHelixStart.addEventListener('click', toggleHelix, true);
       helixIsRunning = false;
       helixIsInitted = false;
+
+      (function () { 
+        // Simple demo dump of all of the formulas
+        var tweenedVal
+            ,formula;
+        
+        if (global.console && global.console.log && Tweenable.util.simpleEase) {
+          
+          console.log('A quick sampling of the different easing formulas:');
+
+          // Test and log all of the tweening methods.
+          for (formula in Tweenable.prototype.formula) {
+            if (Tweenable.prototype.formula.hasOwnProperty(formula)) {
+              console.log(formula + ' at 0.5: ' + Tweenable.util.simpleEase(formula, 0.5));
+            }
+          }
+        }
+      } ());
 
     } (this));
   </script>
