@@ -59,7 +59,7 @@ require.ready(function () {
   }
 
   quickTestDuration = 250
-  module('Basic smoke tests');
+  module('Core functionality');
 
   test('Generate a series of consecutively larger numbers.', function () {
     var inst
@@ -155,6 +155,32 @@ require.ready(function () {
         ok( (endTimestamp - startTimestamp) >= (QUICK_TEST_DURATION + pauseTime), 'The duration of the pause is added to the actual duration of the tween.' );
         runDeltaTest(inst);
         start(); 
+      }
+    );
+  });
+
+  test('Hook functions are executed in every step through an animation.', function () {
+    var inst
+        ,hookCallCount
+        ,stepCallCount;
+
+    stop();
+    inst = getTestInst();
+    hookCallCount = 0;
+    stepCallCount = 0;
+    inst.hookAdd('step', function () {
+      hookCallCount++;
+    });
+
+    simpleTestTween(
+      inst
+      ,function step () {
+        stepCallCount++;
+      }
+      ,function callback () {
+        ok(hookCallCount > 0, 'The hook function was called more than once.');
+        equal(hookCallCount, stepCallCount, 'The step function was called the same number of times as the step hook function.');
+        start();
       }
     );
   });
