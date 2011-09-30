@@ -29,7 +29,7 @@ To use this awesome Shifty extension, just load after you load `shifty.core.js`.
 Example usage:
 
 ````javascript
-var myTweenable = (new Tweenable()).init();
+var myTweenable = new Tweenable();
 
 myTweenable.tween({
 	from: {

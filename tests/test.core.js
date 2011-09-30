@@ -42,7 +42,7 @@ function runCoreTests () {
   }
 
   quickTestDuration = 250
-  module('Core functionality');
+  module('Core tests');
 
   test('Generate a series of consecutively larger numbers.', function () {
     var inst

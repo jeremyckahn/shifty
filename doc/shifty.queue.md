@@ -8,7 +8,7 @@ You can define a list of tweens to be executed sequentially as each one complete
 To queue up a tween, first make a `Tweenable()` instance:
 
 ````javascript
-var myTweenable = (new Tweenable()).init();
+var myTweenable = new Tweenable();
 ````
 
 And then call `queue()` on the instance to start tweening.  The API for `queue()` is identical to `tween()`, please consult the docs for that method if you need clarification.
