@@ -15,7 +15,7 @@ function runExtensionTests () {
   }
   
 
-  function simpleTestTween (inst, step, callback) {
+  /*function simpleTestTween (inst, step, callback) {
     inst.tween({
       'from': {
         'testVal': START_TEST_VAL
@@ -33,35 +33,76 @@ function runExtensionTests () {
       } 
       ,'callback': callback
     });
-  }
+  }*/
   
 
   test('shifty.queue.js', function () {
     var inst
-        ,queuedTween1Run
-        ,queuedTween2Run
-        ,queuedTween3Run;
+        ,queuedTweenList
+        ,startedTweensList;
 
     inst = getTestInst();
+    queuedTweenList = [];
+    startedTweensList = [];
 
-    inst.queue(START_TEST_VAL, END_TEST_VAL, QUICK_TEST_DURATION, function () {
-      queuedTween1Run = true;
+    inst.queue({
+      'from': START_TEST_VAL
+      ,'to': END_TEST_VAL
+      ,'duration': QUICK_TEST_DURATION
+      ,'start': function () {
+        startedTweensList[0] = true;
+      }
+      ,'callback': function () {
+        queuedTweenList[0] = true;
+      }
     });
 
-    inst.queue(START_TEST_VAL, END_TEST_VAL, QUICK_TEST_DURATION, function () {
-      queuedTween2Run = true;
+    inst.queue({
+      'from': START_TEST_VAL
+      ,'to': END_TEST_VAL
+      ,'duration': QUICK_TEST_DURATION
+      ,'start': function () {
+        if (startedTweensList[0] === true) {
+          startedTweensList[1] = true;
+        }
+      }
+      ,'callback': function () {
+        
+        if (queuedTweenList[0] === true) {
+          queuedTweenList[1] = true;
+        }
+      }
     });
 
-    inst.queue(START_TEST_VAL, END_TEST_VAL, QUICK_TEST_DURATION, function () {
-      queuedTween3Run = true;
-      ok(true === queuedTween1Run
-        && true === queuedTween2Run
-        && true === queuedTween3Run,
-        'All three queue tweens were run.')
-      
-      start();
+    inst.queue({
+      'from': START_TEST_VAL
+      ,'to': END_TEST_VAL
+      ,'duration': QUICK_TEST_DURATION
+      ,'start': function () {
+        if (startedTweensList[1] === true) {
+          startedTweensList[2] = true;
+        }
+      }
+      ,'callback': function () {
+        
+        if (queuedTweenList[1] === true) {
+          queuedTweenList[2] = true;
+        }
+
+        ok(true === queuedTweenList[0]
+          && true === queuedTweenList[1]
+          && true === queuedTweenList[2],
+          'All three queue tweens were run in order.');
+          
+        ok(true === startedTweensList[0]
+          && true === startedTweensList[1]
+          && true === startedTweensList[2],
+          'All three queued tweens ended before the next one began.');
+          
+        start();
+      }
     });
-    
+
     stop();
   });
 }

@@ -3,7 +3,7 @@
 /**
 Shifty - A teeny tiny tweening engine in JavaScript. 
 By Jeremy Kahn - jeremyckahn@gmail.com
-  v0.4.5
+  v0.4.6
 
 For instructions on how to use Shifty, please consult the README: https://github.com/jeremyckahn/shifty/blob/master/README.md
 
@@ -223,6 +223,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	 * @param {Object} from The beginning state Object containing the properties to tween from.  NOTE:  The properties of this Object are modified over time (to reflect the values in `to`).
 	 * @param {Object} to The target state Object containing the properties to tween to.
 	 * @param {Number} duration The amount of time in milliseconds that the tween should run for.
+	 * @param {Function} start The function to be invoked as soon as the this tween starts.  Mostly useful when used with the `queue` extension.
 	 * @param {Function} callback The function to invoke as soon as this tween completes.  This function is given the tween's current state Object as the first parameter.
 	 * @param {String} easing The name of the easing formula to use for this tween.  You can specify any easing fomula that was attached to `Tweenable.prototype.formula`.  If ommitted, the easing formula specified when the instance was created is used, or `linear` if that was omitted.
 	 * @param {Function} step A function to call for each step of the tween.  A "step" is defined as one update cycle (frame) of the tween.  Many update cycles occur to create the illusion of motion, so this function will likely be called quite a bit.
@@ -268,7 +269,11 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		applyFilter('tweenCreated', this._tweenParams.owner, [this._state.current, this._tweenParams.originalState, this._tweenParams.to]);
 		this._tweenParams.originalState = simpleCopy({}, this._state.current);
 		this._state.isAnimating = true;
-                this.resume();
+    this.resume();
+
+    if (from.start) {
+      from.start();
+    }
 		
 		return this;
 	};
@@ -673,9 +678,10 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 				context.tween(from, to, duration, callback, easing);
 			} else {
 				// Shorthand notation was used
-				
+
 				// Ensure that that `wrappedCallback` (from `queue`) gets passed along.
 				from.callback = callback;
+
 				if (from.from) {
 					context.tween(from);
 				} else {

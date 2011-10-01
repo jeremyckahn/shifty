@@ -43,9 +43,10 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 				context.tween(from, to, duration, callback, easing);
 			} else {
 				// Shorthand notation was used
-				
+
 				// Ensure that that `wrappedCallback` (from `queue`) gets passed along.
 				from.callback = callback;
+
 				if (from.from) {
 					context.tween(from);
 				} else {

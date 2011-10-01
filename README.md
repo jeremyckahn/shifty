@@ -71,6 +71,7 @@ myTweenable.tween({
   to:         {  },            // Object.  The "destination" `Number`s that the properties in `from` will tween to.
   duration:   1000,            // Number.  How long the tween lasts for, in milliseconds.
   easing:     'linear',        // String.  Easing equation to use.  You can specify any easing method that was attached to `Tweenable.prototype.formula`.
+  start:      function () {},  // Function.  Runs as soon as the tween begins.  Handy when used with the `queue` extension.
   step:       function () {},  // Function.  Runs each "frame" that the tween is updated.
   callback:   function () {}   // Function.  Runs when the tween completes.
 });
@@ -99,6 +100,7 @@ myTweenable.to({
   to:         {  },            // Object.  The "destination" `Number`s that the properties in `from` will tween to.
   duration:   1000,            // Number.  How long the tween lasts for, in milliseconds.
   easing:     'linear',        // String.  Easing equation to use.  You can specify any easing method that was attached to `Tweenable.prototype.formula`.
+  start:      function () {},  // Function.  Runs as soon as the tween begins.
   step:       function () {},  // Function.  Runs each "frame" that the tween is updated.
   callback:   function () {}   // Function.  Runs when the tween completes.
 });
