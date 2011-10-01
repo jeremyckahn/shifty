@@ -230,45 +230,50 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 	 */
 	Tweenable.prototype.tween = function tween (from, to, duration, callback, easing) {
 
-		var self = this;
+		var self
+		    ,params
+		    ,state;
 
 		if (this._state.isAnimating) {
 			return;
 		}
 		
+		self = this;
+		params = this._tweenParams;
+		state = this._state;
 		this._state.loopId = 0;
 		this._state.pausedAtTime = null;
 		
 		// Normalize some internal values depending on how `tweenableInst.tween` was invoked
 		if (to) {
 			// Assume the shorthand syntax is being used.
-			this._tweenParams.step = function () {};
-			this._state.current = from || {};
-			this._tweenParams.to = to || {};
-			this._tweenParams.duration = duration || this.duration;
-			this._tweenParams.callback = callback || function () {};
-			this._tweenParams.easing = easing || this.easing;
+			params.step = function () {};
+			params.to = to || {};
+			params.duration = duration || this.duration;
+			params.callback = callback || function () {};
+			params.easing = easing || this.easing;
+			state.current = from || {};
 		} else {
 			// If the second argument is not present, assume the longhand syntax is being used.
-			this._tweenParams.step = from.step || function () {};
-			this._tweenParams.callback = from.callback || function () {};
-			this._state.current = from.from || {};
-			this._tweenParams.to = from.to || from.target || {};
-			this._tweenParams.duration = from.duration || this.duration;
-			this._tweenParams.easing = from.easing || this.easing;
+			params.step = from.step || function () {};
+			params.callback = from.callback || function () {};
+			params.to = from.to || from.target || {};
+			params.duration = from.duration || this.duration;
+			params.easing = from.easing || this.easing;
+			state.current = from.from || {};
 		}
 		
-		this._tweenParams.timestamp = now();
-		this._tweenParams.easingFunc = this.formula[this._tweenParams.easing] || this.formula.linear;
+		params.timestamp = now();
+		params.easingFunc = this.formula[params.easing] || this.formula.linear;
 		
 		// Ensure that there is always something to tween to.
-		// Kinda dumb and slow, but makes this code way more flexible.
-		weakCopy(this._state.current, this._tweenParams.to);
-		weakCopy(this._tweenParams.to, this._state.current);
+		// Kinda dumb and wasteful, but makes this code way more flexible.
+		weakCopy(state.current, params.to);
+		weakCopy(params.to, state.current);
 		
-		applyFilter('tweenCreated', this._tweenParams.owner, [this._state.current, this._tweenParams.originalState, this._tweenParams.to]);
-		this._tweenParams.originalState = simpleCopy({}, this._state.current);
-		this._state.isAnimating = true;
+		applyFilter('tweenCreated', params.owner, [state.current, params.originalState, params.to]);
+		params.originalState = simpleCopy({}, state.current);
+		state.isAnimating = true;
     this.resume();
 
     if (from.start) {
