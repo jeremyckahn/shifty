@@ -13,28 +13,6 @@ function runExtensionTests () {
 
     return inst;
   }
-  
-
-  /*function simpleTestTween (inst, step, callback) {
-    inst.tween({
-      'from': {
-        'testVal': START_TEST_VAL
-      }
-      ,'to': {
-        'testVal': END_TEST_VAL
-      }
-      ,'duration': QUICK_TEST_DURATION
-      ,'step': function () {
-        
-        // Faking the context of the `step` call
-        step.call(inst._state.current);
-
-        return inst;
-      } 
-      ,'callback': callback
-    });
-  }*/
-  
 
   test('shifty.queue.js', function () {
     var inst
@@ -102,7 +80,8 @@ function runExtensionTests () {
         start();
       }
     });
-
+    
+    inst.queueStart();
     stop();
   });
 }

@@ -11,13 +11,19 @@ To queue up a tween, first make a `Tweenable()` instance:
 var myTweenable = new Tweenable();
 ````
 
-And then call `queue()` on the instance to start tweening.  The API for `queue()` is identical to `tween()`, please consult the docs for that method if you need clarification.
+And then call `queue()` on the instance to build up a queue of tweens.  The API for `queue()` is identical to `tween()`, please consult the docs for that method if you need clarification.
 
 ````javascript
 myTweenable.queue( from, to, duration, callback, easing );
 ````
 
-The longer `tween()` syntax is also valid.  A few more important methods:
+The longer `tween()` syntax is also valid.  All you have to do now is call `queueStart()` on the instance to start the sequence of queued tweens.
+
+````javascript
+myTweenable.queueStart();
+````
+
+A few more important methods:
 
 ````javascript
 // Removes the next queued tween to be executed

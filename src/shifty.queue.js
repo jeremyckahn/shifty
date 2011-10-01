@@ -3,7 +3,7 @@
 /**
 Shifty Queue Extension
 By Jeremy Kahn - jeremyckahn@gmail.com
-  v0.1.0
+  v0.2.0
 
 Dependencies: shifty.core.js
 
@@ -39,10 +39,10 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		// and what paramters to pass to it.
 		return function () {
 			if (to) {
-				// Longhand notation was used, call `tween`
+				// Shorthand notation was used, call `tween`
 				context.tween(from, to, duration, callback, easing);
 			} else {
-				// Shorthand notation was used
+				// Longhand notation was used
 
 				// Ensure that that `wrappedCallback` (from `queue`) gets passed along.
 				from.callback = callback;
@@ -69,7 +69,11 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		wrappedCallback = getWrappedCallback(callback, this._tweenQueue);
 		this._tweenQueue.push(tweenInit(this, from, to, duration, wrappedCallback, easing));
 
-		if (!this._tweenQueue.running) {
+		return this;
+	};
+	
+	global.Tweenable.prototype.queueStart = function () {
+	  if (!this._tweenQueue.running && this._tweenQueue.length > 0) {
 			this._tweenQueue[0]();
 			this._tweenQueue.running = true;
 		}
