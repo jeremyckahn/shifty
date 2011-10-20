@@ -150,18 +150,23 @@ Sets (and overwrites) the `Tweenable` instance's current internal state properti
 
 ##Extending Tweenable()##
 
-Shifty's true power comes from it's extensibility.  Specifically, it is designed to be inherited, and to fit easily into any prototypal inheritance chain.  A quick example of how to do that:
+Shifty's true power comes from it's extensibility.  It is designed to be an inheritable, effective base Object.  A quick example of how to do that:
 
 ````javascript
 function Cartoon () {
-	console.log('Whoop whoop!  This is my framerate: ', this.fps);
+  // Borrow `Tweenable`'s constructor
+  this.constructor.call(this);
+  console.log('Whoop whoop!  This is my framerate: ', this.fps);
 }
 
-Cartoon.prototype = new Tweenable();
+// Set `Cartoon` to share `Tweenable`'s prototype
+Cartoon.prototype = Tweenable.prototype;
 var myCartoon = new Cartoon();
 ````
 
-This is awesome because any plugins or extensions that are present on the `Tweenable()` prototype are also available to `myCartoon`, and all instances of `Cartoon` (and `Tweenable`).  You can define these inheritable functions by attaching them to the `Tweenable.prototype` object.  A full example of this:
+In this example, `Cartoon` is borrowing the prototype and constructor of `Tweeneable` to build the inheritance chain.  This is a more advanced approach, but it will likely give you the most flexibility and minimize bizarre "shared prototype" bugs.
+
+Using inheritance is awesome because any plugins or extensions that are present on the `Tweenable()` prototype are also available to `myCartoon`, and all instances of `Cartoon` (and `Tweenable`).  You can define these inheritable functions by attaching them to the `Tweenable.prototype` Object.  A full example of this:
 
 ````javascript
 // Add a new method to the `Tweenable` prototype
@@ -173,12 +178,12 @@ Tweenable.prototype.logMyProperties = function () {
 
 // Define a constructor function
 function Cartoon () {
-	this.cartoonProp = "I am a property of Cartoon!  And not the Tweenable prototype!";
-	console.log('Whoop whoop!  This is my framerate: ', this.fps);
+  this.constructor.call(this);
+  this.cartoonProp = "I am a property of Cartoon!  And not the Tweenable prototype!";
+  console.log('Whoop whoop!  This is my framerate: ', this.fps);
 }
 
-// Set `Cartoon`'s `prototype` to a `new` instance of `Tweenable`
-Cartoon.prototype = new Tweenable();
+Cartoon.prototype = Tweenable.prototype;
 
 // Make a new instance of `cartoon`
 var myCartoon = new Cartoon();
