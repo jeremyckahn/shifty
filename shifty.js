@@ -3,7 +3,7 @@
 /**
 Shifty - A teeny tiny tweening engine in JavaScript. 
 By Jeremy Kahn - jeremyckahn@gmail.com
-  v0.4.6
+  v0.4.7
 
 For instructions on how to use Shifty, please consult the README: https://github.com/jeremyckahn/shifty/blob/master/README.md
 
@@ -83,12 +83,17 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		
 		for (prop in state.current) {
 			if (state.current.hasOwnProperty(prop) && params.to.hasOwnProperty(prop)) {
-				state.current[prop] = params.originalState[prop] + ((params.to[prop] - params.originalState[prop]) * params.easingFunc(normalizedPosition));
+				//state.current[prop] = params.originalState[prop] + ((params.to[prop] - params.originalState[prop]) * params.easingFunc(normalizedPosition));
+				state.current[prop] = tweenProp(params.originalState[prop], params.to[prop], params.easingFunc, normalizedPosition);
 			}
 		}
 		
 		return state.current;
 	}
+
+        function tweenProp (from, to, easingFunc, position) {
+        	return from + (to - from) * easingFunc(position);
+        }
 	
 	function scheduleUpdate (handler, fps) {
 		return setTimeout(handler, 1000 / fps);

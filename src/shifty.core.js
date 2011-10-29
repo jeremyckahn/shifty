@@ -83,12 +83,16 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 		
 		for (prop in state.current) {
 			if (state.current.hasOwnProperty(prop) && params.to.hasOwnProperty(prop)) {
-				state.current[prop] = params.originalState[prop] + ((params.to[prop] - params.originalState[prop]) * params.easingFunc(normalizedPosition));
+				state.current[prop] = tweenProp(params.originalState[prop], params.to[prop], params.easingFunc, normalizedPosition);
 			}
 		}
 		
 		return state.current;
 	}
+
+  function tweenProp (from, to, easingFunc, position) {
+    return from + (to - from) * easingFunc(position);
+  }
 	
 	function scheduleUpdate (handler, fps) {
 		return setTimeout(handler, 1000 / fps);
