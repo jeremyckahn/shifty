@@ -150,35 +150,40 @@ Sets (and overwrites) the `Tweenable` instance's current internal state properti
 
 ##Extending Tweenable()##
 
-Shifty's true power comes from it's extensibility.  Specifically, it is designed to be inherited, and to fit easily into any prototypal inheritance chain.  A quick example of how to do that:
+Shifty's true power comes from it's extensibility.  It is designed to be an inheritable, effective base Object.  A quick example of how to set that up:
 
 ````javascript
 function Cartoon () {
-	console.log('Whoop whoop!  This is my framerate: ', this.fps);
+  // Borrow `Tweenable`'s constructor
+  this.constructor.call(this);
+  console.log('Whoop whoop!  This is my framerate: ', this.fps);
 }
 
-Cartoon.prototype = new Tweenable();
+// Set `Cartoon` to share `Tweenable`'s prototype
+Cartoon.prototype = Tweenable.prototype;
 var myCartoon = new Cartoon();
 ````
 
-This is awesome because any plugins or extensions that are present on the `Tweenable()` prototype are also available to `myCartoon`, and all instances of `Cartoon` (and `Tweenable`).  You can define these inheritable functions by attaching them to the `Tweenable.prototype` object.  A full example of this:
+In this example, `Cartoon` is borrowing the prototype and constructor of `Tweeneable` to build the inheritance chain.  This is a more advanced approach, but it will likely give you the most flexibility and minimize bizarre "shared prototype" bugs.
+
+Using inheritance is awesome because any plugins or extensions that are present on the `Tweenable()` prototype are also available to `myCartoon`, and all instances of `Cartoon` (and `Tweenable`).  You can define these inheritable functions by attaching them to the `Tweenable.prototype` Object.  A full example of this:
 
 ````javascript
 // Add a new method to the `Tweenable` prototype
 Tweenable.prototype.logMyProperties = function () {
-	Tweenable.util.each(this, function (obj, prop) {
-		console.log(prop + ': ', obj[prop]);
-	});
+  Tweenable.util.each(this, function (obj, prop) {
+    console.log(prop + ': ', obj[prop]);
+  });
 }
 
 // Define a constructor function
 function Cartoon () {
-	this.cartoonProp = "I am a property of Cartoon!  And not the Tweenable prototype!";
-	console.log('Whoop whoop!  This is my framerate: ', this.fps);
+  this.constructor.call(this);
+  this.cartoonProp = "I am a property of Cartoon!  And not the Tweenable prototype!";
+  console.log('Whoop whoop!  This is my framerate: ', this.fps);
 }
 
-// Set `Cartoon`'s `prototype` to a `new` instance of `Tweenable`
-Cartoon.prototype = new Tweenable();
+Cartoon.prototype = Tweenable.prototype;
 
 // Make a new instance of `cartoon`
 var myCartoon = new Cartoon();
@@ -206,10 +211,10 @@ You can attach as many functions as you please to any hook.  Here's an example:
 
 ````javascript
 function limitX (state) {
-	// Limit x to 300
-	if (state.x > 300) {
-		state.x = 300;
-	}
+  // Limit x to 300
+  if (state.x > 300) {
+    state.x = 300;
+  }
 }
 
 var myTweenable = new Tweenable();
@@ -248,31 +253,31 @@ Here's an annotated example of a filter:
 
 ````javascript
 Tweenable.prototype.filter.doubler = {
-	// Gets called when a tween is created.  `fromState` is the state that the tween starts at, and `toState` contains the target values.
-	'tweenCreated': function tweenCreated (fromState, toState) {
-		Tweenable.util.each(obj, function (fromState, prop) {
-			// Double each initial state property value as soon as the tween is created.
-			obj[prop] *= 2;
-		});
-	},
-	
-	// Gets called right before a tween state is calculated.
-	// `currentState` is the current state of the tweened object, `fromState` is the state that the tween started at, and `toState` contains the target values.
-	'beforeTween': function beforeTween (currentState, fromState, toState) {
-		Tweenable.util.each(toState, function (obj, prop) {
-			// Double each target property right before the tween formula is applied.
-			obj[prop] *= 2;
-		});
-	},
-	
-	// Gets called right after a tween state is calculated.
-	// `currentState` is the current state of the tweened object, `fromState` is the state that the tween started at, and `toState` contains the target values.
-	'afterTween': function afterTween (currentState, fromState, toState) {
-		Tweenable.util.each(toState, function (obj, prop) {
-			// Return the target properties back to their pre-doubled values.
-			obj[prop] /= 2;
-		});
-	}
+  // Gets called when a tween is created.  `fromState` is the state that the tween starts at, and `toState` contains the target values.
+  'tweenCreated': function tweenCreated (fromState, toState) {
+    Tweenable.util.each(obj, function (fromState, prop) {
+      // Double each initial state property value as soon as the tween is created.
+      obj[prop] *= 2;
+    });
+  },
+  
+  // Gets called right before a tween state is calculated.
+  // `currentState` is the current state of the tweened object, `fromState` is the state that the tween started at, and `toState` contains the target values.
+  'beforeTween': function beforeTween (currentState, fromState, toState) {
+    Tweenable.util.each(toState, function (obj, prop) {
+      // Double each target property right before the tween formula is applied.
+      obj[prop] *= 2;
+    });
+  },
+  
+  // Gets called right after a tween state is calculated.
+  // `currentState` is the current state of the tweened object, `fromState` is the state that the tween started at, and `toState` contains the target values.
+  'afterTween': function afterTween (currentState, fromState, toState) {
+    Tweenable.util.each(toState, function (obj, prop) {
+      // Return the target properties back to their pre-doubled values.
+      obj[prop] /= 2;
+    });
+  }
 }
 ````
 
