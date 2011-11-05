@@ -106,9 +106,9 @@ myTweenable.to({
 });
 ````
 
-However you call `to()` the only required parameter is `to`.
+However you call `to()`, the only required parameter is `to`.
 
-And yes... I should probably come up with a better naming scheme.
+And yes... I should probably come up with a better naming scheme, because even I'm confused by that.
 
 ##Controlling a tween##
 
@@ -299,7 +299,8 @@ Shifty in Use
 
 Shifty is in known to be use in the following projects:
 
-  * [Morf.js](https://github.com/joelambert/morf), by [@joelambert](https://github.com/joelambert).  Morf.js is a CSS3 Transition utility.  It lets you define your own easing formulas, but also take advantage of hardware acceleration provided by Webkit browsers.  Morf.js uses Shifty to calculate keyframe states.
+  * [Morf.js](https://github.com/joelambert/morf), by [Joe Lambert](https://github.com/joelambert).  Morf.js is a CSS3 Transition utility.  It lets you define your own easing formulas, but also take advantage of hardware acceleration provided by Webkit browsers.  Morf.js uses Shifty to calculate keyframe states.
+  * [html-timeline](https://github.com/Instrument/html-timeline), by [Thomas Reynolds](https://github.com/tdreyno).  This project acts as a wrapper for Shifty that animates HTML elements as you scroll the page.  Written in CoffeeScript!
 
 Upgrading from pre-0.4.0
 ---
