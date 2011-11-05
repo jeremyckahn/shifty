@@ -3,7 +3,7 @@
 /**
 Shifty - A teeny tiny tweening engine in JavaScript. 
 By Jeremy Kahn - jeremyckahn@gmail.com
-  v0.4.8
+  v0.4.9
 
 For instructions on how to use Shifty, please consult the README: https://github.com/jeremyckahn/shifty/blob/master/README.md
 
@@ -133,7 +133,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
    *   @property {Object} owner The `Tweenable` instance that the tween this function is acting upon belongs to.
    *   @property {Object} hook The Object containing all of the `hook`s that belong to `owner
    * @param {Object} state The configuration Object containing all of the state properties for a `Tweenable` instance.  It requires all of the @properties listed for the `state` parameter of  `tweenProps`, so see that.  It also requires:
-   *   @property {Boolean} isAnimating Whether or not this tween as actually running.
+   *   @property {Boolean} isTweening Whether or not this tween as actually running.
    *   @property {Number} loopId The property that the latest `setTimeout` invokation ID stored in.
    */
   function timeoutHandler (params, state) {
@@ -141,7 +141,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     
     currentTime = now();
     
-    if (currentTime < params.timestamp + params.duration && state.isAnimating) {
+    if (currentTime < params.timestamp + params.duration && state.isTweening) {
       // The tween is still running, schedule an update
       state.loopId = scheduleUpdate(function () {
         timeoutHandler(params, state);
@@ -238,7 +238,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
         ,params
         ,state;
 
-    if (this._state.isAnimating) {
+    if (this._state.isTweening) {
       return;
     }
     
@@ -277,7 +277,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     
     applyFilter('tweenCreated', params.owner, [state.current, params.originalState, params.to]);
     params.originalState = simpleCopy({}, state.current);
-    state.isAnimating = true;
+    state.isTweening = true;
     this.resume();
 
     if (from.start) {
@@ -332,7 +332,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
    */
   Tweenable.prototype.stop = function stop (gotoEnd) {
     clearTimeout(this._state.loopId);
-    this._state.isAnimating = false;
+    this._state.isTweening = false;
     
     if (gotoEnd) {
       simpleCopy(this._state.current, this._tweenParams.to);
