@@ -90,10 +90,25 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     return state.current;
   }
 
+  /**
+   * Tweens a single property.
+   * @param {number} from The origination value of the tween.
+   * @param {number} to The destination value of the tween.
+   * @param {Function} easingFunc The easing formula to apply to the tween.
+   * @param {number} position The normalized position (between 0.0 and 1.0) to
+   *    calculate the midpoint of 'from' and 'to' against.
+   * @returns {number} The tweened value.
+   */
   function tweenProp (from, to, easingFunc, position) {
     return from + (to - from) * easingFunc(position);
   }
   
+  /**
+   * Schedules an update.
+   * @param {Function} handler The function to execute
+   * @param {number} fps The fraction of a second in the update should occur.
+   * @returns {number} The id of the update.
+   */
   function scheduleUpdate (handler, fps) {
     return setTimeout(handler, 1000 / fps);
   }
@@ -147,8 +162,8 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
         timeoutHandler(params, state);
       }, params.owner.fps);
       
-                        applyFilter('beforeTween', params.owner, [state.current, params.originalState, params.to]);
-      tweenProps (currentTime, params, state);    
+      applyFilter('beforeTween', params.owner, [state.current, params.originalState, params.to]);
+      tweenProps (currentTime, params, state);
       applyFilter('afterTween', params.owner, [state.current, params.originalState, params.to]);
       
       if (params.hook.step) {
