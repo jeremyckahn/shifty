@@ -3,7 +3,7 @@
 /**
 Shifty - A teeny tiny tweening engine in JavaScript. 
 By Jeremy Kahn - jeremyckahn@gmail.com
-  v0.4.9
+  v0.4.10
 
 For instructions on how to use Shifty, please consult the README: https://github.com/jeremyckahn/shifty/blob/master/README.md
 
@@ -13,12 +13,18 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 (function Shifty (global) {
   
-  /**
-   * Get the current UNIX epoch time as an integer.  Exposed publicly as `Tweenable.util.now()`.
-   * @returns {Number} An integer representing the current timestamp.
-   */
-  function now () {
-    return +new Date();
+  var now;
+
+  if (typeof SHIFTY_DEBUG_NOW === 'function') {
+    now = SHIFTY_DEBUG_NOW;
+  } else {
+    /**
+     * Get the current UNIX epoch time as an integer.  Exposed publicly as `Tweenable.util.now()`.
+     * @returns {Number} An integer representing the current timestamp.
+     */
+    now = function () {
+      return +new Date();
+    };
   }
   
   /**
