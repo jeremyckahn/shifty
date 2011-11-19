@@ -299,6 +299,7 @@ Shifty in Use
 
 Shifty is in known to be use in the following projects/sites:
 
+  * [Rekapi](https://github.com/jeremyckahn/rekapi)  Shifty is a core component of Rekapi, a higher-level tool that allows developers to easily create and manage complex animations.
   * [Galaxy Nexus Landing Page](http://www.google.com/nexus/).  Shifty was used to create animations bound to the browser's scroll event.
   * [Morf.js](https://github.com/joelambert/morf), by [Joe Lambert](https://github.com/joelambert).  Morf.js is a CSS3 Transition utility.  It lets you define your own easing formulas, but also take advantage of hardware acceleration provided by Webkit browsers.  Morf.js uses Shifty to calculate keyframe states.
   * [html-timeline](https://github.com/Instrument/html-timeline), by [Thomas Reynolds](https://github.com/tdreyno).  This project acts as a wrapper for Shifty that animates HTML elements as you scroll the page.  Written in CoffeeScript!
