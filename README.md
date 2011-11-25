@@ -70,7 +70,7 @@ myTweenable.tween({
   from:       {  },            // Object.  Contains the properties to tween.  Must all be `Number`s.  Note: This object's properties are modified by the tween.
   to:         {  },            // Object.  The "destination" `Number`s that the properties in `from` will tween to.
   duration:   1000,            // Number.  How long the tween lasts for, in milliseconds.
-  easing:     'linear',        // String.  Easing equation to use.  You can specify any easing method that was attached to `Tweenable.prototype.formula`.
+  easing:     'linear',        // String or Object.  Easing equation(s) to use.  You can specify any easing method that was attached to `Tweenable.prototype.formula`.
   start:      function () {},  // Function.  Runs as soon as the tween begins.  Handy when used with the `queue` extension.
   step:       function () {},  // Function.  Runs each "frame" that the tween is updated.
   callback:   function () {}   // Function.  Runs when the tween completes.
@@ -99,7 +99,7 @@ Longhand:
 myTweenable.to({
   to:         {  },            // Object.  The "destination" `Number`s that the properties in `from` will tween to.
   duration:   1000,            // Number.  How long the tween lasts for, in milliseconds.
-  easing:     'linear',        // String.  Easing equation to use.  You can specify any easing method that was attached to `Tweenable.prototype.formula`.
+  easing:     'linear',        // String or Object.  Easing equation to use.  You can specify any easing method that was attached to `Tweenable.prototype.formula`.
   start:      function () {},  // Function.  Runs as soon as the tween begins.
   step:       function () {},  // Function.  Runs each "frame" that the tween is updated.
   callback:   function () {}   // Function.  Runs when the tween completes.
@@ -147,6 +147,29 @@ myTweenable.set(state);
 Sets (and overwrites) the `Tweenable` instance's current internal state properties.
 
   * `state`: An Object containing the properties that the state should have.  Any properties not present in this Object will be erased form the current state.
+
+##Using multiple easing formulas##
+
+You can create tweens that use different easing formulas for each property.  Having multiple easing formulas on a single tween can make for some really interesting motions, because you arent constrained to moving things in a straight line.  You can make curves!  To do this, simply supply `easing` as an Object, rather than a string to `tween()`:
+
+````javascript
+myTweenable.tween({
+  from: {
+    x: 0,
+    y: 0
+  },
+  to: {
+    x: 250,
+    y: 150
+  },
+  easing: {
+    x: 'swingFromTo',
+    y: 'bounce'
+  }
+});
+````
+
+You can use an an Object to specify the easing to use in any `Tweenable` method that accepts an `easing` parameter (on other words, you can use this with `to` and the Interpolate extension).  Mix and match to make interesting new animations.
 
 ##Extending Tweenable()##
 
