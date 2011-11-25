@@ -312,10 +312,12 @@ Building Shifty
 In the root directory, there is a file called `build.sh`.  Just do this to build the project on the command line:
 
 ````shell
-$: sh build.sh
+$: sh build.sh <version>
 ````
 
-The only requirement is `curl` and an internet connection (the script calls out to Google's Closure Compiler API).  In English:  If you are on a Mac, you're good to go.  You can find a ready-to-use build of the project at `builds/shifty.min.js`.  This build includes the core and all extensions.  Feel free to customize the build for your own needs.
+`<version>` is the label for the new build.  Shifty uses [SemVer](http://semver.org/).
+
+The only requirement for building is `curl` and an internet connection (the script calls out to Google's Closure Compiler API).  In English:  If you are on a Mac, you're good to go.  You can find a ready-to-use build of the project at `builds/shifty.min.js`.  This build includes the core and all extensions.  Feel free to customize the build for your own needs.
 
 Shifty in Use
 ---
@@ -326,8 +328,3 @@ Shifty is in known to be use in the following projects/sites:
   * [Galaxy Nexus Landing Page](http://www.google.com/nexus/).  Shifty was used to create animations bound to the browser's scroll event.
   * [Morf.js](https://github.com/joelambert/morf), by [Joe Lambert](https://github.com/joelambert).  Morf.js is a CSS3 Transition utility.  It lets you define your own easing formulas, but also take advantage of hardware acceleration provided by Webkit browsers.  Morf.js uses Shifty to calculate keyframe states.
   * [html-timeline](https://github.com/Instrument/html-timeline), by [Thomas Reynolds](https://github.com/tdreyno).  This project acts as a wrapper for Shifty that animates HTML elements as you scroll the page.  Written in CoffeeScript!
-
-Upgrading from pre-0.4.0
----
-
-Earlier versions of Shifty require a call to a `Tweenable`'s `init()`.  This requirement has been removed, and so has the `init()` method.  Simply remove any calls to `init()` and you should be fine.
