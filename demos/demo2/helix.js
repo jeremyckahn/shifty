@@ -32,14 +32,23 @@
     } 
     
     interpolatedValue = global.Tweenable.util.interpolate({
-        from: { 'left': 0 },
-        to: { 'left': HELIX_WIDTH },
+        from: {
+          'left': 0
+          ,'color': '#f00'
+        },
+        to: {
+          'left': HELIX_WIDTH 
+          ,'color': '#00f'
+        },
         position: interpolator,
         easing: 'easeInOutSine'
-    }).left;
+    });
     
     if (moddedLoopPosition > 1) {
-      return HELIX_WIDTH - interpolatedValue;
+      return {
+        'left': HELIX_WIDTH - interpolatedValue.left
+        ,'color': interpolatedValue.color
+      }
     } else {
       return interpolatedValue;
     }
@@ -51,7 +60,8 @@
     
     segment = segments[index];
     calculated = getPosition(loopPosition, index * SEGMENT_BUFFER);
-    segment.style.left = calculated + 'px';
+    segment.style.left = calculated.left + 'px';
+    //segment.style.background = calculated.color;
   }
   
   function updateSegments (startTime, callback) {
@@ -95,19 +105,19 @@
     loop();
   }
 
-        function init (containerId) {
-            pausedAtTime = startTime = Tweenable.util.now();
-            segmentContainer = document.getElementById(containerId);
-            segments = segmentContainer.children;
-            stepStateLists = [];
-            
-            for (i = 0; i < segments.length; i++) {
-                    stepStateLists.push([]);  
-            }
-            
-            window.pause = pause;
-            window.play = play;
-        }
+  function init (containerId) {
+    pausedAtTime = startTime = Tweenable.util.now();
+    segmentContainer = document.getElementById(containerId);
+    segments = segmentContainer.children;
+    stepStateLists = [];
+    
+    for (i = 0; i < segments.length; i++) {
+      stepStateLists.push([])
+    }
+    
+    window.pause = pause;
+    window.play = play;
+  }
 
   global.shiftyDemo = global.shiftyDemo || {};
 
