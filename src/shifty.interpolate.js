@@ -22,12 +22,16 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
   }
   
   function getInterpolatedValues (from, current, to, position, easing) {
+    var easingObject;
+
+    easingObject = Tweenable.util.composeEasingObject(from, easing);
+
     return global.Tweenable.util.tweenProps(position, {
       'originalState': from
       ,'to': to
       ,'timestamp': 0
       ,'duration': 1
-      ,'easingFunc': global.Tweenable.prototype.formula[easing] || global.Tweenable.prototype.formula.linear
+      ,'easing': easingObject
     }, {
       'current': current
     });
@@ -35,8 +39,9 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
   // This is the static utility version of the function.
   global.Tweenable.util.interpolate = function (from, to, position, easing) {
-    var current,
-      interpolatedValues;
+    var current
+        ,interpolatedValues
+        ,mockTweenable;
     
     // Function was passed a configuration object, extract the values
     if (from && from.from) {
@@ -45,14 +50,16 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
       easing = from.easing;
       from = from.from;
     }
-    
+
+    mockTweenable = new Tweenable();
+    mockTweenable._tweenParams.easing = easing;
     current = global.Tweenable.util.simpleCopy({}, from);
     
     // Call any data type filters
-    global.Tweenable.util.applyFilter('tweenCreated', current, [current, from, to]);
-    global.Tweenable.util.applyFilter('beforeTween', current, [current, from, to]);
-    interpolatedValues = getInterpolatedValues (from, current, to, position, easing);
-    global.Tweenable.util.applyFilter('afterTween', interpolatedValues, [interpolatedValues, from, to]);
+    global.Tweenable.util.applyFilter('tweenCreated', mockTweenable, [current, from, to]);
+    global.Tweenable.util.applyFilter('beforeTween', mockTweenable, [current, from, to]);
+    interpolatedValues = getInterpolatedValues (from, current, to, position, mockTweenable._tweenParams.easing);
+    global.Tweenable.util.applyFilter('afterTween', mockTweenable, [interpolatedValues, from, to]);
     
     return interpolatedValues;
   };

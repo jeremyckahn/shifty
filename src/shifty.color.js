@@ -108,7 +108,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
   
   function joinRGBChunks (obj, rgbPropNames) {
     var i,
-      limit;
+        limit;
       
     limit = rgbPropNames.length;
     
@@ -122,6 +122,32 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
       delete obj['__r__' + rgbPropNames[i]];
       delete obj['__g__' + rgbPropNames[i]];
       delete obj['__b__' + rgbPropNames[i]];
+    }
+  }
+
+  function expandEasingObject (easingObject, rgbPropNames) {
+    var i,
+        limit;
+      
+    limit = rgbPropNames.length;
+    
+    for (i = 0; i < limit; i++) {
+      easingObject['__r__' + rgbPropNames[i]] = easingObject[rgbPropNames[i]];
+      easingObject['__g__' + rgbPropNames[i]] = easingObject[rgbPropNames[i]];
+      easingObject['__b__' + rgbPropNames[i]] = easingObject[rgbPropNames[i]];
+    }
+  }
+
+  function collapseEasingObject (easingObject, rgbPropNames) {
+    var i,
+        limit;
+      
+    limit = rgbPropNames.length;
+    
+    for (i = 0; i < limit; i++) {
+      delete easingObject['__r__' + rgbPropNames[i]];
+      delete easingObject['__g__' + rgbPropNames[i]];
+      delete easingObject['__b__' + rgbPropNames[i]];
     }
   }
   
@@ -138,12 +164,14 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
       splitRGBChunks(currentState, savedRGBPropNames);
       splitRGBChunks(fromState, savedRGBPropNames);
       splitRGBChunks(toState, savedRGBPropNames);
+      expandEasingObject(this._tweenParams.easing, savedRGBPropNames);
     },
     
     'afterTween': function afterTween (currentState, fromState, toState) {
       joinRGBChunks(currentState, savedRGBPropNames);
       joinRGBChunks(fromState, savedRGBPropNames);
       joinRGBChunks(toState, savedRGBPropNames);
+      collapseEasingObject(this._tweenParams.easing, savedRGBPropNames);
     }
   };
   

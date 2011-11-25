@@ -1,19 +1,18 @@
-/*global setTimeout:true, clearTimeout:true */
-
 /**
-Shifty - A teeny tiny tweening engine in JavaScript. 
+Shifty - A teeny tiny tweening engine in JavaScript. v0.5.0
 By Jeremy Kahn - jeremyckahn@gmail.com
-  v0.4.10
 
 For instructions on how to use Shifty, please consult the README: https://github.com/jeremyckahn/shifty/blob/master/README.md
 
 MIT Lincense.  This code free to use, modify, distribute and enjoy.
-
 */
-
 (function Shifty (global) {
   
-  var now;
+  var now
+      ,DEFAULT_EASING = 'linear'
+      // Making an alias, because Tweenable.prototype.formula will get looked
+      // a lot, and this is way faster than resolving the symbol.
+      ,easing;
 
   if (typeof SHIFTY_DEBUG_NOW === 'function') {
     now = SHIFTY_DEBUG_NOW;
@@ -77,7 +76,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
    *   @property {Object} to The destination properties the Object is tweening to.
    *   @property {Number} duration The length of the tween in milliseconds.
    *   @property {Number} timestamp The UNIX epoch time at which the tween began.
-   *   @property {Function} easingFunc The function used to calculate the tween.  See the documentation for `Tweenable.prototype.formula` for more info on the appropriate function signature for this.
+   *   @property {Object} easing An Object of strings.  This Object's keys correspond to the keys in `to`.
    * @param {Object} state A configuration object containing current state data of the tween.  Required properties:
    *   @property {Object} current The Object containing the current `Number` values of the tween.
    */
@@ -89,7 +88,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     
     for (prop in state.current) {
       if (state.current.hasOwnProperty(prop) && params.to.hasOwnProperty(prop)) {
-        state.current[prop] = tweenProp(params.originalState[prop], params.to[prop], params.easingFunc, normalizedPosition);
+        state.current[prop] = tweenProp(params.originalState[prop], params.to[prop], easing[params.easing[prop]], normalizedPosition);
       }
     }
     
@@ -183,6 +182,32 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
       params.owner.stop(true);
     }
   }
+
+  /**
+   * Creates a fully-usable easing Object from either a string or another easing Object.  If `easing` is an Object, then this function clones it and fills in the missing properties with "linear".
+   * @param {Object} fromTweenParams
+   * @param {Object|string} easing
+   */
+  function composeEasingObject (fromTweenParams, easing) {
+    var composedEasing;
+
+    composedEasing = {};
+
+    if (typeof easing === 'string') {
+      each(fromTweenParams, function (obj, prop) {
+        composedEasing[prop] = easing;
+      });
+    // else, it's an Object
+    } else {
+      each(fromTweenParams, function (obj, prop) {
+        if (!composedEasing[prop]) {
+          composedEasing[prop] = easing[prop] || DEFAULT_EASING;
+        }
+      });
+    }
+
+    return composedEasing;
+  }
   
   /**
    * This is the `Tweenable` constructor.  Do this for fun tweeny goodness:
@@ -219,7 +244,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     this.fps = options.fps || 30;
 
     // The default easing formula.  This is exposed publicly as `tweenableInst.easing`.
-    this.easing = options.easing || 'linear';
+    this.easing = options.easing || DEFAULT_EASING;
 
     // The default `duration`.  This is exposed publicly as `tweenableInst.duration`.
     this.duration = options.duration || 500;
@@ -237,10 +262,10 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
    *   tweenableInst.tween ( {
    *     from:       Object,
    *     to:         Object,
-   *     duration:   [Number],
-   *     callback:   [Function],
-   *     easing:     [String],
-   *     step:       [Function]
+   *     duration:   Number,
+   *     callback:   Function,
+   *     easing:     String|Object,
+   *     step:       Function
    *   });
    *
    * Regardless of how you invoke this method, the only required parameters are `from` and `to`.
@@ -250,7 +275,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
    * @param {Number} duration The amount of time in milliseconds that the tween should run for.
    * @param {Function} start The function to be invoked as soon as the this tween starts.  Mostly useful when used with the `queue` extension.
    * @param {Function} callback The function to invoke as soon as this tween completes.  This function is given the tween's current state Object as the first parameter.
-   * @param {String} easing The name of the easing formula to use for this tween.  You can specify any easing fomula that was attached to `Tweenable.prototype.formula`.  If ommitted, the easing formula specified when the instance was created is used, or `linear` if that was omitted.
+   * @param {String|Object} easing This can either be a string specifying the easing formula to be used on every property of the tween, or an Object with values that are strings that specify an easing formula for a specific property.  Any properties that do not have an easing formula specified will use "linear".
    * @param {Function} step A function to call for each step of the tween.  A "step" is defined as one update cycle (frame) of the tween.  Many update cycles occur to create the illusion of motion, so this function will likely be called quite a bit.
    */
   Tweenable.prototype.tween = function tween (from, to, duration, callback, easing) {
@@ -289,13 +314,13 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     }
     
     params.timestamp = now();
-    params.easingFunc = this.formula[params.easing] || this.formula.linear;
     
     // Ensure that there is always something to tween to.
     // Kinda dumb and wasteful, but makes this code way more flexible.
     weakCopy(state.current, params.to);
     weakCopy(params.to, state.current);
-    
+
+    params.easing = composeEasingObject(state.current, params.easing);
     applyFilter('tweenCreated', params.owner, [state.current, params.originalState, params.to]);
     params.originalState = simpleCopy({}, state.current);
     state.isTweening = true;
@@ -307,13 +332,13 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     
     return this;
   };
-  
+
   /**
    * Convenience method for tweening from the current position.  This method functions identically to `tween()` (it's just a wrapper function), but implicitly passes the `Tweenable` instance's current state (what you get from `get()`) as the `from` parameter.  This supports both the longhand and shorthand syntax that `tween()` does, just omitting the `from` paramter in both cases.
    * @param {Object} target If the other parameters are omitted, this Object should contain the longhand parameters outlined in `tween()`.  If at least one other formal parameter is specified, then this Object should contain the target values to tween to.
    * @param {Number} duration Duration of the tween, in milliseconds.
    * @param {Function} callback The callback function to pass along to `tween()`.
-   * @param {String} easing The easing formula to use.
+   * @param {String|Object} easing The easing formula to use.
    */
   Tweenable.prototype.to = function to (target, duration, callback, easing) {
     if (typeof duration === 'undefined') {
@@ -450,23 +475,24 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     ,'applyFilter': applyFilter
     ,'simpleCopy': simpleCopy
     ,'weakCopy': weakCopy
+    ,'composeEasingObject': composeEasingObject
   };
   
   /**
    * This object contains all of the tweens available to Shifty.  It is extendable - simply attach properties to the Tweenable.prototype.formula Object following the same format at `linear`.
    */
-  Tweenable.prototype.formula = {
+  easing = Tweenable.prototype.formula = {
     linear: function (pos) {
       return pos;
     }
   };
-  
+
   if (typeof global.Tweenable === 'undefined') {
     // Make `Tweenable` globally accessible.
     global.Tweenable = Tweenable;
   }
   
-}(this));
+} (this));
 /**
 Shifty Easing Formulas
 Adapted for Shifty by Jeremy Kahn - jeremyckahn@gmail.com
@@ -485,184 +511,184 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 */
 
 (function (global) {
-	global.Tweenable.util.simpleCopy(global.Tweenable.prototype.formula, {
-		easeInQuad: function(pos){
-			 return Math.pow(pos, 2);
-		},
+  global.Tweenable.util.simpleCopy(global.Tweenable.prototype.formula, {
+    easeInQuad: function(pos){
+       return Math.pow(pos, 2);
+    },
 
-		easeOutQuad: function(pos){
-			return -(Math.pow((pos-1), 2) -1);
-		},
+    easeOutQuad: function(pos){
+      return -(Math.pow((pos-1), 2) -1);
+    },
 
-		easeInOutQuad: function(pos){
-			if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,2);
-			return -0.5 * ((pos-=2)*pos - 2);
-		},
+    easeInOutQuad: function(pos){
+      if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,2);
+      return -0.5 * ((pos-=2)*pos - 2);
+    },
 
-		easeInCubic: function(pos){
-			return Math.pow(pos, 3);
-		},
+    easeInCubic: function(pos){
+      return Math.pow(pos, 3);
+    },
 
-		easeOutCubic: function(pos){
-			return (Math.pow((pos-1), 3) +1);
-		},
+    easeOutCubic: function(pos){
+      return (Math.pow((pos-1), 3) +1);
+    },
 
-		easeInOutCubic: function(pos){
-			if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,3);
-			return 0.5 * (Math.pow((pos-2),3) + 2);
-		},
+    easeInOutCubic: function(pos){
+      if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,3);
+      return 0.5 * (Math.pow((pos-2),3) + 2);
+    },
 
-		easeInQuart: function(pos){
-			return Math.pow(pos, 4);
-		},
+    easeInQuart: function(pos){
+      return Math.pow(pos, 4);
+    },
 
-		easeOutQuart: function(pos){
-			return -(Math.pow((pos-1), 4) -1)
-		},
+    easeOutQuart: function(pos){
+      return -(Math.pow((pos-1), 4) -1)
+    },
 
-		easeInOutQuart: function(pos){
-			if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,4);
-			return -0.5 * ((pos-=2)*Math.pow(pos,3) - 2);
-		},
+    easeInOutQuart: function(pos){
+      if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,4);
+      return -0.5 * ((pos-=2)*Math.pow(pos,3) - 2);
+    },
 
-		easeInQuint: function(pos){
-			return Math.pow(pos, 5);
-		},
+    easeInQuint: function(pos){
+      return Math.pow(pos, 5);
+    },
 
-		easeOutQuint: function(pos){
-			return (Math.pow((pos-1), 5) +1);
-		},
+    easeOutQuint: function(pos){
+      return (Math.pow((pos-1), 5) +1);
+    },
 
-		easeInOutQuint: function(pos){
-			if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,5);
-			return 0.5 * (Math.pow((pos-2),5) + 2);
-		},
+    easeInOutQuint: function(pos){
+      if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,5);
+      return 0.5 * (Math.pow((pos-2),5) + 2);
+    },
 
-		easeInSine: function(pos){
-			return -Math.cos(pos * (Math.PI/2)) + 1;
-		},
+    easeInSine: function(pos){
+      return -Math.cos(pos * (Math.PI/2)) + 1;
+    },
 
-		easeOutSine: function(pos){
-			return Math.sin(pos * (Math.PI/2));
-		},
+    easeOutSine: function(pos){
+      return Math.sin(pos * (Math.PI/2));
+    },
 
-		easeInOutSine: function(pos){
-			return (-.5 * (Math.cos(Math.PI*pos) -1));
-		},
+    easeInOutSine: function(pos){
+      return (-.5 * (Math.cos(Math.PI*pos) -1));
+    },
 
-		easeInExpo: function(pos){
-			return (pos==0) ? 0 : Math.pow(2, 10 * (pos - 1));
-		},
+    easeInExpo: function(pos){
+      return (pos==0) ? 0 : Math.pow(2, 10 * (pos - 1));
+    },
 
-		easeOutExpo: function(pos){
-			return (pos==1) ? 1 : -Math.pow(2, -10 * pos) + 1;
-		},
+    easeOutExpo: function(pos){
+      return (pos==1) ? 1 : -Math.pow(2, -10 * pos) + 1;
+    },
 
-		easeInOutExpo: function(pos){
-			if(pos==0) return 0;
-			if(pos==1) return 1;
-			if((pos/=0.5) < 1) return 0.5 * Math.pow(2,10 * (pos-1));
-			return 0.5 * (-Math.pow(2, -10 * --pos) + 2);
-		},
+    easeInOutExpo: function(pos){
+      if(pos==0) return 0;
+      if(pos==1) return 1;
+      if((pos/=0.5) < 1) return 0.5 * Math.pow(2,10 * (pos-1));
+      return 0.5 * (-Math.pow(2, -10 * --pos) + 2);
+    },
 
-		easeInCirc: function(pos){
-			return -(Math.sqrt(1 - (pos*pos)) - 1);
-		},
+    easeInCirc: function(pos){
+      return -(Math.sqrt(1 - (pos*pos)) - 1);
+    },
 
-		easeOutCirc: function(pos){
-			return Math.sqrt(1 - Math.pow((pos-1), 2))
-		},
+    easeOutCirc: function(pos){
+      return Math.sqrt(1 - Math.pow((pos-1), 2))
+    },
 
-		easeInOutCirc: function(pos){
-			if((pos/=0.5) < 1) return -0.5 * (Math.sqrt(1 - pos*pos) - 1);
-			return 0.5 * (Math.sqrt(1 - (pos-=2)*pos) + 1);
-		},
+    easeInOutCirc: function(pos){
+      if((pos/=0.5) < 1) return -0.5 * (Math.sqrt(1 - pos*pos) - 1);
+      return 0.5 * (Math.sqrt(1 - (pos-=2)*pos) + 1);
+    },
 
-		easeOutBounce: function(pos){
-			if ((pos) < (1/2.75)) {
-			return (7.5625*pos*pos);
-			} else if (pos < (2/2.75)) {
-			return (7.5625*(pos-=(1.5/2.75))*pos + .75);
-			} else if (pos < (2.5/2.75)) {
-			return (7.5625*(pos-=(2.25/2.75))*pos + .9375);
-			} else {
-			return (7.5625*(pos-=(2.625/2.75))*pos + .984375);
-			}
-		},
+    easeOutBounce: function(pos){
+      if ((pos) < (1/2.75)) {
+      return (7.5625*pos*pos);
+      } else if (pos < (2/2.75)) {
+      return (7.5625*(pos-=(1.5/2.75))*pos + .75);
+      } else if (pos < (2.5/2.75)) {
+      return (7.5625*(pos-=(2.25/2.75))*pos + .9375);
+      } else {
+      return (7.5625*(pos-=(2.625/2.75))*pos + .984375);
+      }
+    },
 
-		easeInBack: function(pos){
-			var s = 1.70158;
-			return (pos)*pos*((s+1)*pos - s);
-		},
+    easeInBack: function(pos){
+      var s = 1.70158;
+      return (pos)*pos*((s+1)*pos - s);
+    },
 
-		easeOutBack: function(pos){
-			var s = 1.70158;
-			return (pos=pos-1)*pos*((s+1)*pos + s) + 1;
-		},
+    easeOutBack: function(pos){
+      var s = 1.70158;
+      return (pos=pos-1)*pos*((s+1)*pos + s) + 1;
+    },
 
-		easeInOutBack: function(pos){
-			var s = 1.70158;
-			if((pos/=0.5) < 1) return 0.5*(pos*pos*(((s*=(1.525))+1)*pos -s));
-			return 0.5*((pos-=2)*pos*(((s*=(1.525))+1)*pos +s) +2);
-		},
+    easeInOutBack: function(pos){
+      var s = 1.70158;
+      if((pos/=0.5) < 1) return 0.5*(pos*pos*(((s*=(1.525))+1)*pos -s));
+      return 0.5*((pos-=2)*pos*(((s*=(1.525))+1)*pos +s) +2);
+    },
 
-		elastic: function(pos) {
-			return -1 * Math.pow(4,-8*pos) * Math.sin((pos*6-1)*(2*Math.PI)/2) + 1;
-		},
+    elastic: function(pos) {
+      return -1 * Math.pow(4,-8*pos) * Math.sin((pos*6-1)*(2*Math.PI)/2) + 1;
+    },
 
-		swingFromTo: function(pos) {
-			var s = 1.70158;
-			return ((pos/=0.5) < 1) ? 0.5*(pos*pos*(((s*=(1.525))+1)*pos - s)) :
-			0.5*((pos-=2)*pos*(((s*=(1.525))+1)*pos + s) + 2);
-		},
+    swingFromTo: function(pos) {
+      var s = 1.70158;
+      return ((pos/=0.5) < 1) ? 0.5*(pos*pos*(((s*=(1.525))+1)*pos - s)) :
+      0.5*((pos-=2)*pos*(((s*=(1.525))+1)*pos + s) + 2);
+    },
 
-		swingFrom: function(pos) {
-			var s = 1.70158;
-			return pos*pos*((s+1)*pos - s);
-		},
+    swingFrom: function(pos) {
+      var s = 1.70158;
+      return pos*pos*((s+1)*pos - s);
+    },
 
-		swingTo: function(pos) {
-			var s = 1.70158;
-			return (pos-=1)*pos*((s+1)*pos + s) + 1;
-		},
+    swingTo: function(pos) {
+      var s = 1.70158;
+      return (pos-=1)*pos*((s+1)*pos + s) + 1;
+    },
 
-		bounce: function(pos) {
-			if (pos < (1/2.75)) {
-				return (7.5625*pos*pos);
-			} else if (pos < (2/2.75)) {
-				return (7.5625*(pos-=(1.5/2.75))*pos + .75);
-			} else if (pos < (2.5/2.75)) {
-				return (7.5625*(pos-=(2.25/2.75))*pos + .9375);
-			} else {
-				return (7.5625*(pos-=(2.625/2.75))*pos + .984375);
-			}
-		},
+    bounce: function(pos) {
+      if (pos < (1/2.75)) {
+        return (7.5625*pos*pos);
+      } else if (pos < (2/2.75)) {
+        return (7.5625*(pos-=(1.5/2.75))*pos + .75);
+      } else if (pos < (2.5/2.75)) {
+        return (7.5625*(pos-=(2.25/2.75))*pos + .9375);
+      } else {
+        return (7.5625*(pos-=(2.625/2.75))*pos + .984375);
+      }
+    },
 
-		bouncePast: function(pos) {
-			if (pos < (1/2.75)) {
-				return (7.5625*pos*pos);
-			} else if (pos < (2/2.75)) {
-				return 2 - (7.5625*(pos-=(1.5/2.75))*pos + .75);
-			} else if (pos < (2.5/2.75)) {
-				return 2 - (7.5625*(pos-=(2.25/2.75))*pos + .9375);
-			} else {
-				return 2 - (7.5625*(pos-=(2.625/2.75))*pos + .984375);
-			}
-		},
+    bouncePast: function(pos) {
+      if (pos < (1/2.75)) {
+        return (7.5625*pos*pos);
+      } else if (pos < (2/2.75)) {
+        return 2 - (7.5625*(pos-=(1.5/2.75))*pos + .75);
+      } else if (pos < (2.5/2.75)) {
+        return 2 - (7.5625*(pos-=(2.25/2.75))*pos + .9375);
+      } else {
+        return 2 - (7.5625*(pos-=(2.625/2.75))*pos + .984375);
+      }
+    },
 
-		easeFromTo: function(pos) {
-			if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,4);
-			return -0.5 * ((pos-=2)*Math.pow(pos,3) - 2);
-		},
+    easeFromTo: function(pos) {
+      if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,4);
+      return -0.5 * ((pos-=2)*Math.pow(pos,3) - 2);
+    },
 
-		easeFrom: function(pos) {
-			return Math.pow(pos,4);
-		},
+    easeFrom: function(pos) {
+      return Math.pow(pos,4);
+    },
 
-		easeTo: function(pos) {
-			return Math.pow(pos,0.25);
-		}
-	});
+    easeTo: function(pos) {
+      return Math.pow(pos,0.25);
+    }
+  });
 } (this));
 /*global setTimeout:true, clearTimeout:true */
 
@@ -682,90 +708,90 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 */
 
 (function shiftyQueue (global) {
-	
-	function iterateQueue (queue) {
-		queue.shift();
+  
+  function iterateQueue (queue) {
+    queue.shift();
 
-		if (queue.length) {
-			queue[0]();
-		} else {
-			queue.running = false;
-		}
-	}
-	
-	function getWrappedCallback (callback, queue) {
-		return function () {
-			callback();
-			iterateQueue(queue);
-		};
-	}
-	
-	function tweenInit (context, from, to, duration, callback, easing) {
-		// Duck typing!  This method infers some info from the parameters above to determine which method to call,
-		// and what paramters to pass to it.
-		return function () {
-			if (to) {
-				// Shorthand notation was used, call `tween`
-				context.tween(from, to, duration, callback, easing);
-			} else {
-				// Longhand notation was used
+    if (queue.length) {
+      queue[0]();
+    } else {
+      queue.running = false;
+    }
+  }
+  
+  function getWrappedCallback (callback, queue) {
+    return function () {
+      callback();
+      iterateQueue(queue);
+    };
+  }
+  
+  function tweenInit (context, from, to, duration, callback, easing) {
+    // Duck typing!  This method infers some info from the parameters above to determine which method to call,
+    // and what paramters to pass to it.
+    return function () {
+      if (to) {
+        // Shorthand notation was used, call `tween`
+        context.tween(from, to, duration, callback, easing);
+      } else {
+        // Longhand notation was used
 
-				// Ensure that that `wrappedCallback` (from `queue`) gets passed along.
-				from.callback = callback;
+        // Ensure that that `wrappedCallback` (from `queue`) gets passed along.
+        from.callback = callback;
 
-				if (from.from) {
-					context.tween(from);
-				} else {
-					// `from` data was omitted, call `to`
-					context.to(from);
-				}
-			}
-		};
-	}
+        if (from.from) {
+          context.tween(from);
+        } else {
+          // `from` data was omitted, call `to`
+          context.to(from);
+        }
+      }
+    };
+  }
 
-	global.Tweenable.prototype.queue = function (from, to, duration, callback, easing) {
-		var wrappedCallback;
-			
-		if (!this._tweenQueue) {
-			this._tweenQueue = [];
-		}
+  global.Tweenable.prototype.queue = function (from, to, duration, callback, easing) {
+    var wrappedCallback;
+      
+    if (!this._tweenQueue) {
+      this._tweenQueue = [];
+    }
 
-		// Make sure there is always an invokable callback
-		callback = callback || from.callback || function () {};
-		wrappedCallback = getWrappedCallback(callback, this._tweenQueue);
-		this._tweenQueue.push(tweenInit(this, from, to, duration, wrappedCallback, easing));
+    // Make sure there is always an invokable callback
+    callback = callback || from.callback || function () {};
+    wrappedCallback = getWrappedCallback(callback, this._tweenQueue);
+    this._tweenQueue.push(tweenInit(this, from, to, duration, wrappedCallback, easing));
 
-		return this;
-	};
-	
-	global.Tweenable.prototype.queueStart = function () {
-	  if (!this._tweenQueue.running && this._tweenQueue.length > 0) {
-			this._tweenQueue[0]();
-			this._tweenQueue.running = true;
-		}
-		
-		return this;
-	};
+    return this;
+  };
+  
+  global.Tweenable.prototype.queueStart = function () {
+    if (!this._tweenQueue.running && this._tweenQueue.length > 0) {
+      this._tweenQueue[0]();
+      this._tweenQueue.running = true;
+    }
+    
+    return this;
+  };
 
-	global.Tweenable.prototype.queueShift = function () {
-		this._tweenQueue.shift();
-		return this;
-	};
-	
-	global.Tweenable.prototype.queuePop = function () {
-		this._tweenQueue.pop();
-		return this;
-	};
+  global.Tweenable.prototype.queueShift = function () {
+    this._tweenQueue.shift();
+    return this;
+  };
+  
+  global.Tweenable.prototype.queuePop = function () {
+    this._tweenQueue.pop();
+    return this;
+  };
 
-	global.Tweenable.prototype.queueEmpty = function () {
-		this._tweenQueue.length = 0;
-		return this;
-	};
+  global.Tweenable.prototype.queueEmpty = function () {
+    this._tweenQueue.length = 0;
+    return this;
+  };
 
-	global.Tweenable.prototype.queueLength = function () {
-		return this._tweenQueue.length;
-	};
-	
+  global.Tweenable.prototype.queueLength = function () {
+    return this._tweenQueue.length;
+  };
+  
 }(this));
 /**
 Shifty Color Extension
@@ -780,142 +806,170 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 */
 
 (function shiftyColor (global) {
-	var R_SHORTHAND_HEX = /^#([0-9]|[a-f]){3}$/i,
-		R_LONGHAND_HEX = /^#([0-9]|[a-f]){6}$/i,
-		R_RGB = /^rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)\s*$/i,
-		savedRGBPropNames;
-	
-	if (!global.Tweenable) {
-		return;
-	}
-	
-	/**
-	 * Convert a base-16 number to base-10.
-	 * @param {Number|String} hex The value to convert
-	 * @returns {Number} The base-10 equivalent of `hex`.
-	 */
-	function hexToDec (hex) {
-		return parseInt(hex, 16);
-	}
+  var R_SHORTHAND_HEX = /^#([0-9]|[a-f]){3}$/i,
+    R_LONGHAND_HEX = /^#([0-9]|[a-f]){6}$/i,
+    R_RGB = /^rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)\s*$/i,
+    savedRGBPropNames;
+  
+  if (!global.Tweenable) {
+    return;
+  }
+  
+  /**
+   * Convert a base-16 number to base-10.
+   * @param {Number|String} hex The value to convert
+   * @returns {Number} The base-10 equivalent of `hex`.
+   */
+  function hexToDec (hex) {
+    return parseInt(hex, 16);
+  }
 
-	/**
-	 * Convert a hexadecimal string to an array with three items, one each for the red, blue, and green decimal values.
-	 * @param {String} hex A hexadecimal string.
-	 * @returns {Array} The converted Array of RGB values if `hex` is a valid string, or an Array of three 0's.
-	 */
-	function hexToRGBArr (hex) {
-		
-		hex = hex.replace(/#/g, '');
-		
-		// If the string is a shorthand three digit hex notation, normalize it to the standard six digit notation
-		if (hex.length === 3) {
-			hex = hex.split('');
-			hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-		}
-		
-		return [hexToDec(hex.substr(0, 2)), hexToDec(hex.substr(2, 2)), hexToDec(hex.substr(4, 2))];
-	}
-	
-	function getRGBStringFromHex (str) {
-		var rgbArr,
-			convertedStr;
-		rgbArr = hexToRGBArr(str);
-		convertedStr = 'rgb(' + rgbArr[0] + ',' + rgbArr[1] + ',' + rgbArr[2] + ')';
-		
-		return convertedStr;
-	}
-	
-	function isColorString (str) {
-		return (typeof str === 'string') && (R_SHORTHAND_HEX.test(str) || R_LONGHAND_HEX.test(str) || R_RGB.test(str));
-	}
-	
-	function isHexString (str) {
-		return (typeof str === 'string') && (R_SHORTHAND_HEX.test(str) || R_LONGHAND_HEX.test(str));
-	}
-	
-	function convertHexStringPropsToRGB (obj) {
-		global.Tweenable.util.each(obj, function (obj, prop) {
-			if (isHexString(obj[prop])) {
-				obj[prop] = getRGBStringFromHex(obj[prop]);
-			}
-		});
-	}
-	
-	function getColorStringPropNames (obj) {
-		var list;
-		
-		list = [];
-		
-		global.Tweenable.util.each(obj, function (obj, prop) {
-			if (isColorString(obj[prop])) {
-				list.push(prop);
-			}
-		});
-		
-		return list;
-	}
-	
-	function rgbToArr (str) {
-		return str.match(/(\d+)/g);
-	}
-	
-	function splitRGBChunks (obj, rgbPropNames) {
-		var i,
-			limit,
-			rgbParts;
-			
-			limit = rgbPropNames.length;
-			
-			for (i = 0; i < limit; i++) {
-				rgbParts = rgbToArr(obj[rgbPropNames[i]]);
-				obj['__r__' + rgbPropNames[i]] = +rgbParts[0];
-				obj['__g__' + rgbPropNames[i]] = +rgbParts[1];
-				obj['__b__' + rgbPropNames[i]] = +rgbParts[2];
-				delete obj[rgbPropNames[i]];
-			}
-	}
-	
-	function joinRGBChunks (obj, rgbPropNames) {
-		var i,
-			limit;
-			
-		limit = rgbPropNames.length;
-		
-		for (i = 0; i < limit; i++) {
-			
-			obj[rgbPropNames[i]] = 'rgb(' + 
-				parseInt(obj['__r__' + rgbPropNames[i]], 10) + ',' + 
-				parseInt(obj['__g__' + rgbPropNames[i]], 10) + ',' + 
-				parseInt(obj['__b__' + rgbPropNames[i]], 10) + ')';
-			
-			delete obj['__r__' + rgbPropNames[i]];
-			delete obj['__g__' + rgbPropNames[i]];
-			delete obj['__b__' + rgbPropNames[i]];
-		}
-	}
-	
-	global.Tweenable.prototype.filter.color = {
-		'tweenCreated': function tweenCreated (currentState, fromState, toState) {
-			convertHexStringPropsToRGB(currentState);
-			convertHexStringPropsToRGB(fromState);
-			convertHexStringPropsToRGB(toState);
-		},
-		
-		'beforeTween': function beforeTween (currentState, fromState, toState) {
-			savedRGBPropNames = getColorStringPropNames(fromState);
-			
-			splitRGBChunks(currentState, savedRGBPropNames);
-			splitRGBChunks(fromState, savedRGBPropNames);
-			splitRGBChunks(toState, savedRGBPropNames);
-		},
-		
-		'afterTween': function afterTween (currentState, fromState, toState) {
-			joinRGBChunks(currentState, savedRGBPropNames);
-			joinRGBChunks(fromState, savedRGBPropNames);
-			joinRGBChunks(toState, savedRGBPropNames);
-		}
-	};
-	
+  /**
+   * Convert a hexadecimal string to an array with three items, one each for the red, blue, and green decimal values.
+   * @param {String} hex A hexadecimal string.
+   * @returns {Array} The converted Array of RGB values if `hex` is a valid string, or an Array of three 0's.
+   */
+  function hexToRGBArr (hex) {
+    
+    hex = hex.replace(/#/g, '');
+    
+    // If the string is a shorthand three digit hex notation, normalize it to the standard six digit notation
+    if (hex.length === 3) {
+      hex = hex.split('');
+      hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    }
+    
+    return [hexToDec(hex.substr(0, 2)), hexToDec(hex.substr(2, 2)), hexToDec(hex.substr(4, 2))];
+  }
+  
+  function getRGBStringFromHex (str) {
+    var rgbArr,
+      convertedStr;
+    rgbArr = hexToRGBArr(str);
+    convertedStr = 'rgb(' + rgbArr[0] + ',' + rgbArr[1] + ',' + rgbArr[2] + ')';
+    
+    return convertedStr;
+  }
+  
+  function isColorString (str) {
+    return (typeof str === 'string') && (R_SHORTHAND_HEX.test(str) || R_LONGHAND_HEX.test(str) || R_RGB.test(str));
+  }
+  
+  function isHexString (str) {
+    return (typeof str === 'string') && (R_SHORTHAND_HEX.test(str) || R_LONGHAND_HEX.test(str));
+  }
+  
+  function convertHexStringPropsToRGB (obj) {
+    global.Tweenable.util.each(obj, function (obj, prop) {
+      if (isHexString(obj[prop])) {
+        obj[prop] = getRGBStringFromHex(obj[prop]);
+      }
+    });
+  }
+  
+  function getColorStringPropNames (obj) {
+    var list;
+    
+    list = [];
+    
+    global.Tweenable.util.each(obj, function (obj, prop) {
+      if (isColorString(obj[prop])) {
+        list.push(prop);
+      }
+    });
+    
+    return list;
+  }
+  
+  function rgbToArr (str) {
+    return str.match(/(\d+)/g);
+  }
+  
+  function splitRGBChunks (obj, rgbPropNames) {
+    var i,
+      limit,
+      rgbParts;
+      
+      limit = rgbPropNames.length;
+      
+      for (i = 0; i < limit; i++) {
+        rgbParts = rgbToArr(obj[rgbPropNames[i]]);
+        obj['__r__' + rgbPropNames[i]] = +rgbParts[0];
+        obj['__g__' + rgbPropNames[i]] = +rgbParts[1];
+        obj['__b__' + rgbPropNames[i]] = +rgbParts[2];
+        delete obj[rgbPropNames[i]];
+      }
+  }
+  
+  function joinRGBChunks (obj, rgbPropNames) {
+    var i,
+        limit;
+      
+    limit = rgbPropNames.length;
+    
+    for (i = 0; i < limit; i++) {
+      
+      obj[rgbPropNames[i]] = 'rgb(' + 
+        parseInt(obj['__r__' + rgbPropNames[i]], 10) + ',' + 
+        parseInt(obj['__g__' + rgbPropNames[i]], 10) + ',' + 
+        parseInt(obj['__b__' + rgbPropNames[i]], 10) + ')';
+      
+      delete obj['__r__' + rgbPropNames[i]];
+      delete obj['__g__' + rgbPropNames[i]];
+      delete obj['__b__' + rgbPropNames[i]];
+    }
+  }
+
+  function expandEasingObject (easingObject, rgbPropNames) {
+    var i,
+        limit;
+      
+    limit = rgbPropNames.length;
+    
+    for (i = 0; i < limit; i++) {
+      easingObject['__r__' + rgbPropNames[i]] = easingObject[rgbPropNames[i]];
+      easingObject['__g__' + rgbPropNames[i]] = easingObject[rgbPropNames[i]];
+      easingObject['__b__' + rgbPropNames[i]] = easingObject[rgbPropNames[i]];
+    }
+  }
+
+  function collapseEasingObject (easingObject, rgbPropNames) {
+    var i,
+        limit;
+      
+    limit = rgbPropNames.length;
+    
+    for (i = 0; i < limit; i++) {
+      delete easingObject['__r__' + rgbPropNames[i]];
+      delete easingObject['__g__' + rgbPropNames[i]];
+      delete easingObject['__b__' + rgbPropNames[i]];
+    }
+  }
+  
+  global.Tweenable.prototype.filter.color = {
+    'tweenCreated': function tweenCreated (currentState, fromState, toState) {
+      convertHexStringPropsToRGB(currentState);
+      convertHexStringPropsToRGB(fromState);
+      convertHexStringPropsToRGB(toState);
+    },
+    
+    'beforeTween': function beforeTween (currentState, fromState, toState) {
+      savedRGBPropNames = getColorStringPropNames(fromState);
+      
+      splitRGBChunks(currentState, savedRGBPropNames);
+      splitRGBChunks(fromState, savedRGBPropNames);
+      splitRGBChunks(toState, savedRGBPropNames);
+      expandEasingObject(this._tweenParams.easing, savedRGBPropNames);
+    },
+    
+    'afterTween': function afterTween (currentState, fromState, toState) {
+      joinRGBChunks(currentState, savedRGBPropNames);
+      joinRGBChunks(fromState, savedRGBPropNames);
+      joinRGBChunks(toState, savedRGBPropNames);
+      collapseEasingObject(this._tweenParams.easing, savedRGBPropNames);
+    }
+  };
+  
 }(this));
 /**
 Shifty CSS Unit Extension
@@ -930,59 +984,59 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 */
 
 (function shiftyCSSUnits (global) {
-	var R_CSS_UNITS = /(px|em|%|pc|pt|mm|cm|in|ex)/i,
-		R_QUICK_CSS_UNITS = /([a-z]|%)/gi,
-		savedTokenProps;
-	
-	function isValidString (str) {
-		return typeof str === 'string' && R_CSS_UNITS.test(str);
-	}
-	
-	function getTokenProps (obj) {
-		var collection;
+  var R_CSS_UNITS = /(px|em|%|pc|pt|mm|cm|in|ex)/i,
+    R_QUICK_CSS_UNITS = /([a-z]|%)/gi,
+    savedTokenProps;
+  
+  function isValidString (str) {
+    return typeof str === 'string' && R_CSS_UNITS.test(str);
+  }
+  
+  function getTokenProps (obj) {
+    var collection;
 
-		collection = {};
-		
-		global.Tweenable.util.each(obj, function (obj, prop) {
-			if (isValidString(obj[prop])) {
-				collection[prop] = {
-					'suffix': obj[prop].match(R_CSS_UNITS)[0]
-				};
-			}
-		});
-		
-		return collection;
-	}
-	
-	function deTokenize (obj, tokenProps) {
-		global.Tweenable.util.each(tokenProps, function (collection, token) {
-			// Extract the value from the string
-			obj[token] = +(obj[token].replace(R_QUICK_CSS_UNITS, ''));
-		});
-	}
-	
-	function reTokenize (obj, tokenProps) {
-		global.Tweenable.util.each(tokenProps, function (collection, token) {
-			obj[token] = obj[token] + collection[token].suffix;
-		});
-	}
-	
-	global.Tweenable.prototype.filter.token = {
-		'beforeTween': function beforeTween (currentState, fromState, toState) {
-			savedTokenProps = getTokenProps(fromState);
-			
-			deTokenize(currentState, savedTokenProps);
-			deTokenize(fromState, savedTokenProps);
-			deTokenize(toState, savedTokenProps);
-		},
-		
-		'afterTween': function afterTween (currentState, fromState, toState) {
-			reTokenize(currentState, savedTokenProps);
-			reTokenize(fromState, savedTokenProps);
-			reTokenize(toState, savedTokenProps);
-		}
-	};
-	
+    collection = {};
+    
+    global.Tweenable.util.each(obj, function (obj, prop) {
+      if (isValidString(obj[prop])) {
+        collection[prop] = {
+          'suffix': obj[prop].match(R_CSS_UNITS)[0]
+        };
+      }
+    });
+    
+    return collection;
+  }
+  
+  function deTokenize (obj, tokenProps) {
+    global.Tweenable.util.each(tokenProps, function (collection, token) {
+      // Extract the value from the string
+      obj[token] = +(obj[token].replace(R_QUICK_CSS_UNITS, ''));
+    });
+  }
+  
+  function reTokenize (obj, tokenProps) {
+    global.Tweenable.util.each(tokenProps, function (collection, token) {
+      obj[token] = obj[token] + collection[token].suffix;
+    });
+  }
+  
+  global.Tweenable.prototype.filter.token = {
+    'beforeTween': function beforeTween (currentState, fromState, toState) {
+      savedTokenProps = getTokenProps(fromState);
+      
+      deTokenize(currentState, savedTokenProps);
+      deTokenize(fromState, savedTokenProps);
+      deTokenize(toState, savedTokenProps);
+    },
+    
+    'afterTween': function afterTween (currentState, fromState, toState) {
+      reTokenize(currentState, savedTokenProps);
+      reTokenize(fromState, savedTokenProps);
+      reTokenize(toState, savedTokenProps);
+    }
+  };
+  
 }(this));
 /*global setTimeout:true, clearTimeout:true */
 
@@ -1002,54 +1056,61 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 */
 
 (function shiftyInterpolate (global) {
-	
-	if (!global.Tweenable) {
-		return;
-	}
-	
-	function getInterpolatedValues (from, current, to, position, easing) {
-		return global.Tweenable.util.tweenProps(position, {
-			'originalState': from
-			,'to': to
-			,'timestamp': 0
-			,'duration': 1
-			,'easingFunc': global.Tweenable.prototype.formula[easing] || global.Tweenable.prototype.formula.linear
-		}, {
-			'current': current
-		});
-	}
+  
+  if (!global.Tweenable) {
+    return;
+  }
+  
+  function getInterpolatedValues (from, current, to, position, easing) {
+    var easingObject;
 
-	// This is the static utility version of the function.
-	global.Tweenable.util.interpolate = function (from, to, position, easing) {
-		var current,
-			interpolatedValues;
-		
-		// Function was passed a configuration object, extract the values
-		if (from && from.from) {
-			to = from.to;
-			position = from.position;
-			easing = from.easing;
-			from = from.from;
-		}
-		
-		current = global.Tweenable.util.simpleCopy({}, from);
-		
-		// Call any data type filters
-		global.Tweenable.util.applyFilter('tweenCreated', current, [current, from, to]);
-		global.Tweenable.util.applyFilter('beforeTween', current, [current, from, to]);
-		interpolatedValues = getInterpolatedValues (from, current, to, position, easing);
-		global.Tweenable.util.applyFilter('afterTween', interpolatedValues, [interpolatedValues, from, to]);
-		
-		return interpolatedValues;
-	};
-	
-	// This is the inheritable instance-method version of the function.
-	global.Tweenable.prototype.interpolate = function (to, position, easing) {
-		var interpolatedValues;
-		
-		interpolatedValues = global.Tweenable.util.interpolate(this.get(), to, position, easing);
-		this.set(interpolatedValues);
-		
-		return interpolatedValues;
-	};
+    easingObject = Tweenable.util.composeEasingObject(from, easing);
+
+    return global.Tweenable.util.tweenProps(position, {
+      'originalState': from
+      ,'to': to
+      ,'timestamp': 0
+      ,'duration': 1
+      ,'easing': easingObject
+    }, {
+      'current': current
+    });
+  }
+
+  // This is the static utility version of the function.
+  global.Tweenable.util.interpolate = function (from, to, position, easing) {
+    var current
+        ,interpolatedValues
+        ,mockTweenable;
+    
+    // Function was passed a configuration object, extract the values
+    if (from && from.from) {
+      to = from.to;
+      position = from.position;
+      easing = from.easing;
+      from = from.from;
+    }
+
+    mockTweenable = new Tweenable();
+    mockTweenable._tweenParams.easing = easing;
+    current = global.Tweenable.util.simpleCopy({}, from);
+    
+    // Call any data type filters
+    global.Tweenable.util.applyFilter('tweenCreated', mockTweenable, [current, from, to]);
+    global.Tweenable.util.applyFilter('beforeTween', mockTweenable, [current, from, to]);
+    interpolatedValues = getInterpolatedValues (from, current, to, position, mockTweenable._tweenParams.easing);
+    global.Tweenable.util.applyFilter('afterTween', mockTweenable, [interpolatedValues, from, to]);
+    
+    return interpolatedValues;
+  };
+  
+  // This is the inheritable instance-method version of the function.
+  global.Tweenable.prototype.interpolate = function (to, position, easing) {
+    var interpolatedValues;
+    
+    interpolatedValues = global.Tweenable.util.interpolate(this.get(), to, position, easing);
+    this.set(interpolatedValues);
+    
+    return interpolatedValues;
+  };
 }(this));

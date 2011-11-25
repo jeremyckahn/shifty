@@ -1,18 +1,10 @@
-/*global setTimeout:true, clearTimeout:true */
-
-/**
-Shifty - A teeny tiny tweening engine in JavaScript. 
-By Jeremy Kahn - jeremyckahn@gmail.com
-
-For instructions on how to use Shifty, please consult the README: https://github.com/jeremyckahn/shifty/blob/master/README.md
-
-MIT Lincense.  This code free to use, modify, distribute and enjoy.
-
-*/
-
 (function Shifty (global) {
   
-  var now;
+  var now
+      ,DEFAULT_EASING = 'linear'
+      // Making an alias, because Tweenable.prototype.formula will get looked
+      // a lot, and this is way faster than resolving the symbol.
+      ,easing;
 
   if (typeof SHIFTY_DEBUG_NOW === 'function') {
     now = SHIFTY_DEBUG_NOW;
@@ -76,7 +68,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
    *   @property {Object} to The destination properties the Object is tweening to.
    *   @property {Number} duration The length of the tween in milliseconds.
    *   @property {Number} timestamp The UNIX epoch time at which the tween began.
-   *   @property {Function} easingFunc The function used to calculate the tween.  See the documentation for `Tweenable.prototype.formula` for more info on the appropriate function signature for this.
+   *   @property {Object} easing An Object of strings.  This Object's keys correspond to the keys in `to`.
    * @param {Object} state A configuration object containing current state data of the tween.  Required properties:
    *   @property {Object} current The Object containing the current `Number` values of the tween.
    */
@@ -88,7 +80,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     
     for (prop in state.current) {
       if (state.current.hasOwnProperty(prop) && params.to.hasOwnProperty(prop)) {
-        state.current[prop] = tweenProp(params.originalState[prop], params.to[prop], params.easingFunc, normalizedPosition);
+        state.current[prop] = tweenProp(params.originalState[prop], params.to[prop], easing[params.easing[prop]], normalizedPosition);
       }
     }
     
@@ -182,6 +174,32 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
       params.owner.stop(true);
     }
   }
+
+  /**
+   * Creates a fully-usable easing Object from either a string or another easing Object.  If `easing` is an Object, then this function clones it and fills in the missing properties with "linear".
+   * @param {Object} fromTweenParams
+   * @param {Object|string} easing
+   */
+  function composeEasingObject (fromTweenParams, easing) {
+    var composedEasing;
+
+    composedEasing = {};
+
+    if (typeof easing === 'string') {
+      each(fromTweenParams, function (obj, prop) {
+        composedEasing[prop] = easing;
+      });
+    // else, it's an Object
+    } else {
+      each(fromTweenParams, function (obj, prop) {
+        if (!composedEasing[prop]) {
+          composedEasing[prop] = easing[prop] || DEFAULT_EASING;
+        }
+      });
+    }
+
+    return composedEasing;
+  }
   
   /**
    * This is the `Tweenable` constructor.  Do this for fun tweeny goodness:
@@ -218,7 +236,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     this.fps = options.fps || 30;
 
     // The default easing formula.  This is exposed publicly as `tweenableInst.easing`.
-    this.easing = options.easing || 'linear';
+    this.easing = options.easing || DEFAULT_EASING;
 
     // The default `duration`.  This is exposed publicly as `tweenableInst.duration`.
     this.duration = options.duration || 500;
@@ -236,10 +254,10 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
    *   tweenableInst.tween ( {
    *     from:       Object,
    *     to:         Object,
-   *     duration:   [Number],
-   *     callback:   [Function],
-   *     easing:     [String],
-   *     step:       [Function]
+   *     duration:   Number,
+   *     callback:   Function,
+   *     easing:     String|Object,
+   *     step:       Function
    *   });
    *
    * Regardless of how you invoke this method, the only required parameters are `from` and `to`.
@@ -249,7 +267,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
    * @param {Number} duration The amount of time in milliseconds that the tween should run for.
    * @param {Function} start The function to be invoked as soon as the this tween starts.  Mostly useful when used with the `queue` extension.
    * @param {Function} callback The function to invoke as soon as this tween completes.  This function is given the tween's current state Object as the first parameter.
-   * @param {String} easing The name of the easing formula to use for this tween.  You can specify any easing fomula that was attached to `Tweenable.prototype.formula`.  If ommitted, the easing formula specified when the instance was created is used, or `linear` if that was omitted.
+   * @param {String|Object} easing This can either be a string specifying the easing formula to be used on every property of the tween, or an Object with values that are strings that specify an easing formula for a specific property.  Any properties that do not have an easing formula specified will use "linear".
    * @param {Function} step A function to call for each step of the tween.  A "step" is defined as one update cycle (frame) of the tween.  Many update cycles occur to create the illusion of motion, so this function will likely be called quite a bit.
    */
   Tweenable.prototype.tween = function tween (from, to, duration, callback, easing) {
@@ -288,13 +306,13 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     }
     
     params.timestamp = now();
-    params.easingFunc = this.formula[params.easing] || this.formula.linear;
     
     // Ensure that there is always something to tween to.
     // Kinda dumb and wasteful, but makes this code way more flexible.
     weakCopy(state.current, params.to);
     weakCopy(params.to, state.current);
-    
+
+    params.easing = composeEasingObject(state.current, params.easing);
     applyFilter('tweenCreated', params.owner, [state.current, params.originalState, params.to]);
     params.originalState = simpleCopy({}, state.current);
     state.isTweening = true;
@@ -306,13 +324,13 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     
     return this;
   };
-  
+
   /**
    * Convenience method for tweening from the current position.  This method functions identically to `tween()` (it's just a wrapper function), but implicitly passes the `Tweenable` instance's current state (what you get from `get()`) as the `from` parameter.  This supports both the longhand and shorthand syntax that `tween()` does, just omitting the `from` paramter in both cases.
    * @param {Object} target If the other parameters are omitted, this Object should contain the longhand parameters outlined in `tween()`.  If at least one other formal parameter is specified, then this Object should contain the target values to tween to.
    * @param {Number} duration Duration of the tween, in milliseconds.
    * @param {Function} callback The callback function to pass along to `tween()`.
-   * @param {String} easing The easing formula to use.
+   * @param {String|Object} easing The easing formula to use.
    */
   Tweenable.prototype.to = function to (target, duration, callback, easing) {
     if (typeof duration === 'undefined') {
@@ -449,20 +467,21 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     ,'applyFilter': applyFilter
     ,'simpleCopy': simpleCopy
     ,'weakCopy': weakCopy
+    ,'composeEasingObject': composeEasingObject
   };
   
   /**
    * This object contains all of the tweens available to Shifty.  It is extendable - simply attach properties to the Tweenable.prototype.formula Object following the same format at `linear`.
    */
-  Tweenable.prototype.formula = {
+  easing = Tweenable.prototype.formula = {
     linear: function (pos) {
       return pos;
     }
   };
-  
+
   if (typeof global.Tweenable === 'undefined') {
     // Make `Tweenable` globally accessible.
     global.Tweenable = Tweenable;
   }
   
-}(this));
+} (this));
