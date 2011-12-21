@@ -1,3 +1,8 @@
+
+// should be outside Shifty closure since it will be used by all modules
+// won't generate global after build
+var Tweenable;
+
 (function Shifty (global) {
   
   var now
@@ -132,7 +137,7 @@
    * @param {Array} args The arguments to pass to the function in the specified filter.
    */
   function applyFilter (filterName, applyTo, args) {
-    each(global.Tweenable.prototype.filter, function (filters, name) {
+    each(Tweenable.prototype.filter, function (filters, name) {
       if (filters[name][filterName]) {
         filters[name][filterName].apply(applyTo, args);
       }
@@ -221,7 +226,7 @@
    *   @property {String} easing The name of the default easing formula (attached to `Tweenable.prototype.formula`) to use for each `tween` made for this instance.  Default is `linear`.
    * returns {Object} `Tweenable` instance for chaining.
    */
-  function Tweenable (options) {
+  Tweenable = function (options) {
     options = options || {};
     
     this._hook = {};
@@ -247,7 +252,7 @@
     this.duration = options.duration || 500;
     
     return this;
-  }
+  };
   
   /**
    * Start a tween.  This method can be called two ways.  The shorthand way:
@@ -488,8 +493,14 @@
     }
   };
 
-  if (typeof global.Tweenable === 'undefined') {
-    // Make `Tweenable` globally accessible.
+  if (typeof exports === 'object') {
+    // nodejs
+    module.exports = Tweenable;
+  } else if (typeof define === 'function' && define.amd) {
+    // AMD
+    define(function(){ return Tweenable; });
+  } else if (typeof global.Tweenable === 'undefined') {
+    // Browser: Make `Tweenable` globally accessible.
     global.Tweenable = Tweenable;
   }
   

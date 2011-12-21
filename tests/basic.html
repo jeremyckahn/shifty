@@ -11,27 +11,24 @@
  <ol id="qunit-tests"></ol>
  <div id="qunit-fixture"></div>
 <script src="qunit/qunit.js"></script>
-<script src="utils/require.js"></script>
+
+<script src="../src/shifty.core.js"></script>
+<script src="../src/shifty.formulas.js"></script>
+<script src="../src/shifty.color.js"></script>
+<script src="../src/shifty.css_units.js"></script>
+<script src="../src/shifty.queue.js"></script>
+<script src="../src/shifty.interpolate.js"></script>
+<script src="../src/shifty.simple_ease.js"></script>
+<script src="../src/shifty.clamp.js"></script>
+<!--
+<script src="../builds/shifty.js"></script>
+-->
+<script src="test.core.js"></script>
+<script src="test.extensions.js"></script>
 
 <script>
-require(
-  ['../src/shifty.core.js'
-    ,'../src/shifty.formulas.js'
-    ,'../src/shifty.color.js'
-    ,'../src/shifty.css_units.js'
-    ,'../src/shifty.queue.js'
-    ,'../src/shifty.interpolate.js'
-    ,'../src/shifty.simple_ease.js'
-    ,'../src/shifty.clamp.js'
-    ,'test.core.js'
-    ,'test.extensions.js']
-
-,function () {
-
   runCoreTests();
   runExtensionTests();
-});
-
 </script>
 </body>
 </html>

@@ -10,13 +10,14 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 */
 
-(function shiftyColor (global) {
+(function shiftyColor () {
+
   var R_SHORTHAND_HEX = /^#([0-9]|[a-f]){3}$/i,
     R_LONGHAND_HEX = /^#([0-9]|[a-f]){6}$/i,
     R_RGB = /^rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)\s*$/i,
     savedRGBPropNames;
   
-  if (!global.Tweenable) {
+  if (!Tweenable) {
     return;
   }
   
@@ -65,7 +66,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
   }
   
   function convertHexStringPropsToRGB (obj) {
-    global.Tweenable.util.each(obj, function (obj, prop) {
+    Tweenable.util.each(obj, function (obj, prop) {
       if (isHexString(obj[prop])) {
         obj[prop] = getRGBStringFromHex(obj[prop]);
       }
@@ -77,7 +78,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     
     list = [];
     
-    global.Tweenable.util.each(obj, function (obj, prop) {
+    Tweenable.util.each(obj, function (obj, prop) {
       if (isColorString(obj[prop])) {
         list.push(prop);
       }
@@ -151,7 +152,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     }
   }
   
-  global.Tweenable.prototype.filter.color = {
+  Tweenable.prototype.filter.color = {
     'tweenCreated': function tweenCreated (currentState, fromState, toState) {
       convertHexStringPropsToRGB(currentState);
       convertHexStringPropsToRGB(fromState);
@@ -175,4 +176,4 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     }
   };
   
-}(this));
+}());

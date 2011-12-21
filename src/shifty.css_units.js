@@ -10,7 +10,8 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 */
 
-(function shiftyCSSUnits (global) {
+(function shiftyCSSUnits () {
+
   var R_CSS_UNITS = /(px|em|%|pc|pt|mm|cm|in|ex)/i,
     R_QUICK_CSS_UNITS = /([a-z]|%)/gi,
     savedTokenProps;
@@ -24,7 +25,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
     collection = {};
     
-    global.Tweenable.util.each(obj, function (obj, prop) {
+    Tweenable.util.each(obj, function (obj, prop) {
       if (isValidString(obj[prop])) {
         collection[prop] = {
           'suffix': obj[prop].match(R_CSS_UNITS)[0]
@@ -36,19 +37,19 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
   }
   
   function deTokenize (obj, tokenProps) {
-    global.Tweenable.util.each(tokenProps, function (collection, token) {
+    Tweenable.util.each(tokenProps, function (collection, token) {
       // Extract the value from the string
       obj[token] = +(obj[token].replace(R_QUICK_CSS_UNITS, ''));
     });
   }
   
   function reTokenize (obj, tokenProps) {
-    global.Tweenable.util.each(tokenProps, function (collection, token) {
+    Tweenable.util.each(tokenProps, function (collection, token) {
       obj[token] = obj[token] + collection[token].suffix;
     });
   }
   
-  global.Tweenable.prototype.filter.token = {
+  Tweenable.prototype.filter.token = {
     'beforeTween': function beforeTween (currentState, fromState, toState) {
       savedTokenProps = getTokenProps(fromState);
       
@@ -64,4 +65,4 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     }
   };
   
-}(this));
+}());
