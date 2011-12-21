@@ -15,7 +15,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 */
 
-(function shiftyQueue (global) {
+(function shiftyQueue () {
   
   function iterateQueue (queue) {
     queue.shift();
@@ -57,7 +57,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     };
   }
 
-  global.Tweenable.prototype.queue = function (from, to, duration, callback, easing) {
+  Tweenable.prototype.queue = function (from, to, duration, callback, easing) {
     var wrappedCallback;
       
     if (!this._tweenQueue) {
@@ -72,7 +72,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     return this;
   };
   
-  global.Tweenable.prototype.queueStart = function () {
+  Tweenable.prototype.queueStart = function () {
     if (!this._tweenQueue.running && this._tweenQueue.length > 0) {
       this._tweenQueue[0]();
       this._tweenQueue.running = true;
@@ -81,23 +81,23 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     return this;
   };
 
-  global.Tweenable.prototype.queueShift = function () {
+  Tweenable.prototype.queueShift = function () {
     this._tweenQueue.shift();
     return this;
   };
   
-  global.Tweenable.prototype.queuePop = function () {
+  Tweenable.prototype.queuePop = function () {
     this._tweenQueue.pop();
     return this;
   };
 
-  global.Tweenable.prototype.queueEmpty = function () {
+  Tweenable.prototype.queueEmpty = function () {
     this._tweenQueue.length = 0;
     return this;
   };
 
-  global.Tweenable.prototype.queueLength = function () {
+  Tweenable.prototype.queueLength = function () {
     return this._tweenQueue.length;
   };
   
-}(this));
+}());

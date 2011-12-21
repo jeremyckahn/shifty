@@ -319,6 +319,31 @@ $: sh build.sh <version>
 
 The only requirement for building is `curl` and an internet connection (the script calls out to Google's Closure Compiler API).  In English:  If you are on a Mac, you're good to go.  You can find a ready-to-use build of the project at `builds/shifty.min.js`.  This build includes the core and all extensions.  Feel free to customize the build for your own needs.
 
+
+AMD and NodeJS
+---
+
+If an AMD loader (eg. [RequireJS](http://requirejs.org/),
+[Curl.js](https://github.com/unscriptable/curl)) is present on the page Shifty
+won't generate any globals, so to use it you must list `"shifty"` as
+a dependency.
+
+```js
+define(['lib/shifty'], function(Tweenable){
+  //shifty was loaded and is ready to be used
+  var myAwesomeTweenable = new Tweenable();
+  ...
+});
+```
+
+Shifty can also be used on NodeJS:
+
+```js
+var Tweenable = require('./shifty');
+...
+```
+
+
 Shifty in Use
 ---
 
