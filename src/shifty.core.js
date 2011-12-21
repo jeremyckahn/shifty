@@ -333,10 +333,14 @@
    * @param {String|Object} easing The easing formula to use.
    */
   Tweenable.prototype.to = function to (target, duration, callback, easing) {
-    if (typeof duration === 'undefined') {
-      // Shorthand notation is being used
-      target.from = this.get();
-      this.tween(target);
+    if (arguments.length === 1) {
+      if ('to' in target) {
+        // Shorthand notation is being used
+        target.from = this.get();
+        this.tween(target);
+      } else {
+        this.tween(this.get(), target);
+      }
     } else {
       // Longhand notation is being used
       this.tween(this.get(), target, duration, callback, easing);
