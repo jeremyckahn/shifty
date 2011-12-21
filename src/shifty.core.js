@@ -167,7 +167,9 @@
         invokeHook('step', params.hook, params.owner, [state.current]);
       }
       
-      params.step.call(state.current);
+      if (params.step) {
+        params.step.call(state.current);
+      }
       
     } else {
       // The duration of the tween has expired
@@ -289,16 +291,15 @@
     // Normalize some internal values depending on how `tweenableInst.tween` was invoked
     if (to) {
       // Assume the shorthand syntax is being used.
-      params.step = function () {};
       params.to = to || {};
       params.duration = duration || this.duration;
-      params.callback = callback || function () {};
+      params.callback = callback;
       params.easing = easing || this.easing;
       state.current = from || {};
     } else {
       // If the second argument is not present, assume the longhand syntax is being used.
-      params.step = from.step || function () {};
-      params.callback = from.callback || function () {};
+      params.step = from.step;
+      params.callback = from.callback;
       params.to = from.to || from.target || {};
       params.duration = from.duration || this.duration;
       params.easing = from.easing || this.easing;
@@ -375,7 +376,9 @@
     if (gotoEnd) {
       simpleCopy(this._state.current, this._tweenParams.to);
       applyFilter('afterTweenEnd', this, [this._state.current, this._tweenParams.originalState, this._tweenParams.to]);
-      this._tweenParams.callback.call(this._state.current);
+      if (this._tweenParams.callback) {
+        this._tweenParams.callback.call(this._state.current);
+      }
     }
     
     return this;
