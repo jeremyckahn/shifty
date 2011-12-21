@@ -16,6 +16,8 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 */
 
 (function shiftyQueue (global) {
+
+  var noop = function(){};
   
   function iterateQueue (queue) {
     queue.shift();
@@ -65,7 +67,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     }
 
     // Make sure there is always an invokable callback
-    callback = callback || from.callback || function () {};
+    callback = callback || from.callback || noop;
     wrappedCallback = getWrappedCallback(callback, this._tweenQueue);
     this._tweenQueue.push(tweenInit(this, from, to, duration, wrappedCallback, easing));
 
