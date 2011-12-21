@@ -7,7 +7,7 @@ For instructions on how to use Shifty, please consult the README: https://github
 MIT Lincense.  This code free to use, modify, distribute and enjoy.
 */
 (function Shifty (global) {
-  
+
   var now
       ,DEFAULT_EASING = 'linear'
       // Making an alias, because Tweenable.prototype.formula will get looked
@@ -25,7 +25,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
       return +new Date();
     };
   }
-  
+
   /**
    * Handy shortcut for doing a for-in loop.  Takes care of all of the `hasOwnProperty` wizardry for you.  This is also exposed publicly, you can access it as `Tweenable.util.each()`.
    * @param {Object} obj The object to iterate through.
@@ -33,14 +33,14 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
    */
   function each (obj, func) {
     var prop;
-    
+
     for (prop in obj) {
       if (obj.hasOwnProperty(prop)) {
         func(obj, prop);
       }
     }
   }
-  
+
   /**
    * Does a basic copy of one Object's properties to another.  This is not a robust `extend` function, nor is it recusrsive.  It is only appropriate to use on objects that have primitive properties (Numbers, Strings, Boolean, etc.).  Exposed publicly as `Tweenable.util.simpleCopy()`
    * @param {Object} targetObject The object to copy into
@@ -51,10 +51,10 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     each(srcObj, function (srcObj, prop) {
       targetObj[prop] = srcObj[prop];
     });
-    
+
     return targetObj;
   }
-  
+
   /**
    * Copies each property from `srcObj` onto `targetObj`, but only if the property to copy to `targetObj` is `undefined`.
    */
@@ -64,10 +64,10 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
         targetObj[prop] = srcObj[prop];
       }
     });
-    
+
     return targetObj;
   }
-  
+
   /**
    * Calculates the interpolated tween values of an Object based on the current time.
    * @param {Number} currentPosition The current position to evaluate the tween against.
@@ -83,15 +83,15 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
   function tweenProps (currentPosition, params, state) {
     var prop,
       normalizedPosition;
-    
+
     normalizedPosition = (currentPosition - params.timestamp) / params.duration;
-    
+
     for (prop in state.current) {
       if (state.current.hasOwnProperty(prop) && params.to.hasOwnProperty(prop)) {
         state.current[prop] = tweenProp(params.originalState[prop], params.to[prop], easing[params.easing[prop]], normalizedPosition);
       }
     }
-    
+
     return state.current;
   }
 
@@ -107,7 +107,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
   function tweenProp (from, to, easingFunc, position) {
     return from + (to - from) * easingFunc(position);
   }
-  
+
   /**
    * Schedules an update.
    * @param {Function} handler The function to execute
@@ -117,7 +117,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
   function scheduleUpdate (handler, fps) {
     return setTimeout(handler, 1000 / fps);
   }
-  
+
   /**
    * Calls all of the functions bound to a specified hook on a `Tweenable` instance.
    * @param {String} hookName The name of the hook to invoke the handlers of.
@@ -127,12 +127,12 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
    */
   function invokeHook (hookName, hooks, applyTo, args) {
     var i;
-    
+
     for (i = 0; i < hooks[hookName].length; i++) {
       hooks[hookName][i].apply(applyTo, args);
     }
   }
-  
+
   /**
    * Applies a Shifty filter to `Tweenable` instance.
    * @param {String} filterName The name of the filter to apply.
@@ -146,7 +146,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
       }
     });
   }
-  
+
   /**
    * Handles the update logic for one step of a tween.
    * @param {Object} params The configuration containing all of a tween's properties.  This requires all of the `params` @properties required for `tweenProps`, so see that.  It also requires:
@@ -158,25 +158,25 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
    */
   function timeoutHandler (params, state) {
     var currentTime;
-    
+
     currentTime = now();
-    
+
     if (currentTime < params.timestamp + params.duration && state.isTweening) {
       // The tween is still running, schedule an update
       state.loopId = scheduleUpdate(function () {
         timeoutHandler(params, state);
       }, params.owner.fps);
-      
+
       applyFilter('beforeTween', params.owner, [state.current, params.originalState, params.to]);
       tweenProps (currentTime, params, state);
       applyFilter('afterTween', params.owner, [state.current, params.originalState, params.to]);
-      
+
       if (params.hook.step) {
         invokeHook('step', params.hook, params.owner, [state.current]);
       }
-      
+
       params.step.call(state.current);
-      
+
     } else {
       // The duration of the tween has expired
       params.owner.stop(true);
@@ -208,13 +208,13 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
     return composedEasing;
   }
-  
+
   /**
    * This is the `Tweenable` constructor.  Do this for fun tweeny goodness:
    * @codestart
    * var tweenableInst = new Tweenable({});
    * @codeend
-   * 
+   *
    * It accepts one parameter:
    *
    * @param {Object} options A configuration Object containing options for the `Tweenable` instance.  The following are valid:
@@ -226,7 +226,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
    */
   function Tweenable (options) {
     options = options || {};
-    
+
     this._hook = {};
 
     this._tweenParams = {
@@ -236,7 +236,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     };
 
     this._state = {};
-    
+
     // The state that the tween begins at.
     this._state.current = options.initialState || {};
 
@@ -248,13 +248,13 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
     // The default `duration`.  This is exposed publicly as `tweenableInst.duration`.
     this.duration = options.duration || 500;
-    
+
     return this;
   }
-  
+
   /**
    * Start a tween.  This method can be called two ways.  The shorthand way:
-   * 
+   *
    *   tweenableInst.tween (from, to, [duration], [callback], [easing]);
    *
    * or the longhand way:
@@ -287,13 +287,13 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     if (this._state.isTweening) {
       return;
     }
-    
+
     self = this;
     params = this._tweenParams;
     state = this._state;
     this._state.loopId = 0;
     this._state.pausedAtTime = null;
-    
+
     // Normalize some internal values depending on how `tweenableInst.tween` was invoked
     if (to) {
       // Assume the shorthand syntax is being used.
@@ -312,9 +312,9 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
       params.easing = from.easing || this.easing;
       state.current = from.from || {};
     }
-    
+
     params.timestamp = now();
-    
+
     // Ensure that there is always something to tween to.
     // Kinda dumb and wasteful, but makes this code way more flexible.
     weakCopy(state.current, params.to);
@@ -329,7 +329,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     if (from.start) {
       from.start();
     }
-    
+
     return this;
   };
 
@@ -349,10 +349,10 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
       // Longhand notation is being used
       this.tween(this.get(), target, duration, callback, easing);
     }
-    
+
     return this;
   };
-  
+
   /**
    * Returns a reference to the `Tweenable`'s current state (the `from` Object that wat passed to `tweenableInst.tween()`).
    * @returns {Object}
@@ -367,7 +367,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
    */
   Tweenable.prototype.set = function set (state) {
     this._state.current = state || {};
-    
+
     return this;
   };
 
@@ -379,16 +379,16 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
   Tweenable.prototype.stop = function stop (gotoEnd) {
     clearTimeout(this._state.loopId);
     this._state.isTweening = false;
-    
+
     if (gotoEnd) {
       simpleCopy(this._state.current, this._tweenParams.to);
       applyFilter('afterTweenEnd', this, [this._state.current, this._tweenParams.originalState, this._tweenParams.to]);
       this._tweenParams.callback.call(this._state.current);
     }
-    
+
     return this;
   };
-  
+
   /**
    * Pauses a tween.  A `pause`d tween can be resumed with `resume()`.
    * @returns {Object} The `Tween` instance for chaining.
@@ -399,25 +399,25 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     this._state.isPaused = true;
     return this;
   };
-  
+
   /**
    * Resumes a paused tween.  A tween must be `pause`d before is can be `resume`d.
    * @returns {Object} The `Tweenable` instance for chaining.
    */
   Tweenable.prototype.resume = function resume () {
     var self;
-    
+
     self = this;
 
     if (this._state.isPaused) {
       this._tweenParams.timestamp += now() - this._state.pausedAtTime;
     }
-    
+
     timeoutHandler(self._tweenParams, self._state);
-    
+
     return this;
   };
-  
+
   /**
    * Add a hook to the `Tweenable` instance.  Hooks are functions that are invoked at key points in a `Tweenable` instance's lifecycle.  A hook that is related to the tweening process (like `step`), for example, will occur for every tween that is performed by the `Tweenable` instance.  You just have to set it once.  You can attach as many functions to any given hook as you like.  The available hooks are as follows:
    *
@@ -430,10 +430,10 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     if (!this._hook.hasOwnProperty(hookName)) {
       this._hook[hookName] = [];
     }
-    
+
     this._hook[hookName].push(hookFunc);
   };
-  
+
   /**
    * Unattach a function from a hook, or all functions.
    *
@@ -442,28 +442,28 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
    */
   Tweenable.prototype.hookRemove = function hookRemove (hookName, hookFunc) {
     var i;
-    
+
     if (!this._hook.hasOwnProperty(hookName)) {
       return;
     }
-    
+
     if (!hookFunc) {
       this._hook[hookName] = [];
       return;
     }
-    
+
     for (i = this._hook[hookName].length; i >= 0; i++) {
       if (this._hook[hookName][i] === hookFunc) {
         this._hook[hookName].splice(i, 1);
       }
     }
   };
-  
+
   /**
    * Globally exposed static property to attach filters to.  Filters are used for transforming the properties of a tween at various points in a `Tweenable` instance's lifecycle.  Please consult the README for more info on this.
    */
   Tweenable.prototype.filter = {};
-  
+
   /**
    * Globally exposed static helper methods.  These methods are used internally and could be helpful in a global context as well.
    */
@@ -477,7 +477,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     ,'weakCopy': weakCopy
     ,'composeEasingObject': composeEasingObject
   };
-  
+
   /**
    * This object contains all of the tweens available to Shifty.  It is extendable - simply attach properties to the Tweenable.prototype.formula Object following the same format at `linear`.
    */
@@ -491,7 +491,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     // Make `Tweenable` globally accessible.
     global.Tweenable = Tweenable;
   }
-  
+
 } (this));
 /**
 Shifty Easing Formulas
@@ -543,7 +543,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     },
 
     easeOutQuart: function(pos){
-      return -(Math.pow((pos-1), 4) -1)
+      return -(Math.pow((pos-1), 4) -1);
     },
 
     easeInOutQuart: function(pos){
@@ -573,11 +573,11 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     },
 
     easeInOutSine: function(pos){
-      return (-.5 * (Math.cos(Math.PI*pos) -1));
+      return (-0.5 * (Math.cos(Math.PI*pos) -1));
     },
 
     easeInExpo: function(pos){
-      return (pos==0) ? 0 : Math.pow(2, 10 * (pos - 1));
+      return (pos == 0)? 0 : Math.pow(2, 10 * (pos - 1));
     },
 
     easeOutExpo: function(pos){
@@ -596,7 +596,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     },
 
     easeOutCirc: function(pos){
-      return Math.sqrt(1 - Math.pow((pos-1), 2))
+      return Math.sqrt(1 - Math.pow((pos-1), 2));
     },
 
     easeInOutCirc: function(pos){
@@ -606,13 +606,13 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
     easeOutBounce: function(pos){
       if ((pos) < (1/2.75)) {
-      return (7.5625*pos*pos);
+          return (7.5625*pos*pos);
       } else if (pos < (2/2.75)) {
-      return (7.5625*(pos-=(1.5/2.75))*pos + .75);
+          return (7.5625*(pos-=(1.5/2.75))*pos + 0.75);
       } else if (pos < (2.5/2.75)) {
-      return (7.5625*(pos-=(2.25/2.75))*pos + .9375);
+          return (7.5625*(pos-=(2.25/2.75))*pos + 0.9375);
       } else {
-      return (7.5625*(pos-=(2.625/2.75))*pos + .984375);
+          return (7.5625*(pos-=(2.625/2.75))*pos + 0.984375);
       }
     },
 
@@ -656,11 +656,11 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
       if (pos < (1/2.75)) {
         return (7.5625*pos*pos);
       } else if (pos < (2/2.75)) {
-        return (7.5625*(pos-=(1.5/2.75))*pos + .75);
+        return (7.5625*(pos-=(1.5/2.75))*pos + 0.75);
       } else if (pos < (2.5/2.75)) {
-        return (7.5625*(pos-=(2.25/2.75))*pos + .9375);
+        return (7.5625*(pos-=(2.25/2.75))*pos + 0.9375);
       } else {
-        return (7.5625*(pos-=(2.625/2.75))*pos + .984375);
+        return (7.5625*(pos-=(2.625/2.75))*pos + 0.984375);
       }
     },
 
@@ -668,11 +668,11 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
       if (pos < (1/2.75)) {
         return (7.5625*pos*pos);
       } else if (pos < (2/2.75)) {
-        return 2 - (7.5625*(pos-=(1.5/2.75))*pos + .75);
+        return 2 - (7.5625*(pos-=(1.5/2.75))*pos + 0.75);
       } else if (pos < (2.5/2.75)) {
-        return 2 - (7.5625*(pos-=(2.25/2.75))*pos + .9375);
+        return 2 - (7.5625*(pos-=(2.25/2.75))*pos + 0.9375);
       } else {
-        return 2 - (7.5625*(pos-=(2.625/2.75))*pos + .984375);
+        return 2 - (7.5625*(pos-=(2.625/2.75))*pos + 0.984375);
       }
     },
 
@@ -708,7 +708,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 */
 
 (function shiftyQueue (global) {
-  
+
   function iterateQueue (queue) {
     queue.shift();
 
@@ -718,14 +718,14 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
       queue.running = false;
     }
   }
-  
+
   function getWrappedCallback (callback, queue) {
     return function () {
       callback();
       iterateQueue(queue);
     };
   }
-  
+
   function tweenInit (context, from, to, duration, callback, easing) {
     // Duck typing!  This method infers some info from the parameters above to determine which method to call,
     // and what paramters to pass to it.
@@ -751,7 +751,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
   global.Tweenable.prototype.queue = function (from, to, duration, callback, easing) {
     var wrappedCallback;
-      
+
     if (!this._tweenQueue) {
       this._tweenQueue = [];
     }
@@ -763,13 +763,13 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
     return this;
   };
-  
+
   global.Tweenable.prototype.queueStart = function () {
     if (!this._tweenQueue.running && this._tweenQueue.length > 0) {
       this._tweenQueue[0]();
       this._tweenQueue.running = true;
     }
-    
+
     return this;
   };
 
@@ -777,7 +777,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     this._tweenQueue.shift();
     return this;
   };
-  
+
   global.Tweenable.prototype.queuePop = function () {
     this._tweenQueue.pop();
     return this;
@@ -791,7 +791,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
   global.Tweenable.prototype.queueLength = function () {
     return this._tweenQueue.length;
   };
-  
+
 }(this));
 /**
 Shifty Color Extension
@@ -810,11 +810,11 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     R_LONGHAND_HEX = /^#([0-9]|[a-f]){6}$/i,
     R_RGB = /^rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)\s*$/i,
     savedRGBPropNames;
-  
+
   if (!global.Tweenable) {
     return;
   }
-  
+
   /**
    * Convert a base-16 number to base-10.
    * @param {Number|String} hex The value to convert
@@ -830,35 +830,35 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
    * @returns {Array} The converted Array of RGB values if `hex` is a valid string, or an Array of three 0's.
    */
   function hexToRGBArr (hex) {
-    
+
     hex = hex.replace(/#/g, '');
-    
+
     // If the string is a shorthand three digit hex notation, normalize it to the standard six digit notation
     if (hex.length === 3) {
       hex = hex.split('');
       hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
     }
-    
+
     return [hexToDec(hex.substr(0, 2)), hexToDec(hex.substr(2, 2)), hexToDec(hex.substr(4, 2))];
   }
-  
+
   function getRGBStringFromHex (str) {
     var rgbArr,
       convertedStr;
     rgbArr = hexToRGBArr(str);
     convertedStr = 'rgb(' + rgbArr[0] + ',' + rgbArr[1] + ',' + rgbArr[2] + ')';
-    
+
     return convertedStr;
   }
-  
+
   function isColorString (str) {
     return (typeof str === 'string') && (R_SHORTHAND_HEX.test(str) || R_LONGHAND_HEX.test(str) || R_RGB.test(str));
   }
-  
+
   function isHexString (str) {
     return (typeof str === 'string') && (R_SHORTHAND_HEX.test(str) || R_LONGHAND_HEX.test(str));
   }
-  
+
   function convertHexStringPropsToRGB (obj) {
     global.Tweenable.util.each(obj, function (obj, prop) {
       if (isHexString(obj[prop])) {
@@ -866,32 +866,32 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
       }
     });
   }
-  
+
   function getColorStringPropNames (obj) {
     var list;
-    
+
     list = [];
-    
+
     global.Tweenable.util.each(obj, function (obj, prop) {
       if (isColorString(obj[prop])) {
         list.push(prop);
       }
     });
-    
+
     return list;
   }
-  
+
   function rgbToArr (str) {
     return str.match(/(\d+)/g);
   }
-  
+
   function splitRGBChunks (obj, rgbPropNames) {
     var i,
       limit,
       rgbParts;
-      
+
       limit = rgbPropNames.length;
-      
+
       for (i = 0; i < limit; i++) {
         rgbParts = rgbToArr(obj[rgbPropNames[i]]);
         obj['__r__' + rgbPropNames[i]] = +rgbParts[0];
@@ -900,20 +900,20 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
         delete obj[rgbPropNames[i]];
       }
   }
-  
+
   function joinRGBChunks (obj, rgbPropNames) {
     var i,
         limit;
-      
+
     limit = rgbPropNames.length;
-    
+
     for (i = 0; i < limit; i++) {
-      
-      obj[rgbPropNames[i]] = 'rgb(' + 
-        parseInt(obj['__r__' + rgbPropNames[i]], 10) + ',' + 
-        parseInt(obj['__g__' + rgbPropNames[i]], 10) + ',' + 
+
+      obj[rgbPropNames[i]] = 'rgb(' +
+        parseInt(obj['__r__' + rgbPropNames[i]], 10) + ',' +
+        parseInt(obj['__g__' + rgbPropNames[i]], 10) + ',' +
         parseInt(obj['__b__' + rgbPropNames[i]], 10) + ')';
-      
+
       delete obj['__r__' + rgbPropNames[i]];
       delete obj['__g__' + rgbPropNames[i]];
       delete obj['__b__' + rgbPropNames[i]];
@@ -923,9 +923,9 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
   function expandEasingObject (easingObject, rgbPropNames) {
     var i,
         limit;
-      
+
     limit = rgbPropNames.length;
-    
+
     for (i = 0; i < limit; i++) {
       easingObject['__r__' + rgbPropNames[i]] = easingObject[rgbPropNames[i]];
       easingObject['__g__' + rgbPropNames[i]] = easingObject[rgbPropNames[i]];
@@ -936,32 +936,32 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
   function collapseEasingObject (easingObject, rgbPropNames) {
     var i,
         limit;
-      
+
     limit = rgbPropNames.length;
-    
+
     for (i = 0; i < limit; i++) {
       delete easingObject['__r__' + rgbPropNames[i]];
       delete easingObject['__g__' + rgbPropNames[i]];
       delete easingObject['__b__' + rgbPropNames[i]];
     }
   }
-  
+
   global.Tweenable.prototype.filter.color = {
     'tweenCreated': function tweenCreated (currentState, fromState, toState) {
       convertHexStringPropsToRGB(currentState);
       convertHexStringPropsToRGB(fromState);
       convertHexStringPropsToRGB(toState);
     },
-    
+
     'beforeTween': function beforeTween (currentState, fromState, toState) {
       savedRGBPropNames = getColorStringPropNames(fromState);
-      
+
       splitRGBChunks(currentState, savedRGBPropNames);
       splitRGBChunks(fromState, savedRGBPropNames);
       splitRGBChunks(toState, savedRGBPropNames);
       expandEasingObject(this._tweenParams.easing, savedRGBPropNames);
     },
-    
+
     'afterTween': function afterTween (currentState, fromState, toState) {
       joinRGBChunks(currentState, savedRGBPropNames);
       joinRGBChunks(fromState, savedRGBPropNames);
@@ -969,7 +969,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
       collapseEasingObject(this._tweenParams.easing, savedRGBPropNames);
     }
   };
-  
+
 }(this));
 /**
 Shifty CSS Unit Extension
@@ -987,16 +987,16 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
   var R_CSS_UNITS = /(px|em|%|pc|pt|mm|cm|in|ex)/i,
     R_QUICK_CSS_UNITS = /([a-z]|%)/gi,
     savedTokenProps;
-  
+
   function isValidString (str) {
     return typeof str === 'string' && R_CSS_UNITS.test(str);
   }
-  
+
   function getTokenProps (obj) {
     var collection;
 
     collection = {};
-    
+
     global.Tweenable.util.each(obj, function (obj, prop) {
       if (isValidString(obj[prop])) {
         collection[prop] = {
@@ -1004,39 +1004,39 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
         };
       }
     });
-    
+
     return collection;
   }
-  
+
   function deTokenize (obj, tokenProps) {
     global.Tweenable.util.each(tokenProps, function (collection, token) {
       // Extract the value from the string
       obj[token] = +(obj[token].replace(R_QUICK_CSS_UNITS, ''));
     });
   }
-  
+
   function reTokenize (obj, tokenProps) {
     global.Tweenable.util.each(tokenProps, function (collection, token) {
       obj[token] = obj[token] + collection[token].suffix;
     });
   }
-  
+
   global.Tweenable.prototype.filter.token = {
     'beforeTween': function beforeTween (currentState, fromState, toState) {
       savedTokenProps = getTokenProps(fromState);
-      
+
       deTokenize(currentState, savedTokenProps);
       deTokenize(fromState, savedTokenProps);
       deTokenize(toState, savedTokenProps);
     },
-    
+
     'afterTween': function afterTween (currentState, fromState, toState) {
       reTokenize(currentState, savedTokenProps);
       reTokenize(fromState, savedTokenProps);
       reTokenize(toState, savedTokenProps);
     }
   };
-  
+
 }(this));
 /*global setTimeout:true, clearTimeout:true */
 
@@ -1056,11 +1056,11 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 */
 
 (function shiftyInterpolate (global) {
-  
+
   if (!global.Tweenable) {
     return;
   }
-  
+
   function getInterpolatedValues (from, current, to, position, easing) {
     var easingObject;
 
@@ -1082,7 +1082,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     var current
         ,interpolatedValues
         ,mockTweenable;
-    
+
     // Function was passed a configuration object, extract the values
     if (from && from.from) {
       to = from.to;
@@ -1094,23 +1094,23 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     mockTweenable = new Tweenable();
     mockTweenable._tweenParams.easing = easing;
     current = global.Tweenable.util.simpleCopy({}, from);
-    
+
     // Call any data type filters
     global.Tweenable.util.applyFilter('tweenCreated', mockTweenable, [current, from, to]);
     global.Tweenable.util.applyFilter('beforeTween', mockTweenable, [current, from, to]);
     interpolatedValues = getInterpolatedValues (from, current, to, position, mockTweenable._tweenParams.easing);
     global.Tweenable.util.applyFilter('afterTween', mockTweenable, [interpolatedValues, from, to]);
-    
+
     return interpolatedValues;
   };
-  
+
   // This is the inheritable instance-method version of the function.
   global.Tweenable.prototype.interpolate = function (to, position, easing) {
     var interpolatedValues;
-    
+
     interpolatedValues = global.Tweenable.util.interpolate(this.get(), to, position, easing);
     this.set(interpolatedValues);
-    
+
     return interpolatedValues;
   };
 }(this));

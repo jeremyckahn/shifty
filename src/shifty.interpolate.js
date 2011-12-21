@@ -16,11 +16,11 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 */
 
 (function shiftyInterpolate (global) {
-  
+
   if (!global.Tweenable) {
     return;
   }
-  
+
   function getInterpolatedValues (from, current, to, position, easing) {
     var easingObject;
 
@@ -42,7 +42,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     var current
         ,interpolatedValues
         ,mockTweenable;
-    
+
     // Function was passed a configuration object, extract the values
     if (from && from.from) {
       to = from.to;
@@ -54,23 +54,23 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     mockTweenable = new Tweenable();
     mockTweenable._tweenParams.easing = easing;
     current = global.Tweenable.util.simpleCopy({}, from);
-    
+
     // Call any data type filters
     global.Tweenable.util.applyFilter('tweenCreated', mockTweenable, [current, from, to]);
     global.Tweenable.util.applyFilter('beforeTween', mockTweenable, [current, from, to]);
     interpolatedValues = getInterpolatedValues (from, current, to, position, mockTweenable._tweenParams.easing);
     global.Tweenable.util.applyFilter('afterTween', mockTweenable, [interpolatedValues, from, to]);
-    
+
     return interpolatedValues;
   };
-  
+
   // This is the inheritable instance-method version of the function.
   global.Tweenable.prototype.interpolate = function (to, position, easing) {
     var interpolatedValues;
-    
+
     interpolatedValues = global.Tweenable.util.interpolate(this.get(), to, position, easing);
     this.set(interpolatedValues);
-    
+
     return interpolatedValues;
   };
 }(this));

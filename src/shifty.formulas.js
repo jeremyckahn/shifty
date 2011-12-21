@@ -48,7 +48,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     },
 
     easeOutQuart: function(pos){
-      return -(Math.pow((pos-1), 4) -1)
+      return -(Math.pow((pos-1), 4) -1);
     },
 
     easeInOutQuart: function(pos){
@@ -78,11 +78,11 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     },
 
     easeInOutSine: function(pos){
-      return (-.5 * (Math.cos(Math.PI*pos) -1));
+      return (-0.5 * (Math.cos(Math.PI*pos) -1));
     },
 
     easeInExpo: function(pos){
-      return (pos==0) ? 0 : Math.pow(2, 10 * (pos - 1));
+      return (pos == 0)? 0 : Math.pow(2, 10 * (pos - 1));
     },
 
     easeOutExpo: function(pos){
@@ -101,7 +101,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     },
 
     easeOutCirc: function(pos){
-      return Math.sqrt(1 - Math.pow((pos-1), 2))
+      return Math.sqrt(1 - Math.pow((pos-1), 2));
     },
 
     easeInOutCirc: function(pos){
@@ -111,13 +111,13 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
     easeOutBounce: function(pos){
       if ((pos) < (1/2.75)) {
-      return (7.5625*pos*pos);
+          return (7.5625*pos*pos);
       } else if (pos < (2/2.75)) {
-      return (7.5625*(pos-=(1.5/2.75))*pos + .75);
+          return (7.5625*(pos-=(1.5/2.75))*pos + 0.75);
       } else if (pos < (2.5/2.75)) {
-      return (7.5625*(pos-=(2.25/2.75))*pos + .9375);
+          return (7.5625*(pos-=(2.25/2.75))*pos + 0.9375);
       } else {
-      return (7.5625*(pos-=(2.625/2.75))*pos + .984375);
+          return (7.5625*(pos-=(2.625/2.75))*pos + 0.984375);
       }
     },
 
@@ -161,11 +161,11 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
       if (pos < (1/2.75)) {
         return (7.5625*pos*pos);
       } else if (pos < (2/2.75)) {
-        return (7.5625*(pos-=(1.5/2.75))*pos + .75);
+        return (7.5625*(pos-=(1.5/2.75))*pos + 0.75);
       } else if (pos < (2.5/2.75)) {
-        return (7.5625*(pos-=(2.25/2.75))*pos + .9375);
+        return (7.5625*(pos-=(2.25/2.75))*pos + 0.9375);
       } else {
-        return (7.5625*(pos-=(2.625/2.75))*pos + .984375);
+        return (7.5625*(pos-=(2.625/2.75))*pos + 0.984375);
       }
     },
 
@@ -173,11 +173,11 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
       if (pos < (1/2.75)) {
         return (7.5625*pos*pos);
       } else if (pos < (2/2.75)) {
-        return 2 - (7.5625*(pos-=(1.5/2.75))*pos + .75);
+        return 2 - (7.5625*(pos-=(1.5/2.75))*pos + 0.75);
       } else if (pos < (2.5/2.75)) {
-        return 2 - (7.5625*(pos-=(2.25/2.75))*pos + .9375);
+        return 2 - (7.5625*(pos-=(2.25/2.75))*pos + 0.9375);
       } else {
-        return 2 - (7.5625*(pos-=(2.625/2.75))*pos + .984375);
+        return 2 - (7.5625*(pos-=(2.625/2.75))*pos + 0.984375);
       }
     },
 
