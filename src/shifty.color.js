@@ -15,11 +15,11 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     R_LONGHAND_HEX = /^#([0-9]|[a-f]){6}$/i,
     R_RGB = /^rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)\s*$/i,
     savedRGBPropNames;
-  
+
   if (!global.Tweenable) {
     return;
   }
-  
+
   /**
    * Convert a base-16 number to base-10.
    * @param {Number|String} hex The value to convert
@@ -35,35 +35,35 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
    * @returns {Array} The converted Array of RGB values if `hex` is a valid string, or an Array of three 0's.
    */
   function hexToRGBArr (hex) {
-    
+
     hex = hex.replace(/#/g, '');
-    
+
     // If the string is a shorthand three digit hex notation, normalize it to the standard six digit notation
     if (hex.length === 3) {
       hex = hex.split('');
       hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
     }
-    
+
     return [hexToDec(hex.substr(0, 2)), hexToDec(hex.substr(2, 2)), hexToDec(hex.substr(4, 2))];
   }
-  
+
   function getRGBStringFromHex (str) {
     var rgbArr,
       convertedStr;
     rgbArr = hexToRGBArr(str);
     convertedStr = 'rgb(' + rgbArr[0] + ',' + rgbArr[1] + ',' + rgbArr[2] + ')';
-    
+
     return convertedStr;
   }
-  
+
   function isColorString (str) {
     return (typeof str === 'string') && (R_SHORTHAND_HEX.test(str) || R_LONGHAND_HEX.test(str) || R_RGB.test(str));
   }
-  
+
   function isHexString (str) {
     return (typeof str === 'string') && (R_SHORTHAND_HEX.test(str) || R_LONGHAND_HEX.test(str));
   }
-  
+
   function convertHexStringPropsToRGB (obj) {
     global.Tweenable.util.each(obj, function (obj, prop) {
       if (isHexString(obj[prop])) {
@@ -71,32 +71,32 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
       }
     });
   }
-  
+
   function getColorStringPropNames (obj) {
     var list;
-    
+
     list = [];
-    
+
     global.Tweenable.util.each(obj, function (obj, prop) {
       if (isColorString(obj[prop])) {
         list.push(prop);
       }
     });
-    
+
     return list;
   }
-  
+
   function rgbToArr (str) {
     return str.match(/(\d+)/g);
   }
-  
+
   function splitRGBChunks (obj, rgbPropNames) {
     var i,
       limit,
       rgbParts;
-      
+
       limit = rgbPropNames.length;
-      
+
       for (i = 0; i < limit; i++) {
         rgbParts = rgbToArr(obj[rgbPropNames[i]]);
         obj['__r__' + rgbPropNames[i]] = +rgbParts[0];
@@ -105,20 +105,20 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
         delete obj[rgbPropNames[i]];
       }
   }
-  
+
   function joinRGBChunks (obj, rgbPropNames) {
     var i,
         limit;
-      
+
     limit = rgbPropNames.length;
-    
+
     for (i = 0; i < limit; i++) {
-      
-      obj[rgbPropNames[i]] = 'rgb(' + 
-        parseInt(obj['__r__' + rgbPropNames[i]], 10) + ',' + 
-        parseInt(obj['__g__' + rgbPropNames[i]], 10) + ',' + 
+
+      obj[rgbPropNames[i]] = 'rgb(' +
+        parseInt(obj['__r__' + rgbPropNames[i]], 10) + ',' +
+        parseInt(obj['__g__' + rgbPropNames[i]], 10) + ',' +
         parseInt(obj['__b__' + rgbPropNames[i]], 10) + ')';
-      
+
       delete obj['__r__' + rgbPropNames[i]];
       delete obj['__g__' + rgbPropNames[i]];
       delete obj['__b__' + rgbPropNames[i]];
@@ -128,9 +128,9 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
   function expandEasingObject (easingObject, rgbPropNames) {
     var i,
         limit;
-      
+
     limit = rgbPropNames.length;
-    
+
     for (i = 0; i < limit; i++) {
       easingObject['__r__' + rgbPropNames[i]] = easingObject[rgbPropNames[i]];
       easingObject['__g__' + rgbPropNames[i]] = easingObject[rgbPropNames[i]];
@@ -141,32 +141,32 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
   function collapseEasingObject (easingObject, rgbPropNames) {
     var i,
         limit;
-      
+
     limit = rgbPropNames.length;
-    
+
     for (i = 0; i < limit; i++) {
       delete easingObject['__r__' + rgbPropNames[i]];
       delete easingObject['__g__' + rgbPropNames[i]];
       delete easingObject['__b__' + rgbPropNames[i]];
     }
   }
-  
+
   global.Tweenable.prototype.filter.color = {
     'tweenCreated': function tweenCreated (currentState, fromState, toState) {
       convertHexStringPropsToRGB(currentState);
       convertHexStringPropsToRGB(fromState);
       convertHexStringPropsToRGB(toState);
     },
-    
+
     'beforeTween': function beforeTween (currentState, fromState, toState) {
       savedRGBPropNames = getColorStringPropNames(fromState);
-      
+
       splitRGBChunks(currentState, savedRGBPropNames);
       splitRGBChunks(fromState, savedRGBPropNames);
       splitRGBChunks(toState, savedRGBPropNames);
       expandEasingObject(this._tweenParams.easing, savedRGBPropNames);
     },
-    
+
     'afterTween': function afterTween (currentState, fromState, toState) {
       joinRGBChunks(currentState, savedRGBPropNames);
       joinRGBChunks(fromState, savedRGBPropNames);
@@ -174,5 +174,5 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
       collapseEasingObject(this._tweenParams.easing, savedRGBPropNames);
     }
   };
-  
+
 }(this));

@@ -17,19 +17,19 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 (function shiftyClamp (global) {
   var staticClamp;
-  
+
   if (!global.Tweenable) {
     return;
   }
-  
+
   function applyClampsToState (state) {
     var clamps;
-    
+
     // Combine both the static clamps and instance clamps.  Instance clamps trump Static clamps, if there is a conflict.
     // The first part of the check is ugly, because this may have been called statically.
-    clamps = global.Tweenable.util.weakCopy( 
+    clamps = global.Tweenable.util.weakCopy(
       ((this._tweenParams && this._tweenParams.data.clamps) || {}), staticClamp.clamps);
-    
+
     global.Tweenable.util.each(clamps, function (obj, prop) {
       if (state.hasOwnProperty(prop)) {
         state[prop] = Math.max(state[prop], clamps[prop].bottom);
@@ -37,7 +37,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
       }
     });
   }
-  
+
   // Static versions of the clamp methods.  These set clamps for all tweens made by `Tweenable`.
   // If an instance of `Tweenable` has a clamp on a property, and different clamp has been set
   // statically on the same propety, only the instance clamp is respected.
@@ -47,33 +47,33 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
       ,'top': topRange
     };
   };
-  
+
   global.Tweenable.util.removeClamp = function (propertyName) {
     return delete staticClamp.clamps[propertyName];
   };
-  
+
   // This is the inheritable instance-method version of the function.
   global.Tweenable.prototype.setClamp = function (propertyName, bottomRange, topRange) {
     if (!this._tweenParams.data.clamps) {
       this._tweenParams.data.clamps = {};
     }
-    
+
     this._tweenParams.data.clamps[propertyName] = {
       'bottom': bottomRange
       ,'top': topRange
     };
   };
-  
+
   global.Tweenable.prototype.removeClamp = function (propertyName) {
     return delete this._tweenParams.data.clamps[propertyName];
   };
-  
+
   global.Tweenable.prototype.filter.clamp = {
     'afterTween': applyClampsToState
-    
+
     ,'afterTweenEnd': applyClampsToState
   };
-  
+
   staticClamp.clamps = {};
-  
+
 }(this));
