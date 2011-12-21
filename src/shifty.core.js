@@ -149,15 +149,17 @@
    *   @property {Number} loopId The property that the latest `setTimeout` invokation ID stored in.
    */
   function timeoutHandler (params, state) {
-    var currentTime;
+    var endTime = params.timestamp + params.duration
+        ,currentTime = Math.min(now(), endTime)
+        ,didEnded = currentTime >= endTime;
     
-    currentTime = now();
-    
-    if (currentTime < params.timestamp + params.duration && state.isTweening) {
-      // The tween is still running, schedule an update
-      state.loopId = scheduleUpdate(function () {
-        timeoutHandler(params, state);
-      }, params.owner.fps);
+    if (state.isTweening) {
+      if (!didEnded) {
+        // The tween is still running, schedule an update
+        state.loopId = scheduleUpdate(function () {
+          timeoutHandler(params, state);
+        }, params.owner.fps);
+      }
       
       applyFilter('beforeTween', params.owner, [state.current, params.originalState, params.to]);
       tweenProps (currentTime, params, state);
@@ -169,10 +171,13 @@
       
       params.step.call(state.current);
       
-    } else {
+    }
+
+    if (didEnded || !state.isTweening) {
       // The duration of the tween has expired
       params.owner.stop(true);
     }
+
   }
 
   /**
