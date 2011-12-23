@@ -1,0 +1,207 @@
+<html>
+<head>
+<link href="qunit/qunit.css" rel="stylesheet" type="text/css" />
+<head>
+<body>
+
+<h1 id="qunit-header"><a href="https://github.com/jeremyckahn/shifty">Shifty</a></h1>
+ <h2 id="qunit-banner"></h2>
+ <div id="qunit-testrunner-toolbar"></div>
+ <h2 id="qunit-userAgent"></h2>
+ <ol id="qunit-tests"></ol>
+ <div id="qunit-fixture"></div>
+<script src="qunit/qunit.js"></script>
+<script>
+  var mock_time = function () {
+    return +(new Date());
+  }
+  ,SHIFTY_DEBUG_NOW = function () {
+    return mock_time();
+  };
+</script>
+<script src="../src/shifty.core.js"></script>
+<script src="../src/shifty.formulas.js"></script>
+<script src="../src/shifty.color.js"></script>
+<script src="../src/shifty.css_units.js"></script>
+<script src="../src/shifty.queue.js"></script>
+<script src="../src/shifty.interpolate.js"></script>
+<script src="../src/shifty.simple_ease.js"></script>
+<script src="../src/shifty.clamp.js"></script>
+<!--
+<script src="../builds/shifty.js"></script>
+-->
+<script src="test.core.js"></script>
+<script src="test.extensions.js"></script>
+
+<script>
+  /*runCoreTests();*/
+  /*runExtensionTests();*/
+  (function () {
+    var log = console.log;
+
+    function forceInternalUpdate (tweenable) {
+      timeoutHandler(tweenable._tweenParams, tweenable._state);
+    }
+
+    module('Tweenable.prototype.tween (shorthand format)');
+
+    test('Midpoints of a tween are correctly computed', function () {
+      var tweenable = new Tweenable();
+      mock_time = function () {return 0;};
+      tweenable.tween({ x: 0 }, { x: 100 }, 1000);
+
+      equals(tweenable.get().x, 0, 'The tween starts at 0');
+      mock_time = function () {return 500;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 50,
+          'The middle of the tween equates to .5 of the target value');
+      mock_time = function () {return 1000;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 100,
+          'The end of the tween equates to 1.0 of the target value');
+      mock_time = function () {return 100000;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 100,
+          'Anything after end of the tween equates to 1.0 of the target value');
+    });
+
+
+    module('Tweenable.prototype.tween (longhand format)');
+
+    test('Midpoints of a tween are correctly computed', function () {
+      var tweenable = new Tweenable();
+      mock_time = function () {return 0;};
+      tweenable.tween({
+        from: { x: 0 }
+        ,to: { x: 100}
+        ,duration: 1000
+      });
+
+      equals(tweenable.get().x, 0, 'The tween starts at 0');
+      mock_time = function () {return 500;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 50,
+          'The middle of the tween equates to .5 of the target value');
+      mock_time = function () {return 1000;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 100,
+          'The end of the tween equates to 1.0 of the target value');
+      mock_time = function () {return 100000;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 100,
+          'Anything after end of the tween equates to 1.0 of the target value');
+    });
+
+
+    module('Tweenable.prototype.pause');
+
+    test('pause() moves the end time of the tween', function () {
+      var tweenable = new Tweenable();
+      mock_time = function () {return 0;};
+      tweenable.tween({ x: 0 }, { x: 100 }, 1000);
+
+      mock_time = function () {return 500;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 50,
+          'Pre-pause: The middle of the tween equates to .5 of the target value');
+      tweenable.pause();
+      mock_time = function () {return 2000;};
+      tweenable.resume();
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 50,
+          'The tween has not changed in the time that it has been paused');
+      mock_time = function () {return 2500;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 100,
+          'The tween ends at the modified end time');
+    });
+
+
+    module('Tweenable.prototype.stop');
+
+    test('stop(undefined) leaves a tween where it was stopped', function () {
+      var tweenable = new Tweenable();
+      mock_time = function () {return 0;};
+      tweenable.tween({ x: 0 }, { x: 100 }, 1000);
+
+      mock_time = function () {return 500;};
+      forceInternalUpdate(tweenable);
+      tweenable.stop();
+      equals(tweenable.get().x, 50,
+          'The tweened value did not go to the end, it was left at its last updated position');
+      equals(tweenable._state.isTweening, false,
+          'The internal state of the Tweenable indicates it is not running (updating)');
+    });
+
+    test('stop(true) skips a tween to the end', function () {
+      var tweenable = new Tweenable();
+      mock_time = function () {return 0;};
+      tweenable.tween({ x: 0 }, { x: 100 }, 1000);
+
+      mock_time = function () {return 500;};
+      forceInternalUpdate(tweenable);
+      tweenable.stop(true);
+      equals(tweenable.get().x, 100,
+          'The tweened value jumps to the end');
+    });
+
+
+    module('Hooks');
+
+    test('Hooks are called (step)', function () {
+      var tweenable = new Tweenable();
+      mock_time = function () {return 0;};
+
+      var c = 0;
+      tweenable.hookAdd('step', function () {
+        c++;
+      });
+
+      tweenable.tween({ x: 0 }, { x: 100 }, 1000);
+      equals(c, 1,
+          'The step hook is invoked when the tween begins');
+      mock_time = function () {return 500;};
+      forceInternalUpdate(tweenable);
+      equals(c, 2,
+          'The step hook is updated only as many times as the tween is actually updated');
+      mock_time = function () {return 1000;};
+      forceInternalUpdate(tweenable);
+      equals(c, 3,
+          'The step hook is updated at the time of tween expiration');
+    });
+
+
+    module('Tween queues');
+
+    test('Queued tweens all run', function () {
+      var tweenable = new Tweenable();
+      mock_time = function () {return 0;};
+      tweenable
+        .queue({ x: 0 }, { x: 100 }, 1000)
+        .queue({ x: 100 }, { x: 200 }, 1000)
+        .queue({ x: 200 }, { x: 300 }, 1000)
+        .queueStart();
+
+      equals(tweenable.get().x, 0,
+          'The queued tween starts at 0');
+      mock_time = function () {return 1500;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 100,
+          'The second queued tween doesn\'t run until the first one completes');
+      mock_time = function () {return 2000;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 150,
+          'The second queued tween runs');
+      mock_time = function () {return 2500;};
+      forceInternalUpdate(tweenable);
+      mock_time = function () {return 3000;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 250,
+          'The third queued tween runs (after the previous one completed)');
+    });
+
+  } ());
+</script>
+
+</body>
+</html>
