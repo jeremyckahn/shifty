@@ -15,9 +15,9 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 */
 
-(function shiftyInterpolate (global) {
+(function shiftyInterpolate () {
   
-  if (!global.Tweenable) {
+  if (!Tweenable) {
     return;
   }
   
@@ -26,7 +26,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
     easingObject = Tweenable.util.composeEasingObject(from, easing);
 
-    return global.Tweenable.util.tweenProps(position, {
+    return Tweenable.util.tweenProps(position, {
       'originalState': from
       ,'to': to
       ,'timestamp': 0
@@ -38,7 +38,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
   }
 
   // This is the static utility version of the function.
-  global.Tweenable.util.interpolate = function (from, to, position, easing) {
+  Tweenable.util.interpolate = function (from, to, position, easing) {
     var current
         ,interpolatedValues
         ,mockTweenable;
@@ -53,24 +53,25 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
     mockTweenable = new Tweenable();
     mockTweenable._tweenParams.easing = easing;
-    current = global.Tweenable.util.simpleCopy({}, from);
+    current = Tweenable.util.simpleCopy({}, from);
     
     // Call any data type filters
-    global.Tweenable.util.applyFilter('tweenCreated', mockTweenable, [current, from, to]);
-    global.Tweenable.util.applyFilter('beforeTween', mockTweenable, [current, from, to]);
+    Tweenable.util.applyFilter('tweenCreated', mockTweenable, [current, from, to]);
+    Tweenable.util.applyFilter('beforeTween', mockTweenable, [current, from, to]);
     interpolatedValues = getInterpolatedValues (from, current, to, position, mockTweenable._tweenParams.easing);
-    global.Tweenable.util.applyFilter('afterTween', mockTweenable, [interpolatedValues, from, to]);
+    Tweenable.util.applyFilter('afterTween', mockTweenable, [interpolatedValues, from, to]);
     
     return interpolatedValues;
   };
   
   // This is the inheritable instance-method version of the function.
-  global.Tweenable.prototype.interpolate = function (to, position, easing) {
+  Tweenable.prototype.interpolate = function (to, position, easing) {
     var interpolatedValues;
     
-    interpolatedValues = global.Tweenable.util.interpolate(this.get(), to, position, easing);
+    interpolatedValues = Tweenable.util.interpolate(this.get(), to, position, easing);
     this.set(interpolatedValues);
     
     return interpolatedValues;
   };
-}(this));
+
+}());
