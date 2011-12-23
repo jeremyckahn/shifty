@@ -16,7 +16,9 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 */
 
 (function shiftyQueue () {
-  
+
+  var noop = function () {};
+
   function iterateQueue (queue) {
     queue.shift();
 
@@ -26,14 +28,14 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
       queue.running = false;
     }
   }
-  
+
   function getWrappedCallback (callback, queue) {
     return function () {
       callback();
       iterateQueue(queue);
     };
   }
-  
+
   function tweenInit (context, from, to, duration, callback, easing) {
     // Duck typing!  This method infers some info from the parameters above to determine which method to call,
     // and what paramters to pass to it.
@@ -59,25 +61,25 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
   Tweenable.prototype.queue = function (from, to, duration, callback, easing) {
     var wrappedCallback;
-      
+
     if (!this._tweenQueue) {
       this._tweenQueue = [];
     }
 
     // Make sure there is always an invokable callback
-    callback = callback || from.callback || function () {};
+    callback = callback || from.callback || noop;
     wrappedCallback = getWrappedCallback(callback, this._tweenQueue);
     this._tweenQueue.push(tweenInit(this, from, to, duration, wrappedCallback, easing));
 
     return this;
   };
-  
+
   Tweenable.prototype.queueStart = function () {
     if (!this._tweenQueue.running && this._tweenQueue.length > 0) {
       this._tweenQueue[0]();
       this._tweenQueue.running = true;
     }
-    
+
     return this;
   };
 
@@ -85,7 +87,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     this._tweenQueue.shift();
     return this;
   };
-  
+
   Tweenable.prototype.queuePop = function () {
     this._tweenQueue.pop();
     return this;
@@ -99,5 +101,5 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
   Tweenable.prototype.queueLength = function () {
     return this._tweenQueue.length;
   };
-  
+
 }());
