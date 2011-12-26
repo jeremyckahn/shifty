@@ -23,7 +23,8 @@ var
     'shifty.outro.js'
   ],
   REPLACEMENTS = {
-    'version' : VERSION
+    'version' : VERSION,
+    'build_date' : (new Date()).toGMTString()
   };
 
 
