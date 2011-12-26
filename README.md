@@ -1,4 +1,4 @@
-Shifty - A teeny tiny tweening engine in JavaScript. 
+Shifty - A teeny tiny tweening engine in JavaScript.
 ===
 
 Shifty is a tweening engine for JavaScript.  That's it.  Shifty is a low-level library meant to be encapsulated by higher-level tools.  At the most basic level, it provides:
@@ -230,7 +230,7 @@ You can attach various hooks that get run at key points in a `Tweenable` instanc
 tweenableInst.hookAdd( hookName, hookFunction )
 ````
 
-You can attach as many functions as you please to any hook.  Here's an example: 
+You can attach as many functions as you please to any hook.  Here's an example:
 
 ````javascript
 function limitX (state) {
@@ -283,7 +283,7 @@ Tweenable.prototype.filter.doubler = {
       obj[prop] *= 2;
     });
   },
-  
+
   // Gets called right before a tween state is calculated.
   // `currentState` is the current state of the tweened object, `fromState` is the state that the tween started at, and `toState` contains the target values.
   'beforeTween': function beforeTween (currentState, fromState, toState) {
@@ -292,7 +292,7 @@ Tweenable.prototype.filter.doubler = {
       obj[prop] *= 2;
     });
   },
-  
+
   // Gets called right after a tween state is calculated.
   // `currentState` is the current state of the tweened object, `fromState` is the state that the tween started at, and `toState` contains the target values.
   'afterTween': function afterTween (currentState, fromState, toState) {
@@ -309,13 +309,35 @@ Yes, having `doubler` filter is useless.  A more practical use of filters is to 
 Building Shifty
 ---
 
-In the root directory, there is a file called `build.js`.  Just do this to build the project on the command line:
+Shifty uses [nodejs](http://nodejs.org) for the build system. In the root
+directory, there is a file called `build.js`. Just do this to build the
+project on the command line:
 
-```shell
+```sh
 node build
 ```
 
-The only requirement for building is [nodejs](http://nodejs.org). You can find a ready-to-use build of the project at `dist/shifty.min.js`.  This build includes the core and all extensions.  Feel free to customize the build for your own needs.  Shifty uses [SemVer](http://semver.org/).
+You can specify the modules that you want to include through the CLI.
+
+```sh
+node build -i formulas,color
+```
+
+Or modules that you want to exclude from the build:
+
+```sh
+node build -e css_units,interpolate,clamp
+```
+
+For more options check the help:
+
+```sh
+node build -h
+```
+
+You can find a ready-to-use build of the project at `dist/shifty.min.js`. This
+build includes the core and all extensions. Feel free to customize the build
+for your own needs. Shifty uses [SemVer](http://semver.org/).
 
 
 AMD and NodeJS
