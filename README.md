@@ -309,15 +309,13 @@ Yes, having `doubler` filter is useless.  A more practical use of filters is to 
 Building Shifty
 ---
 
-In the root directory, there is a file called `build.sh`.  Just do this to build the project on the command line:
+In the root directory, there is a file called `build.js`.  Just do this to build the project on the command line:
 
-````shell
-$: sh build.sh <version>
-````
+```shell
+node build
+```
 
-`<version>` is the label for the new build.  Shifty uses [SemVer](http://semver.org/).
-
-The only requirement for building is `curl` and an internet connection (the script calls out to Google's Closure Compiler API).  In English:  If you are on a Mac, you're good to go.  You can find a ready-to-use build of the project at `builds/shifty.min.js`.  This build includes the core and all extensions.  Feel free to customize the build for your own needs.
+The only requirement for building is [nodejs](http://nodejs.org). You can find a ready-to-use build of the project at `dist/shifty.min.js`.  This build includes the core and all extensions.  Feel free to customize the build for your own needs.  Shifty uses [SemVer](http://semver.org/).
 
 
 AMD and NodeJS
