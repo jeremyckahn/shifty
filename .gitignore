@@ -5,3 +5,10 @@
 
 node_modules/uglify-js/test/
 node_modules/uglify-js/tmp/
+
+
+node_modules/commander/examples
+node_modules/commander/test
+node_modules/commander/.travis.yml
+node_modules/commander/Makefile
+
