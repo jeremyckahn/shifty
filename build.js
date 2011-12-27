@@ -8,7 +8,9 @@ var
   SRC_FOLDER = 'src',
   SRC_FILE_NAME_PATTERN = 'shifty.{{moduleName}}.js',
   COMPILER_JAR = 'build/closure_compiler/compiler.jar',
+  // module list should be in order
   MODULES_LIST = [
+    'license',
     'intro',
     'core',
     'formulas',
@@ -19,6 +21,7 @@ var
     'outro'
   ],
   ALWAYS_INCLUDE = [
+    'license',
     'intro',
     'core',
     'outro'
@@ -77,6 +80,11 @@ function contains(arr, val) {
 }
 
 
+function moduleToFilePath(moduleName) {
+  var fileName = stache(SRC_FILE_NAME_PATTERN, {moduleName : moduleName});
+  return _path.join(__dirname, SRC_FOLDER, fileName);
+}
+
 
 
 // ---  CONCAT --- //
@@ -100,10 +108,7 @@ function getFileList() {
     });
   }
 
-  return modules.map(function(moduleName){
-    return stache(SRC_FILE_NAME_PATTERN, {moduleName : moduleName});
-  });
-
+  return modules.map(moduleToFilePath);
 }
 
 
@@ -120,9 +125,8 @@ function validateModules(modules) {
 
 
 function concatFiles(fileList) {
-  var out = [];
-  fileList.forEach(function(fileName){
-    out.push( _fs.readFileSync( _path.join(__dirname, SRC_FOLDER, fileName) ) );
+  var out = fileList.map(function(filePath){
+    return _fs.readFileSync(filePath);
   });
   return out.join('\n');
 }
@@ -134,18 +138,21 @@ _fs.writeFileSync(_distFileName, stache(concatFiles(getFileList()), REPLACEMENTS
 
 // --- MINIFICATION ---- //
 
-function uglyfy(srcPath, distPath) {
-  var
-    uglyfyJS = require('uglify-js'),
-    jsp = uglyfyJS.parser,
-    pro = uglyfyJS.uglify,
-    ast = jsp.parse( _fs.readFileSync(srcPath, 'utf-8') );
-  ast = pro.ast_mangle(ast);
-  ast = pro.ast_squeeze(ast);
-  _fs.writeFileSync(_distFileNameMin, pro.gen_code(ast) );
-}
+var
+  uglyfyJS = require('uglify-js'),
+  jsp = uglyfyJS.parser,
+  pro = uglyfyJS.uglify,
+  ast = jsp.parse( _fs.readFileSync(_distFileName, 'utf-8') );
 
-uglyfy(_distFileName, _distFileNameMin);
+ast = pro.ast_mangle(ast);
+ast = pro.ast_squeeze(ast);
+
+_fs.writeFileSync(_distFileNameMin, getLicense() + pro.gen_code(ast) );
+
+function getLicense(){
+  var srcLicense = _fs.readFileSync(moduleToFilePath('license'), 'utf-8');
+  return stache(srcLicense, REPLACEMENTS);
+}
 
 if (! _cli.silent) {
   console.log('  Boom! Shifty was built.');
