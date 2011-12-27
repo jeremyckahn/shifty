@@ -1,3 +1,7 @@
 *.swp
 .DS_Store
 *.vim
+
+
+node_modules/uglify-js/test/
+node_modules/uglify-js/tmp/
