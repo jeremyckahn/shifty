@@ -335,6 +335,7 @@ For more options check the help:
 node build -h
 ```
 
+All required files will be included automatically (such as `shifty.core.js`).
 You can find a ready-to-use build of the project at `dist/shifty.min.js`. This
 build includes the core and all extensions. Feel free to customize the build
 for your own needs. Shifty uses [SemVer](http://semver.org/).
