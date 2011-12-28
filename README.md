@@ -368,9 +368,10 @@ Contributors
 ---
 
 Take a peek at the [Network](https://github.com/jeremyckahn/shifty/network)
-page to see all of the Shifty contributors, but @millermedeiros deserves
-particular recogintion for his patches to make Shifty compatible with Node and
-for rewriting the build system.
+page to see all of the Shifty contributors, but
+[@millermedeiros](https://github.com/millermedeiros) deserves particular
+recogintion for his patches to make Shifty compatible with Node and for
+rewriting the build system.
 
 
 Shifty in Use
