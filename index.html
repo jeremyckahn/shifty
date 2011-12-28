@@ -47,7 +47,7 @@
   margin: 0px auto;
   text-align: center;
     }
-    
+
     .segment {
   background-color: #f00;
   clear: both;
@@ -84,7 +84,7 @@
   font-size: 12px;
   text-align: center;
     }
-      
+
     </style>
   <!-- end CSS-->
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -97,7 +97,7 @@
         <h1 id="banner">Shifty!</h1>
     </header>
     <div id="main" role="main">
-  <a href="https://github.com/jeremyckahn/shifty"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/30f550e0d38ceb6ef5b81500c64d970b7fb0f028/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub"></a>  
+  <a href="https://github.com/jeremyckahn/shifty"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/30f550e0d38ceb6ef5b81500c64d970b7fb0f028/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub"></a>
   <p>Shifty is a tweening engine built in JavaScript.  It is designed to fit any number of tweening needs. Features include:</p>
   <ul>
       <li>Excellent performance; all design decisions were built around minimizing performance overhead.</li>
@@ -110,7 +110,7 @@
 
   <pre>
     var myTweenable = new <code>Tweenable()</code>;
-      
+
     myTweenable.tween({
 
       from: {
@@ -175,10 +175,10 @@
   </div>
     </div>
     <footer>
-  Shifty is an open source project by <a href="https://github.com/jeremyckahn">Jeremy Kahn</a>.  He's a nice guy and likes to make things for your web browser.    
+  Shifty is an open source project by <a href="https://github.com/jeremyckahn">Jeremy Kahn</a>.  He's a nice guy and likes to make things for your web browser.
     </footer>
   </div> <!--! end of #container -->
-  <script type="text/javascript" src="builds/shifty.min.js" charset="utf-8"></script>
+  <script type="text/javascript" src="dist/shifty.min.js" charset="utf-8"></script>
   <script type="text/javascript" src="src/shifty.simple_ease.js" charset="utf-8"></script>
   <script type="text/javascript" src="demos/demo1/shiftme.js" charset="utf-8"></script>
   <script type="text/javascript" src="demos/demo2/helix.js" charset="utf-8"></script>
@@ -191,7 +191,7 @@
     ,helixIsRunning;
 
       function animateHeader () {
-  var header = document.getElementById('banner'); 
+  var header = document.getElementById('banner');
 
   global.shiftyDemo.introInit(header);
 
@@ -210,10 +210,10 @@
   }
 
   if (helixIsRunning) {
-      global.shiftyDemo.helixPause();   
+      global.shiftyDemo.helixPause();
       btnHelixStart.innerHTML = 'Go go helix!';
   } else {
-      global.shiftyDemo.helixPlay();   
+      global.shiftyDemo.helixPlay();
       btnHelixStart.innerHTML = 'Stop stop helix!';
   }
 
@@ -241,13 +241,13 @@
       helixIsRunning = false;
       helixIsInitted = false;
 
-      (function () { 
+      (function () {
         // Simple demo dump of all of the formulas
         var tweenedVal
             ,formula;
-        
+
         if (global.console && global.console.log && Tweenable.util.simpleEase) {
-          
+
           console.log('A quick sampling of the different easing formulas:');
 
           // Test and log all of the tweening methods.
@@ -271,6 +271,6 @@
     <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
     <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
   <![endif]-->
-  
+
 </body>
 </html>

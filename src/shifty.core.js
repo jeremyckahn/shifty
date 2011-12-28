@@ -187,7 +187,7 @@ var Tweenable;
   }
 
   // A hook used for unit testing.
-  if (SHIFTY_DEBUG_NOW) {
+  if (typeof SHIFTY_DEBUG_NOW === 'function') {
     global.timeoutHandler = timeoutHandler;
   }
 

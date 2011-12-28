@@ -2,7 +2,7 @@
  * Shifty <http://jeremyckahn.github.com/shifty/>
  * Author: Jeremy Kahn - jeremyckahn@gmail.com
  * License: MIT
- * Version: 0.5.0+ (Tue, 27 Dec 2011 18:01:34 GMT)
+ * Version: 0.5.0+ (Wed, 28 Dec 2011 22:44:37 GMT)
  */
 
 (function(){
@@ -196,7 +196,7 @@ var Tweenable;
   }
 
   // A hook used for unit testing.
-  if (SHIFTY_DEBUG_NOW) {
+  if (typeof SHIFTY_DEBUG_NOW === 'function') {
     global.timeoutHandler = timeoutHandler;
   }
 
