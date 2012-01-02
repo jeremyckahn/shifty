@@ -2,7 +2,7 @@
  * Shifty <http://jeremyckahn.github.com/shifty/>
  * Author: Jeremy Kahn - jeremyckahn@gmail.com
  * License: MIT
- * Version: 0.5.0+ (Mon, 02 Jan 2012 23:35:58 GMT)
+ * Version: 5.0.2 (Mon, 02 Jan 2012 23:44:33 GMT)
  */
 
 ;(function(){

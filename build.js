@@ -2,7 +2,6 @@
 // --- SETTINGS --- //
 
 var
-  VERSION = '0.5.0+',
   DIST_NAME = 'shifty',
   DIST_FOLDER = 'dist',
   SRC_FOLDER = 'src',
@@ -27,7 +26,7 @@ var
     'outro'
   ],
   replacements = {
-    'version' : VERSION,
+    'version' : null,
     'build_date' : (new Date()).toGMTString()
   };
 
@@ -138,6 +137,7 @@ if (! _cli.buildver ) {
   process.exit(1); //exit with error
 }
 
+replacements.version = _cli.buildver;
 _fs.writeFileSync(_distFileName, stache(concatFiles(getFileList()), replacements));
 
 
