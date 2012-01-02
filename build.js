@@ -183,3 +183,11 @@ function echoFileSize() {
     }
   );
 }
+
+writeVersionToFile();
+
+// --- VERSIONING --- //
+
+function writeVersionToFile() {
+  _exec('echo ' + replacements.version + ' > version.txt');
+}
