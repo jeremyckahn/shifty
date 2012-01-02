@@ -15,7 +15,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 */
 
-(function shiftyQueue () {
+(function () {
 
   var noop = function () {};
 

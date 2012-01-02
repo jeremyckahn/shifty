@@ -1,9 +1,8 @@
-
-// should be outside Shifty closure since it will be used by all modules
-// won't generate global after build
+// Should be outside the following closure since it will be used by all
+// modules.  It won't generate any globals after building.
 var Tweenable;
 
-(function Shifty (global) {
+(function (global) {
 
   var now
       ,DEFAULT_EASING = 'linear'
@@ -287,7 +286,7 @@ var Tweenable;
    * @param {String|Object} easing This can either be a string specifying the easing formula to be used on every property of the tween, or an Object with values that are strings that specify an easing formula for a specific property.  Any properties that do not have an easing formula specified will use "linear".
    * @param {Function} step A function to call for each step of the tween.  A "step" is defined as one update cycle (frame) of the tween.  Many update cycles occur to create the illusion of motion, so this function will likely be called quite a bit.
    */
-  Tweenable.prototype.tween = function tween (from, to, duration, callback, easing) {
+  Tweenable.prototype.tween = function (from, to, duration, callback, easing) {
 
     var self
         ,params
@@ -369,7 +368,7 @@ var Tweenable;
    * Returns a reference to the `Tweenable`'s current state (the `from` Object that wat passed to `tweenableInst.tween()`).
    * @returns {Object}
    */
-  Tweenable.prototype.get = function get () {
+  Tweenable.prototype.get = function () {
     return this._state.current;
   };
 
@@ -377,7 +376,7 @@ var Tweenable;
    * Force the `Tweenable` instance's current state.
    * @param {Object} state The state the instance shall have.
    */
-  Tweenable.prototype.set = function set (state) {
+  Tweenable.prototype.set = function  (state) {
     this._state.current = state || {};
 
     return this;
@@ -388,7 +387,7 @@ var Tweenable;
    * @param {Boolean} gotoEnd If `false`, or omitted, the tween just stops at its current state, and the `callback` is not invoked.  If `true`, the tweened object's values are instantly set the the target "to" values, and the `callback` is invoked.
    * @returns {Object} The `Tweenable` instance for chaining.
    */
-  Tweenable.prototype.stop = function stop (gotoEnd) {
+  Tweenable.prototype.stop = function (gotoEnd) {
     clearTimeout(this._state.loopId);
     this._state.isTweening = false;
 
@@ -407,7 +406,7 @@ var Tweenable;
    * Pauses a tween.  A `pause`d tween can be resumed with `resume()`.
    * @returns {Object} The `Tween` instance for chaining.
    */
-  Tweenable.prototype.pause = function pause () {
+  Tweenable.prototype.pause = function () {
     clearTimeout(this._state.loopId);
     this._state.pausedAtTime = now();
     this._state.isPaused = true;
@@ -418,7 +417,7 @@ var Tweenable;
    * Resumes a paused tween.  A tween must be `pause`d before is can be `resume`d.
    * @returns {Object} The `Tweenable` instance for chaining.
    */
-  Tweenable.prototype.resume = function resume () {
+  Tweenable.prototype.resume = function () {
     var self;
 
     self = this;
@@ -440,7 +439,7 @@ var Tweenable;
    * @param {String} hookName The name of the hook to attach `hookFunc` to.
    * @param {Function} hookFunc The hook handler function.  This function will receive parameters based on what hook it is being attached to.
    */
-  Tweenable.prototype.hookAdd = function hookAdd (hookName, hookFunc) {
+  Tweenable.prototype.hookAdd = function (hookName, hookFunc) {
     if (!this._hook.hasOwnProperty(hookName)) {
       this._hook[hookName] = [];
     }
@@ -454,7 +453,7 @@ var Tweenable;
    * @param {String} hookName The hook to remove a function or functions from.
    * @param {String|undefined} hookFunc The function to matched against and remove from the hook handler list.  If omitted, all functions are removed for the hook specified by `hookName`.
    */
-  Tweenable.prototype.hookRemove = function hookRemove (hookName, hookFunc) {
+  Tweenable.prototype.hookRemove = function (hookName, hookFunc) {
     var i;
 
     if (!this._hook.hasOwnProperty(hookName)) {

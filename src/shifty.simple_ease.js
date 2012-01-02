@@ -15,15 +15,15 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 */
 
-(function shiftySimpleEase () {
-  
+(function () {
+
   var formulas = Tweenable.prototype.formula;
-  
+
   Tweenable.util.simpleEase = function (easing, position) {
     var easingMethod;
-    
+
     easingMethod = formulas[easing] || formulas.linear;
-    
+
     // Fake some values and return the result.
     return easingMethod(position, 0, 1, 1);
   };

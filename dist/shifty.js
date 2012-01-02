@@ -2,17 +2,16 @@
  * Shifty <http://jeremyckahn.github.com/shifty/>
  * Author: Jeremy Kahn - jeremyckahn@gmail.com
  * License: MIT
- * Version: 0.5.0+ (Sat, 31 Dec 2011 21:23:16 GMT)
+ * Version: 0.5.0+ (Mon, 02 Jan 2012 23:35:58 GMT)
  */
 
-(function(){
+;(function(){
 
-
-// should be outside Shifty closure since it will be used by all modules
-// won't generate global after build
+// Should be outside the following closure since it will be used by all
+// modules.  It won't generate any globals after building.
 var Tweenable;
 
-(function Shifty (global) {
+(function (global) {
 
   var now
       ,DEFAULT_EASING = 'linear'
@@ -296,7 +295,7 @@ var Tweenable;
    * @param {String|Object} easing This can either be a string specifying the easing formula to be used on every property of the tween, or an Object with values that are strings that specify an easing formula for a specific property.  Any properties that do not have an easing formula specified will use "linear".
    * @param {Function} step A function to call for each step of the tween.  A "step" is defined as one update cycle (frame) of the tween.  Many update cycles occur to create the illusion of motion, so this function will likely be called quite a bit.
    */
-  Tweenable.prototype.tween = function tween (from, to, duration, callback, easing) {
+  Tweenable.prototype.tween = function (from, to, duration, callback, easing) {
 
     var self
         ,params
@@ -378,7 +377,7 @@ var Tweenable;
    * Returns a reference to the `Tweenable`'s current state (the `from` Object that wat passed to `tweenableInst.tween()`).
    * @returns {Object}
    */
-  Tweenable.prototype.get = function get () {
+  Tweenable.prototype.get = function () {
     return this._state.current;
   };
 
@@ -386,7 +385,7 @@ var Tweenable;
    * Force the `Tweenable` instance's current state.
    * @param {Object} state The state the instance shall have.
    */
-  Tweenable.prototype.set = function set (state) {
+  Tweenable.prototype.set = function  (state) {
     this._state.current = state || {};
 
     return this;
@@ -397,7 +396,7 @@ var Tweenable;
    * @param {Boolean} gotoEnd If `false`, or omitted, the tween just stops at its current state, and the `callback` is not invoked.  If `true`, the tweened object's values are instantly set the the target "to" values, and the `callback` is invoked.
    * @returns {Object} The `Tweenable` instance for chaining.
    */
-  Tweenable.prototype.stop = function stop (gotoEnd) {
+  Tweenable.prototype.stop = function (gotoEnd) {
     clearTimeout(this._state.loopId);
     this._state.isTweening = false;
 
@@ -416,7 +415,7 @@ var Tweenable;
    * Pauses a tween.  A `pause`d tween can be resumed with `resume()`.
    * @returns {Object} The `Tween` instance for chaining.
    */
-  Tweenable.prototype.pause = function pause () {
+  Tweenable.prototype.pause = function () {
     clearTimeout(this._state.loopId);
     this._state.pausedAtTime = now();
     this._state.isPaused = true;
@@ -427,7 +426,7 @@ var Tweenable;
    * Resumes a paused tween.  A tween must be `pause`d before is can be `resume`d.
    * @returns {Object} The `Tweenable` instance for chaining.
    */
-  Tweenable.prototype.resume = function resume () {
+  Tweenable.prototype.resume = function () {
     var self;
 
     self = this;
@@ -449,7 +448,7 @@ var Tweenable;
    * @param {String} hookName The name of the hook to attach `hookFunc` to.
    * @param {Function} hookFunc The hook handler function.  This function will receive parameters based on what hook it is being attached to.
    */
-  Tweenable.prototype.hookAdd = function hookAdd (hookName, hookFunc) {
+  Tweenable.prototype.hookAdd = function (hookName, hookFunc) {
     if (!this._hook.hasOwnProperty(hookName)) {
       this._hook[hookName] = [];
     }
@@ -463,7 +462,7 @@ var Tweenable;
    * @param {String} hookName The hook to remove a function or functions from.
    * @param {String|undefined} hookFunc The function to matched against and remove from the hook handler list.  If omitted, all functions are removed for the hook specified by `hookName`.
    */
-  Tweenable.prototype.hookRemove = function hookRemove (hookName, hookFunc) {
+  Tweenable.prototype.hookRemove = function (hookName, hookFunc) {
     var i;
 
     if (!this._hook.hasOwnProperty(hookName)) {
@@ -740,7 +739,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 */
 
-(function shiftyQueue () {
+(function () {
 
   var noop = function () {};
 
@@ -841,17 +840,17 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 */
 
-(function shiftyColor () {
+(function () {
 
   var R_SHORTHAND_HEX = /^#([0-9]|[a-f]){3}$/i,
     R_LONGHAND_HEX = /^#([0-9]|[a-f]){6}$/i,
     R_RGB = /^rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)\s*$/i,
     savedRGBPropNames;
-  
+
   if (!Tweenable) {
     return;
   }
-  
+
   /**
    * Convert a base-16 number to base-10.
    * @param {Number|String} hex The value to convert
@@ -867,35 +866,35 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
    * @returns {Array} The converted Array of RGB values if `hex` is a valid string, or an Array of three 0's.
    */
   function hexToRGBArr (hex) {
-    
+
     hex = hex.replace(/#/g, '');
-    
+
     // If the string is a shorthand three digit hex notation, normalize it to the standard six digit notation
     if (hex.length === 3) {
       hex = hex.split('');
       hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
     }
-    
+
     return [hexToDec(hex.substr(0, 2)), hexToDec(hex.substr(2, 2)), hexToDec(hex.substr(4, 2))];
   }
-  
+
   function getRGBStringFromHex (str) {
     var rgbArr,
       convertedStr;
     rgbArr = hexToRGBArr(str);
     convertedStr = 'rgb(' + rgbArr[0] + ',' + rgbArr[1] + ',' + rgbArr[2] + ')';
-    
+
     return convertedStr;
   }
-  
+
   function isColorString (str) {
     return (typeof str === 'string') && (R_SHORTHAND_HEX.test(str) || R_LONGHAND_HEX.test(str) || R_RGB.test(str));
   }
-  
+
   function isHexString (str) {
     return (typeof str === 'string') && (R_SHORTHAND_HEX.test(str) || R_LONGHAND_HEX.test(str));
   }
-  
+
   function convertHexStringPropsToRGB (obj) {
     Tweenable.util.each(obj, function (obj, prop) {
       if (isHexString(obj[prop])) {
@@ -903,32 +902,32 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
       }
     });
   }
-  
+
   function getColorStringPropNames (obj) {
     var list;
-    
+
     list = [];
-    
+
     Tweenable.util.each(obj, function (obj, prop) {
       if (isColorString(obj[prop])) {
         list.push(prop);
       }
     });
-    
+
     return list;
   }
-  
+
   function rgbToArr (str) {
     return str.match(/(\d+)/g);
   }
-  
+
   function splitRGBChunks (obj, rgbPropNames) {
     var i,
       limit,
       rgbParts;
-      
+
       limit = rgbPropNames.length;
-      
+
       for (i = 0; i < limit; i++) {
         rgbParts = rgbToArr(obj[rgbPropNames[i]]);
         obj['__r__' + rgbPropNames[i]] = +rgbParts[0];
@@ -937,20 +936,20 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
         delete obj[rgbPropNames[i]];
       }
   }
-  
+
   function joinRGBChunks (obj, rgbPropNames) {
     var i,
         limit;
-      
+
     limit = rgbPropNames.length;
-    
+
     for (i = 0; i < limit; i++) {
-      
-      obj[rgbPropNames[i]] = 'rgb(' + 
-        parseInt(obj['__r__' + rgbPropNames[i]], 10) + ',' + 
-        parseInt(obj['__g__' + rgbPropNames[i]], 10) + ',' + 
+
+      obj[rgbPropNames[i]] = 'rgb(' +
+        parseInt(obj['__r__' + rgbPropNames[i]], 10) + ',' +
+        parseInt(obj['__g__' + rgbPropNames[i]], 10) + ',' +
         parseInt(obj['__b__' + rgbPropNames[i]], 10) + ')';
-      
+
       delete obj['__r__' + rgbPropNames[i]];
       delete obj['__g__' + rgbPropNames[i]];
       delete obj['__b__' + rgbPropNames[i]];
@@ -960,9 +959,9 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
   function expandEasingObject (easingObject, rgbPropNames) {
     var i,
         limit;
-      
+
     limit = rgbPropNames.length;
-    
+
     for (i = 0; i < limit; i++) {
       easingObject['__r__' + rgbPropNames[i]] = easingObject[rgbPropNames[i]];
       easingObject['__g__' + rgbPropNames[i]] = easingObject[rgbPropNames[i]];
@@ -973,40 +972,40 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
   function collapseEasingObject (easingObject, rgbPropNames) {
     var i,
         limit;
-      
+
     limit = rgbPropNames.length;
-    
+
     for (i = 0; i < limit; i++) {
       delete easingObject['__r__' + rgbPropNames[i]];
       delete easingObject['__g__' + rgbPropNames[i]];
       delete easingObject['__b__' + rgbPropNames[i]];
     }
   }
-  
+
   Tweenable.prototype.filter.color = {
-    'tweenCreated': function tweenCreated (currentState, fromState, toState) {
+    'tweenCreated': function (currentState, fromState, toState) {
       convertHexStringPropsToRGB(currentState);
       convertHexStringPropsToRGB(fromState);
       convertHexStringPropsToRGB(toState);
     },
-    
-    'beforeTween': function beforeTween (currentState, fromState, toState) {
+
+    'beforeTween': function (currentState, fromState, toState) {
       savedRGBPropNames = getColorStringPropNames(fromState);
-      
+
       splitRGBChunks(currentState, savedRGBPropNames);
       splitRGBChunks(fromState, savedRGBPropNames);
       splitRGBChunks(toState, savedRGBPropNames);
       expandEasingObject(this._tweenParams.easing, savedRGBPropNames);
     },
-    
-    'afterTween': function afterTween (currentState, fromState, toState) {
+
+    'afterTween': function (currentState, fromState, toState) {
       joinRGBChunks(currentState, savedRGBPropNames);
       joinRGBChunks(fromState, savedRGBPropNames);
       joinRGBChunks(toState, savedRGBPropNames);
       collapseEasingObject(this._tweenParams.easing, savedRGBPropNames);
     }
   };
-  
+
 }());
 
 /**
@@ -1021,21 +1020,21 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 */
 
-(function shiftyCSSUnits () {
+(function () {
 
   var R_CSS_UNITS = /(px|em|%|pc|pt|mm|cm|in|ex)/i,
     R_QUICK_CSS_UNITS = /([a-z]|%)/gi,
     savedTokenProps;
-  
+
   function isValidString (str) {
     return typeof str === 'string' && R_CSS_UNITS.test(str);
   }
-  
+
   function getTokenProps (obj) {
     var collection;
 
     collection = {};
-    
+
     Tweenable.util.each(obj, function (obj, prop) {
       if (isValidString(obj[prop])) {
         collection[prop] = {
@@ -1043,39 +1042,39 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
         };
       }
     });
-    
+
     return collection;
   }
-  
+
   function deTokenize (obj, tokenProps) {
     Tweenable.util.each(tokenProps, function (collection, token) {
       // Extract the value from the string
       obj[token] = +(obj[token].replace(R_QUICK_CSS_UNITS, ''));
     });
   }
-  
+
   function reTokenize (obj, tokenProps) {
     Tweenable.util.each(tokenProps, function (collection, token) {
       obj[token] = obj[token] + collection[token].suffix;
     });
   }
-  
+
   Tweenable.prototype.filter.token = {
-    'beforeTween': function beforeTween (currentState, fromState, toState) {
+    'beforeTween': function (currentState, fromState, toState) {
       savedTokenProps = getTokenProps(fromState);
-      
+
       deTokenize(currentState, savedTokenProps);
       deTokenize(fromState, savedTokenProps);
       deTokenize(toState, savedTokenProps);
     },
-    
-    'afterTween': function afterTween (currentState, fromState, toState) {
+
+    'afterTween': function (currentState, fromState, toState) {
       reTokenize(currentState, savedTokenProps);
       reTokenize(fromState, savedTokenProps);
       reTokenize(toState, savedTokenProps);
     }
   };
-  
+
 }());
 
 /*global setTimeout:true, clearTimeout:true */
@@ -1095,12 +1094,12 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 */
 
-(function shiftyInterpolate () {
-  
+(function () {
+
   if (!Tweenable) {
     return;
   }
-  
+
   function getInterpolatedValues (from, current, to, position, easing) {
     var easingObject;
 
@@ -1122,7 +1121,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     var current
         ,interpolatedValues
         ,mockTweenable;
-    
+
     // Function was passed a configuration object, extract the values
     if (from && from.from) {
       to = from.to;
@@ -1134,23 +1133,23 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     mockTweenable = new Tweenable();
     mockTweenable._tweenParams.easing = easing;
     current = Tweenable.util.simpleCopy({}, from);
-    
+
     // Call any data type filters
     Tweenable.util.applyFilter('tweenCreated', mockTweenable, [current, from, to]);
     Tweenable.util.applyFilter('beforeTween', mockTweenable, [current, from, to]);
     interpolatedValues = getInterpolatedValues (from, current, to, position, mockTweenable._tweenParams.easing);
     Tweenable.util.applyFilter('afterTween', mockTweenable, [interpolatedValues, from, to]);
-    
+
     return interpolatedValues;
   };
-  
+
   // This is the inheritable instance-method version of the function.
   Tweenable.prototype.interpolate = function (to, position, easing) {
     var interpolatedValues;
-    
+
     interpolatedValues = Tweenable.util.interpolate(this.get(), to, position, easing);
     this.set(interpolatedValues);
-    
+
     return interpolatedValues;
   };
 
