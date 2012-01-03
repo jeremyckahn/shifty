@@ -3,11 +3,11 @@
     ,tweener
     ,originalColor
     ,originalFontSize;
-  
+
   function getStyle (el, style) {
     var ret
       ,styleWords;
-    
+
     if (window.getComputedStyle) {
       ret = window.getComputedStyle(el).getPropertyCSSValue(style).cssText;
     } else {
@@ -19,10 +19,10 @@
         style += styleWords[1].match(/^./)[0].toUpperCase();
         style += styleWords[1].split('').slice(1).join('');
       }
-      
+
       ret = el.currentStyle[style];
     }
-    
+
     return ret;
   }
 
@@ -47,7 +47,7 @@
   function fade (el, callback) {
     tweener.to({
       'to': {
-        'color': '#001BB5'
+        'color': '#333'
       }
 
       ,'duration': 800
@@ -65,7 +65,7 @@
   function init (el) {
     originalFontSize = getStyle(el, 'font-size');
     originalColor = getStyle(el, 'color');
-    
+
     tweener = new Tweenable({
       'initialState': {
         'font-size': originalFontSize
@@ -83,5 +83,5 @@
       ,'introGrow': grow
       ,'introFade': fade
   });
-  
+
 } (this));
