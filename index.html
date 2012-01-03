@@ -6,87 +6,94 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 <head>
     <meta charset="utf-8">
-
     <!-- Use the .htaccess and remove these lines to avoid edge case issues.
        More info: h5bp.com/b/378 -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-
     <title>Shifty!</title>
-
-<!-- Mobile viewport optimized: j.mp/bplateviewport -->
     <meta name="viewport" content="width=device-width,initial-scale=1">
-
+    <link href='http://fonts.googleapis.com/css?family=Petrona' rel='stylesheet' type='text/css'>
     <style type="text/css" media="screen">
-    /* REAL BADASSES USE INLINE STYLESHEETS */
-
     body {
-  font-family: Helvetica, Arial, sans-serif;
-  font-size: 18px;
-  line-height: 24px;
+      font-family: 'Petrona', Helvetica, Arial, sans-serif;
+      line-height: 1.7em;
     }
 
     pre {
-  background: #e8e8e8;
-  line-height: 20px;
-  padding: 24px 0px;
+      background: #e8e8e8;
+      font-size: 1.3em;
+      line-height: 1.4em;
+      padding: 24px 0px;
+    }
+
+    p {
+      font-size: 1.2em;
+    }
+
+    a, a:active, a:hover, a:link, a:visited {
+      color: #a00;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: #f00;
     }
 
     #container {
-  margin: 0px auto 40px;
-  width: 800px;
+      margin: 0px auto 40px;
+      width: 800px;
     }
 
     header {
-  height: 200px;
-  color: #aaa;
-  line-height: 200px;
+      height: 200px;
+      color: #aaa;
+      line-height: 200px;
     }
 
     #banner {
-  font-family: 'Carter One', Helvetica, Arial, sans-serif;
-  margin: 0px auto;
-  text-align: center;
+      font-family: 'Carter One', Helvetica, Arial, sans-serif;
+      margin: 0px auto;
+      text-align: center;
     }
 
     .segment {
-  background-color: #f00;
-  clear: both;
-  float: left;
-  left: 0px;
-  position: relative;
-  height: 20px;
-  width: 20px;
-  -webkit-border-radius: 15px;
-  -moz-border-radius: 15px;
-  border-radius: 15px;
+      background-color: #f00;
+      clear: both;
+      float: left;
+      left: 0px;
+      position: relative;
+      height: 20px;
+      width: 20px;
+      -webkit-border-radius: 15px;
+      -moz-border-radius: 15px;
+      border-radius: 15px;
     }
 
     #helix-container {
-  background: #eaeaea;
-  border: solid 1px #000;
-  overflow: hidden;
-  margin: 0px auto 40px;
-  padding: 50px;
-  width: 320px;
+      background: #eaeaea;
+      border: solid 1px #000;
+      overflow: hidden;
+      margin: 0px auto 40px;
+      padding: 50px;
+      width: 320px;
     }
 
     #btnHelixStart {
-  display: block;
-  font-family: 'Carter One', Helvetica, Arial, sans-serif;
-  font-size: 30px;
-  font-weight: bold;
-  margin: 15px auto 10px;
-  height: 60px;
-  width: 420px;
+      display: block;
+      font-family: 'Carter One', Helvetica, Arial, sans-serif;
+      font-size: 30px;
+      font-weight: bold;
+      margin: 15px auto 10px;
+      height: 60px;
+      width: 420px;
     }
 
     footer {
-  font-size: 12px;
-  text-align: center;
+      font-size: 12px;
+      text-align: center;
     }
-
     </style>
-  <!-- end CSS-->
+    <!-- end CSS-->
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 </head>
 
@@ -113,7 +120,7 @@
   <p>Shifty exposes only one function globally: <code>Tweenable()</code>.  To create a simple tween, you could have something like this:</p>
 
   <pre>
-    var myTweenable = new <code>Tweenable()</code>;
+    var myTweenable = new Tweenable();
 
     myTweenable.tween({
       from:     { 'x': 0  },
