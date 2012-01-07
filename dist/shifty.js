@@ -2,7 +2,7 @@
  * Shifty <http://jeremyckahn.github.com/shifty/>
  * Author: Jeremy Kahn - jeremyckahn@gmail.com
  * License: MIT
- * Version: 0.5.2 (Mon, 02 Jan 2012 23:55:16 GMT)
+ * Version: 0.5.3 (Sat, 07 Jan 2012 22:33:53 GMT)
  */
 
 ;(function(){
@@ -183,7 +183,7 @@ var Tweenable;
       }
 
       if (params.step) {
-        params.step.call(state.current);
+        params.step.call(state.current, state.current);
       }
 
     }
@@ -404,7 +404,7 @@ var Tweenable;
       simpleCopy(this._state.current, this._tweenParams.to);
       applyFilter('afterTweenEnd', this, [this._state.current, this._tweenParams.originalState, this._tweenParams.to]);
       if (this._tweenParams.callback) {
-        this._tweenParams.callback.call(this._state.current);
+        this._tweenParams.callback.call(this._state.current, this._state.current);
       }
     }
 

@@ -174,7 +174,7 @@ var Tweenable;
       }
 
       if (params.step) {
-        params.step.call(state.current);
+        params.step.call(state.current, state.current);
       }
 
     }
@@ -395,7 +395,7 @@ var Tweenable;
       simpleCopy(this._state.current, this._tweenParams.to);
       applyFilter('afterTweenEnd', this, [this._state.current, this._tweenParams.originalState, this._tweenParams.to]);
       if (this._tweenParams.callback) {
-        this._tweenParams.callback.call(this._state.current);
+        this._tweenParams.callback.call(this._state.current, this._state.current);
       }
     }
 
