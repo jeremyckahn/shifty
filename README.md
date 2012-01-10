@@ -126,7 +126,7 @@ Stops a tween.
 myTweenable.pause();
 ````
 
-Pauses a tween.  This is different from `stop()`, as you are to resume from a `pause()`ed state.
+Pauses a tween.  This is different from `stop()`, as you are able to resume from a `pause()`ed state.
 
 ````javascript
 myTweenable.resume();
