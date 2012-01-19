@@ -2,7 +2,7 @@
  * Shifty <http://jeremyckahn.github.com/shifty/>
  * Author: Jeremy Kahn - jeremyckahn@gmail.com
  * License: MIT
- * Version: 0.5.3 (Mon, 16 Jan 2012 07:49:26 GMT)
+ * Version: 0.5.4 (Thu, 19 Jan 2012 05:12:05 GMT)
  */
 
 ;(function(){
@@ -1227,7 +1227,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     }
 
     mockTweenable = new Tweenable();
-    mockTweenable._tweenParams.easing = easing;
+    mockTweenable._tweenParams.easing = easing || 'linear';
     current = Tweenable.util.simpleCopy({}, from);
 
     // Call any data type filters

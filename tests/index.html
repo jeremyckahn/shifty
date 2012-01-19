@@ -191,6 +191,9 @@
       forceInternalUpdate(tweenable);
       equals(tweenable.get().x, 250,
           'The third queued tween runs (after the previous one completed)');
+
+      // Prevents a post-test infinite loop
+      mock_time = function () {return 10000000;};
     });
 
   } ());

@@ -52,7 +52,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     }
 
     mockTweenable = new Tweenable();
-    mockTweenable._tweenParams.easing = easing;
+    mockTweenable._tweenParams.easing = easing || 'linear';
     current = Tweenable.util.simpleCopy({}, from);
 
     // Call any data type filters
