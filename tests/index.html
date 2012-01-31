@@ -27,6 +27,7 @@
 <script src="../src/shifty.interpolate.js"></script>
 <script src="../src/shifty.simple_ease.js"></script>
 <script src="../src/shifty.clamp.js"></script>
+<script src="../src/shifty.round.js"></script>
 
 <script>
   (function () {
@@ -194,6 +195,26 @@
 
       // Prevents a post-test infinite loop
       mock_time = function () {return 10000000;};
+    });
+
+
+    module('Rounding');
+
+    test('Rounding extension rounds floating-point numbers', function () {
+      var from = { x: 0 }
+          ,to = { x: 10 };
+
+      var roundingDisabled = Tweenable.util.interpolate(from, to, .55).x;
+      equals(roundingDisabled, 5.5,
+          'Rounding was disabled');
+
+      Tweenable.util.enableRounding();
+      var roundedUp = Tweenable.util.interpolate(from, to, .55).x;
+      equals(roundedUp, 6,
+          'Result was rounded up');
+      var roundedDown = Tweenable.util.interpolate(from, to, .54).x;
+      equals(roundedDown, 5,
+          'Result was rounded down');
     });
 
   } ());

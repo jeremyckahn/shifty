@@ -17,6 +17,7 @@ var
     'color',
     'css_units',
     'interpolate',
+    'round',
     'outro'
   ],
   ALWAYS_INCLUDE = [
