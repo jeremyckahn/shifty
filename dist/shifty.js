@@ -2,7 +2,7 @@
  * Shifty <http://jeremyckahn.github.com/shifty/>
  * Author: Jeremy Kahn - jeremyckahn@gmail.com
  * License: MIT
- * Version: 0.5.4 (Thu, 19 Jan 2012 05:12:05 GMT)
+ * Version: 0.5.5 (Tue, 31 Jan 2012 06:03:12 GMT)
  */
 
 ;(function(){
@@ -1247,6 +1247,48 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     this.set(interpolatedValues);
 
     return interpolatedValues;
+  };
+
+}());
+
+/**
+Shifty Rounding Extension
+By Jeremy Kahn - jeremyckahn@gmail.com
+  v0.1.0
+
+MIT Lincense.  This code free to use, modify, distribute and enjoy.
+
+*/
+
+(function () {
+
+  var isRoundingEnabled = false;
+
+  Tweenable.util.enableRounding = function () {
+    isRoundingEnabled = true;
+  };
+
+
+  Tweenable.util.disableRounding = function () {
+    isRoundingEnabled = false;
+  };
+
+
+  Tweenable.util.isRoundingEnabled = function () {
+    return isRoundingEnabled;
+  };
+
+
+  Tweenable.prototype.filter.round = {
+
+    'afterTween': function (currentState, fromState, toState) {
+
+      if (isRoundingEnabled) {
+        Tweenable.util.each(currentState, function (obj, prop) {
+          obj[prop] = Math.round(obj[prop]);
+        });
+      }
+    }
   };
 
 }());
