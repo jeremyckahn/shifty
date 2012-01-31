@@ -2,7 +2,7 @@
  * Shifty <http://jeremyckahn.github.com/shifty/>
  * Author: Jeremy Kahn - jeremyckahn@gmail.com
  * License: MIT
- * Version: 0.5.5 (Tue, 31 Jan 2012 06:03:12 GMT)
+ * Version: 0.5.6 (Tue, 31 Jan 2012 06:25:32 GMT)
  */
 
 ;(function(){
@@ -1285,7 +1285,10 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
       if (isRoundingEnabled) {
         Tweenable.util.each(currentState, function (obj, prop) {
-          obj[prop] = Math.round(obj[prop]);
+          // Duck type to see if the property is a number
+          if (!obj[prop].replace) {
+            obj[prop] = Math.round(obj[prop]);
+          }
         });
       }
     }

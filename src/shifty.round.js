@@ -32,7 +32,10 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
       if (isRoundingEnabled) {
         Tweenable.util.each(currentState, function (obj, prop) {
-          obj[prop] = Math.round(obj[prop]);
+          // Duck type to see if the property is a number
+          if (!obj[prop].replace) {
+            obj[prop] = Math.round(obj[prop]);
+          }
         });
       }
     }
