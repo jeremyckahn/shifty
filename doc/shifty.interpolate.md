@@ -1,7 +1,7 @@
 Shifty Interpolate Extension
 ===
 
-To use the `interpolate` functions, include `shifty.interpolate.js` on your page after `shifty.core.js`.  `shifty.interpolate.js` is also included in `shifty.min.js` for your convenience.
+To use the `interpolate` functions, include `shifty.interpolate.js` on your page after `shifty.core.js`.  `shifty.interpolate.js` is also included in the standard build for your convenience.
 
 The `interpolate` functions are handy utilities for calculating what tween values will be at specified points.  To put it another way, you can query the calculated values that `Tweenable` would be calculating for you anyways.  The difference is that you can control what point in the tween you want to sample the values from.
 
@@ -26,9 +26,9 @@ The alternative (but equivalent) function signature is:
 ````javascript
 // Properties are identical to corresponding parameters above.
 Tweenable.util.interpolate ({
-	from: Object, 
-	to: Object, 
-	position: Number, 
+	from: Object,
+	to: Object,
+	position: Number,
 	easing: String
 })
 ````
