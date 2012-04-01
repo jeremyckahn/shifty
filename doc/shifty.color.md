@@ -22,7 +22,7 @@ Pink:
   rgb(255,0,255)
 ````
 
-Keep in mind that whitespace is not allowed - this was a design choice when writing this extension, as stipping out the white space would require slightly more CPU cycles than not.  Also, all characters must be lowercase.
+Keep in mind that whitespace is not allowed - this was a design choice when writing this extension, as stripping out the white space would require slightly more CPU cycles than not.  Also, all characters must be lowercase.
 
 To use this awesome Shifty extension, just load after you load `shifty.core.js`.
 
