@@ -188,9 +188,9 @@ Cartoon.prototype = new CartoonPrototype();
 var myCartoon = new Cartoon();
 ````
 
-In this example, `Cartoon` is borrowing the prototype and constructor of `Tweeneable` to build the inheritance chain.  This is a more advanced approach, but it will likely give you the most flexibility and minimize bizarre "shared prototype" bugs.
+In this example, we are creating `CartoonPrototype`.  It inherits `Tweenable`'s methods and acts as a proxy function to inherit from.  This keeps the `Tweenable` prototype safe from modification while providing access to its methods on the prototype chain.  An instance of `CartoonPrototype` is then set as `Cartoon`'s prototype.  This is a more advanced approach, but it will likely give you the most flexibility and minimize bizarre "shared prototype" bugs.
 
-Using inheritance is awesome because any plugins or extensions that are present on the `Tweenable()` prototype are also available to `myCartoon`, and all instances of `Cartoon` (and `Tweenable`).  You can define these inheritable functions by attaching them to the `Tweenable.prototype` Object.  A full example of this:
+Using inheritance is awesome because any plugins or extensions that are present on the `Tweenable()` prototype are also available to `myCartoon`, and all instances of `Cartoon` (and `Tweenable`).  You can hook these inheritable functions up by attaching them to the `Tweenable.prototype` Object.  A full example of this:
 
 ````javascript
 // Add a new method to the `Tweenable` prototype
