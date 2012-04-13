@@ -178,12 +178,13 @@ Shifty's true power comes from it's extensibility.  It is designed to be an inhe
 ````javascript
 function Cartoon () {
   // Borrow `Tweenable`'s constructor
-  this.constructor.call(this);
+  Tweenable.call(this);
   console.log('Whoop whoop!  This is my framerate: ', this.fps);
 }
 
-// Set `Cartoon` to share `Tweenable`'s prototype
-Cartoon.prototype = Tweenable.prototype;
+function CartoonPrototype () {};
+CartoonPrototype.prototype = Tweenable.prototype;
+Cartoon.prototype = new CartoonPrototype();
 var myCartoon = new Cartoon();
 ````
 
@@ -201,12 +202,14 @@ Tweenable.prototype.logMyProperties = function () {
 
 // Define a constructor function
 function Cartoon () {
-  this.constructor.call(this);
+  Tweenable.call(this);
   this.cartoonProp = "I am a property of Cartoon!  And not the Tweenable prototype!";
   console.log('Whoop whoop!  This is my framerate: ', this.fps);
 }
 
-Cartoon.prototype = Tweenable.prototype;
+function CartoonPrototype () {};
+CartoonPrototype.prototype = Tweenable.prototype;
+Cartoon.prototype = new CartoonPrototype();
 
 // Make a new instance of `cartoon`
 var myCartoon = new Cartoon();
