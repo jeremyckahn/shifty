@@ -9,7 +9,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
   <title></title>
-  
+
   <style type="text/css" media="screen">
     #main {
       background: #0f0;
@@ -40,7 +40,7 @@
   <script type="text/javascript" charset="utf-8" src="../src/shifty.formulas.js"></script>
   <script type="text/javascript" charset="utf-8" src="../src/shifty.color.js"></script>
   <script type="text/javascript" charset="utf-8" src="../src/shifty.css_units.js"></script>
-  
+
   <script type="text/javascript" charset="utf-8">
 
     var myTweenable = new Tweenable({
@@ -49,23 +49,23 @@
         div = document.getElementById('main');
 
     window.myTweenable = myTweenable;
-  
+
     myTweenable.tween({
       from: {
-        'left': '0px'
-        ,'top': '0px'
+        'left': 'translateX(0px)'
+        ,'top': 'translateY(0px)'
         ,'color': '#0f0'
       },
       to: {
-        'left': '400px'
-        ,'top': '200px'
+        'left': 'translateX(400px)'
+        ,'top': 'translatey(200px)'
         ,'color': '#f0f'
       },
       'duration': 2500
       ,'step': function () {
-        div.style.left = this.left;
-        div.style.top = this.top;
-        div.style.background = this.color;
+        var style = div.style;
+        style.MozTransform = style.webkitTransform = this.left + ' ' + this.top;
+        style.background = this.color;
       }
       ,'easing': {
         'left': 'bounce'
@@ -73,7 +73,7 @@
         ,'color': 'easeInExpo'
       }
     });
-    
+
   </script>
 
 </body>

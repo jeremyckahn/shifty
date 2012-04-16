@@ -2,7 +2,7 @@
  * Shifty <http://jeremyckahn.github.com/shifty/>
  * Author: Jeremy Kahn - jeremyckahn@gmail.com
  * License: MIT
- * Version: 0.5.6 (Tue, 31 Jan 2012 06:25:32 GMT)
+ * Version: 0.6.0 (Mon, 16 Apr 2012 03:00:56 GMT)
  */
 
 ;(function(){
@@ -1118,12 +1118,11 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 (function () {
 
-  var R_CSS_UNITS = /(px|em|%|pc|pt|mm|cm|in|ex)/i,
-    R_QUICK_CSS_UNITS = /([a-z]|%)/gi,
-    savedTokenProps;
+    var R_FORMAT = /\D+/g;
+    var savedTokenProps;
 
   function isValidString (str) {
-    return typeof str === 'string' && R_CSS_UNITS.test(str);
+    return typeof str === 'string' && str.match(R_FORMAT);
   }
 
   function getTokenProps (obj) {
@@ -1132,10 +1131,16 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     collection = {};
 
     Tweenable.util.each(obj, function (obj, prop) {
-      if (isValidString(obj[prop])) {
-        collection[prop] = {
-          'suffix': obj[prop].match(R_CSS_UNITS)[0]
-        };
+      var rawString = obj[prop];
+
+      if (isValidString(rawString)) {
+        var templateChunks = rawString.match(R_FORMAT);
+
+        if (templateChunks.length === 1) {
+          templateChunks.unshift('');
+        }
+
+        collection[prop] = templateChunks;
       }
     });
 
@@ -1145,13 +1150,14 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
   function deTokenize (obj, tokenProps) {
     Tweenable.util.each(tokenProps, function (collection, token) {
       // Extract the value from the string
-      obj[token] = +(obj[token].replace(R_QUICK_CSS_UNITS, ''));
+      obj[token] = +(obj[token].replace(R_FORMAT, ''));
     });
   }
 
   function reTokenize (obj, tokenProps) {
     Tweenable.util.each(tokenProps, function (collection, token) {
-      obj[token] = obj[token] + collection[token].suffix;
+      var tokenChunks = collection[token];
+      obj[token] = tokenChunks[0] + obj[token] + tokenChunks[1];
     });
   }
 
