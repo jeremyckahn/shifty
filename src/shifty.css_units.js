@@ -19,6 +19,12 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     return typeof str === 'string' && str.match(R_FORMAT);
   }
 
+  function sanitizeRegExpString (str) {
+    return str
+      .replace(/\(/g, '\\(')
+      .replace(/\)/g, '\\)');
+  }
+
   function getTokenProps (obj) {
     var collection;
 
@@ -43,8 +49,21 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
   function deTokenize (obj, tokenProps) {
     Tweenable.util.each(tokenProps, function (collection, token) {
+      var currentTokenChunks = tokenProps[token];
+
       // Extract the value from the string
-      obj[token] = +(obj[token].replace(R_FORMAT, ''));
+      var rChunkFinder;
+      var firstChunk = sanitizeRegExpString(currentTokenChunks[0]);
+      var secondChunk = sanitizeRegExpString(currentTokenChunks[1]);
+
+      if (currentTokenChunks[0] === '') {
+        rChunkFinder = new RegExp(secondChunk, 'g');
+      } else {
+        rChunkFinder =
+          new RegExp('(' + firstChunk  + '|' + secondChunk + ')', 'g');
+      }
+
+      obj[token] = +(obj[token].replace(rChunkFinder, ''));
     });
   }
 
