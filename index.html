@@ -1,9 +1,5 @@
 <!doctype html>
-<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
-<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <!-- Use the .htaccess and remove these lines to avoid edge case issues.
@@ -30,13 +26,13 @@
     }
 
     a, a:active, a:hover, a:link, a:visited {
-      color: #a00;
+      color: #00a;
       font-weight: bold;
       text-decoration: none;
     }
 
     a:hover {
-      color: #f00;
+      color: #05f;
     }
 
     #container {
@@ -51,13 +47,15 @@
     }
 
     #banner {
-      font-family: 'Carter One', Helvetica, Arial, sans-serif;
-      margin: 0px auto;
-      text-align: center;
     }
 
+      #banner img {
+        display: block;
+        margin: 0 auto;
+      }
+
     .segment {
-      background-color: #f00;
+      background-color: #05f;
       clear: both;
       float: left;
       left: 0px;
@@ -80,7 +78,6 @@
 
     #btnHelixStart {
       display: block;
-      font-family: 'Carter One', Helvetica, Arial, sans-serif;
       font-size: 30px;
       font-weight: bold;
       margin: 15px auto 10px;
@@ -101,14 +98,16 @@
 
   <div id="container">
     <header>
-        <h1 id="banner">Shifty!</h1>
+    <h1 id="banner">
+      <img src="demos/img/shifty-logo-600.png" alt="Shifty logo">
+    </h1>
     </header>
     <ul>
       <li><a href="https://raw.github.com/jeremyckahn/shifty/master/dist/shifty.js"><strong>Download <code>shifty.js</code></strong></a>
       <li><a href="https://raw.github.com/jeremyckahn/shifty/master/dist/shifty.min.js"><strong>Download <code>shifty.min.js</code></strong></a>
     </ul>
     <div id="main" role="main">
-  <a href="https://github.com/jeremyckahn/shifty"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/30f550e0d38ceb6ef5b81500c64d970b7fb0f028/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub"></a>
+  <a href="https://github.com/jeremyckahn/shifty"><img style="position: absolute; top: 0; left: 0; border: 0;" src="demos/img/forkme.png" alt="Fork me on GitHub"></a>
   <p>Shifty is a tweening engine built in JavaScript.  It is designed to fit any number of tweening needs. Features include:</p>
   <ul>
       <li>Speed - Shifty is optimized for performance.</li>
@@ -182,7 +181,6 @@
   </div> <!--! end of #container -->
   <script type="text/javascript" src="dist/shifty.min.js" charset="utf-8"></script>
   <script type="text/javascript" src="src/shifty.simple_ease.js" charset="utf-8"></script>
-  <script type="text/javascript" src="demos/demo1/shiftme.js" charset="utf-8"></script>
   <script type="text/javascript" src="demos/demo2/helix.js" charset="utf-8"></script>
   <script type="text/javascript">
 
@@ -190,89 +188,31 @@
 
       var btnHelixStart
           ,helixIsInitted
-    ,helixIsRunning;
-
-      function animateHeader () {
-  var header = document.getElementById('banner');
-
-  global.shiftyDemo.introInit(header);
-
-  setTimeout(function () {
-      global.shiftyDemo.introGrow(header, 140, function () {
-    global.shiftyDemo.introFade(header);
-      });
-  }, 600);
-      }
+          ,helixIsRunning;
 
       function toggleHelix () {
 
-  if (!helixIsInitted) {
-      helixIsInitted = true;
-      global.shiftyDemo.helixInit('helix-container');
-  }
+        if (!helixIsInitted) {
+          helixIsInitted = true;
+          global.shiftyDemo.helixInit('helix-container');
+        }
 
-  if (helixIsRunning) {
-      global.shiftyDemo.helixPause();
-      btnHelixStart.innerHTML = 'Go go helix!';
-  } else {
-      global.shiftyDemo.helixPlay();
-      btnHelixStart.innerHTML = 'Stop stop helix!';
-  }
+        if (helixIsRunning) {
+          global.shiftyDemo.helixPause();
+          btnHelixStart.innerHTML = 'Go go helix!';
+        } else {
+          global.shiftyDemo.helixPlay();
+          btnHelixStart.innerHTML = 'Stop stop helix!';
+        }
 
-
-  helixIsRunning = !helixIsRunning;
-      }
-
-      if (typeof google !== 'undefined') {
-  google.load("webfont", "1");
-
-  google.setOnLoadCallback(function() {
-  WebFont.load({
-      google: {
-    families: [ 'Carter One' ]
-      }});
-
-      animateHeader();
-  });
-      } else {
-  animateHeader();
+        helixIsRunning = !helixIsRunning;
       }
 
       btnHelixStart = document.getElementById('btnHelixStart');
       btnHelixStart.addEventListener('click', toggleHelix, true);
       helixIsRunning = false;
       helixIsInitted = false;
-
-      (function () {
-        // Simple demo dump of all of the formulas
-        var tweenedVal
-            ,formula;
-
-        if (global.console && global.console.log && Tweenable.util.simpleEase) {
-
-          console.log('A quick sampling of the different easing formulas:');
-
-          // Test and log all of the tweening methods.
-          for (formula in Tweenable.prototype.formula) {
-            if (Tweenable.prototype.formula.hasOwnProperty(formula)) {
-              console.log(formula + ' at 0.5: ' + Tweenable.util.simpleEase(formula, 0.5));
-            }
-          }
-        }
-      } ());
-
     } (this));
   </script>
-
-  <!-- end scripts-->
-
-
-  <!-- Prompt IE 6 users to install Chrome Frame. Remove this if you want to support IE 6.
-       chromium.org/developers/how-tos/chrome-frame-getting-started -->
-  <!--[if lt IE 7 ]>
-    <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
-    <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
-  <![endif]-->
-
 </body>
 </html>
