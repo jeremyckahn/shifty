@@ -22,19 +22,28 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
   }
 
   function getInterpolatedValues (from, current, to, position, easing) {
-    var easingObject;
-
-    easingObject = Tweenable.util.composeEasingObject(from, easing);
-
     return Tweenable.util.tweenProps(position, {
       'originalState': from
       ,'to': to
       ,'timestamp': 0
       ,'duration': 1
-      ,'easing': easingObject
+      ,'easing': easing
     }, {
       'current': current
     });
+  }
+
+  function expandEasingParam (stateObject, easingParam) {
+    var easingObject = easingParam;
+
+    if (typeof easingParam === 'string') {
+      easingObject = {};
+      Tweenable.util.each(stateObject, function (obj, prop) {
+        easingObject[prop] = obj[prop];
+      });
+    }
+
+    return easingObject;
   }
 
   // This is the static utility version of the function.
@@ -54,12 +63,18 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     mockTweenable = new Tweenable();
     mockTweenable._tweenParams.easing = easing || 'linear';
     current = Tweenable.util.simpleCopy({}, from);
+    var easingObject = Tweenable.util.composeEasingObject(
+        from, mockTweenable._tweenParams.easing);
 
     // Call any data type filters
-    Tweenable.util.applyFilter('tweenCreated', mockTweenable, [current, from, to]);
-    Tweenable.util.applyFilter('beforeTween', mockTweenable, [current, from, to]);
-    interpolatedValues = getInterpolatedValues (from, current, to, position, mockTweenable._tweenParams.easing);
-    Tweenable.util.applyFilter('afterTween', mockTweenable, [interpolatedValues, from, to]);
+    Tweenable.util.applyFilter('tweenCreated', mockTweenable,
+        [current, from, to, easingObject]);
+    Tweenable.util.applyFilter('beforeTween', mockTweenable,
+        [current, from, to, easingObject]);
+    interpolatedValues = getInterpolatedValues(
+        from, current, to, position, easingObject);
+    Tweenable.util.applyFilter('afterTween', mockTweenable,
+        [interpolatedValues, from, to, easingObject]);
 
     return interpolatedValues;
   };

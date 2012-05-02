@@ -15,8 +15,11 @@ The are actually two versions of the `interpolate` method:  Static and instance.
 /**
  * @param {Object} from The starting values to tween from.
  * @param {Object} to The ending values to tween to.
- * @param {Number} position The normalized position value (between 0.0 and 1.0) to interpolate the values between `from` and `to` against.
- * @param {String} easing The easing method to calculate the interpolation against.  You can use any easing method attached to `Tweenable.prototype.formula`.  If omitted, this defaults to "linear".
+ * @param {Number} position The normalized position value (between 0.0 and 1.0)
+ *     to interpolate the values between `from` and `to` against.
+ * @param {String|Object} easing The easing method to calculate the interpolation
+ *     against.  You can use any easing method attached to
+ *     `Tweenable.prototype.formula`.  If omitted, this defaults to "linear".
  */
 Tweenable.util.interpolate ( from, to, position, easing )
 ````

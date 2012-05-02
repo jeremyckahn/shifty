@@ -200,10 +200,10 @@ var Tweenable;
       }
 
       applyFilter('beforeTween', params.owner, [state.current,
-          params.originalState, params.to]);
+          params.originalState, params.to, params.easing]);
       tweenProps (currentTime, params, state);
       applyFilter('afterTween', params.owner, [state.current,
-          params.originalState, params.to]);
+          params.originalState, params.to, params.easing]);
 
       if (params.hook.step) {
         invokeHook('step', params.hook, params.owner, [state.current]);
@@ -392,9 +392,9 @@ var Tweenable;
     weakCopy(params.to, state.current);
 
     params.easing = composeEasingObject(state.current, params.easing);
-    applyFilter('tweenCreated', params.owner, [state.current,
-        params.originalState, params.to]);
     params.originalState = simpleCopy({}, state.current);
+    applyFilter('tweenCreated', params.owner, [state.current,
+        params.originalState, params.to, params.easing]);
     state.isTweening = true;
     this.resume();
 
@@ -472,7 +472,8 @@ var Tweenable;
     if (gotoEnd) {
       simpleCopy(this._state.current, this._tweenParams.to);
       applyFilter('afterTweenEnd', this, [this._state.current,
-          this._tweenParams.originalState, this._tweenParams.to]);
+          this._tweenParams.originalState, this._tweenParams.to,
+          this._tweenParams.easing]);
       if (this._tweenParams.callback) {
         this._tweenParams.callback.call(this._state.current,
             this._state.current);

@@ -14,10 +14,9 @@ var
     'core',
     'formulas',
     'queue',
-    'color',
-    'css_units',
     'interpolate',
     'round',
+    'token',
     'outro'
   ],
   ALWAYS_INCLUDE = [
