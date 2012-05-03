@@ -1,21 +1,16 @@
 /**
-Shifty Easing Formulas
-Adapted for Shifty by Jeremy Kahn - jeremyckahn@gmail.com
-  v0.1.0
+ * Shifty Easing Formulas
+ * Adapted for Shifty by Jeremy Kahn - jeremyckahn@gmail.com
+ *
+ * All equations are adapted from Thomas Fuchs' Scripty2:
+ * https://raw.github.com/madrobby/scripty2/master/src/effects/transitions/penner.js
+ * Based on Easing Equations (c) 2003 Robert Penner, all rights reserved.
+ * (http://www.robertpenner.com/). This work is subject to the terms in
+ * http://www.robertpenner.com/easing_terms_of_use.html
+ *
+ */
 
-================================
-All equations are adapted from Thomas Fuchs' Scripty2: https://raw.github.com/madrobby/scripty2/master/src/effects/transitions/penner.js
-Based on Easing Equations (c) 2003 Robert Penner, all rights reserved. (http://www.robertpenner.com/)
-This work is subject to the terms in http://www.robertpenner.com/easing_terms_of_use.html
-================================
-
-For instructions on how to use Shifty, please consult the README: https://github.com/jeremyckahn/shifty/blob/master/README.md
-
-MIT Lincense.  This code free to use, modify, distribute and enjoy.
-
-*/
-
-(function () {
+;(function () {
 
   Tweenable.util.simpleCopy(Tweenable.prototype.formula, {
     easeInQuad: function(pos){

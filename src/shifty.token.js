@@ -1,5 +1,10 @@
+/**
+ * Shifty Token Extension
+ * By Jeremy Kahn - jeremyckahn@gmail.com
+ *
+ * Adds string support to Shifty.
+ */
 ;(function (Tweenable) {
-
 
   /**
    * @typedef {{
@@ -11,6 +16,7 @@
 
 
   // CONSTANTS
+
   var R_FORMAT_CHUNKS = /([^-0-9]+)/g;
   var R_UNFORMATTED_VALUES = /[0-9.-]+/g;
   var R_RGB = new RegExp('rgb\\('
@@ -196,7 +202,7 @@
   /**
    * @param {Object} stateObject
    *
-   * @return {{formatManifest}} An Object of string manifests that correspond to
+   * @return {Object} An Object of formatManifests that correspond to
    * the string properties of stateObject
    */
   function getFormatManifests (stateObject) {
@@ -221,7 +227,7 @@
 
   /**
    * @param {Object} stateObject
-   * @param {{formatManifest}} formatManifests
+   * @param {Object} formatManifests
    */
   function expandFormattedProperties (stateObject, formatManifests) {
     Tweenable.util.each(formatManifests, function (obj, prop) {
@@ -240,7 +246,7 @@
 
   /**
    * @param {Object} stateObject
-   * @param {{formatManifest}} formatManifests
+   * @param {Object} formatManifests
    */
   function collapseFormattedProperties (stateObject, formatManifests) {
     Tweenable.util.each(formatManifests, function (obj, prop) {
@@ -323,16 +329,6 @@
    */
   function getValuesFrom (formattedString) {
     return formattedString.match(R_UNFORMATTED_VALUES);
-  }
-
-
-  /**
-   * @param {Array.<number>} values
-   * @param {string} easingString
-   *
-   * @return {Array.<string>}
-   */
-  function getEasingArrayFrom (values, easingString) {
   }
 
 

@@ -1,21 +1,10 @@
-/*global setTimeout:true, clearTimeout:true */
-
 /**
-Shifty Queue Extension
-By Jeremy Kahn - jeremyckahn@gmail.com
-  v0.2.0
-
-Dependencies: shifty.core.js
-
-Shifty and all official extensions are freely available under an MIT license.
-For instructions on how to use Shifty and this extension, please consult the manual: https://github.com/jeremyckahn/shifty/blob/master/README.md
-For instructions on how to use this extension, please see: https://github.com/jeremyckahn/shifty/blob/master/doc/shifty.queue.md
-
-MIT Lincense.  This code free to use, modify, distribute and enjoy.
-
-*/
-
-(function () {
+ * Shifty Queue Extension
+ * By Jeremy Kahn - jeremyckahn@gmail.com
+ *
+ * Enables Shifty tweens to be sequentially queueable.
+ */
+;(function () {
 
   var noop = function () {};
 

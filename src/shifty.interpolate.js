@@ -1,25 +1,10 @@
-/*global setTimeout:true, clearTimeout:true */
-
 /**
-Shifty Interpolate Extension
-By Jeremy Kahn - jeremyckahn@gmail.com
-  v0.1.0
-
-Dependencies: shifty.core.js
-
-Shifty and all official extensions are freely available under an MIT license.
-For instructions on how to use Shifty and this extension, please consult the manual: https://github.com/jeremyckahn/shifty/blob/master/README.md
-For instructions on how to use this extension, please see: https://github.com/jeremyckahn/shifty/blob/master/doc/shifty.queue.md
-
-MIT Lincense.  This code free to use, modify, distribute and enjoy.
-
-*/
-
-(function () {
-
-  if (!Tweenable) {
-    return;
-  }
+ * Shifty Interpolate Extension
+ * By Jeremy Kahn - jeremyckahn@gmail.com
+ *
+ * Enables Shifty to compute single midpoints of a tween.
+ */
+;(function () {
 
   function getInterpolatedValues (from, current, to, position, easing) {
     return Tweenable.util.tweenProps(position, {
@@ -33,6 +18,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     });
   }
 
+
   function expandEasingParam (stateObject, easingParam) {
     var easingObject = easingParam;
 
@@ -45,6 +31,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
     return easingObject;
   }
+
 
   // This is the static utility version of the function.
   Tweenable.util.interpolate = function (from, to, position, easing) {
@@ -78,6 +65,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
     return interpolatedValues;
   };
+
 
   // This is the inheritable instance-method version of the function.
   Tweenable.prototype.interpolate = function (to, position, easing) {

@@ -1,13 +1,11 @@
 /**
-Shifty Rounding Extension
-By Jeremy Kahn - jeremyckahn@gmail.com
-  v0.1.0
+ * Shifty Rounding Extension
+ * By Jeremy Kahn - jeremyckahn@gmail.com
+ *
+ * Enables number rounding for computed tween values.
+ */
 
-MIT Lincense.  This code free to use, modify, distribute and enjoy.
-
-*/
-
-(function () {
+;(function () {
 
   var isRoundingEnabled = false;
 

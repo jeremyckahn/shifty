@@ -1,17 +1,23 @@
 /** @license
  * Shifty <http://jeremyckahn.github.com/shifty/>
+ * Description: A teeny tiny tweening engine in JavaScript. That's all it does.
  * Author: Jeremy Kahn - jeremyckahn@gmail.com
  * License: MIT
- * Version: 0.6.3 (Wed, 02 May 2012 06:06:32 GMT)
+ * Version: 0.6.4 (Thu, 03 May 2012 06:22:40 GMT)
  */
 
 ;(function(){
+
+/**
+ * Shifty Core
+ * By Jeremy Kahn - jeremyckahn@gmail.com
+ */
 
 // Should be outside the following closure since it will be used by all
 // modules.  It won't generate any globals after building.
 var Tweenable;
 
-(function (global) {
+;(function (global) {
 
   var now
       ,DEFAULT_EASING = 'linear'
@@ -620,23 +626,18 @@ var Tweenable;
 } (this));
 
 /**
-Shifty Easing Formulas
-Adapted for Shifty by Jeremy Kahn - jeremyckahn@gmail.com
-  v0.1.0
+ * Shifty Easing Formulas
+ * Adapted for Shifty by Jeremy Kahn - jeremyckahn@gmail.com
+ *
+ * All equations are adapted from Thomas Fuchs' Scripty2:
+ * https://raw.github.com/madrobby/scripty2/master/src/effects/transitions/penner.js
+ * Based on Easing Equations (c) 2003 Robert Penner, all rights reserved.
+ * (http://www.robertpenner.com/). This work is subject to the terms in
+ * http://www.robertpenner.com/easing_terms_of_use.html
+ *
+ */
 
-================================
-All equations are adapted from Thomas Fuchs' Scripty2: https://raw.github.com/madrobby/scripty2/master/src/effects/transitions/penner.js
-Based on Easing Equations (c) 2003 Robert Penner, all rights reserved. (http://www.robertpenner.com/)
-This work is subject to the terms in http://www.robertpenner.com/easing_terms_of_use.html
-================================
-
-For instructions on how to use Shifty, please consult the README: https://github.com/jeremyckahn/shifty/blob/master/README.md
-
-MIT Lincense.  This code free to use, modify, distribute and enjoy.
-
-*/
-
-(function () {
+;(function () {
 
   Tweenable.util.simpleCopy(Tweenable.prototype.formula, {
     easeInQuad: function(pos){
@@ -819,24 +820,13 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 }());
 
-/*global setTimeout:true, clearTimeout:true */
-
 /**
-Shifty Queue Extension
-By Jeremy Kahn - jeremyckahn@gmail.com
-  v0.2.0
-
-Dependencies: shifty.core.js
-
-Shifty and all official extensions are freely available under an MIT license.
-For instructions on how to use Shifty and this extension, please consult the manual: https://github.com/jeremyckahn/shifty/blob/master/README.md
-For instructions on how to use this extension, please see: https://github.com/jeremyckahn/shifty/blob/master/doc/shifty.queue.md
-
-MIT Lincense.  This code free to use, modify, distribute and enjoy.
-
-*/
-
-(function () {
+ * Shifty Queue Extension
+ * By Jeremy Kahn - jeremyckahn@gmail.com
+ *
+ * Enables Shifty tweens to be sequentially queueable.
+ */
+;(function () {
 
   var noop = function () {};
 
@@ -925,28 +915,13 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 }());
 
-/*global setTimeout:true, clearTimeout:true */
-
 /**
-Shifty Interpolate Extension
-By Jeremy Kahn - jeremyckahn@gmail.com
-  v0.1.0
-
-Dependencies: shifty.core.js
-
-Shifty and all official extensions are freely available under an MIT license.
-For instructions on how to use Shifty and this extension, please consult the manual: https://github.com/jeremyckahn/shifty/blob/master/README.md
-For instructions on how to use this extension, please see: https://github.com/jeremyckahn/shifty/blob/master/doc/shifty.queue.md
-
-MIT Lincense.  This code free to use, modify, distribute and enjoy.
-
-*/
-
-(function () {
-
-  if (!Tweenable) {
-    return;
-  }
+ * Shifty Interpolate Extension
+ * By Jeremy Kahn - jeremyckahn@gmail.com
+ *
+ * Enables Shifty to compute single midpoints of a tween.
+ */
+;(function () {
 
   function getInterpolatedValues (from, current, to, position, easing) {
     return Tweenable.util.tweenProps(position, {
@@ -960,6 +935,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     });
   }
 
+
   function expandEasingParam (stateObject, easingParam) {
     var easingObject = easingParam;
 
@@ -972,6 +948,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
     return easingObject;
   }
+
 
   // This is the static utility version of the function.
   Tweenable.util.interpolate = function (from, to, position, easing) {
@@ -1006,6 +983,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     return interpolatedValues;
   };
 
+
   // This is the inheritable instance-method version of the function.
   Tweenable.prototype.interpolate = function (to, position, easing) {
     var interpolatedValues;
@@ -1019,15 +997,13 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 }());
 
 /**
-Shifty Rounding Extension
-By Jeremy Kahn - jeremyckahn@gmail.com
-  v0.1.0
+ * Shifty Rounding Extension
+ * By Jeremy Kahn - jeremyckahn@gmail.com
+ *
+ * Enables number rounding for computed tween values.
+ */
 
-MIT Lincense.  This code free to use, modify, distribute and enjoy.
-
-*/
-
-(function () {
+;(function () {
 
   var isRoundingEnabled = false;
 
@@ -1063,8 +1039,13 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 }());
 
+/**
+ * Shifty Token Extension
+ * By Jeremy Kahn - jeremyckahn@gmail.com
+ *
+ * Adds string support to Shifty.
+ */
 ;(function (Tweenable) {
-
 
   /**
    * @typedef {{
@@ -1076,6 +1057,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
 
   // CONSTANTS
+
   var R_FORMAT_CHUNKS = /([^-0-9]+)/g;
   var R_UNFORMATTED_VALUES = /[0-9.-]+/g;
   var R_RGB = new RegExp('rgb\\('
@@ -1261,7 +1243,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
   /**
    * @param {Object} stateObject
    *
-   * @return  An Object of string manifests that correspond to
+   * @return {Object} An Object of formatManifests that correspond to
    * the string properties of stateObject
    */
   function getFormatManifests (stateObject) {
@@ -1286,7 +1268,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
   /**
    * @param {Object} stateObject
-   * @param  formatManifests
+   * @param {Object} formatManifests
    */
   function expandFormattedProperties (stateObject, formatManifests) {
     Tweenable.util.each(formatManifests, function (obj, prop) {
@@ -1305,7 +1287,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
   /**
    * @param {Object} stateObject
-   * @param  formatManifests
+   * @param {Object} formatManifests
    */
   function collapseFormattedProperties (stateObject, formatManifests) {
     Tweenable.util.each(formatManifests, function (obj, prop) {
@@ -1388,16 +1370,6 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
    */
   function getValuesFrom (formattedString) {
     return formattedString.match(R_UNFORMATTED_VALUES);
-  }
-
-
-  /**
-   * @param {Array.<number>} values
-   * @param {string} easingString
-   *
-   * @return {Array.<string>}
-   */
-  function getEasingArrayFrom (values, easingString) {
   }
 
 

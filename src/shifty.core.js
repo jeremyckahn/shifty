@@ -1,8 +1,13 @@
+/**
+ * Shifty Core
+ * By Jeremy Kahn - jeremyckahn@gmail.com
+ */
+
 // Should be outside the following closure since it will be used by all
 // modules.  It won't generate any globals after building.
 var Tweenable;
 
-(function (global) {
+;(function (global) {
 
   var now
       ,DEFAULT_EASING = 'linear'
