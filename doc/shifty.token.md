@@ -139,8 +139,8 @@ translateX(100px) translateY(100px)
 ````
 
 `translateX` and `translateY` are not in sync anymore, because we specified the
-`easeInQuad` formula for `translateX` and `bounce` for `translateY`.  Mixing
-and matching easing formulas can make for some interesting curves in your
+_`easeInQuad`_ formula for `translateX` and _`bounce`_ for `translateY`.  Mixing
+and matching easing formulae can make for some interesting curves in your
 animations.
 
 The order of the space-separated easing formulas correspond the token values
