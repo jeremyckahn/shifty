@@ -1,15 +1,8 @@
 <!doctype html>
-<!--[if lt IE 9]>      <html class="no-js oldie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="en">
 <head>
   <meta charset="utf-8">
-
-  <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
-       Remove this if you use the .htaccess -->
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-
   <title></title>
-
   <style type="text/css" media="screen">
     #main {
       background: #0f0;
@@ -19,29 +12,13 @@
       width: 200px;
     }
   </style>
-
 </head>
-
 <body id="root">
-
-  <div id="container">
-    <header>
-
-    </header>
-    <div id="main" role="main">
-
-    </div>
-    <footer>
-
-    </footer>
-  </div> <!--! end of #container -->
-
+  <div id="main" role="main"></div>
   <script type="text/javascript" charset="utf-8" src="../src/shifty.core.js"></script>
   <script type="text/javascript" charset="utf-8" src="../src/shifty.formulas.js"></script>
   <script type="text/javascript" charset="utf-8" src="../src/shifty.token.js"></script>
-
   <script type="text/javascript" charset="utf-8">
-
     var myTweenable = new Tweenable({
           'fps': 60
         }),
@@ -51,32 +28,24 @@
 
     myTweenable.tween({
       from: {
-        'left': 'translateX(0px)'
-        ,'top': 'translateY(0px)'
-        ,'height': '50px'
+        'transform': 'translateX(0px) translateY(0px)'
         ,'color': '#0f0'
       },
       to: {
-        'left': 'translateX(400px)'
-        ,'top': 'translateY(200px)'
-        ,'height': '200px'
+        'transform': 'translateX(400px) translateY(200px)'
         ,'color': '#f0f'
       },
       'duration': 2500
       ,'step': function () {
         var style = div.style;
-        style.MozTransform = style.webkitTransform = this.left + ' ' + this.top;
+        style.MozTransform = style.webkitTransform = this.transform;
         style.background = this.color;
-        style.height = this.height;
       }
       ,'easing': {
-        'left': 'bounce'
-        ,'top': 'easeOutCirc'
+        'transform': 'bounce easeOutCirc'
         ,'color': 'easeInExpo'
       }
     });
-
   </script>
-
 </body>
 </html>

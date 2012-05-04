@@ -1,6 +1,8 @@
 Shifty Token Extension
 ===
 
+__[Example](http://jeremyckahn.github.com/shifty/examples/token.html)__
+
 The Token extension allows Shifty to tween numbers inside of strings.  This is
 nice because it allows you to animate CSS properties.  For example, you can do
 this:
