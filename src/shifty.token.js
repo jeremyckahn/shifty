@@ -312,7 +312,7 @@
 
     for (var i = 0; i < rawValuesLength; i++) {
       formattedValueString = formattedValueString.replace(
-          VALUE_PLACEHOLDER, rawValues[i]);
+          VALUE_PLACEHOLDER, +rawValues[i].toFixed(4));
     }
 
     return formattedValueString;
