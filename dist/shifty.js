@@ -3,7 +3,7 @@
  * Description: A teeny tiny tweening engine in JavaScript. That's all it does.
  * Author: Jeremy Kahn - jeremyckahn@gmail.com
  * License: MIT
- * Version: 0.6.4 (Thu, 03 May 2012 06:22:40 GMT)
+ * Version: 0.6.5 (Tue, 08 May 2012 04:14:58 GMT)
  */
 
 ;(function(){
@@ -1353,7 +1353,7 @@ var Tweenable;
 
     for (var i = 0; i < rawValuesLength; i++) {
       formattedValueString = formattedValueString.replace(
-          VALUE_PLACEHOLDER, rawValues[i]);
+          VALUE_PLACEHOLDER, +rawValues[i].toFixed(4));
     }
 
     return formattedValueString;
