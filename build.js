@@ -13,9 +13,7 @@ var
     'intro',
     'core',
     'formulas',
-    'queue',
     'interpolate',
-    'round',
     'token',
     'outro'
   ],
