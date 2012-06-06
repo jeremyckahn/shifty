@@ -3,7 +3,7 @@
  * Description: A teeny tiny tweening engine in JavaScript. That's all it does.
  * Author: Jeremy Kahn - jeremyckahn@gmail.com
  * License: MIT
- * Version: 0.6.6 (Mon, 28 May 2012 22:46:02 GMT)
+ * Version: 0.6.7 (Wed, 06 Jun 2012 03:45:31 GMT)
  */
 
 ;(function(){
@@ -920,7 +920,7 @@ var Tweenable;
 
   // CONSTANTS
 
-  var R_FORMAT_CHUNKS = /([^-0-9]+)/g;
+  var R_FORMAT_CHUNKS = /([^-0-9\.]+)/g;
   var R_UNFORMATTED_VALUES = /[0-9.-]+/g;
   var R_RGB = new RegExp('rgb\\('
       + R_UNFORMATTED_VALUES.source + ',\s*' + R_UNFORMATTED_VALUES.source

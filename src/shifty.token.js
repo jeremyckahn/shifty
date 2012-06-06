@@ -17,7 +17,7 @@
 
   // CONSTANTS
 
-  var R_FORMAT_CHUNKS = /([^-0-9]+)/g;
+  var R_FORMAT_CHUNKS = /([^-0-9\.]+)/g;
   var R_UNFORMATTED_VALUES = /[0-9.-]+/g;
   var R_RGB = new RegExp('rgb\\('
       + R_UNFORMATTED_VALUES.source + ',\s*' + R_UNFORMATTED_VALUES.source
