@@ -148,7 +148,11 @@ var
   pro = uglyfyJS.uglify,
   ast = jsp.parse( _fs.readFileSync(_distFileName, 'utf-8') );
 
-ast = pro.ast_mangle(ast);
+ast = pro.ast_mangle(ast, {
+    'defines': {
+      SHIFTY_DEBUG_NOW: ['name', false]
+    }
+  });
 ast = pro.ast_squeeze(ast);
 
 _fs.writeFileSync(_distFileNameMin, getLicense() + pro.gen_code(ast) );

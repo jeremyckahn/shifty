@@ -7,6 +7,13 @@
 // modules.  It won't generate any globals after building.
 var Tweenable;
 
+// UglifyJS define hack
+if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
+  var SHIFTY_DEBUG_NOW = function () {
+    return +new Date();
+  };
+}
+
 ;(function (global) {
 
   var now
@@ -15,7 +22,7 @@ var Tweenable;
       // a lot, and this is way faster than resolving the symbol.
       ,easing;
 
-  if (typeof SHIFTY_DEBUG_NOW === 'function') {
+  if (SHIFTY_DEBUG_NOW) {
     now = SHIFTY_DEBUG_NOW;
   } else {
     /**
