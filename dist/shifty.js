@@ -3,7 +3,7 @@
  * Description: A teeny tiny tweening engine in JavaScript. That's all it does.
  * Author: Jeremy Kahn - jeremyckahn@gmail.com
  * License: MIT
- * Version: 0.6.8 (Sun, 01 Jul 2012 17:46:54 GMT)
+ * Version: 0.6.9 (Sun, 01 Jul 2012 18:03:42 GMT)
  */
 
 ;(function(){
@@ -19,7 +19,7 @@ var Tweenable;
 
 // UglifyJS define hack
 if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
-  var SHIFTY_DEBUG_NOW = function () {
+  SHIFTY_DEBUG_NOW = function () {
     return +new Date();
   };
 }

@@ -9,7 +9,7 @@ var Tweenable;
 
 // UglifyJS define hack
 if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
-  var SHIFTY_DEBUG_NOW = function () {
+  SHIFTY_DEBUG_NOW = function () {
     return +new Date();
   };
 }
