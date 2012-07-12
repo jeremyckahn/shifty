@@ -150,7 +150,7 @@ var
 
 ast = pro.ast_mangle(ast, {
     'defines': {
-      SHIFTY_DEBUG_NOW: ['name', false]
+      SHIFTY_DEBUG_NOW: ['name', 'false']
     }
   });
 ast = pro.ast_squeeze(ast);
