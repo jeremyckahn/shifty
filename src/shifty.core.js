@@ -48,7 +48,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     var prop;
 
     for (prop in obj) {
-      if (obj.hasOwnProperty(prop)) {
+      if (Object.hasOwnProperty.call(obj, prop)) {
         func(obj, prop);
       }
     }
