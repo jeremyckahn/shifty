@@ -241,54 +241,6 @@ that accepts an `easing` parameter (on other words, you can use this with `to`
 and the Interpolate extension).  Mix and match to make interesting new
 animations.
 
-## Extending Tweenable
-
-Shifty's true power comes from it's extensibility.  It is designed to be an
-inheritable, effective base Object.  A quick example of how to set that up:
-
-````javascript
-function Cartoon () {
-  // Borrow `Tweenable`'s constructor
-  Tweenable.call(this);
-  console.log('Whoop whoop!  This is my framerate: ', this.fps);
-}
-
-function CartoonPrototype () {};
-CartoonPrototype.prototype = Tweenable.prototype;
-Cartoon.prototype = new CartoonPrototype();
-var myCartoon = new Cartoon();
-````
-
-You can hook inheritable functions up by attaching them to the
-`Tweenable.prototype` Object.  A full example of this:
-
-````javascript
-// Add a new method to the `Tweenable` prototype
-Tweenable.prototype.logMyProperties = function () {
-  Tweenable.util.each(this, function (obj, prop) {
-    console.log(prop + ': ', obj[prop]);
-  });
-}
-
-// Define a constructor function
-function Cartoon () {
-  Tweenable.call(this);
-  this.cartoonProp =
-      "I am a property of Cartoon!  And not the Tweenable prototype!";
-  console.log('Whoop whoop!  This is my framerate: ', this.fps);
-}
-
-function CartoonPrototype () {};
-CartoonPrototype.prototype = Tweenable.prototype;
-Cartoon.prototype = new CartoonPrototype();
-
-// Make a new instance of `cartoon`
-var myCartoon = new Cartoon();
-
-// Test the new prototype method
-myCartoon.logMyProperties();
-````
-
 Filters
 ---
 
