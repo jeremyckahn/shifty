@@ -1,156 +1,223 @@
-Shifty - A teeny tiny tweening engine in JavaScript.
-===
+# Shifty - A teeny tiny tweening engine in JavaScript
 
-Shifty is a tweening engine for JavaScript.  That's it.  Shifty is a low-level library meant to be encapsulated by higher-level tools.  At the most basic level, it provides:
+Shifty is a tweening engine for JavaScript.  It is a lightweight library meant
+to be encapsulated by higher-level tools.  The core library provides:
 
-  * Tweening of `Number`s.
-  * Extensibility hooks for the tweening.
+  * Interpolation of `Number`s over time (tweening).
+  * Extensibility hooks for key points in the tweening process.
 
-Shifty is great because it focuses on doing one thing very well - tweening.  It is optimized to run many times a second with minimal processing and memory overhead, which is necessary for smooth animations.  To this end, the Shifty core doesn't do:
+This is useful for web developers because it is the minimum amount of
+functionality needed to build customizable animations. Shifty is optimized to
+run many times a second with minimal processing and memory overhead, which is
+necessary for smooth animations.  The core Shifty library doesn't do:
 
-  * Keyframing.
-  * Drawing.
-  * Much else.
+  * CSS animation
+  * Canvas rendering
+  * Sequencing
+  * Much else
 
-If you need functionality like this and more, you can easily extend or wrap Shifty's core with whatever you need.  In fact, there are some extensions included in this repo to do just that.  Currently, there are Shifty extensions for:
+But don't worry!  If you need functionality like this, you can easily extend
+the core with whatever you need.  In fact, there are some extensions included
+in this repo that make Shifty more useful for common animation needs.
+Extensions included in the default build are:
 
-  * `shifty.color.js`: Color tweening (RGB/Hex strings).
-  * `shifty.css_units.js`: CSS Unit strings ("px", "em", "%", etc.), so you can tween DOM elements.
-  * `shifty.queue.js`: Queuing up tweens that execute sequentially.
+  * `shifty.token.js`: String support.  Allows you to interpolate strings with
+    mixed units and numbers, such as "25px" or "rgb(255, 0, 255)".
+  * `shifty.interpolate.js`: Compute the midpoint between two values outside of
+    an animation sequence (computes a single frame of an animation).
+  * `shifty.formulas.js`: A bunch of [Robert Penner](http://robertpenner.com/)
+    easing formulas adapted from
+    [Scripty2](https://github.com/madrobby/scripty2).
 
-There is also a file called `shifty.formulas.js` that contains a bunch of ready-to-use easing formulas, adapted from [Scripty2](https://github.com/madrobby/scripty2) and [Robert Penner](http://robertpenner.com/).
+## Using Shifty
 
-Using Shifty
----
+Shifty has no dependencies, so you can just load
+[/dist/shifty.min.js](https://github.com/jeremyckahn/shifty/blob/master/dist/shifty.min.js)
+to start using it.  This file has all of the extensions described above baked
+in.  If you only want the core `Number` tweening functionality
+([shifty.core.js](https://github.com/jeremyckahn/shifty/blob/master/src/shifty.core.js)),
+you can easily build that without any extensions (please see the "Building
+Shifty" section in this README).
 
-Shifty has no dependencies, so you can just load [/dist/shifty.min.js](https://github.com/jeremyckahn/shifty/blob/master/dist/shifty.min.js) to start using it.  This file has all of the extensions baked in.  If you only need raw tweening functionality ([shifty.core.js](https://github.com/jeremyckahn/shifty/blob/master/src/shifty.core.js)), you can easily build that without the extensions (please see the "Building Shifty" section in this README).
+In other words, you can use whatever components you want.  Just make sure you
+use the build script, don't just copy and paste the files inside the `/src`
+directory.
 
-In other words, you can use whatever components you want.  Just make sure you build it first, don't just copy and paste the files inside the `/src` directory.
+## API
 
-API
-===
+The section explains how to use the core Shifty APIs.  For information on each
+extension, explore the `doc/` directory.
 
-The section explains how to use the Shifty core.  For information on each extension, explore the `doc/` directory.
+## Making a `tweenable()` instance
 
-__Making a `tweenable()` instance__
-
-The first thing you need to do is create a `new` instance of `Tweenable`.  Example:
+The first thing you need to do is create a `new` instance of `Tweenable`:
 
 ````javascript
 var myTweenable = new Tweenable();
 ````
 
-You can also supply some fun options to `init()` via an Object.  They are:
+You can also supply some fun options to the constuctor via an Object:
 
-  * `fps`: A Number.  This is the framerate (frames per second) at which the tween animation updates.  The default is `30`.
-  * `easing`: A String.  The default easing formula to use on a tween.  This can be overridden on a per-tween basis via the `tween` function's `easing` parameter (see below).  This value is `linear` by default.
-  * `duration`: A Number.  The default duration that a tween lasts for.  This can be overridden on a per-tween basis via the `tween` function's `duration` parameter (see below).
-  * `intialState`: An Object.  The state at which the first tween should begin at.
+````javascript
+/**
+ * - fps: This is the framerate (frames per second) at which the tween updates.
+ * - easing: The default easing formula to use on a tween.  This can be
+ *   overridden on a per-tween basis via the `tween` function's `easing`
+ *   parameter (see below).
+ * - duration: The default duration that a tween lasts for.  This can be
+ *   overridden on a per-tween basis via the `tween` function's `duration`
+ *   parameter (see below).
+ * - initialState: The state at which the first tween should begin at.
+ * @typedef {{
+ *  fps: number,
+ *  easing: string,
+ *  duration: number,
+ *  initialState': Object
+ * }}
+ */
+var tweenableConfig = {};
 
-##Starting a tween##
+var myTweenable = new Tweenable(tweenableConfig);
+````
 
-__tween()__
+## Starting a tween
+
+### tween
 
 Make a basic tween:
 
 ````javascript
-myTweenable.tween( from, to );
-````
-
-You can optionally add some fun extra parameters:
-
-````javascript
+/**
+ * The property names and types in `from` and `to` must match.
+ * @param {Object} from Position to start at.
+ * @param {Object} to Position to end at.
+ * @param {number=} duration How long to animate for.
+ * @param {function=} callback Function to execute upon completion.
+ * @param {string=} easing Easing formula name to use for tween.
+ */
 myTweenable.tween( from, to, duration, callback, easing );
 ````
 
-The previous examples used the shorthand syntax.  You can also use the longhand configuration object syntax (recommended!):
+This is the shorthand syntax.  You can also use the Configuration Object
+syntax:
 
 ````javascript
-myTweenable.tween({
-  from:       {  },            // Object.  Contains the properties to tween.  Must all be `Number`s.  Note: This object's properties are modified by the tween.
-  to:         {  },            // Object.  The "destination" `Number`s that the properties in `from` will tween to.
-  duration:   1000,            // Number.  How long the tween lasts for, in milliseconds.
-  easing:     'linear',        // String or Object.  Easing equation(s) to use.  You can specify any easing method that was attached to `Tweenable.prototype.formula`.
-  start:      function () {},  // Function.  Runs as soon as the tween begins.  Handy when used with the `queue` extension.
-  step:       function () {},  // Function.  Runs each "frame" that the tween is updated.
-  callback:   function () {}   // Function.  Runs when the tween completes.
-});
+/**
+ * - from: Starting position.
+ * - to: Ending position (signature must match `from`).
+ * - duration: How long to animate for.
+ * - easing: Easing formula name to use for tween.
+ * - start: Function to execute when the tween begins (after the first tick).
+ * - step: Function to execute every tick.
+ * - callback: Function to execute upon completion.
+ * @typedef {{
+ *   from: Object,
+ *   to: Object,
+ *   duration: number=,
+ *   easing: string=,
+ *   start: Function=,
+ *   step: Function=,
+ *   callback: Function=
+ * }}
+ */
+var tweenConfig = {};
+myTweenable.tween( tweenConfig );
 ````
 
-This method starts a tween.  You can use either format, but the second, longer format give you more hooks and controls.  `Tweenable` also has some methods that you can use to control a tween, as described in the next section.
+__Important!__  The object that is passed as the `from` parameter, regardless
+of which syntax you use to invoke `tween`, is modified.
 
-__Important!__  The object that is passed as the `from` parameter, regardless of which syntax you use to invoke `tween()`, is modified.
+### to
 
-__to()__
-
-Another handy way to tween is to use the `to`  method.  `to()` is nearly identical to `tween()` - in fact, `to()` just wraps `tween()` internally.  The only difference is that you can omit the `from` parameter.  `to()` simply assumes that you want to tween from the `Tweenable` instance's current position.  Like tween, the shorthand and longhand syntaxes are supported.  Shorthand:
+Another handy way to tween is to use the `to`  method.  `to()` is nearly
+identical to `tween()` - in fact, `to()` just wraps `tween()` internally.  The
+only difference is that you can omit the `from` parameter.  `to()` simply
+assumes that you want to tween from the `Tweenable` instance's current
+position.  Like tween, the shorthand and longhand syntaxes are supported.
+Shorthand:
 
 ````javascript
-myTweenable.to( to );
-````
-
-````javascript
+/**
+ * @param {Object} to
+ * @param {number=} duration
+ * @param {function=} callback
+ * @param {string=} easing
+ */
 myTweenable.to( to, duration, callback, easing );
 ````
 
 Longhand:
 
 ````javascript
-myTweenable.to({
-  to:         {  },            // Object.  The "destination" `Number`s that the properties in `from` will tween to.
-  duration:   1000,            // Number.  How long the tween lasts for, in milliseconds.
-  easing:     'linear',        // String or Object.  Easing equation to use.  You can specify any easing method that was attached to `Tweenable.prototype.formula`.
-  start:      function () {},  // Function.  Runs as soon as the tween begins.
-  step:       function () {},  // Function.  Runs each "frame" that the tween is updated.
-  callback:   function () {}   // Function.  Runs when the tween completes.
-});
+/**
+ * @typedef {{
+ *   to: Object,
+ *   duration: number=,
+ *   easing: string=,
+ *   start: Function=,
+ *   step: Function=,
+ *   callback: Function=
+ * }}
+ */
+var toConfig = {};
+myTweenable.to( toConfig );
 ````
 
-However you call `to()`, the only required parameter is `to`.
-
-And yes... I should probably come up with a better naming scheme, because even I'm confused by that.
-
-##Controlling a tween##
+## Controlling a tween
 
 Continuing from above...
 
 ````javascript
+/**
+ * @param {boolean} gotoEnd Controls whether to jump to the end "to" state or
+ * just stop where the tweened values currently are.
+ */
 myTweenable.stop( gotoEnd );
 ````
 
 Stops a tween.
 
-  * `gotoEnd`: Boolean.  Controls whether to jump to the end "to" state or just stop where the tweened values currently are.
-
 ````javascript
+/**
+ * Pauses a tween.  This is different from `stop()`, as you are able to resume
+ * from a `pause`ed state.
+ */
 myTweenable.pause();
 ````
 
-Pauses a tween.  This is different from `stop()`, as you are able to resume from a `pause()`ed state.
 
 ````javascript
+/**
+ * Resumes a `pause`ed tween.
+ */
 myTweenable.resume();
 ````
 
-Resumes a `pause()`ed tween.
-
 ````javascript
+/**
+ * Returns a `Tweenable`'s current internal state value.
+ * @return {Object}
+ */
 myTweenable.get();
 ````
 
-Returns a `Tweenable`'s current internal state values.
-
 ````javascript
+/**
+ * Sets (and overwrites) the current internal state properties.
+ * @param {Object} state Contains the properties that the state should have.
+ * Any properties not present in this Object will be erased form the current
+ * state.
+ */
 myTweenable.set(state);
 ````
 
-Sets (and overwrites) the `Tweenable` instance's current internal state properties.
+## Using multiple easing formulas
 
-  * `state`: An Object containing the properties that the state should have.  Any properties not present in this Object will be erased form the current state.
-
-##Using multiple easing formulas##
-
-You can create tweens that use different easing formulas for each property.  Having multiple easing formulas on a single tween can make for some really interesting motions, because you arent constrained to moving things in a straight line.  You can make curves!  To do this, simply supply `easing` as an Object, rather than a string to `tween()`:
+You can create tweens that use different easing formulas for each property.
+Having multiple easing formulas on a single tween can make for some really
+interesting animations, because you aren't constrained to moving things in a
+straight line.  You can make curves!  To do this, simply supply `easing` as an
+Object, rather than a string to `tween()`:
 
 ````javascript
 myTweenable.tween({
@@ -169,11 +236,15 @@ myTweenable.tween({
 });
 ````
 
-You can use an an Object to specify the easing to use in any `Tweenable` method that accepts an `easing` parameter (on other words, you can use this with `to` and the Interpolate extension).  Mix and match to make interesting new animations.
+You can use an an Object to specify the easing to use in any `Tweenable` method
+that accepts an `easing` parameter (on other words, you can use this with `to`
+and the Interpolate extension).  Mix and match to make interesting new
+animations.
 
-##Extending Tweenable()##
+## Extending Tweenable
 
-Shifty's true power comes from it's extensibility.  It is designed to be an inheritable, effective base Object.  A quick example of how to set that up:
+Shifty's true power comes from it's extensibility.  It is designed to be an
+inheritable, effective base Object.  A quick example of how to set that up:
 
 ````javascript
 function Cartoon () {
@@ -188,9 +259,8 @@ Cartoon.prototype = new CartoonPrototype();
 var myCartoon = new Cartoon();
 ````
 
-In this example, we are creating `CartoonPrototype`.  It inherits `Tweenable`'s methods and acts as a proxy function to inherit from.  This keeps the `Tweenable` prototype safe from modification while providing access to its methods on the prototype chain.  An instance of `CartoonPrototype` is then set as `Cartoon`'s prototype.  This is a more advanced approach, but it will likely give you the most flexibility and minimize bizarre "shared prototype" bugs.
-
-Using inheritance is awesome because any plugins or extensions that are present on the `Tweenable()` prototype are also available to `myCartoon`, and all instances of `Cartoon` (and `Tweenable`).  You can hook these inheritable functions up by attaching them to the `Tweenable.prototype` Object.  A full example of this:
+You can hook inheritable functions up by attaching them to the
+`Tweenable.prototype` Object.  A full example of this:
 
 ````javascript
 // Add a new method to the `Tweenable` prototype
@@ -203,7 +273,8 @@ Tweenable.prototype.logMyProperties = function () {
 // Define a constructor function
 function Cartoon () {
   Tweenable.call(this);
-  this.cartoonProp = "I am a property of Cartoon!  And not the Tweenable prototype!";
+  this.cartoonProp =
+      "I am a property of Cartoon!  And not the Tweenable prototype!";
   console.log('Whoop whoop!  This is my framerate: ', this.fps);
 }
 
@@ -218,16 +289,16 @@ var myCartoon = new Cartoon();
 myCartoon.logMyProperties();
 ````
 
-That's fun, but how do we hook functionality into `Tweenable` instances themselves?
-
 Hooks
 ---
 
-You can attach various hooks that get run at key points in a `Tweenable` instance's execution.  The API:
+You can attach various hooks that get run at key points in a `Tweenable`
+instance's execution.  The API:
 
 ````javascript
 /**
- * @param {String} hookName The `Tweenable` hook to attach the `hookFunction` to.
+ * @param {String} hookName The `Tweenable` hook to attach the `hookFunction`
+ * to.
  * @param {Function} hookFunction The function to execute.
  */
 tweenableInst.hookAdd( hookName, hookFunction )
@@ -248,12 +319,16 @@ var myTweenable = new Tweenable();
 myTweenable.hookAdd('step', limitX);
 ````
 
-This snippet will set the function `limitX` for `hookFunction` to be called every frame, after the values have been computed.  You can also remove hooks.  The API:
+This snippet will set the function `limitX` for `hookFunction` to be called
+every frame, after the values have been computed.  You can also remove hooks.
+The API:
 
 ````javascript
 /**
- * @param {String} hookName The `Tweenable` hook to remove the `hookFunction` from.
- * @param {Function|undefined} hookFunction The function to remove.  If omitted, all functions attached to `hookName` are removed.
+ * @param {String} hookName The `Tweenable` hook to remove the `hookFunction`
+ * from.
+ * @param {Function|undefined} hookFunction The function to remove.  If
+ * omitted, all functions attached to `hookName` are removed.
  */
 tweenableInst.hookRemove( hookName, hookFunction )
 ````
@@ -273,22 +348,32 @@ The hooks you can currently attach functions to are:
 Filters
 ---
 
-Filters are used for transforming the properties of a tween at various points in a `Tweenable` instance's lifecycle.  Filters differ from hooks because they get executed for all `Tweenable` instances globally.  Additionally, they are meant to convert non-`Number` datatypes to `Number`s so they can be tweened, and then back again. Just define a filter once, attach it to `Tweenable.prototype`, and all `new` instances of `Tweenable` will have access to it.
+Filters are used for transforming the properties of a tween at various points
+in a `Tweenable` instance's lifecycle.  Filters differ from hooks because they
+get executed for all `Tweenable` instances globally.  Additionally, they are
+meant to convert non-`Number` datatypes to `Number`s so they can be tweened,
+and then back again. Just define a filter once, attach it to
+`Tweenable.prototype`, and all `new` instances of `Tweenable` will have access
+to it.
 
 Here's an annotated example of a filter:
 
 ````javascript
 Tweenable.prototype.filter.doubler = {
-  // Gets called when a tween is created.  `fromState` is the state that the tween starts at, and `toState` contains the target values.
+  // Gets called when a tween is created.  `fromState` is the state that the
+  // tween starts at, and `toState` contains the target values.
   'tweenCreated': function tweenCreated (fromState, toState) {
     Tweenable.util.each(obj, function (fromState, prop) {
-      // Double each initial state property value as soon as the tween is created.
+      // Double each initial state property value as soon as the tween is
+      // created.
       obj[prop] *= 2;
     });
   },
 
   // Gets called right before a tween state is calculated.
-  // `currentState` is the current state of the tweened object, `fromState` is the state that the tween started at, and `toState` contains the target values.
+  // `currentState` is the current state of the tweened object, `fromState` is
+  // the state that the tween started at, and `toState` contains the target
+  // values.
   'beforeTween': function beforeTween (currentState, fromState, toState) {
     Tweenable.util.each(toState, function (obj, prop) {
       // Double each target property right before the tween formula is applied.
@@ -297,7 +382,9 @@ Tweenable.prototype.filter.doubler = {
   },
 
   // Gets called right after a tween state is calculated.
-  // `currentState` is the current state of the tweened object, `fromState` is the state that the tween started at, and `toState` contains the target values.
+  // `currentState` is the current state of the tweened object, `fromState` is
+  the state that the tween started at, and `toState` contains the target
+  // values.
   'afterTween': function afterTween (currentState, fromState, toState) {
     Tweenable.util.each(toState, function (obj, prop) {
       // Return the target properties back to their pre-doubled values.
@@ -307,7 +394,12 @@ Tweenable.prototype.filter.doubler = {
 }
 ````
 
-Yes, having `doubler` filter is useless.  A more practical use of filters is to add support for more data types.  __Remember, `Tweenable` only supports `Numbers` out of the box__, but you can add support for strings, functions, or whatever else you might need.  The `px` and `color` extensions work by filtering string values into numbers before each tween step, and then back again after the tween step.
+Yes, having `doubler` filter is useless.  A more practical use of filters is to
+add support for more data types.  __Remember, `Tweenable` only supports
+`Numbers` out of the box__, but you can add support for strings, functions, or
+whatever else you might need.  The `px` and `color` extensions work by
+filtering string values into numbers before each tween step, and then back
+again after the tween step.
 
 Building Shifty
 ---
@@ -383,7 +475,17 @@ Shifty in Use
 
 Shifty is in known to be use in the following projects/sites:
 
-  * [Rekapi](https://github.com/jeremyckahn/rekapi).  Shifty is a core component of Rekapi, a higher-level tool that allows developers to easily create and manage complex animations.
-  * [Galaxy Nexus Landing Page](http://www.google.com/nexus/).  Shifty was used to create animations bound to the browser's scroll event.
-  * [Morf.js](https://github.com/joelambert/morf), by [Joe Lambert](https://github.com/joelambert).  Morf.js is a CSS3 Transition utility.  It lets you define your own easing formulas, but also take advantage of hardware acceleration provided by Webkit browsers.  Morf.js uses Shifty to calculate keyframe states.
-  * [html-timeline](https://github.com/Instrument/html-timeline), by [Thomas Reynolds](https://github.com/tdreyno).  This project acts as a wrapper for Shifty that animates HTML elements as you scroll the page.  Written in CoffeeScript!
+  * [Rekapi](https://github.com/jeremyckahn/rekapi).  Shifty is a core
+    component of Rekapi, a higher-level tool that allows developers to easily
+    create and manage complex animations.
+  * [Galaxy Nexus Landing Page](http://www.google.com/nexus/).  Shifty was used
+    to create animations bound to the browser's scroll event.
+  * [Morf.js](https://github.com/joelambert/morf), by [Joe
+    Lambert](https://github.com/joelambert).  Morf.js is a CSS3 Transition
+    utility.  It lets you define your own easing formulas, but also take
+    advantage of hardware acceleration provided by Webkit browsers.  Morf.js
+    uses Shifty to calculate keyframe states.
+  * [html-timeline](https://github.com/Instrument/html-timeline), by [Thomas
+    Reynolds](https://github.com/tdreyno).  This project acts as a wrapper for
+    Shifty that animates HTML elements as you scroll the page.  Written in
+    CoffeeScript!

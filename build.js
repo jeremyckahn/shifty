@@ -6,7 +6,6 @@ var
   DIST_FOLDER = 'dist',
   SRC_FOLDER = 'src',
   SRC_FILE_NAME_PATTERN = 'shifty.{{moduleName}}.js',
-  COMPILER_JAR = 'build/closure_compiler/compiler.jar',
   // module list should be in order
   MODULES_LIST = [
     'license',
