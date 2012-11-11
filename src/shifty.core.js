@@ -149,23 +149,6 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
   /**
-   * Calls all of the functions bound to a specified hook on a `Tweenable`
-   * instance.
-   * @param {String} hookName The name of the hook to invoke the handlers of.
-   * @param {Object} hooks The object containing the hook Arrays.
-   * @param {Object} applyTo The `Tweenable` instance to call the hooks upon.
-   * @param {Array} args The arguments to pass to each function in the
-   * specified hook.
-   */
-  function invokeHook (hookName, hooks, applyTo, args) {
-    var i;
-
-    for (i = 0; i < hooks[hookName].length; i++) {
-      hooks[hookName][i].apply(applyTo, args);
-    }
-  }
-
-  /**
    * Applies a Shifty filter to `Tweenable` instance.
    * @param {String} filterName The name of the filter to apply.
    * @param {Object} applyTo The `Tweenable` instance to call the filter upon.
@@ -187,8 +170,6 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
    *     for `tweenProps`, so see that.  It also requires:
    *   @property {Object} owner The `Tweenable` instance that the tween this
    *   function is acting upon belongs to.
-   *   @property {Object} hook The Object containing all of the `hook`s that
-   *       belong to `owner
    * @param {Object} state The configuration Object containing all of the state
    *     properties for a `Tweenable` instance.  It requires all of the
    *     @properties listed for the `state` parameter of  `tweenProps`, so see
@@ -216,10 +197,6 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
       tweenProps (currentTime, params, state);
       applyFilter('afterTween', params.owner, [state.current,
           params.originalState, params.to, params.easing]);
-
-      if (params.hook.step) {
-        invokeHook('step', params.hook, params.owner, [state.current]);
-      }
 
       if (params.step) {
         params.step.call(state.current, state.current);
@@ -291,11 +268,9 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   Tweenable = function (options) {
     options = options || {};
 
-    this._hook = {};
 
     this._tweenParams = {
       'owner': this
-      ,'hook': this._hook
       ,'data': {} // holds arbitrary data
     };
 
@@ -523,56 +498,6 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     timeoutHandler(self._tweenParams, self._state);
 
     return this;
-  };
-
-  /**
-   * Add a hook to the `Tweenable` instance.  Hooks are functions that are
-   * invoked at key points in a `Tweenable` instance's lifecycle.  A hook that
-   * is related to the tweening process (like `step`), for example, will occur
-   * for every tween that is performed by the `Tweenable` instance.  You just
-   * have to set it once.  You can attach as many functions to any given hook
-   * as you like.  The available hooks are as follows:
-   *
-   *   - `step`:  Runs on every frame that a tween runs for.  Hook handler
-   *   function receives a tween's `currentState` for a parameter.
-   *
-   * @param {String} hookName The name of the hook to attach `hookFunc` to.
-   * @param {Function} hookFunc The hook handler function.  This function will
-   *     receive parameters based on what hook it is being attached to.
-   */
-  Tweenable.prototype.hookAdd = function (hookName, hookFunc) {
-    if (!this._hook.hasOwnProperty(hookName)) {
-      this._hook[hookName] = [];
-    }
-
-    this._hook[hookName].push(hookFunc);
-  };
-
-  /**
-   * Unattach a function from a hook, or all functions.
-   *
-   * @param {String} hookName The hook to remove a function or functions from.
-   * @param {String|undefined} hookFunc The function to matched against and
-   *     remove from the hook handler list.  If omitted, all functions are
-   *     removed for the hook specified by `hookName`.
-   */
-  Tweenable.prototype.hookRemove = function (hookName, hookFunc) {
-    var i;
-
-    if (!this._hook.hasOwnProperty(hookName)) {
-      return;
-    }
-
-    if (!hookFunc) {
-      this._hook[hookName] = [];
-      return;
-    }
-
-    for (i = this._hook[hookName].length; i >= 0; i++) {
-      if (this._hook[hookName][i] === hookFunc) {
-        this._hook[hookName].splice(i, 1);
-      }
-    }
   };
 
   /**

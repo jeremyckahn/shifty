@@ -141,31 +141,6 @@
     });
 
 
-    module('Hooks');
-
-    test('Hooks are called (step)', function () {
-      var tweenable = new Tweenable();
-      mock_time = function () {return 0;};
-
-      var c = 0;
-      tweenable.hookAdd('step', function () {
-        c++;
-      });
-
-      tweenable.tween({ x: 0 }, { x: 100 }, 1000);
-      equals(c, 1,
-          'The step hook is invoked when the tween begins');
-      mock_time = function () {return 500;};
-      forceInternalUpdate(tweenable);
-      equals(c, 2,
-          'The step hook is updated only as many times as the tween is actually updated');
-      mock_time = function () {return 1000;};
-      forceInternalUpdate(tweenable);
-      equals(c, 3,
-          'The step hook is updated at the time of tween expiration');
-    });
-
-
     module('Tween queues');
 
     test('Queued tweens all run', function () {
