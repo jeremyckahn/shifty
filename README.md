@@ -341,9 +341,11 @@ myTweenable.hookRemove('step', stepHook);
 
 The hooks you can currently attach functions to are:
 
-  * `step`:  Runs on every frame that a tween runs for.  Hook handler function receives a tween's `currentState` for a parameter.
+  * `step`:  Runs on every frame that a tween runs for.  Hook handler function
+    receives a tween's `currentState` for a parameter.
 
-... And that's it.  They're easy to add in, please make Github issue or pull request if you'd like more to be added.
+... And that's it.  They're easy to add in, please make Github issue or pull
+request if you'd like more to be added.
 
 Filters
 ---
