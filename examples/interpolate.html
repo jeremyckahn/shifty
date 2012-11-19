@@ -51,7 +51,7 @@
       ,'color': '#fff'
     };
 
-    interpolatedVals = Tweenable.util.interpolate({
+    interpolatedVals = Tweenable.interpolate({
       'from': startObj
       ,'to': endObj
       ,'position': .5
@@ -60,7 +60,7 @@
 
     console.log('All of the following logged outputs should be identical.  This is a test of the different ways to call `interpolate`.');
     console.dir(interpolatedVals);
-    console.dir(Tweenable.util.interpolate(startObj, endObj, .5, 'linear'));
+    console.dir(Tweenable.interpolate(startObj, endObj, .5, 'linear'));
 
     // Reset the state to the initial value.
     myTweenable.set({

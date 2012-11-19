@@ -64,14 +64,10 @@ You can also supply some fun options to the constuctor via an Object:
  * - easing: The default easing formula to use on a tween.  This can be
  *   overridden on a per-tween basis via the `tween` function's `easing`
  *   parameter (see below).
- * - duration: The default duration that a tween lasts for.  This can be
- *   overridden on a per-tween basis via the `tween` function's `duration`
- *   parameter (see below).
  * - initialState: The state at which the first tween should begin at.
  * @typedef {{
  *  fps: number,
  *  easing: string,
- *  duration: number,
  *  initialState': Object
  * }}
  */
@@ -305,19 +301,19 @@ directory, there is a file called `build.js`. Just do this to build the
 project on the command line:
 
 ```sh
-node build
+node build --ver <version_number>
 ```
 
 You can specify the modules that you want to include through the CLI.
 
 ```sh
-node build -i formulas,color
+node build --ver <version_number> -i formulas,color
 ```
 
 Or modules that you want to exclude from the build:
 
 ```sh
-node build -e css_units,interpolate,clamp
+node build --ver <version_number> -e css_units,interpolate,clamp
 ```
 
 For more options check the help:

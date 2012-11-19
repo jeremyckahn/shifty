@@ -27,10 +27,10 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
     // Combine both the static clamps and instance clamps.  Instance clamps trump Static clamps, if there is a conflict.
     // The first part of the check is ugly, because this may have been called statically.
-    clamps = Tweenable.util.weakCopy(
+    clamps = Tweenable.defaults(
       ((this._tweenParams && this._tweenParams.data.clamps) || {}), staticClamp.clamps);
 
-    Tweenable.util.each(clamps, function (obj, prop) {
+    Tweenable.each(clamps, function (prop) {
       if (state.hasOwnProperty(prop)) {
         state[prop] = Math.max(state[prop], clamps[prop].bottom);
         state[prop] = Math.min(state[prop], clamps[prop].top);
@@ -41,14 +41,14 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
   // Static versions of the clamp methods.  These set clamps for all tweens made by `Tweenable`.
   // If an instance of `Tweenable` has a clamp on a property, and different clamp has been set
   // statically on the same propety, only the instance clamp is respected.
-  staticClamp = Tweenable.util.setClamp = function (propertyName, bottomRange, topRange) {
+  staticClamp = Tweenable.setClamp = function (propertyName, bottomRange, topRange) {
     staticClamp.clamps[propertyName] = {
       'bottom': bottomRange
       ,'top': topRange
     };
   };
 
-  Tweenable.util.removeClamp = function (propertyName) {
+  Tweenable.removeClamp = function (propertyName) {
     return delete staticClamp.clamps[propertyName];
   };
 

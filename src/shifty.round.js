@@ -9,17 +9,17 @@
 
   var isRoundingEnabled = false;
 
-  Tweenable.util.enableRounding = function () {
+  Tweenable.enableRounding = function () {
     isRoundingEnabled = true;
   };
 
 
-  Tweenable.util.disableRounding = function () {
+  Tweenable.disableRounding = function () {
     isRoundingEnabled = false;
   };
 
 
-  Tweenable.util.isRoundingEnabled = function () {
+  Tweenable.isRoundingEnabled = function () {
     return isRoundingEnabled;
   };
 
@@ -29,10 +29,10 @@
     'afterTween': function (currentState, fromState, toState) {
 
       if (isRoundingEnabled) {
-        Tweenable.util.each(currentState, function (obj, prop) {
+        Tweenable.each(currentState, function (prop) {
           // Duck type to see if the property is a number
-          if (!obj[prop].replace) {
-            obj[prop] = Math.round(obj[prop]);
+          if (!currentState[prop].replace) {
+            currentState[prop] = Math.round(currentState[prop]);
           }
         });
       }

@@ -34,7 +34,7 @@
     var myTweenable = new Tweenable();
     
     
-    Tweenable.util.setClamp('test', 0, 10);
+    Tweenable.setClamp('test', 0, 10);
   
     myTweenable.tween({
       from: {
@@ -49,7 +49,7 @@
       },
       'callback': function () {
         console.log('Done!  Final value: ' + this.test);
-        console.log(Tweenable.util.removeClamp('test'));
+        console.log(Tweenable.removeClamp('test'));
       }
     });
   </script>

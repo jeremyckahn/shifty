@@ -31,7 +31,7 @@
       interpolator = moddedLoopPosition - 1;
     }
 
-    interpolatedValue = global.Tweenable.util.interpolate({
+    interpolatedValue = global.Tweenable.interpolate({
         from: {
           'left': 0
         },
@@ -90,7 +90,7 @@
     }
 
     isPlaying = false;
-    pausedAtTime = Tweenable.util.now();
+    pausedAtTime = Tweenable.now();
     clearTimeout(updateHandle);
   }
 
@@ -100,12 +100,12 @@
     }
 
     isPlaying = true;
-    startTime = Tweenable.util.now() - (pausedAtTime - startTime);
+    startTime = Tweenable.now() - (pausedAtTime - startTime);
     loop();
   }
 
   function init (containerId) {
-    pausedAtTime = startTime = Tweenable.util.now();
+    pausedAtTime = startTime = Tweenable.now();
     segmentContainer = document.getElementById(containerId);
     segments = segmentContainer.children;
     stepStateLists = [];
@@ -120,7 +120,7 @@
 
   global.shiftyDemo = global.shiftyDemo || {};
 
-  Tweenable.util.simpleCopy(global.shiftyDemo, {
+  Tweenable.shallowCopy(global.shiftyDemo, {
             'helixInit': init
             ,'helixPlay': play
             ,'helixPause': pause

@@ -19,7 +19,7 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
 
   var formulas = Tweenable.prototype.formula;
 
-  Tweenable.util.simpleEase = function (easing, position) {
+  Tweenable.simpleEase = function (easing, position) {
     var easingMethod;
 
     easingMethod = formulas[easing] || formulas.linear;

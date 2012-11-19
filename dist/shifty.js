@@ -3,7 +3,7 @@
  * Description: A teeny tiny tweening engine in JavaScript. That's all it does.
  * Author: Jeremy Kahn - jeremyckahn@gmail.com
  * License: MIT
- * Version: 0.7.0 (Sun, 11 Nov 2012 01:28:02 GMT)
+ * Version: 0.8.0 (Mon, 19 Nov 2012 23:10:45 GMT)
  */
 
 ;(function(){
@@ -17,64 +17,47 @@
 // modules.  It won't generate any globals after building.
 var Tweenable;
 
-// UglifyJS define hack
+// UglifyJS define hack.  Used for unit testing.
 if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   SHIFTY_DEBUG_NOW = function () {
     return +new Date();
   };
 }
 
-;(function (global) {
+(function (global) {
 
-  var now
-      ,DEFAULT_EASING = 'linear'
-      // Making an alias, because Tweenable.prototype.formula will get looked
-      // a lot, and this is way faster than resolving the symbol.
-      ,easing;
+  'use strict';
 
-  if (SHIFTY_DEBUG_NOW) {
-    now = SHIFTY_DEBUG_NOW;
-  } else {
-    /**
-     * Get the current UNIX epoch time as an integer.  Exposed publicly as
-     * `Tweenable.util.now()`.  @return {Number} An integer representing the
-     * current timestamp.
-     */
-    now = function () {
-      return +new Date();
-    };
-  }
+  var DEFAULT_EASING = 'linear';
+  var DEFAULT_DURATION = 500;
+  var now = SHIFTY_DEBUG_NOW
+      ? SHIFTY_DEBUG_NOW
+      : function () { return +new Date(); };
 
   /**
-   * Handy shortcut for doing a for-in loop.  Takes care of all of the
-   * `hasOwnProperty` wizardry for you.  This is also exposed publicly, you can
-   * access it as `Tweenable.util.each()`.
-   * @param {Object} obj The object to iterate through.
-   * @param {Function} func The function to pass the object and "own" property
-   *     to.  This handler function receives the `obj` back as the first
-   *     parameter, and a property name as the second.
+   * Handy shortcut for doing a for-in loop. This is not a "normal" each
+   * function, it is optimized for Shifty.  The iterator function only receives
+   * the property name, not the value.
+   * @param {Object} obj
+   * @param {Function(string)} fn
    */
-  function each (obj, func) {
-    var prop;
-
-    for (prop in obj) {
-      if (Object.hasOwnProperty.call(obj, prop)) {
-        func(obj, prop);
+  function each (obj, fn) {
+    var key;
+    for (key in obj) {
+      if (Object.hasOwnProperty.call(obj, key)) {
+        fn(key);
       }
     }
   }
 
   /**
-   * Does a basic copy of one Object's properties to another.  This is not a
-   * robust `extend` function, nor is it recusrsive.  It is only appropriate to
-   * use on objects that have primitive properties (Numbers, Strings, Boolean,
-   * etc.).  Exposed publicly as `Tweenable.util.simpleCopy()`
+   * Perform a shallow copy of Object properties.
    * @param {Object} targetObject The object to copy into
-   * @param {Object} srcObject The object to copy from @return {Object} A
-   *     reference to the augmented `targetObj` Object
+   * @param {Object} srcObject The object to copy from
+   * @return {Object} A reference to the augmented `targetObj` Object
    */
-  function simpleCopy (targetObj, srcObj) {
-    each(srcObj, function (srcObj, prop) {
+  function shallowCopy (targetObj, srcObj) {
+    each(srcObj, function (prop) {
       targetObj[prop] = srcObj[prop];
     });
 
@@ -82,147 +65,123 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
   /**
-   * Copies each property from `srcObj` onto `targetObj`, but only if the
-   * property to copy to `targetObj` is `undefined`.
+   * Copies each property from src onto target, but only if the property to
+   * copy to target is undefined.
+   * @param {Object} target Missing properties in this Object are filled in
+   * @param {Object} src
    */
-  function weakCopy (targetObj, srcObj) {
-    each(srcObj, function (srcObj, prop) {
-      if (typeof targetObj[prop] === 'undefined') {
-        targetObj[prop] = srcObj[prop];
+  function defaults (target, src) {
+    each(src, function (prop) {
+      if (typeof target[prop] === 'undefined') {
+        target[prop] = src[prop];
       }
     });
 
-    return targetObj;
+    return target;
   }
 
   /**
-   * Calculates the interpolated tween values of an Object based on the current
-   * time.
-   * @param {Number} currentPosition The current position to evaluate the tween
-   * against.
-   * @param {Object} params A configuration Object containing the values that
-   *      this function requires.  The required properties in this Object are:
-   *   @property {Object} originalState The original properties the Object is
-   *       tweening from.
-   *   @property {Object} to The destination properties the Object is tweening
-   *       to.
-   *   @property {Number} duration The length of the tween in milliseconds.
-   *   @property {Number} timestamp The UNIX epoch time at which the tween
-   *       began.
-   *   @property {Object} easing An Object of strings.  This Object's keys
-   *       correspond to the keys in `to`.
-   * @param {Object} state A configuration object containing current state data
-   *     of the tween.  Required properties:
-   *   @property {Object} current The Object containing the current `Number`
-   *       values of the tween.
+   * Calculates the interpolated tween values of an Object for a given
+   * timestamp.
+   * @param {Number} forPosition The position to compute the state for.
+   * @param {Object} currentState Current state properties.
+   * @param {Object} originalState: The original state properties the Object is
+   * tweening from.
+   * @param {Object} targetState: The destination state properties the Object
+   * is tweening to.
+   * @param {number} duration: The length of the tween in milliseconds.
+   * @param {number} timestamp: The UNIX epoch time at which the tween began.
+   * @param {Object} easing: This Object's keys must correspond to the keys in
+   * targetState.
    */
-  function tweenProps (currentPosition, params, state) {
-    var prop,
-      normalizedPosition;
+  function tweenProps (forPosition, currentState, originalState, targetState,
+      duration, timestamp, easing) {
+    var normalizedPosition = (forPosition - timestamp) / duration;
 
-    normalizedPosition = (currentPosition - params.timestamp) /
-      params.duration;
-
-    for (prop in state.current) {
-      if (state.current.hasOwnProperty(prop)
-          && params.to.hasOwnProperty(prop)) {
-          state.current[prop] = tweenProp(params.originalState[prop],
-              params.to[prop], easing[params.easing[prop]],
-              normalizedPosition);
+    var prop;
+    for (prop in currentState) {
+      if (currentState.hasOwnProperty(prop)
+          && targetState.hasOwnProperty(prop)) {
+          currentState[prop] = tweenProp(originalState[prop],
+              targetState[prop], formula[easing[prop]], normalizedPosition);
       }
     }
 
-    return state.current;
+    return currentState;
   }
 
   /**
    * Tweens a single property.
-   * @param {number} from The origination value of the tween.
-   * @param {number} to The destination value of the tween.
+   * @param {number} start The value that the tween started from.
+   * @param {number} end The value that the tween should end at.
    * @param {Function} easingFunc The easing formula to apply to the tween.
    * @param {number} position The normalized position (between 0.0 and 1.0) to
-   *    calculate the midpoint of 'from' and 'to' against.
+   *    calculate the midpoint of 'start' and 'end' against.
    * @return {number} The tweened value.
    */
-  function tweenProp (from, to, easingFunc, position) {
-    return from + (to - from) * easingFunc(position);
+  function tweenProp (start, end, easingFunc, position) {
+    return start + (end - start) * easingFunc(position);
   }
 
   /**
-   * Schedules an update.
-   * @param {Function} handler The function to execute
-   * @param {number} fps The fraction of a second in the update should occur.
-   * @return {number} The id of the update.
-   */
-  function scheduleUpdate (handler, fps) {
-    return setTimeout(handler, 1000 / fps);
-  }
-
-  /**
-   * Applies a Shifty filter to `Tweenable` instance.
+   * Applies a filter to Tweenable instance.
+   * @param {Tweenable} tweenable The `Tweenable` instance to call the filter
+   * upon.
    * @param {String} filterName The name of the filter to apply.
-   * @param {Object} applyTo The `Tweenable` instance to call the filter upon.
    * @param {Array} args The arguments to pass to the function in the specified
    * filter.
    */
-  function applyFilter (filterName, applyTo, args) {
-    each(Tweenable.prototype.filter, function (filters, name) {
+  function applyFilter (tweenable, filterName, args) {
+    var filters = Tweenable.prototype.filter;
+    each(filters, function (name) {
       if (filters[name][filterName]) {
-        filters[name][filterName].apply(applyTo, args);
+        filters[name][filterName].apply(tweenable, args);
       }
     });
   }
 
   /**
    * Handles the update logic for one step of a tween.
-   * @param {Object} params The configuration containing all of a tween's
-   *     properties.  This requires all of the `params` @properties required
-   *     for `tweenProps`, so see that.  It also requires:
-   *   @property {Object} owner The `Tweenable` instance that the tween this
-   *   function is acting upon belongs to.
-   * @param {Object} state The configuration Object containing all of the state
-   *     properties for a `Tweenable` instance.  It requires all of the
-   *     @properties listed for the `state` parameter of  `tweenProps`, so see
-   *     that.  It also requires:
-   *   @property {Boolean} isTweening Whether or not this tween as actually
-   *       running.
-   *   @property {Number} loopId The property that the latest `setTimeout`
-   *       invokation ID stored in.
+   * @param {Tweenable} tweenable
+   * @param {number} timestamp
+   * @param {number} duration
+   * @param {Object} currentState
+   * @param {Object} originalState
+   * @param {Object} targetState
+   * @param {Object} easing
+   * @param {Function} step
    */
-  function timeoutHandler (params, state) {
-    var endTime = params.timestamp + params.duration
-        ,currentTime = Math.min(now(), endTime)
-        ,didEnded = currentTime >= endTime;
+  function timeoutHandler (tweenable, timestamp, duration, currentState,
+      originalState, targetState, easing, step) {
+    var endTime = timestamp + duration;
+    var currentTime = Math.min(now(), endTime);
+    var isEnded = currentTime >= endTime;
 
-    if (state.isTweening) {
-      if (!didEnded) {
-        // The tween is still running, schedule an update
-        state.loopId = scheduleUpdate(function () {
-          timeoutHandler(params, state);
-        }, params.owner.fps);
+    if (tweenable._isTweening) {
+      if (!isEnded) {
+        tweenable._loopId = setTimeout(function () {
+          timeoutHandler(tweenable, timestamp, duration, currentState,
+            originalState, targetState, easing, step);
+        }, 1000 / tweenable.fps);
       }
 
-      applyFilter('beforeTween', params.owner, [state.current,
-          params.originalState, params.to, params.easing]);
-      tweenProps (currentTime, params, state);
-      applyFilter('afterTween', params.owner, [state.current,
-          params.originalState, params.to, params.easing]);
+      applyFilter(tweenable, 'beforeTween',
+          [currentState, originalState, targetState, easing]);
+      tweenProps(currentTime, currentState, originalState, targetState,
+          duration, timestamp, easing);
+      applyFilter(tweenable, 'afterTween',
+          [currentState, originalState, targetState, easing]);
 
-      if (params.step) {
-        params.step.call(state.current, state.current);
+      if (step) {
+        // TODO: This is silly.  Either pass the state as context or as a
+        // formal parameter, not both.
+        step.call(currentState, currentState);
       }
-
     }
 
-    if (didEnded || !state.isTweening) {
-      // The duration of the tween has expired
-      params.owner.stop(true);
+    if (isEnded || !tweenable._isTweening) {
+      tweenable.stop(true);
     }
-  }
-
-  // A hook used for unit testing.
-  if (typeof SHIFTY_DEBUG_NOW === 'function') {
-    global.timeoutHandler = timeoutHandler;
   }
 
 
@@ -234,17 +193,14 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
    * @param {Object|string} easing
    */
   function composeEasingObject (fromTweenParams, easing) {
-    var composedEasing;
-
-    composedEasing = {};
+    var composedEasing = {};
 
     if (typeof easing === 'string') {
-      each(fromTweenParams, function (obj, prop) {
+      each(fromTweenParams, function (prop) {
         composedEasing[prop] = easing;
       });
-    // else, it's an Object
     } else {
-      each(fromTweenParams, function (obj, prop) {
+      each(fromTweenParams, function (prop) {
         if (!composedEasing[prop]) {
           composedEasing[prop] = easing[prop] || DEFAULT_EASING;
         }
@@ -255,39 +211,34 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
   /**
-   * This is the `Tweenable` constructor.  Do this for fun tweeny goodness:
-   * @codestart
-   * var tweenableInst = new Tweenable({});
-   * @codeend
-   *
-   * It accepts one parameter:
-   *
-   * @param {Object} options A configuration Object containing options for the
-   *     `Tweenable` instance.  The following are valid:
-   *   @property {Object} initialState The state at which the first tween
-   *       should begin at.
-   *   @property {Number} duration The default `duration` for each `tween` made
-   *       by this instance.  Default is 500 milliseconds.
-   *   @property {Number} fps The frame rate (frames per second) at which the
-   *       instance will update.  Default is 30.
-   *   @property {String} easing The name of the default easing formula
-   *       (attached to `Tweenable.prototype.formula`) to use for each `tween`
-   *       made for this instance.  Default is `linear`.
-   * @return {Object} `Tweenable` instance for chaining.
+   * - fps: This is the framerate (frames per second) at which the tween
+   *   updates.
+   * - easing: The default easing formula to use on a tween.  This can be
+   *   overridden on a per-tween basis via the `tween` function's `easing`
+   *   parameter (see below).
+   * - duration: The default duration that a tween lasts for.  This can be
+   *   overridden on a per-tween basis via the `tween` function's `duration`
+   *   parameter (see below).
+   * - initialState: The state at which the first tween should begin at.
+   * @typedef {{
+   *  fps: number,
+   *  easing: string,
+   *  initialState': Object
+   * }}
+   */
+  var tweenableConfig;
+
+  /**
+   * @param {tweenableConfig} options
+   * @return {Object}
    */
   Tweenable = function (options) {
     options = options || {};
 
-
-    this._tweenParams = {
-      'owner': this
-      ,'data': {} // holds arbitrary data
-    };
-
-    this._state = {};
+    this.data = {};
 
     // The state that the tween begins at.
-    this._state.current = options.initialState || {};
+    this._currentState = options.initialState || {};
 
     // The framerate at which Shifty updates.  This is exposed publicly as
     // `tweenableInst.fps`.
@@ -295,120 +246,105 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
 
     // The default easing formula.  This is exposed publicly as
     // `tweenableInst.easing`.
-    this.easing = options.easing || DEFAULT_EASING;
-
-    // The default `duration`.  This is exposed publicly as
-    // `tweenableInst.duration`.
-    this.duration = options.duration || 500;
+    this._easing = options.easing || DEFAULT_EASING;
 
     return this;
   };
 
   /**
-   * Start a tween.  This method can be called two ways.  The shorthand way:
-   *
-   *   tweenableInst.tween (from, to, [duration], [callback], [easing]);
-   *
-   * or the longhand way:
-   *
-   *   tweenableInst.tween ( {
-   *     from:       Object,
-   *     to:         Object,
-   *     duration:   Number,
-   *     callback:   Function,
-   *     easing:     String|Object,
-   *     step:       Function
-   *   });
-   *
-   * Regardless of how you invoke this method, the only required parameters are
-   * `from` and `to`.
-   *
-   * @param {Object} from The beginning state Object containing the properties
-   *     to tween from.  NOTE:  The properties of this Object are modified over
-   *     time (to reflect the values in `to`).
-   * @param {Object} to The target state Object containing the properties to
-   *     tween to.
-   * @param {Number} duration The amount of time in milliseconds that the tween
-   *     should run for.
-   * @param {Function} start The function to be invoked as soon as the this
-   *     tween starts.  Mostly useful when used with the `queue` extension.
-   * @param {Function} callback The function to invoke as soon as this tween
-   *     completes.  This function is given the tween's current state Object as
-   *     the first parameter.
-   * @param {String|Object} easing This can either be a string specifying the
-   *     easing formula to be used on every property of the tween, or an Object
-   *     with values that are strings that specify an easing formula for a
-   *     specific property.  Any properties that do not have an easing formula
-   *     specified will use "linear".
-   * @param {Function} step A function to call for each step of the tween.  A
-   *     "step" is defined as one update cycle (frame) of the tween.  Many
-   *     update cycles occur to create the illusion of motion, so this function
-   *     will likely be called quite a bit.
+   * - from: Starting position.
+   * - to: Ending position (signature must match `from`).
+   * - duration: How long to animate for.
+   * - easing: Easing formula name to use for tween.
+   * - start: Function to execute when the tween begins (after the first tick).
+   * - step: Function to execute every tick.
+   * - callback: Function to execute upon completion.
+   * @typedef {{
+   *   from: Object,
+   *   to: Object,
+   *   duration: number=,
+   *   easing: string=,
+   *   start: Function=,
+   *   step: Function=,
+   *   callback: Function=
+   * }}
    */
-  Tweenable.prototype.tween = function (from, to, duration, callback, easing) {
+  var tweenConfig;
 
-    var self
-        ,params
-        ,state;
+  /**
+   * TODO: Remove support for the shorthand form of calling this method.
+   *
+   * Start a tween.
+   * @param {Object|tweenConfig} fromState
+   * @param {Object=} targetState
+   * @param {number=} duration
+   * @param {Function=} callback
+   * @param {Object|string=} easing
+   * @return {Object} The `Tweenable` instance for chaining.
+   */
+  Tweenable.prototype.tween =
+      function (fromState, targetState, duration, callback, easing) {
 
-    if (this._state.isTweening) {
+    if (this._isTweening) {
       return;
     }
 
-    self = this;
-    params = this._tweenParams;
-    state = this._state;
-    this._state.loopId = 0;
-    this._state.pausedAtTime = null;
+    this._loopId = 0;
+    this._pausedAtTime = null;
 
-    // Normalize some internal values depending on how `tweenableInst.tween`
-    // was invoked
-    if (to) {
+    // Normalize some internal values depending on how this method was called
+    if (arguments.length > 1) {
       // Assume the shorthand syntax is being used.
-      params.to = to || {};
-      params.duration = duration || this.duration;
-      params.callback = callback;
-      params.easing = easing || this.easing;
-      state.current = from || {};
+      this._targetState = targetState || {};
+      this._duration = duration || DEFAULT_DURATION;
+      this._callback = callback;
+      this._easing = easing || DEFAULT_EASING;
+      this._currentState = fromState || {};
     } else {
       // If the second argument is not present, assume the longhand syntax is
       // being used.
-      params.step = from.step;
-      params.callback = from.callback;
-      params.to = from.to || from.target || {};
-      params.duration = from.duration || this.duration;
-      params.easing = from.easing || this.easing;
-      state.current = from.from || {};
+      var config = fromState;
+      this._step = config.step;
+      this._callback = config.callback;
+      this._targetState = config.to || config.target || {};
+      this._duration = config.duration || DEFAULT_DURATION;
+      this._easing = config.easing || DEFAULT_EASING;
+      this._currentState = config.from || {};
     }
 
-    params.timestamp = now();
+    this._timestamp = now();
+
+    var currentStateAlias = this._currentState;
+    var targetStateAlias = this._targetState;
 
     // Ensure that there is always something to tween to.
     // Kinda dumb and wasteful, but makes this code way more flexible.
-    weakCopy(state.current, params.to);
-    weakCopy(params.to, state.current);
+    defaults(currentStateAlias, targetStateAlias);
+    defaults(targetStateAlias, currentStateAlias);
 
-    params.easing = composeEasingObject(state.current, params.easing);
-    params.originalState = simpleCopy({}, state.current);
-    applyFilter('tweenCreated', params.owner, [state.current,
-        params.originalState, params.to, params.easing]);
-    state.isTweening = true;
+    this._easing = composeEasingObject(currentStateAlias, this._easing);
+    var originalStateAlias = this._originalState =
+        shallowCopy({}, currentStateAlias);
+    applyFilter(this, 'tweenCreated', [currentStateAlias, originalStateAlias,
+        targetStateAlias, this._easing]);
+    this._isTweening = true;
     this.resume();
 
-    if (from.start) {
-      from.start();
+    if (fromState.start) {
+      fromState.start();
     }
 
     return this;
   };
 
   /**
+   * TODO: Remove this method and roll it into Tweenable#tween.
+   *
    * Convenience method for tweening from the current position.  This method
-   * functions identically to `tween()` (it's just a wrapper function), but
-   * implicitly passes the `Tweenable` instance's current state (what you get
-   * from `get()`) as the `from` parameter.  This supports both the longhand
-   * and shorthand syntax that `tween()` does, just omitting the `from`
-   * paramter in both cases.
+   * functions identically to tween (it's just a wrapper function), but
+   * implicitly passes the Tweenable instance's current state as the from
+   * parameter.  This supports the same formats as tween, just omitting the
+   * from paramter in both cases.
    * @param {Object} target If the other parameters are omitted, this Object
    *     should contain the longhand parameters outlined in `tween()`.  If at
    *     least one other formal parameter is specified, then this Object should
@@ -417,6 +353,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
    * @param {Function} callback The callback function to pass along to
    *     `tween()`.
    * @param {String|Object} easing The easing formula to use.
+   * @return {Object} The `Tweenable` instance for chaining.
    */
   Tweenable.prototype.to = function to (target, duration, callback, easing) {
     if (arguments.length === 1) {
@@ -436,113 +373,109 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   };
 
   /**
-   * Returns a reference to the `Tweenable`'s current state (the `from` Object
-   * that wat passed to `tweenableInst.tween()`).
+   * Returns the current state.
    * @return {Object}
    */
   Tweenable.prototype.get = function () {
-    return this._state.current;
+    return shallowCopy({}, this._currentState);
   };
 
   /**
    * Force the `Tweenable` instance's current state.
-   * @param {Object} state The state the instance shall have.
+   * @param {Object} state
    */
   Tweenable.prototype.set = function  (state) {
-    this._state.current = state || {};
-
-    return this;
+    this._currentState = state;
   };
 
   /**
    * Stops and cancels a tween.
-   * @param {Boolean} gotoEnd If `false`, or omitted, the tween just stops at
-   *     its current state, and the `callback` is not invoked.  If `true`, the
-   *     tweened object's values are instantly set the the target "to" values,
-   *     and the `callback` is invoked.
-   * @return {Object} The `Tweenable` instance for chaining.
+   * @param {Boolean} gotoEnd If false, or omitted, the tween just stops at its
+   * current state, and the callback is not invoked.  If true, the tweened
+   * object's values are instantly set to the target values, and the `callback`
+   * is invoked.
+   * @return {Tweenable}
    */
   Tweenable.prototype.stop = function (gotoEnd) {
-    clearTimeout(this._state.loopId);
-    this._state.isTweening = false;
+    clearTimeout(this._loopId);
+    this._isTweening = false;
 
     if (gotoEnd) {
-      simpleCopy(this._state.current, this._tweenParams.to);
-      applyFilter('afterTweenEnd', this, [this._state.current,
-          this._tweenParams.originalState, this._tweenParams.to,
-          this._tweenParams.easing]);
-      if (this._tweenParams.callback) {
-        this._tweenParams.callback.call(this._state.current,
-            this._state.current);
+      shallowCopy(this._currentState, this._targetState);
+      applyFilter(this, 'afterTweenEnd', [this._currentState,
+          this._originalState, this._targetState, this._easing]);
+      if (this._callback) {
+        this._callback.call(this._currentState, this._currentState);
       }
     }
 
+    // TODO: The start, step and callback hooks need to be nulled here, but
+    // doing so will break the queue extension.  Restructure that extension so
+    // that the tween can be cleaned up properly.
+
     return this;
   };
 
   /**
-   * Pauses a tween.  A `pause`d tween can be resumed with `resume()`.
-   * @return {Object} The `Tween` instance for chaining.
+   * Pauses a tween.
+   * @return {Tweenable}
    */
   Tweenable.prototype.pause = function () {
-    clearTimeout(this._state.loopId);
-    this._state.pausedAtTime = now();
-    this._state.isPaused = true;
+    clearTimeout(this._loopId);
+    this._pausedAtTime = now();
+    this._isPaused = true;
     return this;
   };
 
   /**
-   * Resumes a paused tween.  A tween must be `pause`d before is can be
-   * `resume`d.
-   * @return {Object} The `Tweenable` instance for chaining.
+   * Resumes a paused tween.  A tween must be paused before is can be
+   * resumed.
+   * @return {Tweenable}
    */
   Tweenable.prototype.resume = function () {
-    var self;
-
-    self = this;
-
-    if (this._state.isPaused) {
-      this._tweenParams.timestamp += now() - this._state.pausedAtTime;
+    if (this._isPaused) {
+      this._timestamp += now() - this._pausedAtTime;
     }
 
-    timeoutHandler(self._tweenParams, self._state);
+    timeoutHandler(this, this._timestamp, this._duration, this._currentState,
+        this._originalState, this._targetState, this._easing, this._step);
 
     return this;
   };
 
   /**
-   * Globally exposed static property to attach filters to.  Filters are used
-   * for transforming the properties of a tween at various points in a
-   * `Tweenable` instance's lifecycle.  Please consult the README for more info
-   * on this.
+   * Filters are used for transforming the properties of a tween at various
+   * points in a Tweenable's lifecycle.  Please consult the README for more
+   * info on this.
    */
   Tweenable.prototype.filter = {};
 
-  /**
-   * Globally exposed static helper methods.  These methods are used internally
-   * and could be helpful in a global context as well.
-   */
-  Tweenable.util = {
+  shallowCopy(Tweenable, {
     'now': now
     ,'each': each
     ,'tweenProps': tweenProps
     ,'tweenProp': tweenProp
     ,'applyFilter': applyFilter
-    ,'simpleCopy': simpleCopy
-    ,'weakCopy': weakCopy
+    ,'shallowCopy': shallowCopy
+    ,'defaults': defaults
     ,'composeEasingObject': composeEasingObject
-  };
+  });
 
   /**
    * This object contains all of the tweens available to Shifty.  It is
    * extendable - simply attach properties to the Tweenable.prototype.formula
-   * Object following the same format at `linear`.
+   * Object following the same format at linear.
    */
-  easing = Tweenable.prototype.formula = {
+  var formula = Tweenable.prototype.formula = {
     linear: function (pos) {
       return pos;
     }
   };
+
+  // A hook used for unit testing.
+  if (typeof SHIFTY_DEBUG_NOW === 'function') {
+    global.timeoutHandler = timeoutHandler;
+  }
 
   if (typeof exports === 'object') {
     // nodejs
@@ -571,7 +504,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
 
 ;(function () {
 
-  Tweenable.util.simpleCopy(Tweenable.prototype.formula, {
+  Tweenable.shallowCopy(Tweenable.prototype.formula, {
     easeInQuad: function(pos){
        return Math.pow(pos, 2);
     },
@@ -760,16 +693,10 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
  */
 ;(function () {
 
-  function getInterpolatedValues (from, current, to, position, easing) {
-    return Tweenable.util.tweenProps(position, {
-      'originalState': from
-      ,'to': to
-      ,'timestamp': 0
-      ,'duration': 1
-      ,'easing': easing
-    }, {
-      'current': current
-    });
+  function getInterpolatedValues (
+      from, current, targetState, position, easing) {
+    return Tweenable.tweenProps(
+        position, current, from, targetState, 1, 0, easing);
   }
 
 
@@ -778,8 +705,8 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
 
     if (typeof easingParam === 'string') {
       easingObject = {};
-      Tweenable.util.each(stateObject, function (obj, prop) {
-        easingObject[prop] = obj[prop];
+      Tweenable.each(stateObject, function (prop) {
+        easingObject[prop] = stateObject[prop];
       });
     }
 
@@ -788,44 +715,45 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
 
 
   // This is the static utility version of the function.
-  Tweenable.util.interpolate = function (from, to, position, easing) {
+  Tweenable.interpolate = function (from, targetState, position, easing) {
     var current
         ,interpolatedValues
         ,mockTweenable;
 
     // Function was passed a configuration object, extract the values
     if (from && from.from) {
-      to = from.to;
+      targetState = from.to;
       position = from.position;
       easing = from.easing;
       from = from.from;
     }
 
     mockTweenable = new Tweenable();
-    mockTweenable._tweenParams.easing = easing || 'linear';
-    current = Tweenable.util.simpleCopy({}, from);
-    var easingObject = Tweenable.util.composeEasingObject(
-        from, mockTweenable._tweenParams.easing);
+    mockTweenable.easing = easing || 'linear';
+    current = Tweenable.shallowCopy({}, from);
+    var easingObject = Tweenable.composeEasingObject(
+        from, mockTweenable.easing);
 
     // Call any data type filters
-    Tweenable.util.applyFilter('tweenCreated', mockTweenable,
-        [current, from, to, easingObject]);
-    Tweenable.util.applyFilter('beforeTween', mockTweenable,
-        [current, from, to, easingObject]);
+    Tweenable.applyFilter(mockTweenable, 'tweenCreated',
+        [current, from, targetState, easingObject]);
+    Tweenable.applyFilter(mockTweenable, 'beforeTween',
+        [current, from, targetState, easingObject]);
     interpolatedValues = getInterpolatedValues(
-        from, current, to, position, easingObject);
-    Tweenable.util.applyFilter('afterTween', mockTweenable,
-        [interpolatedValues, from, to, easingObject]);
+        from, current, targetState, position, easingObject);
+    Tweenable.applyFilter(mockTweenable, 'afterTween',
+        [interpolatedValues, from, targetState, easingObject]);
 
     return interpolatedValues;
   };
 
 
   // This is the inheritable instance-method version of the function.
-  Tweenable.prototype.interpolate = function (to, position, easing) {
+  Tweenable.prototype.interpolate = function (targetState, position, easing) {
     var interpolatedValues;
 
-    interpolatedValues = Tweenable.util.interpolate(this.get(), to, position, easing);
+    interpolatedValues =
+        Tweenable.interpolate(this.get(), targetState, position, easing);
     this.set(interpolatedValues);
 
     return interpolatedValues;
@@ -906,8 +834,8 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
    * @return {Object} The modified obj
    */
   function sanitizeObjectForHexProps (stateObject) {
-    Tweenable.util.each(stateObject, function (obj, prop) {
-      var currentProp = obj[prop];
+    Tweenable.each(stateObject, function (prop) {
+      var currentProp = stateObject[prop];
 
       if (typeof currentProp === 'string' && currentProp.match(R_HEX)) {
         stateObject[prop] = sanitizeHexChunksToRGB(currentProp);
@@ -1043,8 +971,8 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   function getFormatManifests (stateObject) {
     var manifestAccumulator = {};
 
-    Tweenable.util.each(stateObject, function (obj, prop) {
-      var currentProp = obj[prop];
+    Tweenable.each(stateObject, function (prop) {
+      var currentProp = stateObject[prop];
 
       if (typeof currentProp === 'string') {
         var rawValues = getValuesFrom(currentProp);
@@ -1065,7 +993,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
    * @param {Object} formatManifests
    */
   function expandFormattedProperties (stateObject, formatManifests) {
-    Tweenable.util.each(formatManifests, function (obj, prop) {
+    Tweenable.each(formatManifests, function (prop) {
       var currentProp = stateObject[prop];
       var rawValues = getValuesFrom(currentProp);
       var rawValuesLength = rawValues.length;
@@ -1084,7 +1012,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
    * @param {Object} formatManifests
    */
   function collapseFormattedProperties (stateObject, formatManifests) {
-    Tweenable.util.each(formatManifests, function (obj, prop) {
+    Tweenable.each(formatManifests, function (prop) {
       var currentProp = stateObject[prop];
       var formatChunks = extractPropertyChunks(
           stateObject, formatManifests[prop].chunkNames);
@@ -1172,8 +1100,8 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
    * @param {Object} tokenData
    */
   function expandEasingObject (easingObject, tokenData) {
-    Tweenable.util.each(tokenData, function (obj, prop) {
-      var currentProp = obj[prop];
+    Tweenable.each(tokenData, function (prop) {
+      var currentProp = tokenData[prop];
       var chunkNames = currentProp.chunkNames;
       var chunkLength = chunkNames.length;
       var easingChunks = easingObject[prop].split(' ');
@@ -1193,8 +1121,8 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
    * @param {Object} tokenData
    */
   function collapseEasingObject (easingObject, tokenData) {
-    Tweenable.util.each(tokenData, function (obj, prop) {
-      var currentProp = obj[prop];
+    Tweenable.each(tokenData, function (prop) {
+      var currentProp = tokenData[prop];
       var chunkNames = currentProp.chunkNames;
       var chunkLength = chunkNames.length;
       var composedEasingString = '';

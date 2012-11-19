@@ -6,16 +6,10 @@
  */
 ;(function () {
 
-  function getInterpolatedValues (from, current, to, position, easing) {
-    return Tweenable.util.tweenProps(position, {
-      'originalState': from
-      ,'to': to
-      ,'timestamp': 0
-      ,'duration': 1
-      ,'easing': easing
-    }, {
-      'current': current
-    });
+  function getInterpolatedValues (
+      from, current, targetState, position, easing) {
+    return Tweenable.tweenProps(
+        position, current, from, targetState, 1, 0, easing);
   }
 
 
@@ -24,8 +18,8 @@
 
     if (typeof easingParam === 'string') {
       easingObject = {};
-      Tweenable.util.each(stateObject, function (obj, prop) {
-        easingObject[prop] = obj[prop];
+      Tweenable.each(stateObject, function (prop) {
+        easingObject[prop] = stateObject[prop];
       });
     }
 
@@ -34,44 +28,45 @@
 
 
   // This is the static utility version of the function.
-  Tweenable.util.interpolate = function (from, to, position, easing) {
+  Tweenable.interpolate = function (from, targetState, position, easing) {
     var current
         ,interpolatedValues
         ,mockTweenable;
 
     // Function was passed a configuration object, extract the values
     if (from && from.from) {
-      to = from.to;
+      targetState = from.to;
       position = from.position;
       easing = from.easing;
       from = from.from;
     }
 
     mockTweenable = new Tweenable();
-    mockTweenable._tweenParams.easing = easing || 'linear';
-    current = Tweenable.util.simpleCopy({}, from);
-    var easingObject = Tweenable.util.composeEasingObject(
-        from, mockTweenable._tweenParams.easing);
+    mockTweenable.easing = easing || 'linear';
+    current = Tweenable.shallowCopy({}, from);
+    var easingObject = Tweenable.composeEasingObject(
+        from, mockTweenable.easing);
 
     // Call any data type filters
-    Tweenable.util.applyFilter('tweenCreated', mockTweenable,
-        [current, from, to, easingObject]);
-    Tweenable.util.applyFilter('beforeTween', mockTweenable,
-        [current, from, to, easingObject]);
+    Tweenable.applyFilter(mockTweenable, 'tweenCreated',
+        [current, from, targetState, easingObject]);
+    Tweenable.applyFilter(mockTweenable, 'beforeTween',
+        [current, from, targetState, easingObject]);
     interpolatedValues = getInterpolatedValues(
-        from, current, to, position, easingObject);
-    Tweenable.util.applyFilter('afterTween', mockTweenable,
-        [interpolatedValues, from, to, easingObject]);
+        from, current, targetState, position, easingObject);
+    Tweenable.applyFilter(mockTweenable, 'afterTween',
+        [interpolatedValues, from, targetState, easingObject]);
 
     return interpolatedValues;
   };
 
 
   // This is the inheritable instance-method version of the function.
-  Tweenable.prototype.interpolate = function (to, position, easing) {
+  Tweenable.prototype.interpolate = function (targetState, position, easing) {
     var interpolatedValues;
 
-    interpolatedValues = Tweenable.util.interpolate(this.get(), to, position, easing);
+    interpolatedValues =
+        Tweenable.interpolate(this.get(), targetState, position, easing);
     this.set(interpolatedValues);
 
     return interpolatedValues;

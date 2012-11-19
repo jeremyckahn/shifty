@@ -12,7 +12,7 @@
 
 ;(function () {
 
-  Tweenable.util.simpleCopy(Tweenable.prototype.formula, {
+  Tweenable.shallowCopy(Tweenable.prototype.formula, {
     easeInQuad: function(pos){
        return Math.pow(pos, 2);
     },

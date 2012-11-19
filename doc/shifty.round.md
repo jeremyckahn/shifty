@@ -8,17 +8,17 @@ This extension rounds tweened property values for each step through an animation
 The extension is disabled by default.  To enable it, call:
 
 ````javascript
-Tweenable.util.enableRounding();
+Tweenable.enableRounding();
 ````
 
 To disable it:
 
 ````javascript
-Tweenable.util.disableRounding();
+Tweenable.disableRounding();
 ````
 
 You can also check to see if it is currently enabled:
 
 ````javascript
-Tweenable.util.isRoundingEnabled();
+Tweenable.isRoundingEnabled();
 ````

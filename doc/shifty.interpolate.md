@@ -7,9 +7,9 @@ The `interpolate` functions are handy utilities for calculating what tween value
 
 For historical reference, this extension was made in response to [Issue 3](https://github.com/jeremyckahn/shifty/issues/3), proposed by [@joelambert](https://github.com/joelambert).
 
-The are actually two versions of the `interpolate` method:  Static and instance.  The static version can be accessed publicly via `Tweenable.util.interpolate`.  The instance version of `interpolated` is available as a method of all `Tweenable` instances.  They are pretty much the same, slight differences are documented below.
+The are actually two versions of the `interpolate` method:  Static and instance.  The static version can be accessed publicly via `Tweenable.interpolate`.  The instance version of `interpolated` is available as a method of all `Tweenable` instances.  They are pretty much the same, slight differences are documented below.
 
-##Tweenable.util.interpolate##
+##Tweenable.interpolate##
 
 ````javascript
 /**
@@ -21,14 +21,14 @@ The are actually two versions of the `interpolate` method:  Static and instance.
  *     against.  You can use any easing method attached to
  *     `Tweenable.prototype.formula`.  If omitted, this defaults to "linear".
  */
-Tweenable.util.interpolate ( from, to, position, easing )
+Tweenable.interpolate ( from, to, position, easing )
 ````
 
 The alternative (but equivalent) function signature is:
 
 ````javascript
 // Properties are identical to corresponding parameters above.
-Tweenable.util.interpolate ({
+Tweenable.interpolate ({
 	from: Object,
 	to: Object,
 	position: Number,
@@ -38,7 +38,7 @@ Tweenable.util.interpolate ({
 Here's an example of the static method in action:
 
 ````javascript
-var interpolatedValues = Tweenable.util.interpolate({
+var interpolatedValues = Tweenable.interpolate({
     width: '100px',
     opacity: 0,
     color: '#FFF'
@@ -63,7 +63,7 @@ Note:  This example assumes that the `px` and `color` extensions are available.
 
 ##tweenableInst.interpolate##
 
-All `Tweenable` instances have an `interpolate` method as well.  This is chiefly a convenience method that wraps the static `Tweenable.util.interpolate` method.  The advantage here is that you don't need to supply the `from` parameter, because `tweenableInst.interpolate` just uses the instance's current state as the `from` parameter.  This is best illustrated with an example:
+All `Tweenable` instances have an `interpolate` method as well.  This is chiefly a convenience method that wraps the static `Tweenable.interpolate` method.  The advantage here is that you don't need to supply the `from` parameter, because `tweenableInst.interpolate` just uses the instance's current state as the `from` parameter.  This is best illustrated with an example:
 
 ````javascript
 var myTweenable = (new Tweenable()).init(),

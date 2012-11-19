@@ -71,8 +71,8 @@
    * @return {Object} The modified obj
    */
   function sanitizeObjectForHexProps (stateObject) {
-    Tweenable.util.each(stateObject, function (obj, prop) {
-      var currentProp = obj[prop];
+    Tweenable.each(stateObject, function (prop) {
+      var currentProp = stateObject[prop];
 
       if (typeof currentProp === 'string' && currentProp.match(R_HEX)) {
         stateObject[prop] = sanitizeHexChunksToRGB(currentProp);
@@ -208,8 +208,8 @@
   function getFormatManifests (stateObject) {
     var manifestAccumulator = {};
 
-    Tweenable.util.each(stateObject, function (obj, prop) {
-      var currentProp = obj[prop];
+    Tweenable.each(stateObject, function (prop) {
+      var currentProp = stateObject[prop];
 
       if (typeof currentProp === 'string') {
         var rawValues = getValuesFrom(currentProp);
@@ -230,7 +230,7 @@
    * @param {Object} formatManifests
    */
   function expandFormattedProperties (stateObject, formatManifests) {
-    Tweenable.util.each(formatManifests, function (obj, prop) {
+    Tweenable.each(formatManifests, function (prop) {
       var currentProp = stateObject[prop];
       var rawValues = getValuesFrom(currentProp);
       var rawValuesLength = rawValues.length;
@@ -249,7 +249,7 @@
    * @param {Object} formatManifests
    */
   function collapseFormattedProperties (stateObject, formatManifests) {
-    Tweenable.util.each(formatManifests, function (obj, prop) {
+    Tweenable.each(formatManifests, function (prop) {
       var currentProp = stateObject[prop];
       var formatChunks = extractPropertyChunks(
           stateObject, formatManifests[prop].chunkNames);
@@ -337,8 +337,8 @@
    * @param {Object} tokenData
    */
   function expandEasingObject (easingObject, tokenData) {
-    Tweenable.util.each(tokenData, function (obj, prop) {
-      var currentProp = obj[prop];
+    Tweenable.each(tokenData, function (prop) {
+      var currentProp = tokenData[prop];
       var chunkNames = currentProp.chunkNames;
       var chunkLength = chunkNames.length;
       var easingChunks = easingObject[prop].split(' ');
@@ -358,8 +358,8 @@
    * @param {Object} tokenData
    */
   function collapseEasingObject (easingObject, tokenData) {
-    Tweenable.util.each(tokenData, function (obj, prop) {
-      var currentProp = obj[prop];
+    Tweenable.each(tokenData, function (prop) {
+      var currentProp = tokenData[prop];
       var chunkNames = currentProp.chunkNames;
       var chunkLength = chunkNames.length;
       var composedEasingString = '';

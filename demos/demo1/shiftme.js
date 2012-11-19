@@ -78,7 +78,7 @@
 
   global.shiftyDemo = global.shiftyDemo || {};
 
-  Tweenable.util.simpleCopy(global.shiftyDemo, {
+  Tweenable.shallowCopy(global.shiftyDemo, {
       'introInit': init
       ,'introGrow': grow
       ,'introFade': fade

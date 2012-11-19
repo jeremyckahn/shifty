@@ -21,8 +21,6 @@
 </script>
 <script src="../src/shifty.core.js"></script>
 <script src="../src/shifty.formulas.js"></script>
-<!--<script src="../src/shifty.color.js"></script>-->
-<!--<script src="../src/shifty.css_units.js"></script>-->
 <script src="../src/shifty.queue.js"></script>
 <script src="../src/shifty.interpolate.js"></script>
 <script src="../src/shifty.simple_ease.js"></script>
@@ -35,7 +33,10 @@
     var log = console.log;
 
     function forceInternalUpdate (tweenable) {
-      timeoutHandler(tweenable._tweenParams, tweenable._state);
+      var tweenParams = tweenable._tweenParams;
+      timeoutHandler(tweenable, tweenable._timestamp, tweenable._duration,
+      tweenable._currentState, tweenable._originalState,
+      tweenable._targetState, tweenable._easing, tweenable._step);
     }
 
     module('Tweenable.prototype.tween (shorthand format)');
@@ -124,7 +125,7 @@
       tweenable.stop();
       equals(tweenable.get().x, 50,
           'The tweened value did not go to the end, it was left at its last updated position');
-      equals(tweenable._state.isTweening, false,
+      equals(tweenable._isTweening, false,
           'The internal state of the Tweenable indicates it is not running (updating)');
     });
 
@@ -180,18 +181,18 @@
       var from = { x: 0 }
           ,to = { x: 10 };
 
-      var roundingDisabled = Tweenable.util.interpolate(from, to, .55).x;
+      var roundingDisabled = Tweenable.interpolate(from, to, .55).x;
       equals(roundingDisabled, 5.5,
           'Rounding was disabled');
 
-      Tweenable.util.enableRounding();
-      var roundedUp = Tweenable.util.interpolate(from, to, .55).x;
+      Tweenable.enableRounding();
+      var roundedUp = Tweenable.interpolate(from, to, .55).x;
       equals(roundedUp, 6,
           'Result was rounded up');
-      var roundedDown = Tweenable.util.interpolate(from, to, .54).x;
+      var roundedDown = Tweenable.interpolate(from, to, .54).x;
       equals(roundedDown, 5,
           'Result was rounded down');
-      Tweenable.util.disableRounding();
+      Tweenable.disableRounding();
     });
 
 
@@ -201,13 +202,13 @@
       var from = { color: 'rgb(0,128,255)' }
           ,to = { color: 'rgb(128,255,0)' };
 
-      var interpolated = Tweenable.util.interpolate(from, to, 0);
+      var interpolated = Tweenable.interpolate(from, to, 0);
       equals(interpolated.color, from.color,
           'The initial interpolated value is the same as the initial color');
-      interpolated = Tweenable.util.interpolate(from, to, .5);
+      interpolated = Tweenable.interpolate(from, to, .5);
       equals(interpolated.color, 'rgb(64,191,127)',
           'The interpolated value at 50% is a 50/50 mixture of the start and end colors');
-      interpolated = Tweenable.util.interpolate(from, to, 1);
+      interpolated = Tweenable.interpolate(from, to, 1);
       equals(interpolated.color, to.color,
           'The final interpolated value is the same as the target color');
     });
@@ -216,15 +217,15 @@
       var from = { color: 'rgb(0,128,255)', x: 0 }
           ,to =  { color: 'rgb(128,255,0)', x: 10 };
 
-      var interpolated = Tweenable.util.interpolate(from, to, 0);
+      var interpolated = Tweenable.interpolate(from, to, 0);
       equals(interpolated.color, from.color,
           'The initial interpolated value is the same as the initial color');
-      interpolated = Tweenable.util.interpolate(from, to, .5);
+      interpolated = Tweenable.interpolate(from, to, .5);
       equals(interpolated.color, 'rgb(64,191,127)',
           'The interpolated color value at 50% is a 50/50 mixture of the start and end colors');
       equals(interpolated.x, 5,
           'The interpolated x value at 50% is the midpoint of the start and end x values');
-      interpolated = Tweenable.util.interpolate(from, to, 1);
+      interpolated = Tweenable.interpolate(from, to, 1);
       equals(interpolated.color, to.color,
           'The final interpolated value is the same as the target color');
     });
@@ -233,13 +234,13 @@
       var from = { color: '#ff00ff' }
           ,to =  { color: '#00ff00' };
 
-      var interpolated = Tweenable.util.interpolate(from, to, 0);
+      var interpolated = Tweenable.interpolate(from, to, 0);
       equals(interpolated.color, 'rgb(255,0,255)',
           'The initial interpolated value is the rgb equivalent as the initial color');
-      interpolated = Tweenable.util.interpolate(from, to, .5);
+      interpolated = Tweenable.interpolate(from, to, .5);
       equals(interpolated.color, 'rgb(127,127,127)',
           'The interpolated value at 50% is a 50/50 mixture of the start and end colors');
-      interpolated = Tweenable.util.interpolate(from, to, 1);
+      interpolated = Tweenable.interpolate(from, to, 1);
       equals(interpolated.color, 'rgb(0,255,0)',
           'The final interpolated value is the rgb equivalent as the target color');
     });
@@ -248,13 +249,13 @@
       var from = { color: 'rgb(0,128,255) rgb(255,0,255)' }
           ,to =  { color: 'rgb(128,255,0) rgb(0,255,0)' };
 
-      var interpolated = Tweenable.util.interpolate(from, to, 0);
+      var interpolated = Tweenable.interpolate(from, to, 0);
       equals(interpolated.color, from.color,
           'The initial interpolated value is the same as the initial color');
-      interpolated = Tweenable.util.interpolate(from, to, .5);
+      interpolated = Tweenable.interpolate(from, to, .5);
       equals(interpolated.color, 'rgb(64,191,127) rgb(127,127,127)',
           'The interpolated value at 50% is a 50/50 mixture of the start and end colors');
-      interpolated = Tweenable.util.interpolate(from, to, 1);
+      interpolated = Tweenable.interpolate(from, to, 1);
       equals(interpolated.color, to.color,
           'The final interpolated value is the same as the target color');
     });
@@ -264,12 +265,12 @@
           ,to =  { color: 'rgb(255,255,255)' }
           ,easing = 'linear easeInQuad easeInCubic';
 
-      var interpolated = Tweenable.util.interpolate(from, to, .5, easing);
-      var interpolatedR = parseInt(Tweenable.util.interpolate(
+      var interpolated = Tweenable.interpolate(from, to, .5, easing);
+      var interpolatedR = parseInt(Tweenable.interpolate(
                             {r:0}, {r:255}, .5, 'linear').r, 10);
-      var interpolatedG = parseInt(Tweenable.util.interpolate(
+      var interpolatedG = parseInt(Tweenable.interpolate(
                             {g:0}, {g:255}, .5, 'easeInQuad').g, 10);
-      var interpolatedB = parseInt(Tweenable.util.interpolate(
+      var interpolatedB = parseInt(Tweenable.interpolate(
                             {b:0}, {b:255}, .5, 'easeInCubic').b, 10);
       var targetString = 'rgb(' + interpolatedR + ',' + interpolatedG + ','
           + interpolatedB + ')';
@@ -283,12 +284,12 @@
           ,to =  { color: 'rgb(255,255,255)' }
           ,easing = 'linear easeInQuad';
 
-      var interpolated = Tweenable.util.interpolate(from, to, .5, easing);
-      var interpolatedR = parseInt(Tweenable.util.interpolate(
+      var interpolated = Tweenable.interpolate(from, to, .5, easing);
+      var interpolatedR = parseInt(Tweenable.interpolate(
                             {r:0}, {r:255}, .5, 'linear').r, 10);
-      var interpolatedG = parseInt(Tweenable.util.interpolate(
+      var interpolatedG = parseInt(Tweenable.interpolate(
                             {g:0}, {g:255}, .5, 'easeInQuad').g, 10);
-      var interpolatedB = parseInt(Tweenable.util.interpolate(
+      var interpolatedB = parseInt(Tweenable.interpolate(
                             {b:0}, {b:255}, .5, 'easeInQuad').b, 10);
       var targetString = 'rgb(' + interpolatedR + ',' + interpolatedG + ','
           + interpolatedB + ')';
@@ -302,13 +303,13 @@
           ,to =  { transform: 'translateX(50)' }
           ,easing = 'linear';
 
-      var interpolated = Tweenable.util.interpolate(from, to, 0);
+      var interpolated = Tweenable.interpolate(from, to, 0);
       equals(interpolated.transform, 'translateX(-50)',
           'The initial interpolated value is the same as the initial transform');
-      interpolated = Tweenable.util.interpolate(from, to, .5);
+      interpolated = Tweenable.interpolate(from, to, .5);
       equals(interpolated.transform, 'translateX(0)',
           'The interpolated value at 50% is at the midpoint of the start and end translations');
-      interpolated = Tweenable.util.interpolate(from, to, 1);
+      interpolated = Tweenable.interpolate(from, to, 1);
       equals(interpolated.transform, 'translateX(50)',
           'The final interpolated value is the same as the target transform');
     });
