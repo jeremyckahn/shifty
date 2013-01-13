@@ -296,36 +296,29 @@ again after the tween step.
 Building Shifty
 ---
 
-Shifty uses [nodejs](http://nodejs.org) for the build system. In the root
-directory, there is a file called `build.js`. Just do this to build the
-project on the command line:
+Shifty uses [nodejs](http://nodejs.org) and [Grunt](http://gruntjs.com/) for
+the build system. Just do this to build the project on the command line:
 
-```sh
-node build --ver <version_number>
-```
+````
+$: grunt build
+````
 
-You can specify the modules that you want to include through the CLI.
+The the default `build` task creates a binary with extensions needed by
+[Rekapi](http://rekapi.com/).  This is a good general-use configuration.  You
+can also create minimal binaries that only include the bare essentials for
+Shifty to run:
 
-```sh
-node build --ver <version_number> -i formulas,color
-```
+````
+$: grunt build-minimal
+````
 
-Or modules that you want to exclude from the build:
+Note that a minimal build includes no tweening formulas.  You can customize and
+add build targets in the `grunt.js` file.  You can also lint the code and run
+the unit tests with the default Grunt task:
 
-```sh
-node build --ver <version_number> -e css_units,interpolate,clamp
-```
-
-For more options check the help:
-
-```sh
-node build -h
-```
-
-All required files will be included automatically (such as `shifty.core.js`).
-You can find a ready-to-use build of the project at `dist/shifty.min.js`. This
-build includes the core and all extensions. Feel free to customize the build
-for your own needs. Shifty uses [SemVer](http://semver.org/).
+````
+$: grunt
+````
 
 
 AMD and NodeJS
@@ -340,7 +333,7 @@ a dependency.
 define(['lib/shifty'], function(Tweenable){
   //shifty was loaded and is ready to be used
   var myAwesomeTweenable = new Tweenable();
-  ...
+  //...
 });
 ```
 
@@ -348,7 +341,7 @@ Shifty can also be used on NodeJS:
 
 ```js
 var Tweenable = require('./shifty');
-...
+//...
 ```
 
 
@@ -358,8 +351,7 @@ Contributors
 Take a peek at the [Network](https://github.com/jeremyckahn/shifty/network)
 page to see all of the Shifty contributors, but
 [@millermedeiros](https://github.com/millermedeiros) deserves particular
-recogintion for his patches to make Shifty compatible with Node and for
-rewriting the build system.
+recogintion for his patches to make Shifty compatible with Node.
 
 
 Shifty in Use

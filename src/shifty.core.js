@@ -1,3 +1,5 @@
+/*global module:true
+ global define: true */
 /**
  * Shifty Core
  * By Jeremy Kahn - jeremyckahn@gmail.com

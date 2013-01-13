@@ -17,11 +17,12 @@
 
   // CONSTANTS
 
-  var R_FORMAT_CHUNKS = /([^-0-9\.]+)/g;
-  var R_UNFORMATTED_VALUES = /[0-9.-]+/g;
-  var R_RGB = new RegExp('rgb\\('
-      + R_UNFORMATTED_VALUES.source + ',\s*' + R_UNFORMATTED_VALUES.source
-      + ',\s*' + R_UNFORMATTED_VALUES.source + '\\)', 'g');
+  var R_FORMAT_CHUNKS = /([^\-0-9\.]+)/g;
+  var R_UNFORMATTED_VALUES = /[0-9.\-]+/g;
+  var R_RGB = new RegExp(
+      'rgb\\(' + R_UNFORMATTED_VALUES.source +
+      (/,\s*/.source) + R_UNFORMATTED_VALUES.source +
+      (/,\s*/.source) + R_UNFORMATTED_VALUES.source + '\\)', 'g');
   var R_RGB_PREFIX = /^.*\(/;
   var R_HEX = /#([0-9]|[a-f]){3,6}/g;
   var VALUE_PLACEHOLDER = 'VAL';
@@ -53,7 +54,7 @@
    * @return {string}
    */
   function getFormatStringFrom (formattedString) {
-    var chunks = formattedString.match(R_FORMAT_CHUNKS)
+    var chunks = formattedString.match(R_FORMAT_CHUNKS);
 
     if (chunks.length === 1) {
       chunks.unshift('');

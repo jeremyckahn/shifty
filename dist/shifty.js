@@ -1,13 +1,9 @@
-/** @license
- * Shifty <http://jeremyckahn.github.com/shifty/>
- * Description: A teeny tiny tweening engine in JavaScript. That's all it does.
- * Author: Jeremy Kahn - jeremyckahn@gmail.com
- * License: MIT
- * Version: 0.8.0 (Mon, 19 Nov 2012 23:10:45 GMT)
- */
+/*! Shifty - v0.8.1 - 2013-01-13 - http://jeremyckahn.github.com/shifty */
 
 ;(function(){
 
+/*global module:true
+ global define: true */
 /**
  * Shifty Core
  * By Jeremy Kahn - jeremyckahn@gmail.com
@@ -514,7 +510,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     },
 
     easeInOutQuad: function(pos){
-      if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,2);
+      if ((pos/=0.5) < 1) {return 0.5*Math.pow(pos,2);}
       return -0.5 * ((pos-=2)*pos - 2);
     },
 
@@ -527,7 +523,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     },
 
     easeInOutCubic: function(pos){
-      if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,3);
+      if ((pos/=0.5) < 1) {return 0.5*Math.pow(pos,3);}
       return 0.5 * (Math.pow((pos-2),3) + 2);
     },
 
@@ -536,11 +532,11 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     },
 
     easeOutQuart: function(pos){
-      return -(Math.pow((pos-1), 4) -1)
+      return -(Math.pow((pos-1), 4) -1);
     },
 
     easeInOutQuart: function(pos){
-      if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,4);
+      if ((pos/=0.5) < 1) {return 0.5*Math.pow(pos,4);}
       return -0.5 * ((pos-=2)*Math.pow(pos,3) - 2);
     },
 
@@ -553,7 +549,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     },
 
     easeInOutQuint: function(pos){
-      if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,5);
+      if ((pos/=0.5) < 1) {return 0.5*Math.pow(pos,5);}
       return 0.5 * (Math.pow((pos-2),5) + 2);
     },
 
@@ -566,21 +562,21 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     },
 
     easeInOutSine: function(pos){
-      return (-.5 * (Math.cos(Math.PI*pos) -1));
+      return (-0.5 * (Math.cos(Math.PI*pos) -1));
     },
 
     easeInExpo: function(pos){
-      return (pos==0) ? 0 : Math.pow(2, 10 * (pos - 1));
+      return (pos===0) ? 0 : Math.pow(2, 10 * (pos - 1));
     },
 
     easeOutExpo: function(pos){
-      return (pos==1) ? 1 : -Math.pow(2, -10 * pos) + 1;
+      return (pos===1) ? 1 : -Math.pow(2, -10 * pos) + 1;
     },
 
     easeInOutExpo: function(pos){
-      if(pos==0) return 0;
-      if(pos==1) return 1;
-      if((pos/=0.5) < 1) return 0.5 * Math.pow(2,10 * (pos-1));
+      if(pos===0) {return 0;}
+      if(pos===1) {return 1;}
+      if((pos/=0.5) < 1) {return 0.5 * Math.pow(2,10 * (pos-1));}
       return 0.5 * (-Math.pow(2, -10 * --pos) + 2);
     },
 
@@ -589,23 +585,23 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     },
 
     easeOutCirc: function(pos){
-      return Math.sqrt(1 - Math.pow((pos-1), 2))
+      return Math.sqrt(1 - Math.pow((pos-1), 2));
     },
 
     easeInOutCirc: function(pos){
-      if((pos/=0.5) < 1) return -0.5 * (Math.sqrt(1 - pos*pos) - 1);
+      if((pos/=0.5) < 1) {return -0.5 * (Math.sqrt(1 - pos*pos) - 1);}
       return 0.5 * (Math.sqrt(1 - (pos-=2)*pos) + 1);
     },
 
     easeOutBounce: function(pos){
       if ((pos) < (1/2.75)) {
-      return (7.5625*pos*pos);
+        return (7.5625*pos*pos);
       } else if (pos < (2/2.75)) {
-      return (7.5625*(pos-=(1.5/2.75))*pos + .75);
+        return (7.5625*(pos-=(1.5/2.75))*pos + 0.75);
       } else if (pos < (2.5/2.75)) {
-      return (7.5625*(pos-=(2.25/2.75))*pos + .9375);
+        return (7.5625*(pos-=(2.25/2.75))*pos + 0.9375);
       } else {
-      return (7.5625*(pos-=(2.625/2.75))*pos + .984375);
+        return (7.5625*(pos-=(2.625/2.75))*pos + 0.984375);
       }
     },
 
@@ -621,7 +617,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
 
     easeInOutBack: function(pos){
       var s = 1.70158;
-      if((pos/=0.5) < 1) return 0.5*(pos*pos*(((s*=(1.525))+1)*pos -s));
+      if((pos/=0.5) < 1) {return 0.5*(pos*pos*(((s*=(1.525))+1)*pos -s));}
       return 0.5*((pos-=2)*pos*(((s*=(1.525))+1)*pos +s) +2);
     },
 
@@ -649,11 +645,11 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
       if (pos < (1/2.75)) {
         return (7.5625*pos*pos);
       } else if (pos < (2/2.75)) {
-        return (7.5625*(pos-=(1.5/2.75))*pos + .75);
+        return (7.5625*(pos-=(1.5/2.75))*pos + 0.75);
       } else if (pos < (2.5/2.75)) {
-        return (7.5625*(pos-=(2.25/2.75))*pos + .9375);
+        return (7.5625*(pos-=(2.25/2.75))*pos + 0.9375);
       } else {
-        return (7.5625*(pos-=(2.625/2.75))*pos + .984375);
+        return (7.5625*(pos-=(2.625/2.75))*pos + 0.984375);
       }
     },
 
@@ -661,16 +657,16 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
       if (pos < (1/2.75)) {
         return (7.5625*pos*pos);
       } else if (pos < (2/2.75)) {
-        return 2 - (7.5625*(pos-=(1.5/2.75))*pos + .75);
+        return 2 - (7.5625*(pos-=(1.5/2.75))*pos + 0.75);
       } else if (pos < (2.5/2.75)) {
-        return 2 - (7.5625*(pos-=(2.25/2.75))*pos + .9375);
+        return 2 - (7.5625*(pos-=(2.25/2.75))*pos + 0.9375);
       } else {
-        return 2 - (7.5625*(pos-=(2.625/2.75))*pos + .984375);
+        return 2 - (7.5625*(pos-=(2.625/2.75))*pos + 0.984375);
       }
     },
 
     easeFromTo: function(pos) {
-      if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,4);
+      if ((pos/=0.5) < 1) {return 0.5*Math.pow(pos,4);}
       return -0.5 * ((pos-=2)*Math.pow(pos,3) - 2);
     },
 
@@ -780,11 +776,12 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
 
   // CONSTANTS
 
-  var R_FORMAT_CHUNKS = /([^-0-9\.]+)/g;
-  var R_UNFORMATTED_VALUES = /[0-9.-]+/g;
-  var R_RGB = new RegExp('rgb\\('
-      + R_UNFORMATTED_VALUES.source + ',\s*' + R_UNFORMATTED_VALUES.source
-      + ',\s*' + R_UNFORMATTED_VALUES.source + '\\)', 'g');
+  var R_FORMAT_CHUNKS = /([^\-0-9\.]+)/g;
+  var R_UNFORMATTED_VALUES = /[0-9.\-]+/g;
+  var R_RGB = new RegExp(
+      'rgb\\(' + R_UNFORMATTED_VALUES.source +
+      (/,\s*/.source) + R_UNFORMATTED_VALUES.source +
+      (/,\s*/.source) + R_UNFORMATTED_VALUES.source + '\\)', 'g');
   var R_RGB_PREFIX = /^.*\(/;
   var R_HEX = /#([0-9]|[a-f]){3,6}/g;
   var VALUE_PLACEHOLDER = 'VAL';
@@ -816,7 +813,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
    * @return {string}
    */
   function getFormatStringFrom (formattedString) {
-    var chunks = formattedString.match(R_FORMAT_CHUNKS)
+    var chunks = formattedString.match(R_FORMAT_CHUNKS);
 
     if (chunks.length === 1) {
       chunks.unshift('');

@@ -22,7 +22,7 @@
     },
 
     easeInOutQuad: function(pos){
-      if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,2);
+      if ((pos/=0.5) < 1) {return 0.5*Math.pow(pos,2);}
       return -0.5 * ((pos-=2)*pos - 2);
     },
 
@@ -35,7 +35,7 @@
     },
 
     easeInOutCubic: function(pos){
-      if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,3);
+      if ((pos/=0.5) < 1) {return 0.5*Math.pow(pos,3);}
       return 0.5 * (Math.pow((pos-2),3) + 2);
     },
 
@@ -44,11 +44,11 @@
     },
 
     easeOutQuart: function(pos){
-      return -(Math.pow((pos-1), 4) -1)
+      return -(Math.pow((pos-1), 4) -1);
     },
 
     easeInOutQuart: function(pos){
-      if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,4);
+      if ((pos/=0.5) < 1) {return 0.5*Math.pow(pos,4);}
       return -0.5 * ((pos-=2)*Math.pow(pos,3) - 2);
     },
 
@@ -61,7 +61,7 @@
     },
 
     easeInOutQuint: function(pos){
-      if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,5);
+      if ((pos/=0.5) < 1) {return 0.5*Math.pow(pos,5);}
       return 0.5 * (Math.pow((pos-2),5) + 2);
     },
 
@@ -74,21 +74,21 @@
     },
 
     easeInOutSine: function(pos){
-      return (-.5 * (Math.cos(Math.PI*pos) -1));
+      return (-0.5 * (Math.cos(Math.PI*pos) -1));
     },
 
     easeInExpo: function(pos){
-      return (pos==0) ? 0 : Math.pow(2, 10 * (pos - 1));
+      return (pos===0) ? 0 : Math.pow(2, 10 * (pos - 1));
     },
 
     easeOutExpo: function(pos){
-      return (pos==1) ? 1 : -Math.pow(2, -10 * pos) + 1;
+      return (pos===1) ? 1 : -Math.pow(2, -10 * pos) + 1;
     },
 
     easeInOutExpo: function(pos){
-      if(pos==0) return 0;
-      if(pos==1) return 1;
-      if((pos/=0.5) < 1) return 0.5 * Math.pow(2,10 * (pos-1));
+      if(pos===0) {return 0;}
+      if(pos===1) {return 1;}
+      if((pos/=0.5) < 1) {return 0.5 * Math.pow(2,10 * (pos-1));}
       return 0.5 * (-Math.pow(2, -10 * --pos) + 2);
     },
 
@@ -97,23 +97,23 @@
     },
 
     easeOutCirc: function(pos){
-      return Math.sqrt(1 - Math.pow((pos-1), 2))
+      return Math.sqrt(1 - Math.pow((pos-1), 2));
     },
 
     easeInOutCirc: function(pos){
-      if((pos/=0.5) < 1) return -0.5 * (Math.sqrt(1 - pos*pos) - 1);
+      if((pos/=0.5) < 1) {return -0.5 * (Math.sqrt(1 - pos*pos) - 1);}
       return 0.5 * (Math.sqrt(1 - (pos-=2)*pos) + 1);
     },
 
     easeOutBounce: function(pos){
       if ((pos) < (1/2.75)) {
-      return (7.5625*pos*pos);
+        return (7.5625*pos*pos);
       } else if (pos < (2/2.75)) {
-      return (7.5625*(pos-=(1.5/2.75))*pos + .75);
+        return (7.5625*(pos-=(1.5/2.75))*pos + 0.75);
       } else if (pos < (2.5/2.75)) {
-      return (7.5625*(pos-=(2.25/2.75))*pos + .9375);
+        return (7.5625*(pos-=(2.25/2.75))*pos + 0.9375);
       } else {
-      return (7.5625*(pos-=(2.625/2.75))*pos + .984375);
+        return (7.5625*(pos-=(2.625/2.75))*pos + 0.984375);
       }
     },
 
@@ -129,7 +129,7 @@
 
     easeInOutBack: function(pos){
       var s = 1.70158;
-      if((pos/=0.5) < 1) return 0.5*(pos*pos*(((s*=(1.525))+1)*pos -s));
+      if((pos/=0.5) < 1) {return 0.5*(pos*pos*(((s*=(1.525))+1)*pos -s));}
       return 0.5*((pos-=2)*pos*(((s*=(1.525))+1)*pos +s) +2);
     },
 
@@ -157,11 +157,11 @@
       if (pos < (1/2.75)) {
         return (7.5625*pos*pos);
       } else if (pos < (2/2.75)) {
-        return (7.5625*(pos-=(1.5/2.75))*pos + .75);
+        return (7.5625*(pos-=(1.5/2.75))*pos + 0.75);
       } else if (pos < (2.5/2.75)) {
-        return (7.5625*(pos-=(2.25/2.75))*pos + .9375);
+        return (7.5625*(pos-=(2.25/2.75))*pos + 0.9375);
       } else {
-        return (7.5625*(pos-=(2.625/2.75))*pos + .984375);
+        return (7.5625*(pos-=(2.625/2.75))*pos + 0.984375);
       }
     },
 
@@ -169,16 +169,16 @@
       if (pos < (1/2.75)) {
         return (7.5625*pos*pos);
       } else if (pos < (2/2.75)) {
-        return 2 - (7.5625*(pos-=(1.5/2.75))*pos + .75);
+        return 2 - (7.5625*(pos-=(1.5/2.75))*pos + 0.75);
       } else if (pos < (2.5/2.75)) {
-        return 2 - (7.5625*(pos-=(2.25/2.75))*pos + .9375);
+        return 2 - (7.5625*(pos-=(2.25/2.75))*pos + 0.9375);
       } else {
-        return 2 - (7.5625*(pos-=(2.625/2.75))*pos + .984375);
+        return 2 - (7.5625*(pos-=(2.625/2.75))*pos + 0.984375);
       }
     },
 
     easeFromTo: function(pos) {
-      if ((pos/=0.5) < 1) return 0.5*Math.pow(pos,4);
+      if ((pos/=0.5) < 1) {return 0.5*Math.pow(pos,4);}
       return -0.5 * ((pos-=2)*Math.pow(pos,3) - 2);
     },
 
