@@ -101,7 +101,7 @@ module.exports = function(grunt) {
     }
 
     var child = exec(
-      'dox-foundation < dist/shifty.js > ' + exportToPath + 'index.html',
+      'dox-foundation -t Shifty < dist/shifty.js > ' + exportToPath + 'index.html',
       function (error, stdout, stderr) {
         console.log('stdout: ' + stdout);
         console.log('stderr: ' + stderr);
