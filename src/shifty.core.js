@@ -1,13 +1,7 @@
-/*global module:true
- global define: true */
-/**
+/*!
  * Shifty Core
  * By Jeremy Kahn - jeremyckahn@gmail.com
  */
-
-// Should be outside the following closure since it will be used by all
-// modules.  It won't generate any globals after building.
-var Tweenable;
 
 // UglifyJS define hack.  Used for unit testing.
 if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
@@ -16,7 +10,11 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   };
 }
 
-(function (global) {
+if (typeof SHIFTY_DEBUG === 'undefined') {
+  var global = (function(){return this;})();
+}
+
+var Tweenable = (function () {
 
   'use strict';
 
@@ -26,7 +24,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
       ? SHIFTY_DEBUG_NOW
       : function () { return +new Date(); };
 
-  /**
+  /*!
    * Handy shortcut for doing a for-in loop. This is not a "normal" each
    * function, it is optimized for Shifty.  The iterator function only receives
    * the property name, not the value.
@@ -42,7 +40,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     }
   }
 
-  /**
+  /*!
    * Perform a shallow copy of Object properties.
    * @param {Object} targetObject The object to copy into
    * @param {Object} srcObject The object to copy from
@@ -56,7 +54,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     return targetObj;
   }
 
-  /**
+  /*!
    * Copies each property from src onto target, but only if the property to
    * copy to target is undefined.
    * @param {Object} target Missing properties in this Object are filled in
@@ -72,7 +70,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     return target;
   }
 
-  /**
+  /*!
    * Calculates the interpolated tween values of an Object for a given
    * timestamp.
    * @param {Number} forPosition The position to compute the state for.
@@ -102,20 +100,20 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     return currentState;
   }
 
-  /**
+  /*!
    * Tweens a single property.
    * @param {number} start The value that the tween started from.
    * @param {number} end The value that the tween should end at.
    * @param {Function} easingFunc The easing formula to apply to the tween.
    * @param {number} position The normalized position (between 0.0 and 1.0) to
-   *    calculate the midpoint of 'start' and 'end' against.
+   * calculate the midpoint of 'start' and 'end' against.
    * @return {number} The tweened value.
    */
   function tweenProp (start, end, easingFunc, position) {
     return start + (end - start) * easingFunc(position);
   }
 
-  /**
+  /*!
    * Applies a filter to Tweenable instance.
    * @param {Tweenable} tweenable The `Tweenable` instance to call the filter
    * upon.
@@ -132,7 +130,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     });
   }
 
-  /**
+  /*!
    * Handles the update logic for one step of a tween.
    * @param {Tweenable} tweenable
    * @param {number} timestamp
@@ -177,7 +175,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
 
-  /**
+  /*!
    * Creates a fully-usable easing Object from either a string or another
    * easing Object.  If `easing` is an Object, then this function clones it and
    * fills in the missing properties with "linear".
@@ -203,28 +201,21 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
   /**
-   * - fps: This is the framerate (frames per second) at which the tween
-   *   updates.
-   * - easing: The default easing formula to use on a tween.  This can be
+   * Tweenable constructor.  Valid parameters for `options` are:
+   *
+   * - fps (number): This is the framerate (frames per second) at which the tween
+   *   updates (default is 60).
+   * - easing (string): The default easing formula to use on a tween.  This can be
    *   overridden on a per-tween basis via the `tween` function's `easing`
    *   parameter (see below).
-   * - duration: The default duration that a tween lasts for.  This can be
+   * - duration (number): The default duration that a tween lasts for.  This can be
    *   overridden on a per-tween basis via the `tween` function's `duration`
    *   parameter (see below).
-   * - initialState: The state at which the first tween should begin at.
-   * @typedef {{
-   *  fps: number,
-   *  easing: string,
-   *  initialState': Object
-   * }}
+   * - initialState (Object): The state at which the first tween should begin at.
+   * @param {Object} options Configuration Object.
+   * @constructor
    */
-  var tweenableConfig;
-
-  /**
-   * @param {tweenableConfig} options
-   * @return {Object}
-   */
-  Tweenable = function (options) {
+   function Tweenable (options) /*!*/{
     options = options || {};
 
     this.data = {};
@@ -234,49 +225,38 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
 
     // The framerate at which Shifty updates.  This is exposed publicly as
     // `tweenableInst.fps`.
-    this.fps = options.fps || 30;
+    this.fps = options.fps || 60;
 
     // The default easing formula.  This is exposed publicly as
     // `tweenableInst.easing`.
     this._easing = options.easing || DEFAULT_EASING;
 
     return this;
-  };
+  }
 
   /**
-   * - from: Starting position.
-   * - to: Ending position (signature must match `from`).
-   * - duration: How long to animate for.
-   * - easing: Easing formula name to use for tween.
-   * - start: Function to execute when the tween begins (after the first tick).
-   * - step: Function to execute every tick.
-   * - callback: Function to execute upon completion.
-   * @typedef {{
-   *   from: Object,
-   *   to: Object,
-   *   duration: number=,
-   *   easing: string=,
-   *   start: Function=,
-   *   step: Function=,
-   *   callback: Function=
-   * }}
-   */
-  var tweenConfig;
-
-  /**
-   * TODO: Remove support for the shorthand form of calling this method.
+   * Start a tween.  You can supply all of the formal parameters, but the preferred approach is to pass a single configuration Object that looks like so:
    *
-   * Start a tween.
-   * @param {Object|tweenConfig} fromState
-   * @param {Object=} targetState
-   * @param {number=} duration
-   * @param {Function=} callback
-   * @param {Object|string=} easing
-   * @return {Object} The `Tweenable` instance for chaining.
+   * - from (Object): Starting position.  Required.
+   * - to (Object): Ending position (parameters must match `from`).  Required.
+   * - duration (number=): How many milliseconds to animate for.
+   * - start (Function=): Function to execute when the tween begins (after the first tick).
+   * - step (Function=): Function to execute every tick.
+   * - callback (Function=): Function to execute upon completion.
+   * - easing (Object|string=): Easing formula(s) name to use for the tween.
+   *
+   * @param {Object} fromState Starting position OR a configuration Object instead of the rest of the formal parameters.
+   * @param {Object=} targetState Ending position (parameters must match `from`).
+   * @param {number=} duration How many milliseconds to animate for.
+   * @param {Function=} callback Function to execute upon completion.
+   * @param {Object|string=} easing Easing formula(s) name to use for the tween.
+   * @return {Tweenable}
    */
-  Tweenable.prototype.tween =
-      function (fromState, targetState, duration, callback, easing) {
+  Tweenable.prototype.tween = function (
+      fromState, targetState, duration, callback, easing) /*!*/{
 
+    // TODO: Remove support for the shorthand form of calling this method.
+    // TODO: Rename "callback" to something like "finish."
     if (this._isTweening) {
       return;
     }
@@ -330,24 +310,15 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   };
 
   /**
-   * TODO: Remove this method and roll it into Tweenable#tween.
-   *
-   * Convenience method for tweening from the current position.  This method
-   * functions identically to tween (it's just a wrapper function), but
-   * implicitly passes the Tweenable instance's current state as the from
-   * parameter.  This supports the same formats as tween, just omitting the
-   * from paramter in both cases.
-   * @param {Object} target If the other parameters are omitted, this Object
-   *     should contain the longhand parameters outlined in `tween()`.  If at
-   *     least one other formal parameter is specified, then this Object should
-   *     contain the target values to tween to.
-   * @param {Number} duration Duration of the tween, in milliseconds.
-   * @param {Function} callback The callback function to pass along to
-   *     `tween()`.
-   * @param {String|Object} easing The easing formula to use.
-   * @return {Object} The `Tweenable` instance for chaining.
+   * Convenience method for tweening from the current position.  This method functions identically to tween (it's just a wrapper function), but implicitly passes the Tweenable instance's current state as the `from` parameter.  This supports the same formats as tween, just omitting the `from` parameter in both cases.
+   * @param {Object} target If the other parameters are omitted, this Object should contain the longhand parameters outlined in `tween()`.  If at least one other formal parameter is specified, then this Object should contain the target values to tween to.
+   * @param {number=} duration Duration of the tween, in milliseconds.
+   * @param {Function=} callback The callback function to pass along to `tween()`.
+   * @param {string|Object=} easing The easing formula to use.
+   * @return {Tweenable}
    */
-  Tweenable.prototype.to = function to (target, duration, callback, easing) {
+  Tweenable.prototype.to = function (target, duration, callback, easing) /*!*/{
+    // TODO: Remove this method and roll it into Tweenable#tween.
     if (arguments.length === 1) {
       if ('to' in target) {
         // Shorthand notation is being used
@@ -368,7 +339,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
    * Returns the current state.
    * @return {Object}
    */
-  Tweenable.prototype.get = function () {
+  Tweenable.prototype.get = function () /*!*/{
     return shallowCopy({}, this._currentState);
   };
 
@@ -376,19 +347,16 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
    * Force the `Tweenable` instance's current state.
    * @param {Object} state
    */
-  Tweenable.prototype.set = function  (state) {
+  Tweenable.prototype.set = function (state) /*!*/{
     this._currentState = state;
   };
 
   /**
    * Stops and cancels a tween.
-   * @param {Boolean} gotoEnd If false, or omitted, the tween just stops at its
-   * current state, and the callback is not invoked.  If true, the tweened
-   * object's values are instantly set to the target values, and the `callback`
-   * is invoked.
+   * @param {boolean=} gotoEnd If false or omitted, the tween just stops at its current state, and the callback is not invoked.  If true, the tweened object's values are instantly set to the target values, and the `callback` is invoked.
    * @return {Tweenable}
    */
-  Tweenable.prototype.stop = function (gotoEnd) {
+  Tweenable.prototype.stop = function (gotoEnd) /*!*/{
     clearTimeout(this._loopId);
     this._isTweening = false;
 
@@ -412,7 +380,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
    * Pauses a tween.
    * @return {Tweenable}
    */
-  Tweenable.prototype.pause = function () {
+  Tweenable.prototype.pause = function () /*!*/{
     clearTimeout(this._loopId);
     this._pausedAtTime = now();
     this._isPaused = true;
@@ -420,11 +388,10 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   };
 
   /**
-   * Resumes a paused tween.  A tween must be paused before is can be
-   * resumed.
+   * Resumes a paused tween.  A tween must be paused before is can be resumed.
    * @return {Tweenable}
    */
-  Tweenable.prototype.resume = function () {
+  Tweenable.prototype.resume = function () /*!*/{
     if (this._isPaused) {
       this._timestamp += now() - this._pausedAtTime;
     }
@@ -435,7 +402,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     return this;
   };
 
-  /**
+  /*!
    * Filters are used for transforming the properties of a tween at various
    * points in a Tweenable's lifecycle.  Please consult the README for more
    * info on this.
@@ -453,16 +420,16 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     ,'composeEasingObject': composeEasingObject
   });
 
-  /**
-   * This object contains all of the tweens available to Shifty.  It is
-   * extendable - simply attach properties to the Tweenable.prototype.formula
-   * Object following the same format at linear.
+  /*!
+   * This object contains all of the tweens available to Shifty.  It is extendable - simply attach properties to the Tweenable.prototype.formula Object following the same format at linear.
    */
-  var formula = Tweenable.prototype.formula = {
+  Tweenable.prototype.formula = {
     linear: function (pos) {
       return pos;
     }
   };
+
+  var formula = Tweenable.prototype.formula;
 
   // A hook used for unit testing.
   if (typeof SHIFTY_DEBUG_NOW === 'function') {
@@ -480,4 +447,6 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     global.Tweenable = Tweenable;
   }
 
-} (this));
+  return Tweenable;
+
+} ());

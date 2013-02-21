@@ -1,4 +1,4 @@
-/*global module:false*/
+/*global module:false, require:true, console:true */
 
 module.exports = function(grunt) {
 
@@ -18,6 +18,14 @@ module.exports = function(grunt) {
         'grunt.js',
         'src/shifty.!(intro|outro)*.js'
       ]
+    },
+    uglify: {
+      mangle: {
+        defines: {
+          SHIFTY_DEBUG: ['name', 'false'],
+          SHIFTY_DEBUG_NOW: ['name', 'false']
+        }
+      }
     },
     jshint: {
       options: {
@@ -42,7 +50,9 @@ module.exports = function(grunt) {
       },
       globals: {
         SHIFTY_DEBUG_NOW: true,
-        Tweenable: true
+        Tweenable: true,
+        module: true,
+        define: true
       }
     },
     concat: {
@@ -78,7 +88,28 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('default', 'lint qunit');
-  grunt.registerTask('build', 'concat:forRekapi min');
-  grunt.registerTask('build-minimal', 'concat:minimal min');
+  grunt.registerTask('build', 'concat:forRekapi min doc');
+  grunt.registerTask('build-minimal', 'concat:minimal min doc');
+
+  grunt.registerTask('doc', 'Generate API documentation.', function () {
+    var fs = require('fs');
+    var exec = require('child_process').exec;
+    var exportToPath = 'dist/doc/';
+
+    if (!fs.existsSync(exportToPath)) {
+      fs.mkdirSync(exportToPath);
+    }
+
+    var child = exec(
+      'dox-foundation < dist/shifty.js > ' + exportToPath + 'index.html',
+      function (error, stdout, stderr) {
+        console.log('stdout: ' + stdout);
+        console.log('stderr: ' + stderr);
+        if (error !== null) {
+          console.log('exec error: ' + error);
+        }
+    });
+
+  });
 
 };

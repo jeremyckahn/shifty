@@ -9,7 +9,7 @@ to be encapsulated by higher-level tools.  The core library provides:
 This is useful for web developers because it is the minimum amount of
 functionality needed to build customizable animations. Shifty is optimized to
 run many times a second with minimal processing and memory overhead, which is
-necessary for smooth animations.  The core Shifty library doesn't do:
+important to achieve smooth animations.  The core Shifty library doesn't do:
 
   * CSS animation
   * Canvas rendering
@@ -21,10 +21,12 @@ the core with whatever you need.  In fact, there are some extensions included
 in this repo that make Shifty more useful for common animation needs.
 Extensions included in the default build are:
 
-  * `shifty.token.js`: String support.  Allows you to interpolate strings with
-    mixed units and numbers, such as "25px" or "rgb(255, 0, 255)".
-  * `shifty.interpolate.js`: Compute the midpoint between two values outside of
-    an animation sequence (computes a single frame of an animation).
+  * [`shifty.token.js`](http://jeremyckahn.github.com/shifty/dist/doc/#token):
+    String support.  Allows you to interpolate strings with mixed units and
+    numbers, such as "25px" or "rgb(255, 0, 255)".
+  * [`shifty.interpolate.js`](http://jeremyckahn.github.com/shifty/dist/doc/#interpolate):
+    Compute the midpoint between two values outside of an animation sequence.
+    In other words, compute a single frame of an animation.
   * `shifty.formulas.js`: A bunch of [Robert Penner](http://robertpenner.com/)
     easing formulas adapted from
     [Scripty2](https://github.com/madrobby/scripty2).
@@ -34,19 +36,16 @@ Extensions included in the default build are:
 Shifty has no dependencies, so you can just load
 [/dist/shifty.min.js](https://github.com/jeremyckahn/shifty/blob/master/dist/shifty.min.js)
 to start using it.  This file has all of the extensions described above baked
-in.  If you only want the core `Number` tweening functionality
+in.  If you only want the core `number` tweening functionality
 ([shifty.core.js](https://github.com/jeremyckahn/shifty/blob/master/src/shifty.core.js)),
-you can easily build that without any extensions (please see the "Building
-Shifty" section in this README).
+you can easily build that without any extensions (please see [Building
+Shifty](#building-shifty)).
 
-In other words, you can use whatever components you want.  Just make sure you
-use the build script, don't just copy and paste the files inside the `/src`
-directory.
+## Getting started
 
-## API
-
-The section explains how to use the core Shifty APIs.  For information on each
-extension, explore the `doc/` directory.
+The section explains how to get started with Shifty.  For full documentation on
+each API, please see [the
+documentation](http://jeremyckahn.github.com/shifty/dist/doc/).
 
 ## Making a `tweenable()` instance
 
@@ -58,154 +57,68 @@ var myTweenable = new Tweenable();
 
 You can also supply some fun options to the constuctor via an Object:
 
-````javascript
-/**
- * - fps: This is the framerate (frames per second) at which the tween updates.
- * - easing: The default easing formula to use on a tween.  This can be
- *   overridden on a per-tween basis via the `tween` function's `easing`
- *   parameter (see below).
- * - initialState: The state at which the first tween should begin at.
- * @typedef {{
- *  fps: number,
- *  easing: string,
- *  initialState': Object
- * }}
- */
-var tweenableConfig = {};
+  * fps (number): This is the framerate (frames per second) at which the tween
+    updates (default is 60).
+  * easing (string or Object): The default easing formula to use on a tween.
+    This can be overridden on a per-tween basis via the `tween` function's
+    `easing` parameter (see below).
+  * initialState (Object): The state at which the first tween should begin at.
 
+````javascript
+var myTweenable = new Tweenable({
+  fps: 30,
+  easing: 'bounce',
+  initialState: { x: 35, y: 50 }
+});
+````
+
+## tween
+
+Make a basic tween by specifying some options:
+
+  * from (Object): Starting position.  Required.
+  * to (Object): Ending position (signature must match `from`). Required.
+  * duration (number): How long to animate for.
+  * easing (string): Easing formula name to use for tween.
+  * start (function): Function to execute when the tween begins (after the
+    first tick).
+  * step (function): Function to execute every tick.
+  * callback (function): Function to execute upon completion.
+
+````javascript
 var myTweenable = new Tweenable(tweenableConfig);
+
+myTweenable.tween({
+  from: { x: 0, y: 50 },
+  to: { x: 10, y: -30 },
+  duration: 1500,
+  easing: 'easeOutQuad',
+  start: function () { console.log('Off I go!'); },
+  callback: function () { console.log('And I\'m done!'); }
+});
 ````
 
-## Starting a tween
+__Important!__  The object that is passed as the `from` parameter is modified.
 
-### tween
+## Advanced usage
 
-Make a basic tween:
+You can control the state of a tween with the following methods:
 
 ````javascript
-/**
- * The property names and types in `from` and `to` must match.
- * @param {Object} from Position to start at.
- * @param {Object} to Position to end at.
- * @param {number=} duration How long to animate for.
- * @param {function=} callback Function to execute upon completion.
- * @param {string=} easing Easing formula name to use for tween.
- */
-myTweenable.tween( from, to, duration, callback, easing );
+Tweenable.prototype.stop();
+Tweenable.prototype.pause();
+Tweenable.prototype.resume();
 ````
 
-This is the shorthand syntax.  You can also use the Configuration Object
-syntax:
+You can also examine modify the state of a `Tweenable`:
 
 ````javascript
-/**
- * - from: Starting position.
- * - to: Ending position (signature must match `from`).
- * - duration: How long to animate for.
- * - easing: Easing formula name to use for tween.
- * - start: Function to execute when the tween begins (after the first tick).
- * - step: Function to execute every tick.
- * - callback: Function to execute upon completion.
- * @typedef {{
- *   from: Object,
- *   to: Object,
- *   duration: number=,
- *   easing: string=,
- *   start: Function=,
- *   step: Function=,
- *   callback: Function=
- * }}
- */
-var tweenConfig = {};
-myTweenable.tween( tweenConfig );
+Tweenable.prototype.get();
+Tweenable.prototype.set();
 ````
 
-__Important!__  The object that is passed as the `from` parameter, regardless
-of which syntax you use to invoke `tween`, is modified.
-
-### to
-
-Another handy way to tween is to use the `to`  method.  `to()` is nearly
-identical to `tween()` - in fact, `to()` just wraps `tween()` internally.  The
-only difference is that you can omit the `from` parameter.  `to()` simply
-assumes that you want to tween from the `Tweenable` instance's current
-position.  Like tween, the shorthand and longhand syntaxes are supported.
-Shorthand:
-
-````javascript
-/**
- * @param {Object} to
- * @param {number=} duration
- * @param {function=} callback
- * @param {string=} easing
- */
-myTweenable.to( to, duration, callback, easing );
-````
-
-Longhand:
-
-````javascript
-/**
- * @typedef {{
- *   to: Object,
- *   duration: number=,
- *   easing: string=,
- *   start: Function=,
- *   step: Function=,
- *   callback: Function=
- * }}
- */
-var toConfig = {};
-myTweenable.to( toConfig );
-````
-
-## Controlling a tween
-
-Continuing from above...
-
-````javascript
-/**
- * @param {boolean} gotoEnd Controls whether to jump to the end "to" state or
- * just stop where the tweened values currently are.
- */
-myTweenable.stop( gotoEnd );
-````
-
-Stops a tween.
-
-````javascript
-/**
- * Pauses a tween.  This is different from `stop()`, as you are able to resume
- * from a `pause`ed state.
- */
-myTweenable.pause();
-````
-
-
-````javascript
-/**
- * Resumes a `pause`ed tween.
- */
-myTweenable.resume();
-````
-
-````javascript
-/**
- * Returns a `Tweenable`'s current internal state value.
- * @return {Object}
- */
-myTweenable.get();
-````
-
-````javascript
-/**
- * Sets (and overwrites) the current internal state properties.
- * @param {Object} state Contains the properties that the state should have.
- * Any properties not present in this Object will be erased form the current
- * state.
- */
-myTweenable.set(state);
-````
+These, as well as other methods, are detailed more in the [API
+documentation](http://jeremyckahn.github.com/shifty/dist/doc/).
 
 ## Using multiple easing formulas
 
@@ -216,6 +129,8 @@ straight line.  You can make curves!  To do this, simply supply `easing` as an
 Object, rather than a string to `tween()`:
 
 ````javascript
+var myTweenable = new Tweenable(tweenableConfig);
+
 myTweenable.tween({
   from: {
     x: 0,
@@ -233,9 +148,8 @@ myTweenable.tween({
 ````
 
 You can use an an Object to specify the easing to use in any `Tweenable` method
-that accepts an `easing` parameter (on other words, you can use this with `to`
-and the Interpolate extension).  Mix and match to make interesting new
-animations.
+that accepts an `easing` parameter (on other words, you can use this with the
+Interpolate extension).  Mix and match to make interesting new animations.
 
 Filters
 ---
@@ -275,7 +189,7 @@ Tweenable.prototype.filter.doubler = {
 
   // Gets called right after a tween state is calculated.
   // `currentState` is the current state of the tweened object, `fromState` is
-  the state that the tween started at, and `toState` contains the target
+  // the state that the tween started at, and `toState` contains the target
   // values.
   'afterTween': function afterTween (currentState, fromState, toState) {
     Tweenable.util.each(toState, function (obj, prop) {
@@ -289,15 +203,23 @@ Tweenable.prototype.filter.doubler = {
 Yes, having `doubler` filter is useless.  A more practical use of filters is to
 add support for more data types.  __Remember, `Tweenable` only supports
 `Numbers` out of the box__, but you can add support for strings, functions, or
-whatever else you might need.  The `px` and `color` extensions work by
-filtering string values into numbers before each tween step, and then back
-again after the tween step.
+whatever else you might need.  The Token extension works by filtering string
+values into numbers before each tween step, and then back again after the tween
+step.
 
 Building Shifty
 ---
 
 Shifty uses [nodejs](http://nodejs.org) and [Grunt](http://gruntjs.com/) for
-the build system. Just do this to build the project on the command line:
+the build system. It also requires
+[dox-foundation](https://github.com/punkave/dox-foundation) to generate the
+documentation.  Install the dependencies via npm like so:
+
+````
+$: npm install -g grunt-cli dox-foundation
+````
+
+Once those are installed, do this at the command line to build the project:
 
 ````
 $: grunt build
@@ -333,7 +255,6 @@ a dependency.
 define(['lib/shifty'], function(Tweenable){
   //shifty was loaded and is ready to be used
   var myAwesomeTweenable = new Tweenable();
-  //...
 });
 ```
 
@@ -341,7 +262,6 @@ Shifty can also be used on NodeJS:
 
 ```js
 var Tweenable = require('./shifty');
-//...
 ```
 
 

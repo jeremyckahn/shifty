@@ -1,17 +1,11 @@
-/*! Shifty - v0.8.1 - 2013-01-13 - http://jeremyckahn.github.com/shifty */
+/*! Shifty - v0.8.2 - 2013-02-20 - http://jeremyckahn.github.com/shifty */
 
-;(function(){
+;(function(global){
 
-/*global module:true
- global define: true */
-/**
+/*!
  * Shifty Core
  * By Jeremy Kahn - jeremyckahn@gmail.com
  */
-
-// Should be outside the following closure since it will be used by all
-// modules.  It won't generate any globals after building.
-var Tweenable;
 
 // UglifyJS define hack.  Used for unit testing.
 if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
@@ -20,7 +14,11 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   };
 }
 
-(function (global) {
+if (typeof SHIFTY_DEBUG === 'undefined') {
+  var global = (function(){return this;})();
+}
+
+var Tweenable = (function () {
 
   'use strict';
 
@@ -30,7 +28,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
       ? SHIFTY_DEBUG_NOW
       : function () { return +new Date(); };
 
-  /**
+  /*!
    * Handy shortcut for doing a for-in loop. This is not a "normal" each
    * function, it is optimized for Shifty.  The iterator function only receives
    * the property name, not the value.
@@ -46,7 +44,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     }
   }
 
-  /**
+  /*!
    * Perform a shallow copy of Object properties.
    * @param {Object} targetObject The object to copy into
    * @param {Object} srcObject The object to copy from
@@ -60,7 +58,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     return targetObj;
   }
 
-  /**
+  /*!
    * Copies each property from src onto target, but only if the property to
    * copy to target is undefined.
    * @param {Object} target Missing properties in this Object are filled in
@@ -76,7 +74,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     return target;
   }
 
-  /**
+  /*!
    * Calculates the interpolated tween values of an Object for a given
    * timestamp.
    * @param {Number} forPosition The position to compute the state for.
@@ -106,20 +104,20 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     return currentState;
   }
 
-  /**
+  /*!
    * Tweens a single property.
    * @param {number} start The value that the tween started from.
    * @param {number} end The value that the tween should end at.
    * @param {Function} easingFunc The easing formula to apply to the tween.
    * @param {number} position The normalized position (between 0.0 and 1.0) to
-   *    calculate the midpoint of 'start' and 'end' against.
+   * calculate the midpoint of 'start' and 'end' against.
    * @return {number} The tweened value.
    */
   function tweenProp (start, end, easingFunc, position) {
     return start + (end - start) * easingFunc(position);
   }
 
-  /**
+  /*!
    * Applies a filter to Tweenable instance.
    * @param {Tweenable} tweenable The `Tweenable` instance to call the filter
    * upon.
@@ -136,7 +134,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     });
   }
 
-  /**
+  /*!
    * Handles the update logic for one step of a tween.
    * @param {Tweenable} tweenable
    * @param {number} timestamp
@@ -181,7 +179,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
 
-  /**
+  /*!
    * Creates a fully-usable easing Object from either a string or another
    * easing Object.  If `easing` is an Object, then this function clones it and
    * fills in the missing properties with "linear".
@@ -207,28 +205,21 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
   /**
-   * - fps: This is the framerate (frames per second) at which the tween
-   *   updates.
-   * - easing: The default easing formula to use on a tween.  This can be
+   * Tweenable constructor.  Valid parameters for `options` are:
+   *
+   * - fps (number): This is the framerate (frames per second) at which the tween
+   *   updates (default is 60).
+   * - easing (string): The default easing formula to use on a tween.  This can be
    *   overridden on a per-tween basis via the `tween` function's `easing`
    *   parameter (see below).
-   * - duration: The default duration that a tween lasts for.  This can be
+   * - duration (number): The default duration that a tween lasts for.  This can be
    *   overridden on a per-tween basis via the `tween` function's `duration`
    *   parameter (see below).
-   * - initialState: The state at which the first tween should begin at.
-   * @typedef {{
-   *  fps: number,
-   *  easing: string,
-   *  initialState': Object
-   * }}
+   * - initialState (Object): The state at which the first tween should begin at.
+   * @param {Object} options Configuration Object.
+   * @constructor
    */
-  var tweenableConfig;
-
-  /**
-   * @param {tweenableConfig} options
-   * @return {Object}
-   */
-  Tweenable = function (options) {
+   function Tweenable (options) /*!*/{
     options = options || {};
 
     this.data = {};
@@ -238,49 +229,38 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
 
     // The framerate at which Shifty updates.  This is exposed publicly as
     // `tweenableInst.fps`.
-    this.fps = options.fps || 30;
+    this.fps = options.fps || 60;
 
     // The default easing formula.  This is exposed publicly as
     // `tweenableInst.easing`.
     this._easing = options.easing || DEFAULT_EASING;
 
     return this;
-  };
+  }
 
   /**
-   * - from: Starting position.
-   * - to: Ending position (signature must match `from`).
-   * - duration: How long to animate for.
-   * - easing: Easing formula name to use for tween.
-   * - start: Function to execute when the tween begins (after the first tick).
-   * - step: Function to execute every tick.
-   * - callback: Function to execute upon completion.
-   * @typedef {{
-   *   from: Object,
-   *   to: Object,
-   *   duration: number=,
-   *   easing: string=,
-   *   start: Function=,
-   *   step: Function=,
-   *   callback: Function=
-   * }}
-   */
-  var tweenConfig;
-
-  /**
-   * TODO: Remove support for the shorthand form of calling this method.
+   * Start a tween.  You can supply all of the formal parameters, but the preferred approach is to pass a single configuration Object that looks like so:
    *
-   * Start a tween.
-   * @param {Object|tweenConfig} fromState
-   * @param {Object=} targetState
-   * @param {number=} duration
-   * @param {Function=} callback
-   * @param {Object|string=} easing
-   * @return {Object} The `Tweenable` instance for chaining.
+   * - from (Object): Starting position.  Required.
+   * - to (Object): Ending position (parameters must match `from`).  Required.
+   * - duration (number=): How many milliseconds to animate for.
+   * - start (Function=): Function to execute when the tween begins (after the first tick).
+   * - step (Function=): Function to execute every tick.
+   * - callback (Function=): Function to execute upon completion.
+   * - easing (Object|string=): Easing formula(s) name to use for the tween.
+   *
+   * @param {Object} fromState Starting position OR a configuration Object instead of the rest of the formal parameters.
+   * @param {Object=} targetState Ending position (parameters must match `from`).
+   * @param {number=} duration How many milliseconds to animate for.
+   * @param {Function=} callback Function to execute upon completion.
+   * @param {Object|string=} easing Easing formula(s) name to use for the tween.
+   * @return {Tweenable}
    */
-  Tweenable.prototype.tween =
-      function (fromState, targetState, duration, callback, easing) {
+  Tweenable.prototype.tween = function (
+      fromState, targetState, duration, callback, easing) /*!*/{
 
+    // TODO: Remove support for the shorthand form of calling this method.
+    // TODO: Rename "callback" to something like "finish."
     if (this._isTweening) {
       return;
     }
@@ -334,24 +314,15 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   };
 
   /**
-   * TODO: Remove this method and roll it into Tweenable#tween.
-   *
-   * Convenience method for tweening from the current position.  This method
-   * functions identically to tween (it's just a wrapper function), but
-   * implicitly passes the Tweenable instance's current state as the from
-   * parameter.  This supports the same formats as tween, just omitting the
-   * from paramter in both cases.
-   * @param {Object} target If the other parameters are omitted, this Object
-   *     should contain the longhand parameters outlined in `tween()`.  If at
-   *     least one other formal parameter is specified, then this Object should
-   *     contain the target values to tween to.
-   * @param {Number} duration Duration of the tween, in milliseconds.
-   * @param {Function} callback The callback function to pass along to
-   *     `tween()`.
-   * @param {String|Object} easing The easing formula to use.
-   * @return {Object} The `Tweenable` instance for chaining.
+   * Convenience method for tweening from the current position.  This method functions identically to tween (it's just a wrapper function), but implicitly passes the Tweenable instance's current state as the `from` parameter.  This supports the same formats as tween, just omitting the `from` parameter in both cases.
+   * @param {Object} target If the other parameters are omitted, this Object should contain the longhand parameters outlined in `tween()`.  If at least one other formal parameter is specified, then this Object should contain the target values to tween to.
+   * @param {number=} duration Duration of the tween, in milliseconds.
+   * @param {Function=} callback The callback function to pass along to `tween()`.
+   * @param {string|Object=} easing The easing formula to use.
+   * @return {Tweenable}
    */
-  Tweenable.prototype.to = function to (target, duration, callback, easing) {
+  Tweenable.prototype.to = function (target, duration, callback, easing) /*!*/{
+    // TODO: Remove this method and roll it into Tweenable#tween.
     if (arguments.length === 1) {
       if ('to' in target) {
         // Shorthand notation is being used
@@ -372,7 +343,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
    * Returns the current state.
    * @return {Object}
    */
-  Tweenable.prototype.get = function () {
+  Tweenable.prototype.get = function () /*!*/{
     return shallowCopy({}, this._currentState);
   };
 
@@ -380,19 +351,16 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
    * Force the `Tweenable` instance's current state.
    * @param {Object} state
    */
-  Tweenable.prototype.set = function  (state) {
+  Tweenable.prototype.set = function (state) /*!*/{
     this._currentState = state;
   };
 
   /**
    * Stops and cancels a tween.
-   * @param {Boolean} gotoEnd If false, or omitted, the tween just stops at its
-   * current state, and the callback is not invoked.  If true, the tweened
-   * object's values are instantly set to the target values, and the `callback`
-   * is invoked.
+   * @param {boolean=} gotoEnd If false or omitted, the tween just stops at its current state, and the callback is not invoked.  If true, the tweened object's values are instantly set to the target values, and the `callback` is invoked.
    * @return {Tweenable}
    */
-  Tweenable.prototype.stop = function (gotoEnd) {
+  Tweenable.prototype.stop = function (gotoEnd) /*!*/{
     clearTimeout(this._loopId);
     this._isTweening = false;
 
@@ -416,7 +384,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
    * Pauses a tween.
    * @return {Tweenable}
    */
-  Tweenable.prototype.pause = function () {
+  Tweenable.prototype.pause = function () /*!*/{
     clearTimeout(this._loopId);
     this._pausedAtTime = now();
     this._isPaused = true;
@@ -424,11 +392,10 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   };
 
   /**
-   * Resumes a paused tween.  A tween must be paused before is can be
-   * resumed.
+   * Resumes a paused tween.  A tween must be paused before is can be resumed.
    * @return {Tweenable}
    */
-  Tweenable.prototype.resume = function () {
+  Tweenable.prototype.resume = function () /*!*/{
     if (this._isPaused) {
       this._timestamp += now() - this._pausedAtTime;
     }
@@ -439,7 +406,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     return this;
   };
 
-  /**
+  /*!
    * Filters are used for transforming the properties of a tween at various
    * points in a Tweenable's lifecycle.  Please consult the README for more
    * info on this.
@@ -457,16 +424,16 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     ,'composeEasingObject': composeEasingObject
   });
 
-  /**
-   * This object contains all of the tweens available to Shifty.  It is
-   * extendable - simply attach properties to the Tweenable.prototype.formula
-   * Object following the same format at linear.
+  /*!
+   * This object contains all of the tweens available to Shifty.  It is extendable - simply attach properties to the Tweenable.prototype.formula Object following the same format at linear.
    */
-  var formula = Tweenable.prototype.formula = {
+  Tweenable.prototype.formula = {
     linear: function (pos) {
       return pos;
     }
   };
+
+  var formula = Tweenable.prototype.formula;
 
   // A hook used for unit testing.
   if (typeof SHIFTY_DEBUG_NOW === 'function') {
@@ -484,18 +451,16 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
     global.Tweenable = Tweenable;
   }
 
-} (this));
+  return Tweenable;
 
-/**
- * Shifty Easing Formulas
- * Adapted for Shifty by Jeremy Kahn - jeremyckahn@gmail.com
+} ());
+
+/*!
+ * Shifty Easing Formulas:
  *
- * All equations are adapted from Thomas Fuchs' Scripty2:
- * https://raw.github.com/madrobby/scripty2/master/src/effects/transitions/penner.js
- * Based on Easing Equations (c) 2003 Robert Penner, all rights reserved.
- * (http://www.robertpenner.com/). This work is subject to the terms in
- * http://www.robertpenner.com/easing_terms_of_use.html
+ * All equations are adapted from Thomas Fuchs' [Scripty2](https://raw.github.com/madrobby/scripty2/master/src/effects/transitions/penner.js).
  *
+ * Based on Easing Equations (c) 2003 [Robert Penner](http://www.robertpenner.com/), all rights reserved. This work is [subject to terms](http://www.robertpenner.com/easing_terms_of_use.html).
  */
 
 ;(function () {
@@ -681,9 +646,8 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
 
 }());
 
-/**
- * Shifty Interpolate Extension
- * By Jeremy Kahn - jeremyckahn@gmail.com
+/*!
+ * Shifty Interpolate Extension:
  *
  * Enables Shifty to compute single midpoints of a tween.
  */
@@ -710,8 +674,35 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
 
-  // This is the static utility version of the function.
-  Tweenable.interpolate = function (from, targetState, position, easing) {
+ /**
+  * Compute the midpoint of two Objects.  This method effectively calculates a specific frame of animation that Tweenable#tween does over a sequence.
+  *
+  * Example:
+  *
+  * ```
+  *  var interpolatedValues = Tweenable.interpolate({
+  *    width: '100px',
+  *    opacity: 0,
+  *    color: '#fff'
+  *  }, {
+  *    width: '200px',
+  *    opacity: 1,
+  *    color: '#000'
+  *  }, 0.5);
+  *
+  *  console.log(interpolatedValues);
+  *  // {opacity: 0.5, width: "150px", color: "rgb(127,127,127)"}
+  * ```
+  *
+  * @param {Object} from The starting values to tween from.
+  * @param {Object} targetState The ending values to tween to.
+  * @param {number} position The normalized position value (between 0.0 and 1.0) to interpolate the values between `from` and `to` against.
+  * @param {string|Object} easing The easing method to calculate the interpolation against.  You can use any easing method attached to `Tweenable.prototype.formula`.  If omitted, this defaults to "linear".
+  * @return {Object}
+  */
+  Tweenable.interpolate = function (from, targetState, position, easing) /*!*/{
+   // TODO: Remove shorthand version of this, only support configuration Object
+   // API.
     var current
         ,interpolatedValues
         ,mockTweenable;
@@ -744,8 +735,38 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   };
 
 
-  // This is the inheritable instance-method version of the function.
-  Tweenable.prototype.interpolate = function (targetState, position, easing) {
+ /**
+  * Prototype version of `Tweenable.interpolate`.  Works the same way, but you don't need to supply a `from` parameter - that is taken from the Tweenable instance.  The interpolated value is also set as the Tweenable's current state.
+  *
+  * Example:
+  *
+  * ```
+  * var tweenable = new Tweenable();
+  *
+  * // Where to start from.  This also sets the current state of the instance.
+  * tweenable.set({
+  *   'top': '100px',
+  *   'left': 0,
+  *   'color': '#000'
+  * });
+  *
+  * // Where to end up
+  * var endObj = {
+  *   'top': '200px',
+  *   'left': 50,
+  *   'color': '#fff'
+  * };
+  *
+  * tweenable.interpolate(endObj, 0.5, 'linear');
+  * // {left: 25, top: "150px", color: "rgb(127,127,127)"}
+  * ```
+  * @param {Object} targetState The ending values to tween to.
+  * @param {number} position The normalized position value (between 0.0 and 1.0) to interpolate the values between `from` and `to` against.
+  * @param {string|Object} easing The easing method to calculate the interpolation against.  You can use any easing method attached to `Tweenable.prototype.formula`.  If omitted, this defaults to "linear".
+  * @return {Object}
+  */
+  Tweenable.prototype.interpolate = function (
+      targetState, position, easing) /*!*/{
     var interpolatedValues;
 
     interpolatedValues =
@@ -758,14 +779,136 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
 }());
 
 /**
- * Shifty Token Extension
- * By Jeremy Kahn - jeremyckahn@gmail.com
+ * Shifty Token Extension:
  *
- * Adds string support to Shifty.
+ * Adds string interpolation support to Shifty.
+ *
+ * The Token extension allows Shifty to tween numbers inside of strings.  This is nice because it allows you to animate CSS properties.  For example, you can do this:
+ *
+ * ```
+ * var tweenable = new Tweenable();
+ * tweenable.tween({
+ *   from: { transform: 'translateX(45px)'},
+ *   to: { transform: 'translateX(90xp)'},
+ *   duration: 1000
+ * });
+ * ```
+ *
+ * ...And `translateX(45)` will be tweened to `translateX(90)`.  To demonstrate...
+ * ```
+ * var tweenable = new Tweenable();
+ * tweenable.tween({
+ *   from: { transform: 'translateX(45px)'},
+ *   to: { transform: 'translateX(90px)'},
+ *   duration: 100,
+ *   step: function () {
+ *     console.log(this.transform);
+ *   }
+ * });
+ * ```
+ *
+ * Will log something like this in the console...
+ * ```
+ * translateX(60.3px)
+ * translateX(76.05px)
+ * translateX(90px)
+ * ```
+ *
+ * Another use for this is animating colors...
+ * ```
+ * var tweenable = new Tweenable();
+ * tweenable.tween({
+ *   from: { color: 'rgb(0,255,0)'},
+ *   to: { color: 'rgb(255,0,255)'},
+ *   duration: 100,
+ *   step: function () {
+ *     console.log(this.color);
+ *   }
+ * });
+ * ```
+ *
+ * Logs something like...
+ * ```
+ * rgb(84,170,84)
+ * rgb(170,84,170)
+ * rgb(255,0,255)
+ * ```
+ *
+ * This extension also supports hex colors, in both long (`#ff00ff`) and short (`#f0f`) forms.  Note that the extension converts hex input to the equivalent RGB output values.  This is done to optimize for performance.
+ * ```
+ * var tweenable = new Tweenable();
+ * tweenable.tween({
+ *   from: { color: '#0f0'},
+ *   to: { color: '#f0f'},
+ *   duration: 100,
+ *   step: function () {
+ *     console.log(this.color);
+ *   }
+ * });
+ * ```
+ *
+ * Yields...
+ * ```
+ * rgb(84,170,84)
+ * rgb(170,84,170)
+ * rgb(255,0,255)
+ * ```
+ *
+ * Same as before.
+ *
+ *
+ * Easing support:
+ *
+ * Easing works somewhat differently in the Token extension.  This is because some CSS properties have multiple values in them, and you might want to have each value tween with an independent easing formula.  A basic example...
+ * ```
+ * var tweenable = new Tweenable();
+ * tweenable.tween({
+ *   from: { transform: 'translateX(0px) translateY(0px)'},
+ *   to: { transform:   'translateX(100px) translateY(100px)'},
+ *   duration: 100,
+ *   easing: { transform: 'easeInQuad' },
+ *   step: function () {
+ *     console.log(this.transform);
+ *   }
+ * });
+ * ```
+ *
+ * Gives results like this...
+ * ```
+ * translateX(11.560000000000002px) translateY(11.560000000000002px)
+ * translateX(46.24000000000001px) translateY(46.24000000000001px)
+ * translateX(100px) translateY(100px)
+ * ```
+ *
+ * Note that the values for `translateX` and `translateY` are always the same for each step of the tween, because they have the same start and end points and both use the same easing formula.  But we can also do this...
+ * ```
+ * var tweenable = new Tweenable();
+ * tweenable.tween({
+ *   from: { transform: 'translateX(0px) translateY(0px)'},
+ *   to: { transform:   'translateX(100px) translateY(100px)'},
+ *   duration: 100,
+ *   easing: { transform: 'easeInQuad bounce' },
+ *   step: function () {
+ *     console.log(this.transform);
+ *   }
+ * });
+ * ```
+ *
+ * And get an output like this...
+ * ```
+ * translateX(10.89px) translateY(82.355625px)
+ * translateX(44.89000000000001px) translateY(86.73062500000002px)
+ * translateX(100px) translateY(100px)
+ * ```
+ *
+ * `translateX` and `translateY` are not in sync anymore, because we specified the `easeInQuad` formula for `translateX` and `bounce` for `translateY`.  Mixing and matching easing formulae can make for some interesting curves in your animations.
+ *
+ * The order of the space-separated easing formulas correspond the token values they apply to.  If there are more token values than easing formulae, the last easing formula listed is used.
  */
+ function token () {}/*!*/
 ;(function (Tweenable) {
 
-  /**
+  /*!
    * @typedef {{
    *   formatString: string
    *   chunkNames: Array.<string>
@@ -789,7 +932,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
 
   // HELPERS
 
-  /**
+  /*!
    * @param {Array.number} rawValues
    * @param {string} prefix
    *
@@ -807,7 +950,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
 
-  /**
+  /*!
    * @param {string} formattedString
    *
    * @return {string}
@@ -823,7 +966,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
 
-  /**
+  /*!
    * Convert all hex color values within a string to an rgb string.
    *
    * @param {Object} stateObject
@@ -841,7 +984,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
 
-  /**
+  /*!
    * @param {string} str
    *
    * @return {string}
@@ -851,7 +994,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
 
-  /**
+  /*!
    * @param {string} hexString
    *
    * @return {string}
@@ -862,7 +1005,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
 
-  /**
+  /*!
    * Convert a hexadecimal string to an array with three items, one each for
    * the red, blue, and green decimal values.
    *
@@ -887,7 +1030,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
 
-  /**
+  /*!
    * Convert a base-16 number to base-10.
    *
    * @param {Number|String} hex The value to convert
@@ -899,7 +1042,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
 
-  /**
+  /*!
    * Runs a filter operation on all chunks of a string that match a RegExp
    *
    * @param {RegExp} pattern
@@ -927,7 +1070,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
 
-  /**
+  /*!
    * Check for floating point values within rgb strings and rounds them.
    *
    * @param {string} formattedString
@@ -939,7 +1082,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
 
-  /**
+  /*!
    * @param {string} rgbChunk
    *
    * @return {string}
@@ -959,7 +1102,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
 
-  /**
+  /*!
    * @param {Object} stateObject
    *
    * @return {Object} An Object of formatManifests that correspond to
@@ -985,7 +1128,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
 
-  /**
+  /*!
    * @param {Object} stateObject
    * @param {Object} formatManifests
    */
@@ -1004,7 +1147,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
 
-  /**
+  /*!
    * @param {Object} stateObject
    * @param {Object} formatManifests
    */
@@ -1022,7 +1165,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
 
-  /**
+  /*!
    * @param {Object} stateObject
    * @param {Array.<string>} chunkNames
    *
@@ -1042,7 +1185,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
 
-  /**
+  /*!
    * @param {Object} stateObject
    * @param {Array.<string>} chunkNames
    *
@@ -1060,7 +1203,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
 
-  /**
+  /*!
    * @param {string} formatString
    * @param {Array.<number>} rawValues
    *
@@ -1079,7 +1222,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
 
-  /**
+  /*!
    * Note: It's the duty of the caller to convert the Array elements of the
    * return value into numbers.  This is a performance optimization.
    *
@@ -1092,7 +1235,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
 
-  /**
+  /*!
    * @param {Object} easingObject
    * @param {Object} tokenData
    */
@@ -1113,7 +1256,7 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   }
 
 
-  /**
+  /*!
    * @param {Object} easingObject
    * @param {Object} tokenData
    */
@@ -1160,4 +1303,4 @@ if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
 
 } (Tweenable));
 
-}());
+}(this));

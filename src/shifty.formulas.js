@@ -1,13 +1,9 @@
-/**
- * Shifty Easing Formulas
- * Adapted for Shifty by Jeremy Kahn - jeremyckahn@gmail.com
+/*!
+ * Shifty Easing Formulas:
  *
- * All equations are adapted from Thomas Fuchs' Scripty2:
- * https://raw.github.com/madrobby/scripty2/master/src/effects/transitions/penner.js
- * Based on Easing Equations (c) 2003 Robert Penner, all rights reserved.
- * (http://www.robertpenner.com/). This work is subject to the terms in
- * http://www.robertpenner.com/easing_terms_of_use.html
+ * All equations are adapted from Thomas Fuchs' [Scripty2](https://raw.github.com/madrobby/scripty2/master/src/effects/transitions/penner.js).
  *
+ * Based on Easing Equations (c) 2003 [Robert Penner](http://www.robertpenner.com/), all rights reserved. This work is [subject to terms](http://www.robertpenner.com/easing_terms_of_use.html).
  */
 
 ;(function () {

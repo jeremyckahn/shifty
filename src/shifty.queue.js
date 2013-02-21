@@ -1,8 +1,7 @@
 /**
  * Shifty Queue Extension
- * By Jeremy Kahn - jeremyckahn@gmail.com
  *
- * Enables Shifty tweens to be sequentially queueable.
+ * Sequentially queues tweens.
  */
 ;(function () {
 
@@ -27,7 +26,7 @@
 
   function tweenInit (context, from, to, duration, callback, easing) {
     // Duck typing!  This method infers some info from the parameters above to determine which method to call,
-    // and what paramters to pass to it.
+    // and what parameters to pass to it.
     return function () {
       if (to) {
         // Shorthand notation was used, call `tween`
@@ -48,6 +47,15 @@
     };
   }
 
+  /**
+   * Add a tween to the queue.
+   * @param {Object|tweenConfig} from Starting position OR a `tweenConfig` Object instead of the rest of the formal parameters.
+   * @param {Object=} to Ending position (parameters must match `from`).
+   * @param {number=} duration How many milliseconds to animate for.
+   * @param {Function=} callback Function to execute upon completion.
+   * @param {Object|string=} easing Easing formula(s) name to use for the tween.
+   * @return {Tweenable}
+   */
   Tweenable.prototype.queue = function (from, to, duration, callback, easing) {
     var wrappedCallback;
 
@@ -63,6 +71,10 @@
     return this;
   };
 
+  /**
+   * Starts a sequence of tweens.
+   * @return {Tweenable}
+   */
   Tweenable.prototype.queueStart = function () {
     if (!this._tweenQueue.running && this._tweenQueue.length > 0) {
       this._tweenQueue[0]();
@@ -72,21 +84,37 @@
     return this;
   };
 
+  /**
+   * Removes the next queued tween to be executed.
+   * @return {Tweenable}
+   */
   Tweenable.prototype.queueShift = function () {
     this._tweenQueue.shift();
     return this;
   };
 
+  /**
+   * Removes the tween at the end of the queue.
+   * @return {Tweenable}
+   */
   Tweenable.prototype.queuePop = function () {
     this._tweenQueue.pop();
     return this;
   };
 
+  /**
+   * Removes all tweens in the queue.
+   * @return {Tweenable}
+   */
   Tweenable.prototype.queueEmpty = function () {
     this._tweenQueue.length = 0;
     return this;
   };
 
+  /**
+   * Returns the number of tweens queued up.
+   * @return {number}
+   */
   Tweenable.prototype.queueLength = function () {
     return this._tweenQueue.length;
   };

@@ -1,7 +1,9 @@
 {
   "predef": {
     "SHIFTY_DEBUG_NOW": true,
-    "Tweenable": true
+    "Tweenable": true,
+    "module": true,
+    "define": true
   },
 
   "asi": false,

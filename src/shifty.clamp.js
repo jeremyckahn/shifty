@@ -1,19 +1,37 @@
 /*global setTimeout:true, clearTimeout:true */
 
 /**
-Shifty Clamp Extension
-By Jeremy Kahn - jeremyckahn@gmail.com
-  v0.1.0
-
-Dependencies: shifty.core.js
-
-Shifty and all official extensions are freely available under an MIT license.
-For instructions on how to use Shifty and this extension, please consult the manual: https://github.com/jeremyckahn/shifty/blob/master/README.md
-For instructions on how to use this extension, please see: https://github.com/jeremyckahn/shifty/blob/master/doc/shifty.queue.md
-
-MIT Lincense.  This code free to use, modify, distribute and enjoy.
-
-*/
+ * Shifty Clamp Extension
+ *
+ * Use case:
+ *
+ * Sometimes, when generating a tween dynamically, you want to "clamp" the outputted values, or restrict them to be within a certain range.
+ *
+ * Example:
+ *
+ * ````javascript
+ * var myTweenable = new Tweenable();
+ *
+ * myTweenable.setClamp('test', 0, 1);
+ *
+ * myTweenable.tween({
+ *    from: {
+ *     'test': -3
+ *    },
+ *    to: {
+ *      'test': 5
+ *    },
+ *    'duration': 1000,
+ *    'step': function () {
+ *      console.log(this.test);
+ *    },
+ *    'callback': function () {
+ *      console.log('Done!  Final value: ' + this.test);
+ *      console.log(myTweenable.removeClamp('test'));
+ *    }
+ * });
+ * ````
+ */
 (function () {
 
   var staticClamp;
@@ -38,21 +56,36 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     });
   }
 
-  // Static versions of the clamp methods.  These set clamps for all tweens made by `Tweenable`.
-  // If an instance of `Tweenable` has a clamp on a property, and different clamp has been set
-  // statically on the same propety, only the instance clamp is respected.
-  staticClamp = Tweenable.setClamp = function (propertyName, bottomRange, topRange) {
+  /**
+   * Static method.  Sets clamps for all tweens made by `Tweenable`.  If an instance of `Tweenable` has a clamp on a property, and different clamp has been set statically on the same propety, only the instance clamp is respected.
+   * @param {string} propertyName The name of the tweened property to clamp.
+   * @param {number} bottomRange The smallest allowed value for propertyName.
+   * @param {number} topRange The largest allowed value for propertyName.
+   */
+  Tweenable.setClamp = function (propertyName, bottomRange, topRange) {
     staticClamp.clamps[propertyName] = {
       'bottom': bottomRange
       ,'top': topRange
     };
   };
 
+  staticClamp = Tweenable.setClamp;
+
+  /**
+   * Static method.  Removes a property clamp.
+   * @param {string} propertyName The property to remove the clamp for.
+   * @return {boolean} Whether or not the operation succeeded.
+   */
   Tweenable.removeClamp = function (propertyName) {
     return delete staticClamp.clamps[propertyName];
   };
 
-  // This is the inheritable instance-method version of the function.
+  /**
+   * Prototype version of `Tweenable.setClamp`.
+   * @param {string} propertyName The name of the tweened property to clamp.
+   * @param {number} bottomRange The smallest allowed value for propertyName.
+   * @param {number} topRange The largest allowed value for propertyName.
+   */
   Tweenable.prototype.setClamp = function (propertyName, bottomRange, topRange) {
     if (!this._tweenParams.data.clamps) {
       this._tweenParams.data.clamps = {};
@@ -64,13 +97,17 @@ MIT Lincense.  This code free to use, modify, distribute and enjoy.
     };
   };
 
+  /**
+   * Protoype version of `Tweenable.removeClamp`.
+   * @param {string} propertyName The property to remove the clamp for.
+   * @return {boolean} Whether or not the operation succeeded.
+   */
   Tweenable.prototype.removeClamp = function (propertyName) {
     return delete this._tweenParams.data.clamps[propertyName];
   };
 
   Tweenable.prototype.filter.clamp = {
     'afterTween': applyClampsToState
-
     ,'afterTweenEnd': applyClampsToState
   };
 
