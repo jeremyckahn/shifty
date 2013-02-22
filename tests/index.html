@@ -141,6 +141,43 @@
     });
 
 
+    module('interpolate');
+
+    test('Static - Interpolate can compute the midpoint of two numbers',
+        function () {
+
+      var interpolated = Tweenable.interpolate({
+        from: { x: 0 },
+        to: { x: 10 },
+        position: .5
+      });
+
+      equals(5, interpolated.x, 'Midpoint was computed');
+    });
+
+    test('Prototype - Interpolate can compute the midpoint of two numbers',
+        function () {
+
+      var tweenable = new Tweenable({initialState: { x: 10 }});
+      var interpolated = tweenable.interpolate({ x: 20 }, .5);
+
+      equals(15, interpolated.x, 'Midpoint was computed');
+    });
+
+    test('Interpolate can compute the midpoint of two token strings',
+        function () {
+
+      var interpolated = Tweenable.interpolate({
+        from: { color: '#000' },
+        to: { color: '#fff' },
+        position: .5
+      });
+
+      equals('rgb(127,127,127)', interpolated.color,
+          'Midpoint color was computed');
+    });
+
+
     module('Tween queues');
 
     test('Queued tweens all run', function () {
