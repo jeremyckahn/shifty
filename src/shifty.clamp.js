@@ -46,7 +46,7 @@
     // Combine both the static clamps and instance clamps.  Instance clamps trump Static clamps, if there is a conflict.
     // The first part of the check is ugly, because this may have been called statically.
     clamps = Tweenable.defaults(
-      ((this._tweenParams && this._tweenParams.data.clamps) || {}), staticClamp.clamps);
+      this.data.clamps || {}, staticClamp.clamps);
 
     Tweenable.each(clamps, function (prop) {
       if (state.hasOwnProperty(prop)) {
@@ -87,11 +87,11 @@
    * @param {number} topRange The largest allowed value for propertyName.
    */
   Tweenable.prototype.setClamp = function (propertyName, bottomRange, topRange) {
-    if (!this._tweenParams.data.clamps) {
-      this._tweenParams.data.clamps = {};
+    if (!this.data.clamps) {
+      this.data.clamps = {};
     }
 
-    this._tweenParams.data.clamps[propertyName] = {
+    this.data.clamps[propertyName] = {
       'bottom': bottomRange
       ,'top': topRange
     };
@@ -103,7 +103,7 @@
    * @return {boolean} Whether or not the operation succeeded.
    */
   Tweenable.prototype.removeClamp = function (propertyName) {
-    return delete this._tweenParams.data.clamps[propertyName];
+    return delete this.data.clamps[propertyName];
   };
 
   Tweenable.prototype.filter.clamp = {

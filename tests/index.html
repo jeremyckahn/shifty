@@ -33,7 +33,6 @@
     var log = console.log;
 
     function forceInternalUpdate (tweenable) {
-      var tweenParams = tweenable._tweenParams;
       timeoutHandler(tweenable, tweenable._timestamp, tweenable._duration,
       tweenable._currentState, tweenable._originalState,
       tweenable._targetState, tweenable._easing, tweenable._step);
