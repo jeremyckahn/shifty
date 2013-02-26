@@ -216,7 +216,7 @@ the build system. It also requires
 documentation.  Install the dependencies via npm like so:
 
 ````
-$: npm install -g grunt-cli dox-foundation
+$: npm install -g dox-foundation && npm install
 ````
 
 Once those are installed, do this at the command line to build the project:
