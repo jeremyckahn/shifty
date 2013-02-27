@@ -1,16 +1,20 @@
 /*global window:true, setTimeout:true */
 (function (global) {
   var CYCLE_SPEED = 1500
-    ,HELIX_WIDTH = 300
-    ,SEGMENT_BUFFER = 0.2
-    ,startTime
-    ,pausedAtTime
-    ,segmentContainer
-    ,segments
-    ,stepStateLists
-    ,updateHandle
-    ,isPlaying
-    ,i;
+      ,HELIX_WIDTH = 300
+      ,SEGMENT_BUFFER = 0.2
+      ,btnHelixStart
+      ,helixIsInitted
+      ,helixIsRunning
+      ,startTime
+      ,pausedAtTime
+      ,segmentContainer
+      ,segments
+      ,stepStateLists
+      ,updateHandle
+      ,isPlaying
+      ,shiftyDemo
+      ,i;
 
   function now () {
     return +(new Date());
@@ -118,11 +122,32 @@
     window.play = play;
   }
 
-  global.shiftyDemo = global.shiftyDemo || {};
+  function toggleHelix () {
 
-  Tweenable.shallowCopy(global.shiftyDemo, {
-            'helixInit': init
-            ,'helixPlay': play
-            ,'helixPause': pause
-        });
+    if (!helixIsInitted) {
+      helixIsInitted = true;
+      shiftyDemo.helixInit('helix-container');
+    }
+
+    if (helixIsRunning) {
+      shiftyDemo.helixPause();
+      btnHelixStart.innerHTML = 'Go go helix!';
+    } else {
+      shiftyDemo.helixPlay();
+      btnHelixStart.innerHTML = 'Stop stop helix!';
+    }
+
+    helixIsRunning = !helixIsRunning;
+  }
+
+  shiftyDemo = {
+    'helixInit': init
+    ,'helixPlay': play
+    ,'helixPause': pause
+  };
+
+  btnHelixStart = document.getElementById('btnHelixStart');
+  btnHelixStart.addEventListener('click', toggleHelix, true);
+  helixIsRunning = false;
+  helixIsInitted = false;
 } (this));
