@@ -70,8 +70,10 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('default', ['jshint', 'qunit']);
-  grunt.registerTask('build', ['concat:forRekapi', 'uglify:standardTarget', 'doc']);
-  grunt.registerTask('build-minimal', ['concat:minimal', 'uglify:standardTarget', 'doc']);
+  grunt.registerTask('build',
+    ['concat:forRekapi', 'uglify:standardTarget', 'doc']);
+  grunt.registerTask('build-minimal',
+    ['concat:minimal', 'uglify:standardTarget', 'doc']);
 
   grunt.registerTask('doc', 'Generate API documentation.', function () {
     var fs = require('fs');
@@ -83,7 +85,9 @@ module.exports = function(grunt) {
     }
 
     var child = exec(
-      'dox-foundation -t Shifty < dist/shifty.js > ' + exportToPath + 'index.html',
+      'dox-foundation -t Shifty < dist/shifty.js > '
+        + exportToPath + 'index.html',
+
       function (error, stdout, stderr) {
         console.log('stdout: ' + stdout);
         console.log('stderr: ' + stderr);
