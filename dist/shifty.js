@@ -1,6 +1,9 @@
 /*! Shifty - v0.8.4 - 2013-03-02 - http://jeremyckahn.github.com/shifty */
 ;(function(global){
 
+const SHIFTY_DEBUG = false;
+const SHIFTY_DEBUG_NOW = false;
+
 /*!
  * Shifty Core
  * By Jeremy Kahn - jeremyckahn@gmail.com

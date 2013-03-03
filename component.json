@@ -1,5 +1,5 @@
 {
   "name": "shifty",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "main": "./dist/shifty.min.js"
 }

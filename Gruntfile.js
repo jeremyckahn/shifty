@@ -25,18 +25,12 @@ module.exports = function(grunt) {
       },
       options: {
         banner: banner
-      },
-      mangle: {
-        defines: {
-          SHIFTY_DEBUG: ['name', 'false'],
-          SHIFTY_DEBUG_NOW: ['name', 'false']
-        }
       }
     },
     jshint: {
       all_files: [
         'grunt.js',
-        'src/shifty.!(intro|outro)*.js'
+        'src/shifty.!(intro|outro|const)*.js'
       ],
       options: {
         jshintrc: '.jshintrc'
@@ -58,6 +52,7 @@ module.exports = function(grunt) {
       forRekapi: {
         src: [
           'src/shifty.intro.js',
+          'src/shifty.const.js',
           'src/shifty.core.js',
           'src/shifty.formulas.js',
           'src/shifty.interpolate.js',
