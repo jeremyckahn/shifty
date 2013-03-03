@@ -2,24 +2,30 @@
 
 module.exports = function(grunt) {
 
-  grunt.initConfig({
-    pkg: '<json:package.json>',
-    meta: {
-      banner: [
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-qunit');
+  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+
+  var banner = [
         '/*! <%= pkg.name %> - v<%= pkg.version %> - ',
-        '<%= grunt.template.today("yyyy-mm-dd") %> - <%= pkg.homepage %> */'
-      ].join('')
-    },
+        '<%= grunt.template.today("yyyy-mm-dd") %> - <%= pkg.homepage %> */\n'
+      ].join('');
+
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
     qunit: {
       files: ['tests/*.html']
     },
-    lint: {
-      files: [
-        'grunt.js',
-        'src/shifty.!(intro|outro)*.js'
-      ]
-    },
     uglify: {
+      standardTarget: {
+        files: {
+          'dist/shifty.min.js': ['dist/shifty.js']
+        }
+      },
+      options: {
+        banner: banner
+      },
       mangle: {
         defines: {
           SHIFTY_DEBUG: ['name', 'false'],
@@ -28,37 +34,20 @@ module.exports = function(grunt) {
       }
     },
     jshint: {
+      all_files: [
+        'grunt.js',
+        'src/shifty.!(intro|outro)*.js'
+      ],
       options: {
-          asi: false,
-          boss: true,
-          browser: true,
-          curly: true,
-          eqeqeq: true,
-          eqnull: true,
-          immed: true,
-          lastsemic: true,
-          latedef: true,
-          laxbreak: true,
-          laxcomma: true,
-          newcap: true,
-          noarg: true,
-          nomen: false,
-          plusplus: false,
-          sub: true,
-          undef: true,
-          white: false
-      },
-      globals: {
-        SHIFTY_DEBUG_NOW: true,
-        Tweenable: true,
-        module: true,
-        define: true
+        jshintrc: '.jshintrc'
       }
     },
     concat: {
+      options: {
+        banner: banner
+      },
       minimal: {
         src: [
-          '<banner>',
           'src/shifty.intro.js',
           'src/shifty.core.js',
           'src/shifty.outro.js'
@@ -68,7 +57,6 @@ module.exports = function(grunt) {
       // Includes extensions needed by Rekapi (see: rekapi.com)
       forRekapi: {
         src: [
-          '<banner>',
           'src/shifty.intro.js',
           'src/shifty.core.js',
           'src/shifty.formulas.js',
@@ -79,17 +67,11 @@ module.exports = function(grunt) {
         dest: 'dist/shifty.js'
       }
     },
-    min: {
-      dist: {
-        src: ['<banner>', 'dist/shifty.js'],
-        dest: 'dist/shifty.min.js'
-      }
-    }
   });
 
-  grunt.registerTask('default', 'lint qunit');
-  grunt.registerTask('build', 'concat:forRekapi min doc');
-  grunt.registerTask('build-minimal', 'concat:minimal min doc');
+  grunt.registerTask('default', ['jshint', 'qunit']);
+  grunt.registerTask('build', ['concat:forRekapi', 'uglify:standardTarget', 'doc']);
+  grunt.registerTask('build-minimal', ['concat:minimal', 'uglify:standardTarget', 'doc']);
 
   grunt.registerTask('doc', 'Generate API documentation.', function () {
     var fs = require('fs');
