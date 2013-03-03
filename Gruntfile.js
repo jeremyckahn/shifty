@@ -20,7 +20,9 @@ module.exports = function(grunt) {
     uglify: {
       standardTarget: {
         files: {
-          'dist/shifty.min.js': ['dist/shifty.js']
+          'dist/shifty.min.js': [
+            'dist/shifty.js'
+          ]
         }
       },
       options: {
@@ -43,6 +45,15 @@ module.exports = function(grunt) {
       minimal: {
         src: [
           'src/shifty.intro.js',
+          'src/shifty.const.js',
+          'src/shifty.core.js',
+          'src/shifty.outro.js'
+        ],
+        dest: 'dist/shifty.js'
+      },
+      minimalDebug: {
+        src: [
+          'src/shifty.intro.js',
           'src/shifty.core.js',
           'src/shifty.outro.js'
         ],
@@ -60,15 +71,26 @@ module.exports = function(grunt) {
           'src/shifty.outro.js'
         ],
         dest: 'dist/shifty.js'
+      },
+      forRekapiDebug: {
+        src: [
+          'src/shifty.intro.js',
+          'src/shifty.core.js',
+          'src/shifty.formulas.js',
+          'src/shifty.interpolate.js',
+          'src/shifty.token.js',
+          'src/shifty.outro.js'
+        ],
+        dest: 'dist/shifty.js'
       }
-    },
+    }
   });
 
   grunt.registerTask('default', ['jshint', 'qunit']);
   grunt.registerTask('build',
-    ['concat:forRekapi', 'uglify:standardTarget', 'doc']);
+    ['concat:forRekapi', 'uglify:standardTarget', 'concat:forRekapiDebug', 'doc']);
   grunt.registerTask('build-minimal',
-    ['concat:minimal', 'uglify:standardTarget', 'doc']);
+    ['concat:minimal', 'uglify:standardTarget', 'concat:minimalDebug', 'doc']);
 
   grunt.registerTask('doc', 'Generate API documentation.', function () {
     var fs = require('fs');
