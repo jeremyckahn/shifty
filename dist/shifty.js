@@ -1,4 +1,4 @@
-/*! Shifty - v0.8.6 - 2013-03-02 - http://jeremyckahn.github.com/shifty */
+/*! Shifty - v0.8.6 - 2013-04-06 - http://jeremyckahn.github.com/shifty */
 ;(function(global){
 
 /*!
@@ -904,7 +904,7 @@ var Tweenable = (function () {
  *
  * The order of the space-separated easing formulas correspond the token values they apply to.  If there are more token values than easing formulae, the last easing formula listed is used.
  */
- function token () {}/*!*/
+ /*!*/
 ;(function (Tweenable) {
 
   /*!

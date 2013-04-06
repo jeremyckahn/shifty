@@ -6,6 +6,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-dox');
 
   var banner = [
         '/*! <%= pkg.name %> - v<%= pkg.version %> - ',
@@ -83,36 +84,26 @@ module.exports = function(grunt) {
         ],
         dest: 'dist/shifty.js'
       }
+    },
+    dox: {
+      options: {
+        title: 'Shifty'
+      },
+      files: {
+        src: [
+          'src/shifty.core.js',
+          'src/shifty.interpolate.js',
+          'src/shifty.token.js'
+        ],
+        dest: 'dist/doc'
+      }
     }
   });
 
   grunt.registerTask('default', ['jshint', 'qunit']);
   grunt.registerTask('build',
-    ['concat:forRekapi', 'uglify:standardTarget', 'concat:forRekapiDebug', 'doc']);
+    ['concat:forRekapi', 'uglify:standardTarget', 'concat:forRekapiDebug', 'dox']);
   grunt.registerTask('build-minimal',
-    ['concat:minimal', 'uglify:standardTarget', 'concat:minimalDebug', 'doc']);
-
-  grunt.registerTask('doc', 'Generate API documentation.', function () {
-    var fs = require('fs');
-    var exec = require('child_process').exec;
-    var exportToPath = 'dist/doc/';
-
-    if (!fs.existsSync(exportToPath)) {
-      fs.mkdirSync(exportToPath);
-    }
-
-    var child = exec(
-      'dox-foundation -t Shifty < dist/shifty.js > '
-        + exportToPath + 'index.html',
-
-      function (error, stdout, stderr) {
-        console.log('stdout: ' + stdout);
-        console.log('stderr: ' + stderr);
-        if (error !== null) {
-          console.log('exec error: ' + error);
-        }
-    });
-
-  });
+    ['concat:minimal', 'uglify:standardTarget', 'concat:minimalDebug', 'dox']);
 
 };

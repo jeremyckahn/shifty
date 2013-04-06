@@ -17,7 +17,46 @@ code {
   div.description {margin: 14px 0; padding-top: 14px; border-top:1px solid #eee; border-bottom:1px solid #eee; }
   .tags {}
     .tags .types {color:#666}
-.ctx-type { float:right; margin-top:8px }</style></head><body><div class="row"><div class="twelve columns"><h1 class="pagetitle">Shifty</h1></div></div><div class="row"><div id="nav" class="three columns"><ul class="side-nav"><li><a href="../../dist/doc/src/shifty.core.js.html">src/shifty.core.js</a><ul><li><a href="../../dist/doc/src/shifty.core.js.html#Tweenable">Tweenable</a></li><li><a href="../../dist/doc/src/shifty.core.js.html#tween">tween</a></li><li><a href="../../dist/doc/src/shifty.core.js.html#to">to</a></li><li><a href="../../dist/doc/src/shifty.core.js.html#get">get</a></li><li><a href="../../dist/doc/src/shifty.core.js.html#set">set</a></li><li><a href="../../dist/doc/src/shifty.core.js.html#stop">stop</a></li><li><a href="../../dist/doc/src/shifty.core.js.html#pause">pause</a></li><li><a href="../../dist/doc/src/shifty.core.js.html#resume">resume</a></li></ul></li><li><a href="../../dist/doc/src/shifty.interpolate.js.html">src/shifty.interpolate.js</a><ul><li><a href="../../dist/doc/src/shifty.interpolate.js.html#interpolate">interpolate</a></li><li><a href="../../dist/doc/src/shifty.interpolate.js.html#interpolate">interpolate</a></li></ul></li><li><a href="../../dist/doc/src/shifty.token.js.html">src/shifty.token.js</a><ul></ul></li></ul></div><div class="nine columns"></div></div><!-- Foundation JS--><script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/3.2.2/javascripts/foundation.min.js"></script><script>/**
+.ctx-type { float:right; margin-top:8px }</style></head><body><div class="row"><div class="twelve columns"><h1 class="pagetitle">Shifty</h1></div></div><div class="row"><div id="nav" class="three columns"><ul class="side-nav"><li><a href="../../../dist/doc/src/shifty.core.js.html">src/shifty.core.js</a><ul><li><a href="../../../dist/doc/src/shifty.core.js.html#Tweenable">Tweenable</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#tween">tween</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#to">to</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#get">get</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#set">set</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#stop">stop</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#pause">pause</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#resume">resume</a></li></ul></li><li><a href="../../../dist/doc/src/shifty.interpolate.js.html">src/shifty.interpolate.js</a><ul><li><a href="../../../dist/doc/src/shifty.interpolate.js.html#interpolate">interpolate</a></li><li><a href="../../../dist/doc/src/shifty.interpolate.js.html#interpolate">interpolate</a></li></ul></li><li><a href="../../../dist/doc/src/shifty.token.js.html">src/shifty.token.js</a><ul><li><a href="../../../dist/doc/src/shifty.token.js.html#getFormatChunksFrom">getFormatChunksFrom</a></li><li><a href="../../../dist/doc/src/shifty.token.js.html#getFormatStringFrom">getFormatStringFrom</a></li><li><a href="../../../dist/doc/src/shifty.token.js.html#sanitizeObjectForHexProps">sanitizeObjectForHexProps</a></li><li><a href="../../../dist/doc/src/shifty.token.js.html#convertHexToRGB">convertHexToRGB</a></li><li><a href="../../../dist/doc/src/shifty.token.js.html#hexToRGBArray">hexToRGBArray</a></li><li><a href="../../../dist/doc/src/shifty.token.js.html#hexToDec">hexToDec</a></li><li><a href="../../../dist/doc/src/shifty.token.js.html#filterStringChunks">filterStringChunks</a></li><li><a href="../../../dist/doc/src/shifty.token.js.html#sanitizeRGBChunks">sanitizeRGBChunks</a></li><li><a href="../../../dist/doc/src/shifty.token.js.html#sanitizeRGBChunk">sanitizeRGBChunk</a></li><li><a href="../../../dist/doc/src/shifty.token.js.html#getFormatManifests">getFormatManifests</a></li><li><a href="../../../dist/doc/src/shifty.token.js.html#expandFormattedProperties">expandFormattedProperties</a></li><li><a href="../../../dist/doc/src/shifty.token.js.html#collapseFormattedProperties">collapseFormattedProperties</a></li><li><a href="../../../dist/doc/src/shifty.token.js.html#extractPropertyChunks">extractPropertyChunks</a></li><li><a href="../../../dist/doc/src/shifty.token.js.html#getValuesList">getValuesList</a></li><li><a href="../../../dist/doc/src/shifty.token.js.html#getFormattedValues">getFormattedValues</a></li><li><a href="../../../dist/doc/src/shifty.token.js.html#getValuesFrom">getValuesFrom</a></li><li><a href="../../../dist/doc/src/shifty.token.js.html#expandEasingObject">expandEasingObject</a></li><li><a href="../../../dist/doc/src/shifty.token.js.html#collapseEasingObject">collapseEasingObject</a></li></ul></li></ul></div><div class="nine columns"><div class="comment"><div class="label radius ctx-type">method</div><h1 id="interpolate">interpolate</h1><h5 class="subheader">Tweenable.interpolate()</h5><div class="tags"><ul class="no-bullet"><li><strong>@param: </strong><span class="types"> {Object} </span><span class="name">from </span><span class="description">The starting values to tween from.</span></li><li><strong>@param: </strong><span class="types"> {Object} </span><span class="name">targetState </span><span class="description">The ending values to tween to.</span></li><li><strong>@param: </strong><span class="types"> {number} </span><span class="name">position </span><span class="description">The normalized position value (between 0.0 and 1.0) to interpolate the values between `from` and `to` against.</span></li><li><strong>@param: </strong><span class="types"> {string,Object} </span><span class="name">easing </span><span class="description">The easing method to calculate the interpolation against. You can use any easing method attached to `Tweenable.prototype.formula`. If omitted, this defaults to &quot;linear&quot;.</span></li><li><strong>@return: </strong><span class="types"> {Object} </span></li></ul></div><div class="description"><p>Compute the midpoint of two Objects.  This method effectively calculates a specific frame of animation that Tweenable#tween does over a sequence.</p>
+
+<h2>Example</h2>
+
+<div class="highlight"><pre lang=""> var interpolatedValues = Tweenable.interpolate({
+   width: '100px',
+   opacity: 0,
+   color: '#fff'
+ }, {
+   width: '200px',
+   opacity: 1,
+   color: '#000'
+ }, 0.5);
+
+ console.log(interpolatedValues);
+ // {opacity: 0.5, width: "150px", color: "rgb(127,127,127)"}
+</pre></div></div><pre><code class="language-javascript">Tweenable.interpolate = function (from, targetState, position, easing)</code></pre></div><div class="comment"><div class="label radius ctx-type">method</div><h1 id="interpolate">interpolate</h1><h5 class="subheader">Tweenable.prototype.interpolate()</h5><div class="tags"><ul class="no-bullet"><li><strong>@param: </strong><span class="types"> {Object} </span><span class="name">targetState </span><span class="description">The ending values to tween to.</span></li><li><strong>@param: </strong><span class="types"> {number} </span><span class="name">position </span><span class="description">The normalized position value (between 0.0 and 1.0) to interpolate the values between `from` and `to` against.</span></li><li><strong>@param: </strong><span class="types"> {string,Object} </span><span class="name">easing </span><span class="description">The easing method to calculate the interpolation against. You can use any easing method attached to `Tweenable.prototype.formula`. If omitted, this defaults to &quot;linear&quot;.</span></li><li><strong>@return: </strong><span class="types"> {Object} </span></li></ul></div><div class="description"><p>Prototype version of <code>Tweenable.interpolate</code>.  Works the same way, but you don't need to supply a <code>from</code> parameter - that is taken from the Tweenable instance.  The interpolated value is also set as the Tweenable's current state.</p>
+
+<h2>Example</h2>
+
+<div class="highlight"><pre lang="">var tweenable = new Tweenable();
+
+// Where to start from.  This also sets the current state of the instance.
+tweenable.set({
+  'top': '100px',
+  'left': 0,
+  'color': '#000'
+});
+
+// Where to end up
+var endObj = {
+  'top': '200px',
+  'left': 50,
+  'color': '#fff'
+};
+
+tweenable.interpolate(endObj, 0.5, 'linear');
+// {left: 25, top: "150px", color: "rgb(127,127,127)"}
+</pre></div></div><pre><code class="language-javascript">Tweenable.prototype.interpolate = function (
+      targetState, position, easing)</code></pre></div></div></div><!-- Foundation JS--><script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/3.2.2/javascripts/foundation.min.js"></script><script>/**
  * Prism: Lightweight, robust, elegant syntax highlighting
  * MIT license http://www.opensource.org/licenses/mit-license.php/
  * @author Lea Verou http://lea.verou.me

@@ -211,12 +211,11 @@ Building Shifty
 ---
 
 Shifty uses [nodejs](http://nodejs.org) and [Grunt](http://gruntjs.com/) for
-the build system. It also requires
-[dox-foundation](https://github.com/punkave/dox-foundation) to generate the
-documentation.  Install the dependencies via npm like so:
+the build system. It also requires a handful of Node modules for the build
+process.  Install the dependencies via npm like so:
 
 ````
-$: npm install -g dox-foundation && npm install
+$: npm install
 ````
 
 Once those are installed, do this at the command line to build the project:
@@ -240,6 +239,12 @@ the unit tests with the default Grunt task:
 
 ````
 $: grunt
+````
+
+To generate the documentation:
+
+````
+$: grunt dox
 ````
 
 
