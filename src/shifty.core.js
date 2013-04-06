@@ -203,15 +203,10 @@ var Tweenable = (function () {
   /**
    * Tweenable constructor.  Valid parameters for `options` are:
    *
-   * - fps (number): This is the framerate (frames per second) at which the tween
-   *   updates (default is 60).
-   * - easing (string): The default easing formula to use on a tween.  This can be
-   *   overridden on a per-tween basis via the `tween` function's `easing`
-   *   parameter (see below).
-   * - duration (number): The default duration that a tween lasts for.  This can be
-   *   overridden on a per-tween basis via the `tween` function's `duration`
-   *   parameter (see below).
-   * - initialState (Object): The state at which the first tween should begin at.
+   * - __fps__ (_number_): This is the framerate (frames per second) at which the tween updates (default is 60).
+   * - __easing__ (_string_): The default easing formula to use on a tween.  This can be overridden on a per-tween basis via the `tween` function's `easing` parameter (see below).
+   * - __duration__ (_number_): The default duration that a tween lasts for.  This can be overridden on a per-tween basis via the `tween` function's `duration` parameter (see below).
+   * - __initialState__ (_Object_): The state at which the first tween should begin at.
    * @param {Object} options Configuration Object.
    * @constructor
    */
@@ -237,13 +232,13 @@ var Tweenable = (function () {
   /**
    * Start a tween.  You can supply all of the formal parameters, but the preferred approach is to pass a single configuration Object that looks like so:
    *
-   * - from (Object): Starting position.  Required.
-   * - to (Object): Ending position (parameters must match `from`).  Required.
-   * - duration (number=): How many milliseconds to animate for.
-   * - start (Function=): Function to execute when the tween begins (after the first tick).
-   * - step (Function=): Function to execute every tick.
-   * - callback (Function=): Function to execute upon completion.
-   * - easing (Object|string=): Easing formula(s) name to use for the tween.
+   * - __from__ (_Object_): Starting position.  Required.
+   * - __to__ (_Object_): Ending position (parameters must match `from`).  Required.
+   * - __duration__ (_number=_): How many milliseconds to animate for.
+   * - __start__ (_Function=_): Function to execute when the tween begins (after the first tick).
+   * - __step__ (_Function=_): Function to execute every tick.
+   * - __callback__ (_Function=_): Function to execute upon completion.
+   * - __easing__ (_Object|string=_): Easing formula(s) name to use for the tween.
    *
    * @param {Object} fromState Starting position OR a configuration Object instead of the rest of the formal parameters.
    * @param {Object=} targetState Ending position (parameters must match `from`).
