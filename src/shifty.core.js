@@ -3,15 +3,12 @@
  * By Jeremy Kahn - jeremyckahn@gmail.com
  */
 
-// UglifyJS define hack.  Used for unit testing.
+// UglifyJS define hack.  Used for unit testing.  Contents of this if are
+// compiled away.
 if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
   SHIFTY_DEBUG_NOW = function () {
     return +new Date();
   };
-}
-
-if (typeof SHIFTY_DEBUG === 'undefined') {
-  var global = (function(){return this;})();
 }
 
 var Tweenable = (function () {
@@ -428,7 +425,7 @@ var Tweenable = (function () {
 
   // A hook used for unit testing.
   if (typeof SHIFTY_DEBUG_NOW === 'function') {
-    global.timeoutHandler = timeoutHandler;
+    root.timeoutHandler = timeoutHandler;
   }
 
   if (typeof exports === 'object') {
@@ -437,9 +434,9 @@ var Tweenable = (function () {
   } else if (typeof define === 'function' && define.amd) {
     // AMD
     define(function () { return Tweenable; });
-  } else if (typeof global.Tweenable === 'undefined') {
+  } else if (typeof root.Tweenable === 'undefined') {
     // Browser: Make `Tweenable` globally accessible.
-    global.Tweenable = Tweenable;
+    root.Tweenable = Tweenable;
   }
 
   return Tweenable;

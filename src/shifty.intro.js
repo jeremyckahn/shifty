@@ -1,1 +1,1 @@
-;(function(global){
+;(function (root) {

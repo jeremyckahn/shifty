@@ -18,6 +18,8 @@
   ,SHIFTY_DEBUG_NOW = function () {
     return mockTime();
   };
+  // Needed for `root` reference in uncompiled source files.
+  window.root = this;
 </script>
 <script src="../src/shifty.core.js"></script>
 <script src="../src/shifty.formulas.js"></script>
