@@ -22,8 +22,8 @@
  *      'test': 5
  *    },
  *    'duration': 1000,
- *    'step': function () {
- *      console.log(this.test);
+ *    'step': function (state) {
+ *      console.log(state.test);
  *    },
  *    'callback': function () {
  *      console.log('Done!  Final value: ' + this.test);

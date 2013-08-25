@@ -1,4 +1,4 @@
-/*! Shifty - v0.8.7 - 2013-08-17 - http://jeremyckahn.github.com/shifty */
+/*! shifty - v0.8.8 - 2013-08-25 - http://jeremyckahn.github.io/shifty */
 ;(function (root) {
 
 /*!
@@ -163,9 +163,7 @@ var Tweenable = (function () {
           [currentState, originalState, targetState, easing]);
 
       if (step) {
-        // TODO: This is silly.  Either pass the state as context or as a
-        // formal parameter, not both.
-        step.call(currentState, currentState);
+        step(currentState);
       }
     }
 
@@ -236,7 +234,7 @@ var Tweenable = (function () {
    * - __to__ (_Object_): Ending position (parameters must match `from`).  Required.
    * - __duration__ (_number=_): How many milliseconds to animate for.
    * - __start__ (_Function=_): Function to execute when the tween begins (after the first tick).
-   * - __step__ (_Function=_): Function to execute every tick.
+   * - __step__ (_Function(Object)=_): Function to execute every tick.  Receives the state of the tween as the first parameter.
    * - __callback__ (_Function=_): Function to execute upon completion.
    * - __easing__ (_Object|string=_): Easing formula(s) name to use for the tween.
    *
@@ -792,8 +790,8 @@ var Tweenable = (function () {
  *   from: { transform: 'translateX(45px)'},
  *   to: { transform: 'translateX(90px)'},
  *   duration: 100,
- *   step: function () {
- *     console.log(this.transform);
+ *   step: function (state) {
+ *     console.log(state.transform);
  *   }
  * });
  * ```
@@ -812,8 +810,8 @@ var Tweenable = (function () {
  *   from: { color: 'rgb(0,255,0)'},
  *   to: { color: 'rgb(255,0,255)'},
  *   duration: 100,
- *   step: function () {
- *     console.log(this.color);
+ *   step: function (state) {
+ *     console.log(state.color);
  *   }
  * });
  * ```
@@ -832,8 +830,8 @@ var Tweenable = (function () {
  *   from: { color: '#0f0'},
  *   to: { color: '#f0f'},
  *   duration: 100,
- *   step: function () {
- *     console.log(this.color);
+ *   step: function (state) {
+ *     console.log(state.color);
  *   }
  * });
  * ```
@@ -858,8 +856,8 @@ var Tweenable = (function () {
  *   to: { transform:   'translateX(100px) translateY(100px)'},
  *   duration: 100,
  *   easing: { transform: 'easeInQuad' },
- *   step: function () {
- *     console.log(this.transform);
+ *   step: function (state) {
+ *     console.log(state.transform);
  *   }
  * });
  * ```
@@ -879,8 +877,8 @@ var Tweenable = (function () {
  *   to: { transform:   'translateX(100px) translateY(100px)'},
  *   duration: 100,
  *   easing: { transform: 'easeInQuad bounce' },
- *   step: function () {
- *     console.log(this.transform);
+ *   step: function (state) {
+ *     console.log(state.transform);
  *   }
  * });
  * ```

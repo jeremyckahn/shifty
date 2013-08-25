@@ -31,7 +31,7 @@ code {
 <li><strong>to</strong> (<em>Object</em>): Ending position (parameters must match <code>from</code>).  Required.</li>
 <li><strong>duration</strong> (<em>number=</em>): How many milliseconds to animate for.</li>
 <li><strong>start</strong> (<em>Function=</em>): Function to execute when the tween begins (after the first tick).</li>
-<li><strong>step</strong> (<em>Function=</em>): Function to execute every tick.</li>
+<li><strong>step</strong> (<em>Function(Object)=</em>): Function to execute every tick.  Receives the state of the tween as the first parameter.</li>
 <li><strong>callback</strong> (<em>Function=</em>): Function to execute upon completion.</li>
 <li><strong>easing</strong> (<em>Object|string=</em>): Easing formula(s) name to use for the tween.</li>
 </ul></div><pre><code class="language-javascript">Tweenable.prototype.tween = function (

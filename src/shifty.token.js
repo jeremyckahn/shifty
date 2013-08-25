@@ -21,8 +21,8 @@
  *   from: { transform: 'translateX(45px)'},
  *   to: { transform: 'translateX(90px)'},
  *   duration: 100,
- *   step: function () {
- *     console.log(this.transform);
+ *   step: function (state) {
+ *     console.log(state.transform);
  *   }
  * });
  * ```
@@ -41,8 +41,8 @@
  *   from: { color: 'rgb(0,255,0)'},
  *   to: { color: 'rgb(255,0,255)'},
  *   duration: 100,
- *   step: function () {
- *     console.log(this.color);
+ *   step: function (state) {
+ *     console.log(state.color);
  *   }
  * });
  * ```
@@ -61,8 +61,8 @@
  *   from: { color: '#0f0'},
  *   to: { color: '#f0f'},
  *   duration: 100,
- *   step: function () {
- *     console.log(this.color);
+ *   step: function (state) {
+ *     console.log(state.color);
  *   }
  * });
  * ```
@@ -87,8 +87,8 @@
  *   to: { transform:   'translateX(100px) translateY(100px)'},
  *   duration: 100,
  *   easing: { transform: 'easeInQuad' },
- *   step: function () {
- *     console.log(this.transform);
+ *   step: function (state) {
+ *     console.log(state.transform);
  *   }
  * });
  * ```
@@ -108,8 +108,8 @@
  *   to: { transform:   'translateX(100px) translateY(100px)'},
  *   duration: 100,
  *   easing: { transform: 'easeInQuad bounce' },
- *   step: function () {
- *     console.log(this.transform);
+ *   step: function (state) {
+ *     console.log(state.transform);
  *   }
  * });
  * ```
