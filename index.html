@@ -71,7 +71,7 @@
       width: 320px;
     }
 
-    #btnHelixStart {
+    .big-button {
       display: block;
       font-size: 30px;
       font-weight: bold;
@@ -106,14 +106,14 @@
       <p>Shifty is a tweening engine built in JavaScript.  It is designed to fit any number of tweening needs. Features include:</p>
       <ul>
           <li>Speed - Shifty is optimized for performance.</li>
-          <li>Works well as the base function in a prototype chain.</li>
+          <li>Works well as the base object in a prototype chain.</li>
           <li>Modular, extensible architecture allows you to use only the Shifty components you need.</li>
           <li>Small download: Full library (with all extensions) is about 3K minified and gzipped.  The core of the library (<code><a href="https://github.com/jeremyckahn/shifty/blob/master/src/shifty.core.js" target="_blank">shifty.core.js</a></code>) is just under 1.5K.</li>
       </ul>
-      <p>Shifty is an excellent animation solution for scenarios in which jQuery's <code>animate()</code> function is either unavailable or insufficient.  It's particularly effective for creating <code>&lt;canvas&gt;</code> animations.  A common use for Shifty is generating the steps of a Tween, as it is used to do in <a href="http://rekapi.com/" target="_blank">Rekapi</a> and Joe Lambert's <a href="https://github.com/joelambert/morf" target="_blank">Morf</a> library.  Using Shifty in this way would also be very useful in a non-browser environment such as <a href="http://nodejs.org/" target="_blank">Node.js</a>.</p>
+      <p>Shifty is an excellent animation solution for scenarios in which jQuery's <code>animate()</code> function is either unavailable or insufficient.  It's particularly effective for creating <code>&lt;canvas&gt;</code> animations.  A common use for Shifty is computing single ticks of a Tween, as it is used to do in <a href="http://rekapi.com/" target="_blank">Rekapi</a> and Joe Lambert's <a href="https://github.com/joelambert/morf" target="_blank">Morf</a> library.  Using Shifty in this way would also be very useful in a non-browser environment such as <a href="http://nodejs.org/" target="_blank">Node.js</a>.</p>
       <p>Shifty exposes only one function globally: <code>Tweenable()</code>.  To create a simple tween, you could have something like this:</p>
-
-      <pre>
+      <button class="big-button" onclick="javascript:eval(document.getElementById('sample-snippet').innerHTML);">Run this snippet</button>
+      <pre id="sample-snippet">
         var myTweenable = new Tweenable();
 
         myTweenable.tween({
@@ -124,12 +124,12 @@
             alert('Hooray, all done!  Final value: ' + this.x);
           }
         });</pre>
-      <p>This snippet would start a tween on the <code>x</code> variable from 0 to 1 over one second, and then log a happy message.  You could have as many properties in a tween as you'd like.</p>
+      <p>This snippet starts a tween on the <code>x</code> variable from 0 to 1 over one second, and then logs a happy message.  You could have as many properties in a tween as you'd like.</p>
       <p>Shifty can do quite a bit more than this.  It gives you play control of a tween (stopping, pausing, and resuming), property access, as well as hooks and filters to customize each tween to your specific needs.  In addition to this, there are several extensions that have been built for Shifty.  These extensions primarily make Shifty more useful on the DOM by providing support such as CSS units and colors.  All of this functionality is documented and demonstrated in the project repo on Github.</p>
       <p>A collection of Robert Penner's easing formulas have been adapted for use with Shifty and are included in the standard download.</p>
       <p>Please fork, use and contribute to Shifty!  It is distributed under the MIT License, and experimentation is encouraged.  If you find a bug or have a question about Shifty, please submit it the the <a href="https://github.com/jeremyckahn/shifty/issues" target="_blank">Github issue tracker</a>.</p>
       <p>Here's another example of Shifty in use.  Now get tweening!</p>
-      <button id="btnHelixStart">Go go helix!</button>
+      <button id="btnHelixStart" class="big-button">Go go helix!</button>
       <div id="helix-container">
           <span class="segment">&nbsp;</span>
           <span class="segment">&nbsp;</span>

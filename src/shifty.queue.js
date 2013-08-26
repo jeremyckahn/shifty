@@ -24,39 +24,18 @@
     };
   }
 
-  function tweenInit (context, from, to, duration, callback, easing) {
-    // Duck typing!  This method infers some info from the parameters above to determine which method to call,
-    // and what parameters to pass to it.
+  function tweenInit (context, config) {
     return function () {
-      if (to) {
-        // Shorthand notation was used, call `tween`
-        context.tween(from, to, duration, callback, easing);
-      } else {
-        // Longhand notation was used
-
-        // Ensure that that `wrappedCallback` (from `queue`) gets passed along.
-        from.callback = callback;
-
-        if (from.from) {
-          context.tween(from);
-        } else {
-          // `from` data was omitted, call `to`
-          context.to(from);
-        }
-      }
+      context.tween(config);
     };
   }
 
   /**
    * Add a tween to the queue.
-   * @param {Object|tweenConfig} from Starting position OR a `tweenConfig` Object instead of the rest of the formal parameters.
-   * @param {Object=} to Ending position (parameters must match `from`).
-   * @param {number=} duration How many milliseconds to animate for.
-   * @param {Function=} callback Function to execute upon completion.
-   * @param {Object|string=} easing Easing formula(s) name to use for the tween.
+   * @param {Object} config Accepts the same parameters as Tweenable#tween.
    * @return {Tweenable}
    */
-  Tweenable.prototype.queue = function (from, to, duration, callback, easing) {
+  Tweenable.prototype.queue = function (config) {
     var wrappedCallback;
 
     if (!this._tweenQueue) {
@@ -64,9 +43,9 @@
     }
 
     // Make sure there is always an invokable callback
-    callback = callback || from.callback || noop;
-    wrappedCallback = getWrappedCallback(callback, this._tweenQueue);
-    this._tweenQueue.push(tweenInit(this, from, to, duration, wrappedCallback, easing));
+    var callback = config.callback || noop;
+    config.callback = getWrappedCallback(callback, this._tweenQueue);
+    this._tweenQueue.push(tweenInit(this, config));
 
     return this;
   };

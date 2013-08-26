@@ -124,7 +124,11 @@
  * `translateX` and `translateY` are not in sync anymore, because we specified the `easeInQuad` formula for `translateX` and `bounce` for `translateY`.  Mixing and matching easing formulae can make for some interesting curves in your animations.
  *
  * The order of the space-separated easing formulas correspond the token values they apply to.  If there are more token values than easing formulae, the last easing formula listed is used.
- */ /*!*/
+ */
+ function token () {
+   // Functionality for this extension runs implicitly if it is loaded.
+ } /*!*/
+
 ;(function (Tweenable) {
 
   /*!

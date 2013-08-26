@@ -40,29 +40,6 @@
       tweenable._targetState, tweenable._easing, tweenable._step);
     }
 
-    module('Tweenable.prototype.tween (shorthand format)');
-
-    test('Midpoints of a tween are correctly computed', function () {
-      var tweenable = new Tweenable();
-      mockTime = function () {return 0;};
-      tweenable.tween({ x: 0 }, { x: 100 }, 1000);
-
-      equals(tweenable.get().x, 0, 'The tween starts at 0');
-      mockTime = function () {return 500;};
-      forceInternalUpdate(tweenable);
-      equals(tweenable.get().x, 50,
-          'The middle of the tween equates to .5 of the target value');
-      mockTime = function () {return 1000;};
-      forceInternalUpdate(tweenable);
-      equals(tweenable.get().x, 100,
-          'The end of the tween equates to 1.0 of the target value');
-      mockTime = function () {return 100000;};
-      forceInternalUpdate(tweenable);
-      equals(tweenable.get().x, 100,
-          'Anything after end of the tween equates to 1.0 of the target value');
-    });
-
-
     module('Tweenable.prototype.tween (longhand format)');
 
     test('Midpoints of a tween are correctly computed', function () {
@@ -70,7 +47,7 @@
       mockTime = function () {return 0;};
       tweenable.tween({
         from: { x: 0 }
-        ,to: { x: 100}
+        ,to: { x: 100 }
         ,duration: 1000
       });
 
@@ -95,7 +72,11 @@
     test('pause() moves the end time of the tween', function () {
       var tweenable = new Tweenable();
       mockTime = function () {return 0;};
-      tweenable.tween({ x: 0 }, { x: 100 }, 1000);
+      tweenable.tween({
+        from: { x: 0 },
+        to: { x: 100 },
+        duration: 1000
+      });
 
       mockTime = function () {return 500;};
       forceInternalUpdate(tweenable);
@@ -119,7 +100,11 @@
     test('stop(undefined) leaves a tween where it was stopped', function () {
       var tweenable = new Tweenable();
       mockTime = function () {return 0;};
-      tweenable.tween({ x: 0 }, { x: 100 }, 1000);
+      tweenable.tween({
+        from: { x: 0 },
+        to: { x: 100 },
+        duration: 1000
+      });
 
       mockTime = function () {return 500;};
       forceInternalUpdate(tweenable);
@@ -133,7 +118,11 @@
     test('stop(true) skips a tween to the end', function () {
       var tweenable = new Tweenable();
       mockTime = function () {return 0;};
-      tweenable.tween({ x: 0 }, { x: 100 }, 1000);
+      tweenable.tween({
+        from: { x: 0 },
+        to: { x: 100 },
+        duration: 1000
+      });
 
       mockTime = function () {return 500;};
       forceInternalUpdate(tweenable);
@@ -186,10 +175,10 @@
       var tweenable = new Tweenable();
       mockTime = function () {return 0;};
       tweenable
-        .queue({ x: 0 }, { x: 100 }, 1000)
-        .queue({ x: 100 }, { x: 200 }, 1000)
-        .queue({ x: 200 }, { x: 300 }, 1000)
-        .queueStart();
+      .queue({from: { x: 0 }, to: { x: 100 }, duration: 1000})
+      .queue({from: { x: 100 }, to: { x: 200 }, duration: 1000})
+      .queue({from: { x: 200 }, to: { x: 300 }, duration: 1000})
+      .queueStart();
 
       equals(tweenable.get().x, 0,
           'The queued tween starts at 0');
@@ -355,7 +344,11 @@
     test('Midpoints of a color tween are correctly computed', function () {
       var tweenable = new Tweenable();
       mockTime = function () {return 0;};
-      tweenable.tween({ color: 'rgb(0,0,0)' }, { color: 'rgb(10,10,10)' }, 1000);
+      tweenable.tween({
+        from: { color: 'rgb(0,0,0)' }
+        ,to: { color: 'rgb(10,10,10)' }
+        ,duration: 1000
+      });
 
       equals(tweenable.get().color, 'rgb(0,0,0)',
           'The tween starts at the initial rgb value');

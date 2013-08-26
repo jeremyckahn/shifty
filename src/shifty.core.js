@@ -199,53 +199,39 @@ var Tweenable = (function () {
    * Tweenable constructor.  Valid parameters for `options` are:
    *
    * - __fps__ (_number_): This is the framerate (frames per second) at which the tween updates (default is 60).
-   * - __easing__ (_string_): The default easing formula to use on a tween.  This can be overridden on a per-tween basis via the `tween` function's `easing` parameter (see below).
-   * - __duration__ (_number_): The default duration that a tween lasts for.  This can be overridden on a per-tween basis via the `tween` function's `duration` parameter (see below).
    * - __initialState__ (_Object_): The state at which the first tween should begin at.
-   * @param {Object} options Configuration Object.
+   * @param {Object=} opt_options Configuration Object.
    * @constructor
    */
-   function Tweenable (options) /*!*/{
-    options = options || {};
+   function Tweenable (opt_options) {
+    var options = opt_options || {};
 
     this.data = {};
 
-    // The state that the tween begins at.
-    this._currentState = options.initialState || {};
-
-    // The framerate at which Shifty updates.  This is exposed publicly as
-    // `tweenableInst.fps`.
+    // The framerate at which Shifty updates.
     this.fps = options.fps || 60;
 
-    // The default easing formula.  This is exposed publicly as
-    // `tweenableInst.easing`.
-    this._easing = options.easing || DEFAULT_EASING;
+    // The state that the tween begins at.
+    this._currentState = options.initialState || {};
 
     return this;
   }
 
   /**
-   * Start a tween.  You can supply all of the formal parameters, but the preferred approach is to pass a single configuration Object that looks like so:
+   * Start a tween.  `config` may have the following options (required parameters are noted):
    *
-   * - __from__ (_Object_): Starting position.  Required.
    * - __to__ (_Object_): Ending position (parameters must match `from`).  Required.
+   * - __from__ (_Object=_): Starting position.  If omitted, the last computed state is used.
    * - __duration__ (_number=_): How many milliseconds to animate for.
-   * - __start__ (_Function=_): Function to execute when the tween begins (after the first tick).
    * - __step__ (_Function(Object)=_): Function to execute every tick.  Receives the state of the tween as the first parameter.
    * - __callback__ (_Function=_): Function to execute upon completion.
-   * - __easing__ (_Object|string=_): Easing formula(s) name to use for the tween.
+   * - __easing__ (_Object|string=_): Easing formula name(s) to use for the tween.
    *
-   * @param {Object} fromState Starting position OR a configuration Object instead of the rest of the formal parameters.
-   * @param {Object=} targetState Ending position (parameters must match `from`).
-   * @param {number=} duration How many milliseconds to animate for.
-   * @param {Function=} callback Function to execute upon completion.
-   * @param {Object|string=} easing Easing formula(s) name to use for the tween.
+   * @param {Object} config
    * @return {Tweenable}
    */
-  Tweenable.prototype.tween = function (
-      fromState, targetState, duration, callback, easing) /*!*/{
+  Tweenable.prototype.tween = function (config) {
 
-    // TODO: Remove support for the shorthand form of calling this method.
     // TODO: Rename "callback" to something like "finish."
     if (this._isTweening) {
       return;
@@ -254,90 +240,44 @@ var Tweenable = (function () {
     this._loopId = 0;
     this._pausedAtTime = null;
 
-    // Normalize some internal values depending on how this method was called
-    if (arguments.length > 1) {
-      // Assume the shorthand syntax is being used.
-      this._targetState = targetState || {};
-      this._duration = duration || DEFAULT_DURATION;
-      this._callback = callback;
-      this._easing = easing || DEFAULT_EASING;
-      this._currentState = fromState || {};
-    } else {
-      // If the second argument is not present, assume the longhand syntax is
-      // being used.
-      var config = fromState;
-      this._step = config.step;
-      this._callback = config.callback;
-      this._targetState = config.to || config.target || {};
-      this._duration = config.duration || DEFAULT_DURATION;
-      this._easing = config.easing || DEFAULT_EASING;
-      this._currentState = config.from || {};
-    }
+    this._step = config.step;
+    this._callback = config.callback;
+    this._targetState = config.to || {};
+    this._duration = config.duration || DEFAULT_DURATION;
+    this._currentState = config.from || this.get();
 
     this._timestamp = now();
 
-    var currentStateAlias = this._currentState;
-    var targetStateAlias = this._targetState;
+    var currentState = this._currentState;
+    var targetState = this._targetState;
 
     // Ensure that there is always something to tween to.
     // Kinda dumb and wasteful, but makes this code way more flexible.
-    defaults(currentStateAlias, targetStateAlias);
-    defaults(targetStateAlias, currentStateAlias);
+    defaults(currentState, targetState);
+    defaults(targetState, currentState);
 
-    this._easing = composeEasingObject(currentStateAlias, this._easing);
-    var originalStateAlias = this._originalState =
-        shallowCopy({}, currentStateAlias);
-    applyFilter(this, 'tweenCreated', [currentStateAlias, originalStateAlias,
-        targetStateAlias, this._easing]);
-    this._isTweening = true;
-    this.resume();
+    this._easing = composeEasingObject(
+        currentState, config.easing || DEFAULT_EASING);
+    var originalState = this._originalState = shallowCopy({}, currentState);
+    applyFilter(this, 'tweenCreated',
+        [currentState, originalState, targetState, this._easing]);
 
-    if (fromState.start) {
-      fromState.start();
-    }
-
-    return this;
+    return this.resume();
   };
 
   /**
-   * Convenience method for tweening from the current position.  This method functions identically to tween (it's just a wrapper function), but implicitly passes the Tweenable instance's current state as the `from` parameter.  This supports the same formats as tween, just omitting the `from` parameter in both cases.
-   * @param {Object} target If the other parameters are omitted, this Object should contain the longhand parameters outlined in `tween()`.  If at least one other formal parameter is specified, then this Object should contain the target values to tween to.
-   * @param {number=} duration Duration of the tween, in milliseconds.
-   * @param {Function=} callback The callback function to pass along to `tween()`.
-   * @param {string|Object=} easing The easing formula to use.
-   * @return {Tweenable}
-   */
-  Tweenable.prototype.to = function (target, duration, callback, easing) /*!*/{
-    // TODO: Remove this method and roll it into Tweenable#tween.
-    if (arguments.length === 1) {
-      if ('to' in target) {
-        // Shorthand notation is being used
-        target.from = this.get();
-        this.tween(target);
-      } else {
-        this.tween(this.get(), target);
-      }
-    } else {
-      // Longhand notation is being used
-      this.tween(this.get(), target, duration, callback, easing);
-    }
-
-    return this;
-  };
-
-  /**
-   * Returns the current state.
+   * Sets the current state.
    * @return {Object}
    */
-  Tweenable.prototype.get = function () /*!*/{
+  Tweenable.prototype.get = function () {
     return shallowCopy({}, this._currentState);
   };
 
   /**
-   * Force the `Tweenable` instance's current state.
+   * Sets the current state.
    * @param {Object} state
    */
-  Tweenable.prototype.set = function (state) /*!*/{
+  Tweenable.prototype.set = function (state) {
     this._currentState = state;
   };
 
@@ -346,9 +286,10 @@ var Tweenable = (function () {
    * @param {boolean=} gotoEnd If false or omitted, the tween just stops at its current state, and the callback is not invoked.  If true, the tweened object's values are instantly set to the target values, and the `callback` is invoked.
    * @return {Tweenable}
    */
-  Tweenable.prototype.stop = function (gotoEnd) /*!*/{
+  Tweenable.prototype.stop = function (gotoEnd) {
     clearTimeout(this._loopId);
     this._isTweening = false;
+    this._isPaused = false;
 
     if (gotoEnd) {
       shallowCopy(this._currentState, this._targetState);
@@ -367,10 +308,10 @@ var Tweenable = (function () {
   };
 
   /**
-   * Pauses a tween.
+   * Pauses a tween.  Paused tweens can be resumed from the point at which they were paused.  This is different than `stop()`, as that method causes a tween to start over when it is resumed.
    * @return {Tweenable}
    */
-  Tweenable.prototype.pause = function () /*!*/{
+  Tweenable.prototype.pause = function () {
     clearTimeout(this._loopId);
     this._pausedAtTime = now();
     this._isPaused = true;
@@ -378,18 +319,29 @@ var Tweenable = (function () {
   };
 
   /**
-   * Resumes a paused tween.  A tween must be paused before is can be resumed.
+   * Resumes a paused tween.
    * @return {Tweenable}
    */
-  Tweenable.prototype.resume = function () /*!*/{
+  Tweenable.prototype.resume = function () {
     if (this._isPaused) {
       this._timestamp += now() - this._pausedAtTime;
     }
+
+    this._isPaused = false;
+    this._isTweening = true;
 
     timeoutHandler(this, this._timestamp, this._duration, this._currentState,
         this._originalState, this._targetState, this._easing, this._step);
 
     return this;
+  };
+
+  /**
+   * Returns whether or not a tween is running.
+   * @return {boolean}
+   */
+  Tweenable.prototype.isPlaying = function () {
+    return this._isTweening && !this._isPaused;
   };
 
   /*!
