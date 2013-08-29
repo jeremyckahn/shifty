@@ -216,15 +216,11 @@ code {
 </style><script srr="http://cdnjs.cloudflare.com/ajax/libs/foundation/4.1.6/js/vendor/custom.modernizr.js"></script></head><body><div class="row"><div class="small-12 columns"><h1 class="page-title">Shifty<small> src/shifty.core.js</small></h1></div></div><div class="row"><div id="nav" class="large-3 columns"><div data-section="accordian" data-options="" class="section-container accordian"><div class="section active"><p data-section-title class="title"><a href="../../../dist/doc/src/shifty.core.js.html"><small>src/</small>shifty.core.js</a></p><div data-section-content class="content"><ul class="side-nav"><li><a href="../../../dist/doc/src/shifty.core.js.html#Tweenable">Tweenable</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#tween">tween</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#get">get</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#set">set</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#stop">stop</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#pause">pause</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#resume">resume</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#isPlaying">isPlaying</a></li></ul></div></div><div class="section"><p data-section-title class="title"><a href="../../../dist/doc/src/shifty.interpolate.js.html"><small>src/</small>shifty.interpolate.js</a></p><div data-section-content class="content"><ul class="side-nav"><li><a href="../../../dist/doc/src/shifty.interpolate.js.html#interpolate">interpolate</a></li><li><a href="../../../dist/doc/src/shifty.interpolate.js.html#interpolate">interpolate</a></li></ul></div></div><div class="section"><p data-section-title class="title"><a href="../../../dist/doc/src/shifty.token.js.html"><small>src/</small>shifty.token.js</a></p><div data-section-content class="content"><ul class="side-nav"><li><a href="../../../dist/doc/src/shifty.token.js.html#token">token</a></li></ul></div></div></div></div><div class="small-12 large-9 columns"><article class="comment"><header><h1 id="Tweenable">Tweenable</h1><h5 class="subheader"><div class="label radius ctx-type">function</div>Tweenable()</h5></header><ul class="no-bullet tags"><li class="tag"><span class="type">@param: </span><span class="types">{Object=}</span><span class="name">opt_options</span><span class="description">Configuration Object.</span></li><li class="tag"><span class="type">@constructor: </span><span class="string"></span></li></ul><div data-section="accordian" data-options="one_up: false;" class="section-container code auto"><div class="section"><p data-section-title class="title"><a href="#">Description</a></p><div data-section-content class="content description"><p>Tweenable constructor.  Valid parameters for <code>options</code> are:</p>
 
 <ul>
-<li><strong>fps</strong> (<em>number</em>): This is the framerate (frames per second) at which the tween updates (default is 60).</li>
 <li><strong>initialState</strong> (<em>Object</em>): The state at which the first tween should begin at.</li>
 </ul></div></div><div class="section"><p data-section-title class="title"><a href="#">Source</a></p><div data-section-content class="content"><pre><code class="language-javascript">function Tweenable (opt_options) {
     var options = opt_options || {};
 
     this.data = {};
-
-    // The framerate at which Shifty updates.
-    this.fps = options.fps || 60;
 
     // The state that the tween begins at.
     this._currentState = options.initialState || {};
@@ -236,7 +232,7 @@ code {
 <li><strong>to</strong> (<em>Object</em>): Ending position (parameters must match <code>from</code>).  Required.</li>
 <li><strong>from</strong> (<em>Object=</em>): Starting position.  If omitted, the last computed state is used.</li>
 <li><strong>duration</strong> (<em>number=</em>): How many milliseconds to animate for.</li>
-<li><strong>step</strong> (<em>Function(Object)=</em>): Function to execute every tick.  Receives the state of the tween as the first parameter.</li>
+<li><strong>step</strong> (<em>Function(Object)=</em>): Function to execute every tick.  Receives the state of the tween as the first parameter.  This function is not called on the final step of the animation, but <code>callback</code> is.</li>
 <li><strong>callback</strong> (<em>Function=</em>): Function to execute upon completion.</li>
 <li><strong>easing</strong> (<em>Object|string=</em>): Easing formula name(s) to use for the tween.</li>
 </ul></div></div><div class="section"><p data-section-title class="title"><a href="#">Source</a></p><div data-section-content class="content"><pre><code class="language-javascript">Tweenable.prototype.tween = function (config) {
@@ -246,11 +242,10 @@ code {
       return;
     }
 
-    this._loopId = 0;
     this._pausedAtTime = null;
 
-    this._step = config.step;
-    this._callback = config.callback;
+    this._step = config.step || noop;
+    this._callback = config.callback || noop;
     this._targetState = config.to || {};
     this._duration = config.duration || DEFAULT_DURATION;
     this._currentState = config.from || this.get();
@@ -277,7 +272,6 @@ code {
   };</code></pre></div></div></div></article><article class="comment"><header><h1 id="set">set</h1><h5 class="subheader"><div class="label radius ctx-type">method</div>Tweenable.prototype.set()</h5></header><ul class="no-bullet tags"><li class="tag"><span class="type">@param: </span><span class="types">{Object}</span><span class="name">state</span><span class="description"></span></li></ul><div data-section="accordian" data-options="one_up: false;" class="section-container code auto"><div class="section"><p data-section-title class="title"><a href="#">Description</a></p><div data-section-content class="content description"><p>Sets the current state.</p></div></div><div class="section"><p data-section-title class="title"><a href="#">Source</a></p><div data-section-content class="content"><pre><code class="language-javascript">Tweenable.prototype.set = function (state) {
     this._currentState = state;
   };</code></pre></div></div></div></article><article class="comment"><header><h1 id="stop">stop</h1><h5 class="subheader"><div class="label radius ctx-type">method</div>Tweenable.prototype.stop()</h5></header><ul class="no-bullet tags"><li class="tag"><span class="type">@param: </span><span class="types">{boolean=}</span><span class="name">gotoEnd</span><span class="description">If false or omitted, the tween just stops at its current state, and the callback is not invoked. If true, the tweened object's values are instantly set to the target values, and the `callback` is invoked.</span></li><li class="tag"><span class="type">@return: </span><span class="types">{Tweenable}</span><span class="description"></span></li></ul><div data-section="accordian" data-options="one_up: false;" class="section-container code auto"><div class="section"><p data-section-title class="title"><a href="#">Description</a></p><div data-section-content class="content description"><p>Stops and cancels a tween.</p></div></div><div class="section"><p data-section-title class="title"><a href="#">Source</a></p><div data-section-content class="content"><pre><code class="language-javascript">Tweenable.prototype.stop = function (gotoEnd) {
-    clearTimeout(this._loopId);
     this._isTweening = false;
     this._isPaused = false;
 
@@ -285,9 +279,7 @@ code {
       shallowCopy(this._currentState, this._targetState);
       applyFilter(this, 'afterTweenEnd', [this._currentState,
           this._originalState, this._targetState, this._easing]);
-      if (this._callback) {
-        this._callback.call(this._currentState, this._currentState);
-      }
+      this._callback.call(this._currentState, this._currentState);
     }
 
     // TODO: The start, step and callback hooks need to be nulled here, but
@@ -296,7 +288,6 @@ code {
 
     return this;
   };</code></pre></div></div></div></article><article class="comment"><header><h1 id="pause">pause</h1><h5 class="subheader"><div class="label radius ctx-type">method</div>Tweenable.prototype.pause()</h5></header><ul class="no-bullet tags"><li class="tag"><span class="type">@return: </span><span class="types">{Tweenable}</span><span class="description"></span></li></ul><div data-section="accordian" data-options="one_up: false;" class="section-container code auto"><div class="section"><p data-section-title class="title"><a href="#">Description</a></p><div data-section-content class="content description"><p>Pauses a tween.  Paused tweens can be resumed from the point at which they were paused.  This is different than <code>stop()</code>, as that method causes a tween to start over when it is resumed.</p></div></div><div class="section"><p data-section-title class="title"><a href="#">Source</a></p><div data-section-content class="content"><pre><code class="language-javascript">Tweenable.prototype.pause = function () {
-    clearTimeout(this._loopId);
     this._pausedAtTime = now();
     this._isPaused = true;
     return this;

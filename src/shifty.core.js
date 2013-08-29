@@ -17,9 +17,35 @@ var Tweenable = (function () {
 
   var DEFAULT_EASING = 'linear';
   var DEFAULT_DURATION = 500;
+  var UPDATE_TIME = 1000 / 60;
+
   var now = SHIFTY_DEBUG_NOW
       ? SHIFTY_DEBUG_NOW
       : function () { return +new Date(); };
+
+  var schedule = (function getUpdateMethod () {
+    var updateMethod;
+
+    if (typeof window !== 'undefined') {
+      // requestAnimationFrame() shim by Paul Irish (modified for Rekapi)
+      // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+      updateMethod = window.requestAnimationFrame
+        || window.webkitRequestAnimationFrame
+        || window.oRequestAnimationFrame
+        || window.msRequestAnimationFrame
+        || (window.mozCancelRequestAnimationFrame
+            && window.mozRequestAnimationFrame)
+        || setTimeout;
+    } else {
+      updateMethod = setTimeout;
+    }
+
+    return updateMethod;
+  })();
+
+  function noop () {
+    // NOOP!
+  }
 
   /*!
    * Handy shortcut for doing a for-in loop. This is not a "normal" each
@@ -144,13 +170,11 @@ var Tweenable = (function () {
     var currentTime = Math.min(now(), endTime);
     var isEnded = currentTime >= endTime;
 
-    if (tweenable._isTweening) {
-      if (!isEnded) {
-        tweenable._loopId = setTimeout(function () {
-          timeoutHandler(tweenable, timestamp, duration, currentState,
-            originalState, targetState, easing, step);
-        }, 1000 / tweenable.fps);
-      }
+    if (tweenable.isPlaying() && !isEnded) {
+      schedule(function () {
+        timeoutHandler(tweenable, timestamp, duration, currentState,
+          originalState, targetState, easing, step);
+      }, UPDATE_TIME);
 
       applyFilter(tweenable, 'beforeTween',
           [currentState, originalState, targetState, easing]);
@@ -159,14 +183,12 @@ var Tweenable = (function () {
       applyFilter(tweenable, 'afterTween',
           [currentState, originalState, targetState, easing]);
 
-      if (step) {
-        step(currentState);
-      }
-    }
-
-    if (isEnded || !tweenable._isTweening) {
+      step(currentState);
+    } else if (isEnded) {
+      step(targetState);
       tweenable.stop(true);
     }
+
   }
 
 
@@ -198,7 +220,6 @@ var Tweenable = (function () {
   /**
    * Tweenable constructor.  Valid parameters for `options` are:
    *
-   * - __fps__ (_number_): This is the framerate (frames per second) at which the tween updates (default is 60).
    * - __initialState__ (_Object_): The state at which the first tween should begin at.
    * @param {Object=} opt_options Configuration Object.
    * @constructor
@@ -207,9 +228,6 @@ var Tweenable = (function () {
     var options = opt_options || {};
 
     this.data = {};
-
-    // The framerate at which Shifty updates.
-    this.fps = options.fps || 60;
 
     // The state that the tween begins at.
     this._currentState = options.initialState || {};
@@ -223,7 +241,7 @@ var Tweenable = (function () {
    * - __to__ (_Object_): Ending position (parameters must match `from`).  Required.
    * - __from__ (_Object=_): Starting position.  If omitted, the last computed state is used.
    * - __duration__ (_number=_): How many milliseconds to animate for.
-   * - __step__ (_Function(Object)=_): Function to execute every tick.  Receives the state of the tween as the first parameter.
+   * - __step__ (_Function(Object)=_): Function to execute every tick.  Receives the state of the tween as the first parameter.  This function is not called on the final step of the animation, but `callback` is.
    * - __callback__ (_Function=_): Function to execute upon completion.
    * - __easing__ (_Object|string=_): Easing formula name(s) to use for the tween.
    *
@@ -237,11 +255,10 @@ var Tweenable = (function () {
       return;
     }
 
-    this._loopId = 0;
     this._pausedAtTime = null;
 
-    this._step = config.step;
-    this._callback = config.callback;
+    this._step = config.step || noop;
+    this._callback = config.callback || noop;
     this._targetState = config.to || {};
     this._duration = config.duration || DEFAULT_DURATION;
     this._currentState = config.from || this.get();
@@ -287,7 +304,6 @@ var Tweenable = (function () {
    * @return {Tweenable}
    */
   Tweenable.prototype.stop = function (gotoEnd) {
-    clearTimeout(this._loopId);
     this._isTweening = false;
     this._isPaused = false;
 
@@ -295,9 +311,7 @@ var Tweenable = (function () {
       shallowCopy(this._currentState, this._targetState);
       applyFilter(this, 'afterTweenEnd', [this._currentState,
           this._originalState, this._targetState, this._easing]);
-      if (this._callback) {
-        this._callback.call(this._currentState, this._currentState);
-      }
+      this._callback.call(this._currentState, this._currentState);
     }
 
     // TODO: The start, step and callback hooks need to be nulled here, but
@@ -312,7 +326,6 @@ var Tweenable = (function () {
    * @return {Tweenable}
    */
   Tweenable.prototype.pause = function () {
-    clearTimeout(this._loopId);
     this._pausedAtTime = now();
     this._isPaused = true;
     return this;
