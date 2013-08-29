@@ -1,4 +1,4 @@
-/*! shifty - v0.10.0 - 2013-08-28 - http://jeremyckahn.github.io/shifty */
+/*! shifty - v0.10.1 - 2013-08-28 - http://jeremyckahn.github.io/shifty */
 ;(function (root) {
 
 /*!
@@ -30,7 +30,7 @@ var Tweenable = (function () {
     var updateMethod;
 
     if (typeof window !== 'undefined') {
-      // requestAnimationFrame() shim by Paul Irish (modified for Rekapi)
+      // requestAnimationFrame() shim by Paul Irish (modified for Shifty)
       // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
       updateMethod = window.requestAnimationFrame
         || window.webkitRequestAnimationFrame
