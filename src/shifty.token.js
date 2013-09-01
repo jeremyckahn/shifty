@@ -155,6 +155,7 @@
 
   // HELPERS
 
+  var getFormatChunksFrom_accumulator = [];
   /*!
    * @param {Array.number} rawValues
    * @param {string} prefix
@@ -162,14 +163,16 @@
    * @return {Array.<string>}
    */
   function getFormatChunksFrom (rawValues, prefix) {
+    getFormatChunksFrom_accumulator.length = 0;
+
     var rawValuesLength = rawValues.length;
-    var i, chunkAccumulator = [];
+    var i;
 
     for (i = 0; i < rawValuesLength; i++) {
-      chunkAccumulator.push('_' + prefix + '_' + i);
+      getFormatChunksFrom_accumulator.push('_' + prefix + '_' + i);
     }
 
-    return chunkAccumulator;
+    return getFormatChunksFrom_accumulator;
   }
 
 
@@ -228,6 +231,7 @@
   }
 
 
+  var hexToRGBArray_returnArray = [];
   /*!
    * Convert a hexadecimal string to an array with three items, one each for
    * the red, blue, and green decimal values.
@@ -248,8 +252,11 @@
       hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
     }
 
-    return [hexToDec(hex.substr(0, 2)), hexToDec(hex.substr(2, 2)),
-           hexToDec(hex.substr(4, 2))];
+    hexToRGBArray_returnArray[0] = hexToDec(hex.substr(0, 2));
+    hexToRGBArray_returnArray[1] = hexToDec(hex.substr(2, 2));
+    hexToRGBArray_returnArray[2] = hexToDec(hex.substr(4, 2));
+
+    return hexToRGBArray_returnArray;
   }
 
 
@@ -408,6 +415,7 @@
   }
 
 
+  var getValuesList_accumulator = [];
   /*!
    * @param {Object} stateObject
    * @param {Array.<string>} chunkNames
@@ -415,14 +423,14 @@
    * @return {Array.<number>}
    */
   function getValuesList (stateObject, chunkNames) {
-    var valueAccumulator = [];
+    getValuesList_accumulator.length = 0;
     var chunkNamesLength = chunkNames.length;
 
     for (var i = 0; i < chunkNamesLength; i++) {
-      valueAccumulator.push(stateObject[chunkNames[i]]);
+      getValuesList_accumulator.push(stateObject[chunkNames[i]]);
     }
 
-    return valueAccumulator;
+    return getValuesList_accumulator;
   }
 
 
@@ -495,8 +503,7 @@
         delete easingObject[chunkNames[i]];
       }
 
-      composedEasingString = composedEasingString.substr(1);
-      easingObject[prop] = composedEasingString;
+      easingObject[prop] = composedEasingString.substr(1);
     });
   }
 

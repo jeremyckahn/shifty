@@ -19,11 +19,15 @@ var Tweenable = (function () {
   var DEFAULT_DURATION = 500;
   var UPDATE_TIME = 1000 / 60;
 
-  var now = SHIFTY_DEBUG_NOW
-      ? SHIFTY_DEBUG_NOW
+  var _now = Date.now
+      ? Date.now
       : function () { return +new Date(); };
 
-  var schedule = (function getUpdateMethod () {
+  var now = SHIFTY_DEBUG_NOW
+      ? SHIFTY_DEBUG_NOW
+      : _now;
+
+  var schedule = (function () {
     var updateMethod;
 
     if (typeof window !== 'undefined') {
@@ -113,8 +117,7 @@ var Tweenable = (function () {
 
     var prop;
     for (prop in currentState) {
-      if (currentState.hasOwnProperty(prop)
-          && targetState.hasOwnProperty(prop)) {
+      if (currentState.hasOwnProperty(prop)) {
           currentState[prop] = tweenProp(originalState[prop],
               targetState[prop], formula[easing[prop]], normalizedPosition);
       }
@@ -153,6 +156,10 @@ var Tweenable = (function () {
     });
   }
 
+  var timeoutHandler_filterList = [];
+  var timeoutHandler_endTime;
+  var timeoutHandler_currentTime;
+  var timeoutHandler_isEnded;
   /*!
    * Handles the update logic for one step of a tween.
    * @param {Tweenable} tweenable
@@ -166,25 +173,26 @@ var Tweenable = (function () {
    */
   function timeoutHandler (tweenable, timestamp, duration, currentState,
       originalState, targetState, easing, step) {
-    var endTime = timestamp + duration;
-    var currentTime = Math.min(now(), endTime);
-    var isEnded = currentTime >= endTime;
+    timeoutHandler_endTime = timestamp + duration;
+    timeoutHandler_currentTime = Math.min(now(), timeoutHandler_endTime);
+    timeoutHandler_isEnded = timeoutHandler_currentTime >= timeoutHandler_endTime;
 
-    if (tweenable.isPlaying() && !isEnded) {
-      schedule(function () {
-        timeoutHandler(tweenable, timestamp, duration, currentState,
-          originalState, targetState, easing, step);
-      }, UPDATE_TIME);
+    if (tweenable.isPlaying() && !timeoutHandler_isEnded) {
+      schedule(tweenable._timeoutHandler, UPDATE_TIME);
 
-      applyFilter(tweenable, 'beforeTween',
-          [currentState, originalState, targetState, easing]);
-      tweenProps(currentTime, currentState, originalState, targetState,
-          duration, timestamp, easing);
-      applyFilter(tweenable, 'afterTween',
-          [currentState, originalState, targetState, easing]);
+      timeoutHandler_filterList.length = 0;
+      timeoutHandler_filterList.push(currentState);
+      timeoutHandler_filterList.push(originalState);
+      timeoutHandler_filterList.push(targetState);
+      timeoutHandler_filterList.push(easing);
+
+      applyFilter(tweenable, 'beforeTween', timeoutHandler_filterList);
+      tweenProps(timeoutHandler_currentTime, currentState, originalState,
+          targetState, duration, timestamp, easing);
+      applyFilter(tweenable, 'afterTween', timeoutHandler_filterList);
 
       step(currentState);
-    } else if (isEnded) {
+    } else if (timeoutHandler_isEnded) {
       step(targetState);
       tweenable.stop(true);
     }
@@ -231,6 +239,8 @@ var Tweenable = (function () {
 
     // The state that the tween begins at.
     this._currentState = options.initialState || {};
+
+    this._timeoutHandler = null;
 
     return this;
   }
@@ -306,6 +316,7 @@ var Tweenable = (function () {
   Tweenable.prototype.stop = function (gotoEnd) {
     this._isTweening = false;
     this._isPaused = false;
+    this._timeoutHandler = null;
 
     if (gotoEnd) {
       shallowCopy(this._currentState, this._targetState);
@@ -343,8 +354,13 @@ var Tweenable = (function () {
     this._isPaused = false;
     this._isTweening = true;
 
-    timeoutHandler(this, this._timestamp, this._duration, this._currentState,
-        this._originalState, this._targetState, this._easing, this._step);
+    var self = this;
+    this._timeoutHandler = function () {
+      timeoutHandler(self, self._timestamp, self._duration, self._currentState,
+          self._originalState, self._targetState, self._easing, self._step);
+    };
+
+    this._timeoutHandler();
 
     return this;
   };
