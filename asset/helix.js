@@ -35,21 +35,13 @@
       interpolator = moddedLoopPosition - 1;
     }
 
-    interpolatedValue = global.Tweenable.interpolate({
-        from: {
-          'left': 0
-        },
-        to: {
-          'left': HELIX_WIDTH
-        },
-        position: interpolator,
-        easing: 'easeInOutSine'
-    });
+    interpolatedValue = global.Tweenable.interpolate(
+        {'left': 0}, {'left': HELIX_WIDTH }, interpolator, 'easeInOutSine');
 
     if (moddedLoopPosition > 1) {
       return {
         'left': HELIX_WIDTH - interpolatedValue.left
-      }
+      };
     } else {
       return interpolatedValue;
     }

@@ -12,20 +12,7 @@
   }
 
 
-  function expandEasingParam (stateObject, easingParam) {
-    var easingObject = easingParam;
-
-    if (typeof easingParam === 'string') {
-      easingObject = {};
-      Tweenable.each(stateObject, function (prop) {
-        easingObject[prop] = stateObject[prop];
-      });
-    }
-
-    return easingObject;
-  }
-
-
+  var filterList = [];
  /**
   * Compute the midpoint of two Objects.  This method effectively calculates a specific frame of animation that Tweenable#tween does over a sequence.
   *
@@ -52,80 +39,30 @@
   * @param {string|Object} easing The easing method to calculate the interpolation against.  You can use any easing method attached to `Tweenable.prototype.formula`.  If omitted, this defaults to "linear".
   * @return {Object}
   */
-  Tweenable.interpolate = function (from, targetState, position, easing) /*!*/{
-   // TODO: Remove shorthand version of this, only support configuration Object
-   // API.
-    var current
-        ,interpolatedValues
-        ,mockTweenable;
+  Tweenable.interpolate = function (from, targetState, position, easing) {
+    // TODO: Could this be moved outside of this function and reused, rather
+    // than be re-initialized?
+    var mockTweenable = new Tweenable();
 
-    // Function was passed a configuration object, extract the values
-    if (from && from.from) {
-      targetState = from.to;
-      position = from.position;
-      easing = from.easing;
-      from = from.from;
-    }
-
-    mockTweenable = new Tweenable();
-    mockTweenable.easing = easing || 'linear';
-    current = Tweenable.shallowCopy({}, from);
+    var current = Tweenable.shallowCopy({}, from);
     var easingObject = Tweenable.composeEasingObject(
-        from, mockTweenable.easing);
+        from, easing || 'linear');
+
+    filterList[0] = current;
+    filterList[1] = from;
+    filterList[2] = targetState;
+    filterList[3] = easingObject;
 
     // Call any data type filters
-    Tweenable.applyFilter(mockTweenable, 'tweenCreated',
-        [current, from, targetState, easingObject]);
-    Tweenable.applyFilter(mockTweenable, 'beforeTween',
-        [current, from, targetState, easingObject]);
-    interpolatedValues = getInterpolatedValues(
+    Tweenable.applyFilter(mockTweenable, 'tweenCreated', filterList);
+    Tweenable.applyFilter(mockTweenable, 'beforeTween', filterList);
+
+    filterList[0] = getInterpolatedValues(
         from, current, targetState, position, easingObject);
-    Tweenable.applyFilter(mockTweenable, 'afterTween',
-        [interpolatedValues, from, targetState, easingObject]);
 
-    return interpolatedValues;
-  };
+    Tweenable.applyFilter(mockTweenable, 'afterTween', filterList);
 
-
- /**
-  * Prototype version of `Tweenable.interpolate`.  Works the same way, but you don't need to supply a `from` parameter - that is taken from the Tweenable instance.  The interpolated value is also set as the Tweenable's current state.
-  *
-  * Example:
-  *
-  * ```
-  * var tweenable = new Tweenable();
-  *
-  * // Where to start from.  This also sets the current state of the instance.
-  * tweenable.set({
-  *   'top': '100px',
-  *   'left': 0,
-  *   'color': '#000'
-  * });
-  *
-  * // Where to end up
-  * var endObj = {
-  *   'top': '200px',
-  *   'left': 50,
-  *   'color': '#fff'
-  * };
-  *
-  * tweenable.interpolate(endObj, 0.5, 'linear');
-  * // {left: 25, top: "150px", color: "rgb(127,127,127)"}
-  * ```
-  * @param {Object} targetState The ending values to tween to.
-  * @param {number} position The normalized position value (between 0.0 and 1.0) to interpolate the values between `from` and `to` against.
-  * @param {string|Object} easing The easing method to calculate the interpolation against.  You can use any easing method attached to `Tweenable.prototype.formula`.  If omitted, this defaults to "linear".
-  * @return {Object}
-  */
-  Tweenable.prototype.interpolate = function (
-      targetState, position, easing) /*!*/{
-    var interpolatedValues;
-
-    interpolatedValues =
-        Tweenable.interpolate(this.get(), targetState, position, easing);
-    this.set(interpolatedValues);
-
-    return interpolatedValues;
+    return filterList[0];
   };
 
 }());
