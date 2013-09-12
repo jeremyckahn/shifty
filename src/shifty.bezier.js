@@ -1,6 +1,6 @@
 /*!
  * The Bezier magic in this file is adapted/copied almost wholesale from
- * [Scripty2](http://opensource.apple.com/source/WebCore/WebCore-955.66/platform/graphics/UnitBezier.h),
+ * [Scripty2](https://github.com/madrobby/scripty2/blob/master/src/effects/transitions/cubic-bezier.js),
  * which was adapted from Apple code (which probably came from
  * [here](http://opensource.apple.com/source/WebCore/WebCore-955.66/platform/graphics/UnitBezier.h)).
  * Special thanks to Apple and Thomas Fuchs for much of this code.
