@@ -67,6 +67,7 @@ module.exports = function(grunt) {
           'src/shifty.const.js',
           'src/shifty.core.js',
           'src/shifty.formulas.js',
+          'src/shifty.bezier.js',
           'src/shifty.interpolate.js',
           'src/shifty.token.js',
           'src/shifty.outro.js'
@@ -78,6 +79,7 @@ module.exports = function(grunt) {
           'src/shifty.intro.js',
           'src/shifty.core.js',
           'src/shifty.formulas.js',
+          'src/shifty.bezier.js',
           'src/shifty.interpolate.js',
           'src/shifty.token.js',
           'src/shifty.outro.js'
@@ -93,6 +95,7 @@ module.exports = function(grunt) {
         src: [
           'src/shifty.core.js',
           'src/shifty.interpolate.js',
+          'src/shifty.bezier.js',
           'src/shifty.token.js'
         ],
         dest: 'dist/doc'

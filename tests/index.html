@@ -29,6 +29,7 @@
 <script src="../src/shifty.clamp.js"></script>
 <script src="../src/shifty.round.js"></script>
 <script src="../src/shifty.token.js"></script>
+<script src="../src/shifty.bezier.js"></script>
 
 <script>
   (function () {
@@ -384,6 +385,49 @@
       forceInternalUpdate(tweenable);
       equals(tweenable.get().x, 10,
           'High value was clamped to top of clamp range.')
+    });
+
+    module('Bezier extension');
+
+    test('Can create a linear Bezier easing formula', function () {
+      Tweenable.setBezierFunction('bezier-linear', 0.250, 0.250, 0.750, 0.750);
+
+      equals(
+        Tweenable.interpolate({x: 0}, {x: 10}, 0.25, 'linear').x.toFixed(1),
+        Tweenable.interpolate({x: 0}, {x: 10}, 0.25, 'bezier-linear').x.toFixed(1),
+        'linear and dynamic bezier-linear are reasonably equivalent at 0.25');
+      equals(
+        Tweenable.interpolate({x: 0}, {x: 10}, 0.5, 'linear').x.toFixed(1),
+        Tweenable.interpolate({x: 0}, {x: 10}, 0.5, 'bezier-linear').x.toFixed(1),
+        'linear and dynamic bezier-linear are reasonably equivalent at 0.5');
+      equals(
+        Tweenable.interpolate({x: 0}, {x: 10}, 0.75, 'linear').x.toFixed(1),
+        Tweenable.interpolate({x: 0}, {x: 10}, 0.75, 'bezier-linear').x.toFixed(1),
+        'linear and dynamic bezier-linear are reasonably equivalent at 0.75');
+    });
+
+    test('Can create a "stretched" linear Bezier easing formula', function () {
+      Tweenable.setBezierFunction('bezier-stretched-linear', 0, 0, 1, 1);
+
+      equals(
+        Tweenable.interpolate({x: 0}, {x: 10}, 0.25, 'linear').x.toFixed(1),
+        Tweenable.interpolate({x: 0}, {x: 10}, 0.25, 'bezier-stretched-linear').x.toFixed(1),
+        'linear and dynamic bezier-stretched-linear are reasonably equivalent at 0.25');
+      equals(
+        Tweenable.interpolate({x: 0}, {x: 10}, 0.5, 'linear').x.toFixed(1),
+        Tweenable.interpolate({x: 0}, {x: 10}, 0.5, 'bezier-stretched-linear').x.toFixed(1),
+        'linear and dynamic bezier-stretched-linear are reasonably equivalent at 0.5');
+      equals(
+        Tweenable.interpolate({x: 0}, {x: 10}, 0.75, 'linear').x.toFixed(1),
+        Tweenable.interpolate({x: 0}, {x: 10}, 0.75, 'bezier-stretched-linear').x.toFixed(1),
+        'linear and dynamic bezier-stretched-linear are reasonably equivalent at 0.75');
+    });
+
+    test('Can remove a Bezier easing formula', function () {
+      Tweenable.setBezierFunction('bezier-linear', 0, 0, 1, 1);
+      Tweenable.unsetBezierFunction('bezier-linear');
+      ok(!Tweenable.prototype['bezier-linear'],
+        '"bezier-linear" was deleted');
     });
 
   } ());
