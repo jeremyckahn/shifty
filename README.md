@@ -277,3 +277,7 @@ Take a peek at the [Network](https://github.com/jeremyckahn/shifty/network)
 page to see all of the Shifty contributors, but
 [@millermedeiros](https://github.com/millermedeiros) deserves particular
 recogintion for his patches to make Shifty compatible with Node.
+
+Also, a special shout out to [Thomas Fuchs](https://twitter.com/thomasfuchs):
+Shifty's easing formulas and Bezier curve code was adapted from his awesome
+[Scripty2](https://github.com/madrobby/scripty2) framework.
