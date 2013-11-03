@@ -89,8 +89,13 @@
    * @return {function} The easing function that was attached to Tweenable.prototype.formula.
    */
   Tweenable.setBezierFunction = function (name, x1, y1, x2, y2) {
-    return Tweenable.prototype.formula[name] =
-      getCubicBezierTransition(x1, y1, x2, y2);
+    var cubicBezierTransition = getCubicBezierTransition(x1, y1, x2, y2);
+    cubicBezierTransition.x1 = x1;
+    cubicBezierTransition.y1 = y1;
+    cubicBezierTransition.x2 = x2;
+    cubicBezierTransition.y2 = y2;
+
+    return Tweenable.prototype.formula[name] = cubicBezierTransition;
   };
 
 
