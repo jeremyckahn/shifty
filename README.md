@@ -1,76 +1,78 @@
 # Shifty - A teeny tiny tweening engine in JavaScript
 
 Shifty is a tweening engine for JavaScript.  It is a lightweight library meant
-to be encapsulated by higher-level tools.  The core library provides:
+to be encapsulated by higher level tools.  At its core, Shifty provides:
 
-  * Interpolation of `Number`s over time (tweening).
-  * Extensibility hooks for key points in the tweening process.
+  * Interpolation of `Number`s over time (tweening)
+  * Playback control of an individual tween
+  * Extensibility hooks for key points in the tweening process
 
-This is useful for web developers because it is the minimum amount of
-functionality needed to build customizable animations. Shifty is optimized to
-run many times a second with minimal processing and memory overhead, which is
-important to achieve smooth animations.  The core Shifty library doesn't do:
+This is useful because it is the least amount of functionality needed to build
+customizable animations. Shifty is optimized to run many times a second with
+minimal processing and memory overhead, which is necessary to achieve smooth
+animations.  The core Shifty library doesn't do:
 
-  * CSS animation
-  * Canvas rendering
+  * Rendering (such as CSS or Canvas)
   * Sequencing
   * Much else
 
 But don't worry!  If you need functionality like this, you can easily extend
 the core with whatever you need.  In fact, there are some extensions included
-in this repo that make Shifty more useful for common animation needs.
-Extensions included in the default build are:
+in the standard distribution (the `dist/` directory) that make Shifty more
+useful for common animation needs.  Extensions included in the default build
+are:
 
-  * [`shifty.token.js`](http://jeremyckahn.github.com/shifty/dist/doc/#token):
-    String support.  Allows you to interpolate strings with mixed units and
-    numbers, such as "25px" or "rgb(255, 0, 255)".
-  * [`shifty.interpolate.js`](http://jeremyckahn.github.com/shifty/dist/doc/#interpolate):
-    Compute the midpoint between two values outside of an animation sequence.
-    In other words, compute a single frame of an animation.
-  * `shifty.formulas.js`: A bunch of [Robert Penner](http://robertpenner.com/)
-    easing formulas adapted from
-    [Scripty2](https://github.com/madrobby/scripty2).
+* [`shifty.token.js`](http://jeremyckahn.github.io/shifty/dist/doc/src/shifty.token.js.html):
+  String support.  Allows you to interpolate numbers within
+  arbitrarily-formatted strings such as "25px" or "rgb(255, 0, 255)".  In other
+  words, this extension allows Shifty to tween CSS properties.
+* [`shifty.interpolate.js`](http://jeremyckahn.github.io/shifty/dist/doc/src/shifty.interpolate.js.html):
+  Compute the midpoint between a set of values outside of a tween.  In other
+  words, compute a single frame of an animation.
+* [`shifty.bezier.js`](http://jeremyckahn.github.io/shifty/dist/doc/src/shifty.bezier.js.html):
+  Define custom easing curves based on a [cubic Bezier
+  curve](http://en.wikipedia.org/wiki/B%C3%A9zier_curve#Cubic_B.C3.A9zier_curves).
+  Take a look at [cubic-bezier.com](http://cubic-bezier.com/) for a visual aid.
+* `shifty.formulas.js`: A bunch of [Robert Penner](http://robertpenner.com/)
+  easing formulas adapted from
+  [Scripty2](https://github.com/madrobby/scripty2).
 
 ## Using Shifty
 
 Shifty has no dependencies, so you can just load
-[/dist/shifty.min.js](https://github.com/jeremyckahn/shifty/blob/master/dist/shifty.min.js)
-to start using it.  This file has all of the extensions described above baked
-in.  If you only want the core `number` tweening functionality
-([shifty.core.js](https://github.com/jeremyckahn/shifty/blob/master/src/shifty.core.js)),
-you can easily build that without any extensions (please see [Building
+[shifty.min.js](dist/shifty.min.js) and start using it.  This file has all of
+the extensions described above baked in.  If you only want the core `Number`
+tweening functionality ([shifty.core.js](src/shifty.core.js)), you can easily
+build that without any extensions (please see [Building
 Shifty](#building-shifty)).
 
 ## Getting started
 
-The section explains how to get started with Shifty.  For full documentation on
-each API, please see [the
-documentation](http://jeremyckahn.github.com/shifty/dist/doc/).
+This section explains how to get started with Shifty.  For full documentation
+on each method, please see [the API
+documentation](http://jeremyckahn.github.io/shifty/dist/doc/src/shifty.core.js.html).
 
 ## Making a `tweenable()` instance
 
 The first thing you need to do is create a `new` instance of `Tweenable`:
 
 ````javascript
-var myTweenable = new Tweenable();
+var tweenable = new Tweenable();
 ````
 
-You can also supply some fun options to the constuctor via an Object:
-
-  * fps (number): This is the framerate (frames per second) at which the tween
-    updates (default is 60).
-  * easing (string or Object): The default easing formula to use on a tween.
-    This can be overridden on a per-tween basis via the `tween` function's
-    `easing` parameter (see below).
-  * initialState (Object): The state at which the first tween should begin at.
+Optionally, you can also define the initial state of the `Tweenable` instance
+to the constructor via a configuration Object:
 
 ````javascript
-var myTweenable = new Tweenable({
-  fps: 30,
-  easing: 'bounce',
-  initialState: { x: 35, y: 50 }
+var tweenable = new Tweenable({
+  x: 50,
+  y: 100,
+  opacity: 0.5
 });
 ````
+
+Supplying the initial state to the constructor would obviate the need to supply
+a `from` value to the `tween` method.
 
 ## tween
 
@@ -86,19 +88,20 @@ Make a basic tween by specifying some options:
   * callback (function): Function to execute upon completion.
 
 ````javascript
-var myTweenable = new Tweenable(tweenableConfig);
+var tweenable = new Tweenable();
 
-myTweenable.tween({
-  from: { x: 0, y: 50 },
-  to: { x: 10, y: -30 },
+tweenable.tween({
+  from: { x: 0,  y: 50  },
+  to:   { x: 10, y: -30 },
   duration: 1500,
   easing: 'easeOutQuad',
   start: function () { console.log('Off I go!'); },
-  callback: function () { console.log('And I\'m done!'); }
+  finish: function () { console.log('And I\'m done!'); }
 });
 ````
 
-__Important!__  The object that is passed as the `from` parameter is modified.
+__Important!__  A reference to the `from` object is retained throughout the
+life of the tween and is modified by Shifty.
 
 ## Advanced usage
 
@@ -110,28 +113,28 @@ Tweenable.prototype.pause();
 Tweenable.prototype.resume();
 ````
 
-You can also examine modify the state of a `Tweenable`:
+You can also examine and modify the state of a `Tweenable`:
 
 ````javascript
 Tweenable.prototype.get();
 Tweenable.prototype.set();
 ````
 
-These, as well as other methods, are detailed more in the [API
-documentation](http://jeremyckahn.github.com/shifty/dist/doc/).
+These, as well as all other methods, are detailed more in the [API
+documentation](http://jeremyckahn.github.io/shifty/dist/doc/src/shifty.core.js.html).
 
 ## Using multiple easing formulas
 
-You can create tweens that use different easing formulas for each property.
+Shifty supports tweens that have different easing formulas for each property.
 Having multiple easing formulas on a single tween can make for some really
 interesting animations, because you aren't constrained to moving things in a
 straight line.  You can make curves!  To do this, simply supply `easing` as an
 Object, rather than a string to `tween()`:
 
 ````javascript
-var myTweenable = new Tweenable(tweenableConfig);
+var tweenable = new Tweenable(tweenableConfig);
 
-myTweenable.tween({
+tweenable.tween({
   from: {
     x: 0,
     y: 0
@@ -147,52 +150,44 @@ myTweenable.tween({
 });
 ````
 
-You can use an an Object to specify the easing to use in any `Tweenable` method
-that accepts an `easing` parameter (on other words, you can use this with the
-Interpolate extension).  Mix and match to make interesting new animations.
+The Interpolate extension also supports both string and object parameter types
+for `easing`.
 
-Filters
----
+## Filters
 
 Filters are used for transforming the properties of a tween at various points
-in a `Tweenable` instance's lifecycle.  Filters differ from hooks because they
-get executed for all `Tweenable` instances globally.  Additionally, they are
-meant to convert non-`Number` datatypes to `Number`s so they can be tweened,
-and then back again. Just define a filter once, attach it to
-`Tweenable.prototype`, and all `new` instances of `Tweenable` will have access
-to it.
+in a `Tweenable` instance's life cycle.  Filters are meant to convert
+non-`Number` data types to `Number`s so they can be tweened, and then back
+again. Just define a filter once, attach it to `Tweenable.prototype`, and all
+`new` instances of `Tweenable` will have access to it.
 
 Here's an annotated example of a filter:
 
 ````javascript
 Tweenable.prototype.filter.doubler = {
-  // Gets called when a tween is created.  `fromState` is the state that the
-  // tween starts at, and `toState` contains the target values.
-  'tweenCreated': function tweenCreated (fromState, toState) {
-    Tweenable.util.each(obj, function (fromState, prop) {
-      // Double each initial state property value as soon as the tween is
-      // created.
-      obj[prop] *= 2;
-    });
-  },
-
-  // Gets called right before a tween state is calculated.
+  // Gets called when a tween is created.
+  //
   // `currentState` is the current state of the tweened object, `fromState` is
   // the state that the tween started at, and `toState` contains the target
   // values.
+  'tweenCreated': function tweenCreated (currentState, fromState, toState) {
+    Tweenable.each(obj, function (prop) {
+      // Nothing to do here, just showing that that is a valid filter to hook
+      // into.
+    });
+  },
+
+  // Gets called on every update before a tween state is calculated.
   'beforeTween': function beforeTween (currentState, fromState, toState) {
-    Tweenable.util.each(toState, function (obj, prop) {
+    Tweenable.each(toState, function (prop) {
       // Double each target property right before the tween formula is applied.
       obj[prop] *= 2;
     });
   },
 
-  // Gets called right after a tween state is calculated.
-  // `currentState` is the current state of the tweened object, `fromState` is
-  // the state that the tween started at, and `toState` contains the target
-  // values.
+  // Gets called on every update after a tween state is calculated.
   'afterTween': function afterTween (currentState, fromState, toState) {
-    Tweenable.util.each(toState, function (obj, prop) {
+    Tweenable.each(toState, function (prop) {
       // Return the target properties back to their pre-doubled values.
       obj[prop] /= 2;
     });
@@ -201,14 +196,13 @@ Tweenable.prototype.filter.doubler = {
 ````
 
 Yes, having `doubler` filter is useless.  A more practical use of filters is to
-add support for more data types.  __Remember, `Tweenable` only supports
-`Numbers` out of the box__, but you can add support for strings, functions, or
-whatever else you might need.  The Token extension works by filtering string
+add support for more data types.  __Remember, Shifty only supports `Numbers`
+by default__, but you can add support for strings, functions, or whatever else
+you might need.  For example, the Token extension works by filtering string
 values into numbers before each tween step, and then back again after the tween
 step.
 
-Building Shifty
----
+## Building Shifty
 
 Shifty uses [nodejs](http://nodejs.org) and [Grunt](http://gruntjs.com/) for
 the build system. It also requires a handful of Node modules for the build
@@ -224,9 +218,8 @@ Once those are installed, do this at the command line to build the project:
 $: grunt build
 ````
 
-The the default `build` task creates a binary with extensions needed by
-[Rekapi](http://rekapi.com/).  This is a good general-use configuration.  You
-can also create minimal binaries that only include the bare essentials for
+The the default `build` task creates a binary that includes all extensions.
+You can also create minimal binaries that only include the bare essentials for
 Shifty to run:
 
 ````
@@ -247,37 +240,38 @@ To generate the documentation:
 $: grunt dox
 ````
 
-
-AMD and NodeJS
----
+## AMD and NodeJS
 
 If an AMD loader (eg. [RequireJS](http://requirejs.org/),
-[Curl.js](https://github.com/unscriptable/curl)) is present on the page Shifty
+[Curl.js](https://github.com/unscriptable/curl)) is present on the page, Shifty
 won't generate any globals, so to use it you must list `"shifty"` as
 a dependency.
 
-```js
-define(['lib/shifty'], function(Tweenable){
-  //shifty was loaded and is ready to be used
-  var myAwesomeTweenable = new Tweenable();
+````javascript
+define(['shifty'], function(Tweenable){
+  var tweenable = new Tweenable();
 });
-```
+````
 
-Shifty can also be used on NodeJS:
+Shifty can also be used in NodeJS:
 
-```js
-var Tweenable = require('./shifty');
-```
+````javascript
+var Tweenable = require('shifty');
+````
 
-
-Contributors
----
+## Contributors
 
 Take a peek at the [Network](https://github.com/jeremyckahn/shifty/network)
 page to see all of the Shifty contributors, but
-[@millermedeiros](https://github.com/millermedeiros) deserves particular
-recogintion for his patches to make Shifty compatible with Node.
+[@millermedeiros](https://github.com/millermedeiros) in particular deserves
+recognition for his patches to make Shifty compatible with Node.
 
-Also, a special shout out to [Thomas Fuchs](https://twitter.com/thomasfuchs):
+Also, special thanks goes to [Thomas Fuchs](https://twitter.com/thomasfuchs):
 Shifty's easing formulas and Bezier curve code was adapted from his awesome
-[Scripty2](https://github.com/madrobby/scripty2) framework.
+[Scripty2](https://github.com/madrobby/scripty2) project.
+
+## License
+
+Shifty is distributed under the [MIT
+license](http://opensource.org/licenses/MIT).  You are encouraged to use and
+modify the code to suit your needs, as well as redistribute it.

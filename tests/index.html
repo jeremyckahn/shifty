@@ -23,11 +23,7 @@
 </script>
 <script src="../src/shifty.core.js"></script>
 <script src="../src/shifty.formulas.js"></script>
-<script src="../src/shifty.queue.js"></script>
 <script src="../src/shifty.interpolate.js"></script>
-<script src="../src/shifty.simple_ease.js"></script>
-<script src="../src/shifty.clamp.js"></script>
-<script src="../src/shifty.round.js"></script>
 <script src="../src/shifty.token.js"></script>
 <script src="../src/shifty.bezier.js"></script>
 
@@ -153,60 +149,6 @@
     });
 
 
-    module('Tween queues');
-
-    test('Queued tweens all run', function () {
-      var tweenable = new Tweenable();
-      mockTime = function () {return 0;};
-      tweenable
-      .queue({from: { x: 0 }, to: { x: 100 }, duration: 1000})
-      .queue({from: { x: 100 }, to: { x: 200 }, duration: 1000})
-      .queue({from: { x: 200 }, to: { x: 300 }, duration: 1000})
-      .queueStart();
-
-      equals(tweenable.get().x, 0,
-          'The queued tween starts at 0');
-      mockTime = function () {return 1500;};
-      forceInternalUpdate(tweenable);
-      equals(tweenable.get().x, 100,
-          'The second queued tween doesn\'t run until the first one completes');
-      mockTime = function () {return 2000;};
-      forceInternalUpdate(tweenable);
-      equals(tweenable.get().x, 150,
-          'The second queued tween runs');
-      mockTime = function () {return 2500;};
-      forceInternalUpdate(tweenable);
-      mockTime = function () {return 3000;};
-      forceInternalUpdate(tweenable);
-      equals(tweenable.get().x, 250,
-          'The third queued tween runs (after the previous one completed)');
-
-      // Prevents a post-test infinite loop
-      mockTime = function () {return 10000000;};
-    });
-
-
-    module('Rounding');
-
-    test('Rounding extension rounds floating-point numbers', function () {
-      var from = { x: 0 }
-          ,to = { x: 10 };
-
-      var roundingDisabled = Tweenable.interpolate(from, to, .55).x;
-      equals(roundingDisabled, 5.5,
-          'Rounding was disabled');
-
-      Tweenable.enableRounding();
-      var roundedUp = Tweenable.interpolate(from, to, .55).x;
-      equals(roundedUp, 6,
-          'Result was rounded up');
-      var roundedDown = Tweenable.interpolate(from, to, .54).x;
-      equals(roundedDown, 5,
-          'Result was rounded down');
-      Tweenable.disableRounding();
-    });
-
-
     module('Token');
 
     test('Can tween an RGB color', function () {
@@ -271,7 +213,7 @@
           'The final interpolated value is the same as the target color');
     });
 
-    test('Each token chunk can have it\'s own easing formula', function () {
+    test('Each token chunk can have it\'s own easing curve', function () {
       var from = { color: 'rgb(0,0,0)' }
           ,to =  { color: 'rgb(255,255,255)' }
           ,easing = 'linear easeInQuad easeInCubic';
@@ -347,49 +289,10 @@
       mockTime = function () {return 100000;};
     });
 
-    module('Clamp extension');
-
-    test('Prototype - Clamped tween values are within a range', function () {
-      var tweenable = new Tweenable();
-      tweenable.setClamp('x', 0, 10);
-
-      mockTime = function () {return 0;};
-      tweenable.tween({from: {x: -2}, to: {x: 12}, duration: 1000})
-      forceInternalUpdate(tweenable);
-      equals(tweenable.get().x, 0,
-          'Low value was clamped to bottom of clamp range.')
-      mockTime = function () {return 500;};
-      forceInternalUpdate(tweenable);
-      equals(tweenable.get().x, 5,
-          'Middle value was unmodified.')
-      mockTime = function () {return 1000;};
-      forceInternalUpdate(tweenable);
-      equals(tweenable.get().x, 10,
-          'High value was clamped to top of clamp range.')
-    });
-
-    test('Static - Clamped tween values are within a range', function () {
-      var tweenable = new Tweenable();
-      Tweenable.setClamp('x', 0, 10);
-
-      mockTime = function () {return 0;};
-      tweenable.tween({from: {x: -2}, to: {x: 12}, duration: 1000})
-      forceInternalUpdate(tweenable);
-      equals(tweenable.get().x, 0,
-          'Low value was clamped to bottom of clamp range.')
-      mockTime = function () {return 500;};
-      forceInternalUpdate(tweenable);
-      equals(tweenable.get().x, 5,
-          'Middle value was unmodified.')
-      mockTime = function () {return 1000;};
-      forceInternalUpdate(tweenable);
-      equals(tweenable.get().x, 10,
-          'High value was clamped to top of clamp range.')
-    });
 
     module('Bezier extension');
 
-    test('Can create a linear Bezier easing formula', function () {
+    test('Can create a linear Bezier easing curve', function () {
       Tweenable.setBezierFunction('bezier-linear', 0.250, 0.250, 0.750, 0.750);
 
       equals(
@@ -406,7 +309,7 @@
         'linear and dynamic bezier-linear are reasonably equivalent at 0.75');
     });
 
-    test('Can create a "stretched" linear Bezier easing formula', function () {
+    test('Can create a "stretched" linear Bezier easing curve', function () {
       Tweenable.setBezierFunction('bezier-stretched-linear', 0, 0, 1, 1);
 
       equals(
@@ -423,7 +326,7 @@
         'linear and dynamic bezier-stretched-linear are reasonably equivalent at 0.75');
     });
 
-    test('Can remove a Bezier easing formula', function () {
+    test('Can remove a Bezier easing curve', function () {
       Tweenable.setBezierFunction('bezier-linear', 0, 0, 1, 1);
       Tweenable.unsetBezierFunction('bezier-linear');
       ok(!Tweenable.prototype['bezier-linear'],

@@ -1,91 +1,94 @@
 /**
- * Shifty Token Extension:
- *
  * Adds string interpolation support to Shifty.
  *
- * The Token extension allows Shifty to tween numbers inside of strings.  This is nice because it allows you to animate CSS properties.  For example, you can do this:
+ * The Token extension allows Shifty to tween numbers inside of strings.  Among other things, this allows you to animate CSS properties.  For example, you can do this:
  *
  * ```
  * var tweenable = new Tweenable();
  * tweenable.tween({
  *   from: { transform: 'translateX(45px)'},
- *   to: { transform: 'translateX(90xp)'},
- *   duration: 1000
+ *   to: { transform: 'translateX(90xp)'}
  * });
  * ```
  *
- * ...And `translateX(45)` will be tweened to `translateX(90)`.  To demonstrate...
+ * `translateX(45)` will be tweened to `translateX(90)`.  To demonstrate:
+ *
  * ```
  * var tweenable = new Tweenable();
  * tweenable.tween({
  *   from: { transform: 'translateX(45px)'},
  *   to: { transform: 'translateX(90px)'},
- *   duration: 100,
  *   step: function (state) {
  *     console.log(state.transform);
  *   }
  * });
  * ```
  *
- * Will log something like this in the console...
+ * The above snippet will log something like this in the console:
+ *
  * ```
  * translateX(60.3px)
+ * ...
  * translateX(76.05px)
+ * ...
  * translateX(90px)
  * ```
  *
- * Another use for this is animating colors...
+ * Another use for this is animating colors:
+ *
  * ```
  * var tweenable = new Tweenable();
  * tweenable.tween({
  *   from: { color: 'rgb(0,255,0)'},
  *   to: { color: 'rgb(255,0,255)'},
- *   duration: 100,
  *   step: function (state) {
  *     console.log(state.color);
  *   }
  * });
  * ```
  *
- * Logs something like...
+ * The above snippet will log something like this:
+ *
  * ```
  * rgb(84,170,84)
+ * ...
  * rgb(170,84,170)
+ * ...
  * rgb(255,0,255)
  * ```
  *
- * This extension also supports hex colors, in both long (`#ff00ff`) and short (`#f0f`) forms.  Note that the extension converts hex input to the equivalent RGB output values.  This is done to optimize for performance.
+ * This extension also supports hexadecimal colors, in both long (`#ff00ff`) and short (`#f0f`) forms.  Be aware that hexadecimal input values will be converted into the equivalent RGB output values.  This is done to optimize for performance.
+ *
  * ```
  * var tweenable = new Tweenable();
  * tweenable.tween({
  *   from: { color: '#0f0'},
  *   to: { color: '#f0f'},
- *   duration: 100,
  *   step: function (state) {
  *     console.log(state.color);
  *   }
  * });
  * ```
  *
- * Yields...
+ * This snippet will generate the same output as the one before it because equivalent values were supplied (just in hexadecimal form rather than RGB):
+ *
  * ```
  * rgb(84,170,84)
+ * ...
  * rgb(170,84,170)
+ * ...
  * rgb(255,0,255)
  * ```
  *
- * Same as before.
+ * ## Easing support
  *
+ * Easing works somewhat differently in the Token extension.  This is because some CSS properties have multiple values in them, and you might need to tween each value along its own easing curve.  A basic example:
  *
- * Easing support:
- *
- * Easing works somewhat differently in the Token extension.  This is because some CSS properties have multiple values in them, and you might want to have each value tween with an independent easing formula.  A basic example...
  * ```
  * var tweenable = new Tweenable();
  * tweenable.tween({
  *   from: { transform: 'translateX(0px) translateY(0px)'},
  *   to: { transform:   'translateX(100px) translateY(100px)'},
- *   duration: 100,
  *   easing: { transform: 'easeInQuad' },
  *   step: function (state) {
  *     console.log(state.transform);
@@ -93,20 +96,23 @@
  * });
  * ```
  *
- * Gives results like this...
+ * The above snippet create values like this:
+ *
  * ```
  * translateX(11.560000000000002px) translateY(11.560000000000002px)
+ * ...
  * translateX(46.24000000000001px) translateY(46.24000000000001px)
+ * ...
  * translateX(100px) translateY(100px)
  * ```
  *
- * Note that the values for `translateX` and `translateY` are always the same for each step of the tween, because they have the same start and end points and both use the same easing formula.  But we can also do this...
+ * In this case, the values for `translateX` and `translateY` are always the same for each step of the tween, because they have the same start and end points and both use the same easing curve.  We can also tween `translateX` and `translateY` along independent curves:
+ *
  * ```
  * var tweenable = new Tweenable();
  * tweenable.tween({
  *   from: { transform: 'translateX(0px) translateY(0px)'},
  *   to: { transform:   'translateX(100px) translateY(100px)'},
- *   duration: 100,
  *   easing: { transform: 'easeInQuad bounce' },
  *   step: function (state) {
  *     console.log(state.transform);
@@ -114,20 +120,27 @@
  * });
  * ```
  *
- * And get an output like this...
+ * The above snippet create values like this:
+ *
  * ```
  * translateX(10.89px) translateY(82.355625px)
+ * ...
  * translateX(44.89000000000001px) translateY(86.73062500000002px)
+ * ...
  * translateX(100px) translateY(100px)
  * ```
  *
- * `translateX` and `translateY` are not in sync anymore, because we specified the `easeInQuad` formula for `translateX` and `bounce` for `translateY`.  Mixing and matching easing formulae can make for some interesting curves in your animations.
+ * `translateX` and `translateY` are not in sync anymore, because `easeInQuad` was specified for `translateX` and `bounce` for `translateY`.  Mixing and matching easing curves can make for some interesting motion in your animations.
  *
- * The order of the space-separated easing formulas correspond the token values they apply to.  If there are more token values than easing formulae, the last easing formula listed is used.
+ * The order of the space-separated easing curves correspond the token values they apply to.  If there are more token values than easing curves listed, the last easing curve listed is used.
  */
  function token () {
    // Functionality for this extension runs implicitly if it is loaded.
  } /*!*/
+
+// token function is defined above only so that dox-foundation sees it as
+// documentation and renders it.  It is never used, and is optimized away at
+// build time.
 
 ;(function (Tweenable) {
 
@@ -138,7 +151,6 @@
    * }}
    */
   var formatManifest;
-
 
   // CONSTANTS
 
@@ -151,7 +163,6 @@
   var R_RGB_PREFIX = /^.*\(/;
   var R_HEX = /#([0-9]|[a-f]){3,6}/g;
   var VALUE_PLACEHOLDER = 'VAL';
-
 
   // HELPERS
 
@@ -175,7 +186,6 @@
     return getFormatChunksFrom_accumulator;
   }
 
-
   /*!
    * @param {string} formattedString
    *
@@ -190,7 +200,6 @@
 
     return chunks.join(VALUE_PLACEHOLDER);
   }
-
 
   /*!
    * Convert all hex color values within a string to an rgb string.
@@ -209,7 +218,6 @@
     });
   }
 
-
   /*!
    * @param {string} str
    *
@@ -218,7 +226,6 @@
   function  sanitizeHexChunksToRGB (str) {
     return filterStringChunks(R_HEX, str, convertHexToRGB);
   }
-
 
   /*!
    * @param {string} hexString
@@ -229,7 +236,6 @@
     var rgbArr = hexToRGBArray(hexString);
     return 'rgb(' + rgbArr[0] + ',' + rgbArr[1] + ',' + rgbArr[2] + ')';
   }
-
 
   var hexToRGBArray_returnArray = [];
   /*!
@@ -259,7 +265,6 @@
     return hexToRGBArray_returnArray;
   }
 
-
   /*!
    * Convert a base-16 number to base-10.
    *
@@ -270,7 +275,6 @@
   function hexToDec (hex) {
     return parseInt(hex, 16);
   }
-
 
   /*!
    * Runs a filter operation on all chunks of a string that match a RegExp
@@ -299,7 +303,6 @@
     return filteredString;
   }
 
-
   /*!
    * Check for floating point values within rgb strings and rounds them.
    *
@@ -310,7 +313,6 @@
   function sanitizeRGBChunks (formattedString) {
     return filterStringChunks(R_RGB, formattedString, sanitizeRGBChunk);
   }
-
 
   /*!
    * @param {string} rgbChunk
@@ -330,7 +332,6 @@
 
     return sanitizedString;
   }
-
 
   /*!
    * @param {Object} stateObject
@@ -357,7 +358,6 @@
     return manifestAccumulator;
   }
 
-
   /*!
    * @param {Object} stateObject
    * @param {Object} formatManifests
@@ -376,7 +376,6 @@
     });
   }
 
-
   /*!
    * @param {Object} stateObject
    * @param {Object} formatManifests
@@ -393,7 +392,6 @@
       stateObject[prop] = sanitizeRGBChunks(currentProp);
     });
   }
-
 
   /*!
    * @param {Object} stateObject
@@ -414,7 +412,6 @@
     return extractedValues;
   }
 
-
   var getValuesList_accumulator = [];
   /*!
    * @param {Object} stateObject
@@ -432,7 +429,6 @@
 
     return getValuesList_accumulator;
   }
-
 
   /*!
    * @param {string} formatString
@@ -452,7 +448,6 @@
     return formattedValueString;
   }
 
-
   /*!
    * Note: It's the duty of the caller to convert the Array elements of the
    * return value into numbers.  This is a performance optimization.
@@ -464,7 +459,6 @@
   function getValuesFrom (formattedString) {
     return formattedString.match(R_UNFORMATTED_VALUES);
   }
-
 
   /*!
    * @param {Object} easingObject
@@ -486,7 +480,6 @@
     });
   }
 
-
   /*!
    * @param {Object} easingObject
    * @param {Object} tokenData
@@ -506,7 +499,6 @@
       easingObject[prop] = composedEasingString.substr(1);
     });
   }
-
 
   Tweenable.prototype.filter.token = {
     'tweenCreated': function (currentState, fromState, toState, easingObject) {

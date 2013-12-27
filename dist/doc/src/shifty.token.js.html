@@ -213,91 +213,88 @@ code {
   margin-right: 6px;
   font-size: 0.7em;
 }
-</style><script srr="http://cdnjs.cloudflare.com/ajax/libs/foundation/4.1.6/js/vendor/custom.modernizr.js"></script></head><body><div class="row"><div class="small-12 columns"><h1 class="page-title">Shifty<small> src/shifty.token.js</small></h1></div></div><div class="row"><div id="nav" class="large-3 columns"><div data-section="accordian" data-options="" class="section-container accordian"><div class="section"><p data-section-title class="title"><a href="../../../dist/doc/src/shifty.core.js.html"><small>src/</small>shifty.core.js</a></p><div data-section-content class="content"><ul class="side-nav"><li><a href="../../../dist/doc/src/shifty.core.js.html#Tweenable">Tweenable</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#tween">tween</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#get">get</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#set">set</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#stop">stop</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#pause">pause</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#resume">resume</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#isPlaying">isPlaying</a></li></ul></div></div><div class="section"><p data-section-title class="title"><a href="../../../dist/doc/src/shifty.interpolate.js.html"><small>src/</small>shifty.interpolate.js</a></p><div data-section-content class="content"><ul class="side-nav"><li><a href="../../../dist/doc/src/shifty.interpolate.js.html#interpolate">interpolate</a></li></ul></div></div><div class="section"><p data-section-title class="title"><a href="../../../dist/doc/src/shifty.bezier.js.html"><small>src/</small>shifty.bezier.js</a></p><div data-section-content class="content"><ul class="side-nav"><li><a href="../../../dist/doc/src/shifty.bezier.js.html#setBezierFunction">setBezierFunction</a></li><li><a href="../../../dist/doc/src/shifty.bezier.js.html#unsetBezierFunction">unsetBezierFunction</a></li></ul></div></div><div class="section active"><p data-section-title class="title"><a href="../../../dist/doc/src/shifty.token.js.html"><small>src/</small>shifty.token.js</a></p><div data-section-content class="content"><ul class="side-nav"><li><a href="../../../dist/doc/src/shifty.token.js.html#token">token</a></li></ul></div></div></div></div><div class="small-12 large-9 columns"><article class="comment"><header><h1 id="token">token</h1><h5 class="subheader"><div class="label radius ctx-type">function</div>token()</h5></header><ul class="no-bullet tags"></ul><div data-section="accordian" data-options="one_up: false;" class="section-container code auto"><div class="section"><p data-section-title class="title"><a href="#">Description</a></p><div data-section-content class="content description"><p>Shifty Token Extension:</p>
+</style><script srr="http://cdnjs.cloudflare.com/ajax/libs/foundation/4.1.6/js/vendor/custom.modernizr.js"></script></head><body><div class="row"><div class="small-12 columns"><h1 class="page-title">Shifty<small> src/shifty.token.js</small></h1></div></div><div class="row"><div id="nav" class="large-3 columns"><div data-section="accordian" data-options="" class="section-container accordian"><div class="section"><p data-section-title class="title"><a href="../../../dist/doc/src/shifty.core.js.html"><small>src/</small>shifty.core.js</a></p><div data-section-content class="content"><ul class="side-nav"><li><a href="../../../dist/doc/src/shifty.core.js.html#Tweenable">Tweenable</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#get">get</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#set">set</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#tween">tween</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#pause">pause</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#resume">resume</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#stop">stop</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#isPlaying">isPlaying</a></li><li><a href="../../../dist/doc/src/shifty.core.js.html#dispose">dispose</a></li></ul></div></div><div class="section"><p data-section-title class="title"><a href="../../../dist/doc/src/shifty.interpolate.js.html"><small>src/</small>shifty.interpolate.js</a></p><div data-section-content class="content"><ul class="side-nav"><li><a href="../../../dist/doc/src/shifty.interpolate.js.html#interpolate">interpolate</a></li></ul></div></div><div class="section"><p data-section-title class="title"><a href="../../../dist/doc/src/shifty.bezier.js.html"><small>src/</small>shifty.bezier.js</a></p><div data-section-content class="content"><ul class="side-nav"><li><a href="../../../dist/doc/src/shifty.bezier.js.html#setBezierFunction">setBezierFunction</a></li><li><a href="../../../dist/doc/src/shifty.bezier.js.html#unsetBezierFunction">unsetBezierFunction</a></li></ul></div></div><div class="section active"><p data-section-title class="title"><a href="../../../dist/doc/src/shifty.token.js.html"><small>src/</small>shifty.token.js</a></p><div data-section-content class="content"><ul class="side-nav"><li><a href="../../../dist/doc/src/shifty.token.js.html#token">token</a></li></ul></div></div></div></div><div class="small-12 large-9 columns"><article class="comment"><header><h1 id="token">token</h1><h5 class="subheader"><div class="label radius ctx-type">function</div>token()</h5></header><ul class="no-bullet tags"></ul><div data-section="accordian" data-options="one_up: false;" class="section-container code auto"><div class="section"><p data-section-title class="title"><a href="#">Description</a></p><div data-section-content class="content description"><p>Adds string interpolation support to Shifty.</p>
 
-<p>Adds string interpolation support to Shifty.</p>
-
-<p>The Token extension allows Shifty to tween numbers inside of strings.  This is nice because it allows you to animate CSS properties.  For example, you can do this:</p>
+<p>The Token extension allows Shifty to tween numbers inside of strings.  Among other things, this allows you to animate CSS properties.  For example, you can do this:</p>
 
 <div class="highlight"><pre lang="">var tweenable = new Tweenable();
 tweenable.tween({
   from: { transform: 'translateX(45px)'},
-  to: { transform: 'translateX(90xp)'},
-  duration: 1000
+  to: { transform: 'translateX(90xp)'}
 });
 </pre></div>
 
-<p>...And <code>translateX(45)</code> will be tweened to <code>translateX(90)</code>.  To demonstrate...</p>
+<p><code>translateX(45)</code> will be tweened to <code>translateX(90)</code>.  To demonstrate:</p>
 
 <div class="highlight"><pre lang="">var tweenable = new Tweenable();
 tweenable.tween({
   from: { transform: 'translateX(45px)'},
   to: { transform: 'translateX(90px)'},
-  duration: 100,
   step: function (state) {
     console.log(state.transform);
   }
 });
 </pre></div>
 
-<p>Will log something like this in the console...</p>
+<p>The above snippet will log something like this in the console:</p>
 
 <div class="highlight"><pre lang="">translateX(60.3px)
+...
 translateX(76.05px)
+...
 translateX(90px)
 </pre></div>
 
-<p>Another use for this is animating colors...</p>
+<p>Another use for this is animating colors:</p>
 
 <div class="highlight"><pre lang="">var tweenable = new Tweenable();
 tweenable.tween({
   from: { color: 'rgb(0,255,0)'},
   to: { color: 'rgb(255,0,255)'},
-  duration: 100,
   step: function (state) {
     console.log(state.color);
   }
 });
 </pre></div>
 
-<p>Logs something like...</p>
+<p>The above snippet will log something like this:</p>
 
 <div class="highlight"><pre lang="">rgb(84,170,84)
+...
 rgb(170,84,170)
+...
 rgb(255,0,255)
 </pre></div>
 
-<p>This extension also supports hex colors, in both long (<code>#ff00ff</code>) and short (<code>#f0f</code>) forms.  Note that the extension converts hex input to the equivalent RGB output values.  This is done to optimize for performance.</p>
+<p>This extension also supports hexadecimal colors, in both long (<code>#ff00ff</code>) and short (<code>#f0f</code>) forms.  Be aware that hexadecimal input values will be converted into the equivalent RGB output values.  This is done to optimize for performance.</p>
 
 <div class="highlight"><pre lang="">var tweenable = new Tweenable();
 tweenable.tween({
   from: { color: '#0f0'},
   to: { color: '#f0f'},
-  duration: 100,
   step: function (state) {
     console.log(state.color);
   }
 });
 </pre></div>
 
-<p>Yields...</p>
+<p>This snippet will generate the same output as the one before it because equivalent values were supplied (just in hexadecimal form rather than RGB):</p>
 
 <div class="highlight"><pre lang="">rgb(84,170,84)
+...
 rgb(170,84,170)
+...
 rgb(255,0,255)
 </pre></div>
 
-<p>Same as before.</p>
+<h2>Easing support</h2>
 
-<p>Easing support:</p>
-
-<p>Easing works somewhat differently in the Token extension.  This is because some CSS properties have multiple values in them, and you might want to have each value tween with an independent easing formula.  A basic example...</p>
+<p>Easing works somewhat differently in the Token extension.  This is because some CSS properties have multiple values in them, and you might need to tween each value along its own easing curve.  A basic example:</p>
 
 <div class="highlight"><pre lang="">var tweenable = new Tweenable();
 tweenable.tween({
   from: { transform: 'translateX(0px) translateY(0px)'},
   to: { transform:   'translateX(100px) translateY(100px)'},
-  duration: 100,
   easing: { transform: 'easeInQuad' },
   step: function (state) {
     console.log(state.transform);
@@ -305,20 +302,21 @@ tweenable.tween({
 });
 </pre></div>
 
-<p>Gives results like this...</p>
+<p>The above snippet create values like this:</p>
 
 <div class="highlight"><pre lang="">translateX(11.560000000000002px) translateY(11.560000000000002px)
+...
 translateX(46.24000000000001px) translateY(46.24000000000001px)
+...
 translateX(100px) translateY(100px)
 </pre></div>
 
-<p>Note that the values for <code>translateX</code> and <code>translateY</code> are always the same for each step of the tween, because they have the same start and end points and both use the same easing formula.  But we can also do this...</p>
+<p>In this case, the values for <code>translateX</code> and <code>translateY</code> are always the same for each step of the tween, because they have the same start and end points and both use the same easing curve.  We can also tween <code>translateX</code> and <code>translateY</code> along independent curves:</p>
 
 <div class="highlight"><pre lang="">var tweenable = new Tweenable();
 tweenable.tween({
   from: { transform: 'translateX(0px) translateY(0px)'},
   to: { transform:   'translateX(100px) translateY(100px)'},
-  duration: 100,
   easing: { transform: 'easeInQuad bounce' },
   step: function (state) {
     console.log(state.transform);
@@ -326,16 +324,18 @@ tweenable.tween({
 });
 </pre></div>
 
-<p>And get an output like this...</p>
+<p>The above snippet create values like this:</p>
 
 <div class="highlight"><pre lang="">translateX(10.89px) translateY(82.355625px)
+...
 translateX(44.89000000000001px) translateY(86.73062500000002px)
+...
 translateX(100px) translateY(100px)
 </pre></div>
 
-<p><code>translateX</code> and <code>translateY</code> are not in sync anymore, because we specified the <code>easeInQuad</code> formula for <code>translateX</code> and <code>bounce</code> for <code>translateY</code>.  Mixing and matching easing formulae can make for some interesting curves in your animations.</p>
+<p><code>translateX</code> and <code>translateY</code> are not in sync anymore, because <code>easeInQuad</code> was specified for <code>translateX</code> and <code>bounce</code> for <code>translateY</code>.  Mixing and matching easing curves can make for some interesting motion in your animations.</p>
 
-<p>The order of the space-separated easing formulas correspond the token values they apply to.  If there are more token values than easing formulae, the last easing formula listed is used.</p></div></div><div class="section"><p data-section-title class="title"><a href="#">Source</a></p><div data-section-content class="content"><pre><code class="language-javascript">function token () {
+<p>The order of the space-separated easing curves correspond the token values they apply to.  If there are more token values than easing curves listed, the last easing curve listed is used.</p></div></div><div class="section"><p data-section-title class="title"><a href="#">Source</a></p><div data-section-content class="content"><pre><code class="language-javascript">function token () {
    // Functionality for this extension runs implicitly if it is loaded.
  }</code></pre></div></div></div></article></div></div><!-- Foundation JS--><script type="text/javascript">document.write('<script src=' +
 ('__proto__' in {} ? 'http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.min' : 'http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min') +

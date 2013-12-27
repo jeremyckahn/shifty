@@ -1,11 +1,11 @@
 {
   "name": "shifty",
-  "version": "0.12.1",
+  "version": "1.0.0",
   "homepage": "http://jeremyckahn.github.io/shifty",
   "author": "Jeremy Kahn <jeremyckahn@gmail.com>",
   "description": "A teeny tiny tweening engine in JavaScript.",
   "devDependencies": {
-    "grunt": "~0.4.0",
+    "grunt": "~0.4.1",
     "grunt-contrib-jshint": "~0.1.1",
     "grunt-contrib-qunit": "~0.1.1",
     "grunt-contrib-concat": "~0.1.3",

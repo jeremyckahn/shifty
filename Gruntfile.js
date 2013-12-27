@@ -32,7 +32,6 @@ module.exports = function(grunt) {
     },
     jshint: {
       all_files: [
-        'grunt.js',
         'src/shifty.!(intro|outro|const)*.js'
       ],
       options: {
