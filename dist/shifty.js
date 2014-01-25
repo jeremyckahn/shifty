@@ -230,7 +230,7 @@ var Tweenable = (function () {
   }
 
   /**
-   * Sets the current state.
+   * Gets the current state.
    * @return {Object}
    */
   Tweenable.prototype.get = function () {
