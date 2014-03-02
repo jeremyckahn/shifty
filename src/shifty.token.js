@@ -161,7 +161,7 @@
       (/,\s*/.source) + R_UNFORMATTED_VALUES.source +
       (/,\s*/.source) + R_UNFORMATTED_VALUES.source + '\\)', 'g');
   var R_RGB_PREFIX = /^.*\(/;
-  var R_HEX = /#([0-9]|[a-f]){3,6}/g;
+  var R_HEX = /#([0-9]|[a-f]){3,6}/gi;
   var VALUE_PLACEHOLDER = 'VAL';
 
   // HELPERS

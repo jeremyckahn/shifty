@@ -1,4 +1,4 @@
-/*! shifty - v1.0.0 - 2013-12-27 - http://jeremyckahn.github.io/shifty */
+/*! shifty - v1.0.1 - 2014-03-02 - http://jeremyckahn.github.io/shifty */
 ;(function (root) {
 
 /*!
@@ -961,7 +961,7 @@ var Tweenable = (function () {
       (/,\s*/.source) + R_UNFORMATTED_VALUES.source +
       (/,\s*/.source) + R_UNFORMATTED_VALUES.source + '\\)', 'g');
   var R_RGB_PREFIX = /^.*\(/;
-  var R_HEX = /#([0-9]|[a-f]){3,6}/g;
+  var R_HEX = /#([0-9]|[a-f]){3,6}/gi;
   var VALUE_PLACEHOLDER = 'VAL';
 
   // HELPERS
