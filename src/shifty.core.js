@@ -218,32 +218,6 @@ var Tweenable = (function () {
    * Tweenable constructor.
    *
    * @param {Object=} opt_initialState The values that the initial tween should start at if a "from" object is not provided to Tweenable#tween.
-   * @constructor
-   */
-   function Tweenable (opt_initialState) {
-     this._currentState = opt_initialState || {};
-
-     return this;
-  }
-
-  /**
-   * Gets the current state.
-   * @return {Object}
-   */
-  Tweenable.prototype.get = function () {
-    return shallowCopy({}, this._currentState);
-  };
-
-  /**
-   * Sets the current state.
-   * @param {Object} state
-   */
-  Tweenable.prototype.set = function (state) {
-    this._currentState = state;
-  };
-
-  /**
-   * Start a tween.  `config` may have the following options:
    *
    * - __from__ (_Object=_): Starting position.  If omitted, the current state is used.
    * - __to__ (_Object=_): Ending position.
@@ -254,13 +228,20 @@ var Tweenable = (function () {
    * - __easing__ (_Object|string=_): Easing curve name(s) to use for the tween.
    *
    * @param {Object} config
-   * @return {Tweenable}
+   * @constructor
    */
-  Tweenable.prototype.tween = function (config) {
-    if (this._isTweening) {
-      return this;
-    }
+  function Tweenable (opt_initialState, config) {
+     this._currentState = opt_initialState || {};
+     this.setConfig(config);
+     return this;
+  }
 
+  /**
+   * Gets the current state.
+   * @return {Object}
+   */
+  Tweenable.prototype.setConfig = function (config) {
+    config = config || {};
     // Init the internal state
     this._pausedAtTime = null;
     this._start = config.start || noop;
@@ -286,9 +267,55 @@ var Tweenable = (function () {
         [currentState, this._originalState, targetState, this._easing];
 
     applyFilter(this, 'tweenCreated');
+  };
+
+  /**
+   * Gets the current state.
+   * @return {Object}
+   */
+  Tweenable.prototype.get = function () {
+    return shallowCopy({}, this._currentState);
+  };
+
+  /**
+   * Sets the current state.
+   * @param {Object} state
+   */
+  Tweenable.prototype.set = function (state) {
+    this._currentState = state;
+  };
+
+  /**
+   * Configure and Start a tween.  `config` may have the following options:
+   *
+   * - __from__ (_Object=_): Starting position.  If omitted, the current state is used.
+   * - __to__ (_Object=_): Ending position.
+   * - __duration__ (_number=_): How many milliseconds to animate for.
+   * - __start__ (_Function(Object)=_): Function to execute when the tween begins.  Receives the state of the tween as the only parameter.
+   * - __step__ (_Function(Object)=_): Function to execute on every tick.  Receives the state of the tween as the only parameter.  This function is not called on the final step of the animation, but `finish` is.
+   * - __finish__ (_Function(Object)=_): Function to execute upon tween completion.  Receives the state of the tween as the only parameter.
+   * - __easing__ (_Object|string=_): Easing curve name(s) to use for the tween.
+   *
+   * @param {Object} config
+   * @return {Tweenable}
+   */
+  Tweenable.prototype.tween = function (config) {
+    if (this._isTweening) {
+      return this;
+    }
+    this.setConfig(config);
+    return this.start();
+  };
+
+  /**
+   * Start the tween
+   **/
+  Tweenable.prototype.start = function(){
+    if (this._isTweening) {
+      return this;
+    }
 
     this._start(this.get());
-
     return this.resume();
   };
 
