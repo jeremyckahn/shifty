@@ -217,22 +217,42 @@ var Tweenable = (function () {
   /**
    * Tweenable constructor.
    * @param {Object=} opt_initialState The values that the initial tween should start at if a "from" object is not provided to Tweenable#tween.
-   * @param {Object} config See Tweenable.prototype.getConfig()
+   * @param {Object} config See Tweenable.prototype.setConfig()
    * @constructor
    */
   function Tweenable (opt_initialState, config) {
     this._currentState = opt_initialState || {};
     this._configured = false;
+
     // To prevent unnecessary calls to setConfig do not set default configuration here.
     // Only set default configuration immediately before tweening if none has been set.
-    if(config !== undefined){
-        this.setConfig(config);
+    if (typeof config !== 'undefined') {
+      this.setConfig(config);
     }
   }
 
   /**
-   * Sets the tween configuration.
-   * `config` may have the following options:
+   * Configure and start a tween.
+   * @param {Object=} opt_config See Tweenable.prototype.setConfig()
+   * @return {Tweenable}
+   */
+  Tweenable.prototype.tween = function (opt_config) {
+    if (this._isTweening) {
+      return this;
+    }
+
+    // Only set default config if no configuration has been set previously and none is provided now.
+    if (opt_config !== undefined || !this._configured) {
+      this.setConfig(opt_config);
+    }
+
+    this._start(this.get());
+    return this.resume();
+  };
+
+  /**
+   * Sets the tween configuration. `config` may have the following options:
+   *
    * - __from__ (_Object=_): Starting position.  If omitted, the current state is used.
    * - __to__ (_Object=_): Ending position.
    * - __duration__ (_number=_): How many milliseconds to animate for.
@@ -289,25 +309,6 @@ var Tweenable = (function () {
    */
   Tweenable.prototype.set = function (state) {
     this._currentState = state;
-  };
-
-  /**
-   * Configure and start a tween.
-   * @param {Object} config See Tweenable.prototype.getConfig()
-   * @return {Tweenable}
-   */
-  Tweenable.prototype.tween = function (config) {
-    if (this._isTweening) {
-      return this;
-    }
-
-    // Only set default config if no configuration has been set previously and none is provided now.
-    if(config !== undefined || !this._configured){
-        this.setConfig(config);
-    }
-
-    this._start(this.get());
-    return this.resume();
   };
 
   /**
