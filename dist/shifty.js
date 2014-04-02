@@ -220,17 +220,17 @@ var Tweenable = (function () {
   /**
    * Tweenable constructor.
    * @param {Object=} opt_initialState The values that the initial tween should start at if a "from" object is not provided to Tweenable#tween.
-   * @param {Object} config See Tweenable.prototype.setConfig()
+   * @param {Object=} opt_config See Tweenable.prototype.setConfig()
    * @constructor
    */
-  function Tweenable (opt_initialState, config) {
+  function Tweenable (opt_initialState, opt_config) {
     this._currentState = opt_initialState || {};
     this._configured = false;
 
     // To prevent unnecessary calls to setConfig do not set default configuration here.
     // Only set default configuration immediately before tweening if none has been set.
-    if (typeof config !== 'undefined') {
-      this.setConfig(config);
+    if (typeof opt_config !== 'undefined') {
+      this.setConfig(opt_config);
     }
   }
 
