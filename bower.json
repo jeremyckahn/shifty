@@ -1,13 +1,28 @@
 {
   "name": "shifty",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "main": "./dist/shifty.min.js",
   "homepage": "http://jeremyckahn.github.io/shifty",
-  "author": "Jeremy Kahn <jeremyckahn@gmail.com>",
   "description": "A teeny tiny tweening engine in JavaScript.",
-  "contributors": [
+  "authors": [
     {
-      "name": "Miller Medeiros <contact@millermedeiros.com>"
+      "name": "Jeremy Kahn",
+      "email": "jeremyckahn@gmail.com"
+    },
+    {
+      "name": "Miller Medeiros",
+      "email": "contact@millermedeiros.com"
+    },
+    {
+      "name": "Carl Olsen",
+      "email": "carl@emoxie.com"
+    },
+    {
+      "name": "Joe Lambert"
+    },
+    {
+      "name": "Roman Kofman",
+      "email": "romank@groupon.com"
     }
   ],
   "license": "MIT"

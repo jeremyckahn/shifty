@@ -1,6 +1,6 @@
 {
   "name": "shifty",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "homepage": "http://jeremyckahn.github.io/shifty",
   "author": "Jeremy Kahn <jeremyckahn@gmail.com>",
   "description": "A teeny tiny tweening engine in JavaScript.",
@@ -11,12 +11,24 @@
     "grunt-contrib-qunit": "~0.1.1",
     "grunt-contrib-concat": "~0.1.3",
     "grunt-contrib-uglify": "~0.1.2",
-    "grunt-dox": "~0.5.0"
+    "grunt-dox": "~0.5.0",
+    "grunt-bump": "0.0.13"
   },
   "contributors": [
     {
-      "name": "Miller Medeiros <contact@millermedeiros.com>",
-      "name": "Carl Olsen <carl@emoxie.com>"
+      "name": "Miller Medeiros",
+      "email": "contact@millermedeiros.com"
+    },
+    {
+      "name": "Carl Olsen",
+      "email": "carl@emoxie.com"
+    },
+    {
+      "name": "Joe Lambert"
+    },
+    {
+      "name": "Roman Kofman",
+      "email": "romank@groupon.com"
     }
   ],
   "license": "MIT"
