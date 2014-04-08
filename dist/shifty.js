@@ -1,4 +1,4 @@
-/*! shifty - v1.1.1 - 2014-04-01 - http://jeremyckahn.github.io/shifty */
+/*! shifty - v1.2.0 - 2014-04-08 - http://jeremyckahn.github.io/shifty */
 ;(function (root) {
 
 /*!
@@ -20,9 +20,9 @@ var Tweenable = (function () {
 
   // Aliases that get defined later in this function
   var formula;
-  var schedule;
 
   // CONSTANTS
+  var DEFAULT_SCHEDULE_FUNCTION;
   var DEFAULT_EASING = 'linear';
   var DEFAULT_DURATION = 500;
   var UPDATE_TIME = 1000 / 60;
@@ -38,7 +38,7 @@ var Tweenable = (function () {
   if (typeof window !== 'undefined') {
     // requestAnimationFrame() shim by Paul Irish (modified for Shifty)
     // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-    schedule = window.requestAnimationFrame
+    DEFAULT_SCHEDULE_FUNCTION = window.requestAnimationFrame
       || window.webkitRequestAnimationFrame
       || window.oRequestAnimationFrame
       || window.msRequestAnimationFrame
@@ -46,7 +46,7 @@ var Tweenable = (function () {
           && window.mozRequestAnimationFrame)
       || setTimeout;
   } else {
-    schedule = setTimeout;
+    DEFAULT_SCHEDULE_FUNCTION = setTimeout;
   }
 
   function noop () {
@@ -169,9 +169,10 @@ var Tweenable = (function () {
    * @param {Object} targetState
    * @param {Object} easing
    * @param {Function} step
+   * @param {Function} schedule
    */
   function timeoutHandler (tweenable, timestamp, duration, currentState,
-      originalState, targetState, easing, step) {
+      originalState, targetState, easing, step, schedule) {
     timeoutHandler_endTime = timestamp + duration;
     timeoutHandler_currentTime = Math.min(now(), timeoutHandler_endTime);
     timeoutHandler_isEnded = timeoutHandler_currentTime >= timeoutHandler_endTime;
@@ -226,6 +227,7 @@ var Tweenable = (function () {
   function Tweenable (opt_initialState, opt_config) {
     this._currentState = opt_initialState || {};
     this._configured = false;
+    this._scheduleFunction = DEFAULT_SCHEDULE_FUNCTION;
 
     // To prevent unnecessary calls to setConfig do not set default configuration here.
     // Only set default configuration immediately before tweening if none has been set.
@@ -233,6 +235,17 @@ var Tweenable = (function () {
       this.setConfig(opt_config);
     }
   }
+
+  /**
+   * Sets a custom schedule function.
+   *
+   * If a custom function is not set the default one is used ({@link Window#requestAnimationFrame} if available, {@link Window#setTimeout} else).
+   *
+   * @param {Function(Function, number)} scheduleFunction The function to be called to schedule the next frame to be rendered
+   */
+  Tweenable.prototype.setScheduleFunction = function (scheduleFunction) {
+    this._scheduleFunction = scheduleFunction;
+  };
 
   /**
    * Configure and start a tween.
@@ -339,7 +352,7 @@ var Tweenable = (function () {
     var self = this;
     this._timeoutHandler = function () {
       timeoutHandler(self, self._timestamp, self._duration, self._currentState,
-          self._originalState, self._targetState, self._easing, self._step);
+          self._originalState, self._targetState, self._easing, self._step, self._scheduleFunction);
     };
 
     this._timeoutHandler();
