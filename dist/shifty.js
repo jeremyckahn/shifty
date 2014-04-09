@@ -169,7 +169,7 @@ var Tweenable = (function () {
    * @param {Object} targetState
    * @param {Object} easing
    * @param {Function} step
-   * @param {Function} schedule
+   * @param {Function(Function,number)}} schedule
    */
   function timeoutHandler (tweenable, timestamp, duration, currentState,
       originalState, targetState, easing, step, schedule) {
@@ -235,17 +235,6 @@ var Tweenable = (function () {
       this.setConfig(opt_config);
     }
   }
-
-  /**
-   * Sets a custom schedule function.
-   *
-   * If a custom function is not set the default one is used ({@link Window#requestAnimationFrame} if available, {@link Window#setTimeout} else).
-   *
-   * @param {Function(Function, number)} scheduleFunction The function to be called to schedule the next frame to be rendered
-   */
-  Tweenable.prototype.setScheduleFunction = function (scheduleFunction) {
-    this._scheduleFunction = scheduleFunction;
-  };
 
   /**
    * Configure and start a tween.
@@ -352,7 +341,8 @@ var Tweenable = (function () {
     var self = this;
     this._timeoutHandler = function () {
       timeoutHandler(self, self._timestamp, self._duration, self._currentState,
-          self._originalState, self._targetState, self._easing, self._step, self._scheduleFunction);
+          self._originalState, self._targetState, self._easing, self._step,
+          self._scheduleFunction);
     };
 
     this._timeoutHandler();
@@ -385,6 +375,17 @@ var Tweenable = (function () {
    */
   Tweenable.prototype.isPlaying = function () {
     return this._isTweening && !this._isPaused;
+  };
+
+  /**
+   * Sets a custom schedule function.
+   *
+   * If a custom function is not set the default one is used [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window.requestAnimationFrame) if available, otherwise [`setTimeout`](https://developer.mozilla.org/en-US/docs/Web/API/Window.setTimeout)).
+   *
+   * @param {Function(Function,number)} scheduleFunction The function to be called to schedule the next frame to be rendered
+   */
+  Tweenable.prototype.setScheduleFunction = function (scheduleFunction) {
+    this._scheduleFunction = scheduleFunction;
   };
 
   /**
