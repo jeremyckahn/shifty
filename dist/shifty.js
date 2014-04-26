@@ -1,4 +1,4 @@
-/*! shifty - v1.2.0 - 2014-04-08 - http://jeremyckahn.github.io/shifty */
+/*! shifty - v1.2.1 - 2014-04-26 - http://jeremyckahn.github.io/shifty */
 ;(function (root) {
 
 /*!
@@ -1027,7 +1027,12 @@ var Tweenable = (function () {
   function getFormatStringFrom (formattedString) {
     var chunks = formattedString.match(R_FORMAT_CHUNKS);
 
-    if (chunks.length === 1) {
+    if (!chunks) {
+      // chunks will be null if there were no tokens to parse in
+      // formattedString (for example, if formattedString is '2').  Coerce
+      // chunks to be useful here.
+      chunks = ['', ''];
+    } else if (chunks.length === 1) {
       chunks.unshift('');
     }
 

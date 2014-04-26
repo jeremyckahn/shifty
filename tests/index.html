@@ -317,6 +317,16 @@
       mockTime = function () {return 100000;};
     });
 
+    test('Can interpolate two number strings that have no non-number token structure',
+        function () {
+        var from = { x: '2' };
+        var to = { x: '3' };
+        var interpolated = Tweenable.interpolate(from, to, 0.5);
+
+        equals(interpolated.x, '2.5',
+            'Token-less strings were successfully interpolated');
+    });
+
 
     module('Bezier extension');
 

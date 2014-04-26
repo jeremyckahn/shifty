@@ -194,7 +194,12 @@
   function getFormatStringFrom (formattedString) {
     var chunks = formattedString.match(R_FORMAT_CHUNKS);
 
-    if (chunks.length === 1) {
+    if (!chunks) {
+      // chunks will be null if there were no tokens to parse in
+      // formattedString (for example, if formattedString is '2').  Coerce
+      // chunks to be useful here.
+      chunks = ['', ''];
+    } else if (chunks.length === 1) {
       chunks.unshift('');
     }
 
