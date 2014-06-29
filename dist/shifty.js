@@ -1,4 +1,4 @@
-/*! shifty - v1.2.1 - 2014-04-26 - http://jeremyckahn.github.io/shifty */
+/*! shifty - v1.2.1 - 2014-06-29 - http://jeremyckahn.github.io/shifty */
 ;(function (root) {
 
 /*!
@@ -28,23 +28,23 @@ var Tweenable = (function () {
   var UPDATE_TIME = 1000 / 60;
 
   var _now = Date.now
-      ? Date.now
-      : function () { return +new Date(); };
+       ? Date.now
+       : function () {return +new Date();};
 
   var now = SHIFTY_DEBUG_NOW
-      ? SHIFTY_DEBUG_NOW
-      : _now;
+       ? SHIFTY_DEBUG_NOW
+       : _now;
 
   if (typeof window !== 'undefined') {
     // requestAnimationFrame() shim by Paul Irish (modified for Shifty)
     // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
     DEFAULT_SCHEDULE_FUNCTION = window.requestAnimationFrame
-      || window.webkitRequestAnimationFrame
-      || window.oRequestAnimationFrame
-      || window.msRequestAnimationFrame
-      || (window.mozCancelRequestAnimationFrame
-          && window.mozRequestAnimationFrame)
-      || setTimeout;
+       || window.webkitRequestAnimationFrame
+       || window.oRequestAnimationFrame
+       || window.msRequestAnimationFrame
+       || (window.mozCancelRequestAnimationFrame
+       && window.mozRequestAnimationFrame)
+       || setTimeout;
   } else {
     DEFAULT_SCHEDULE_FUNCTION = setTimeout;
   }
@@ -112,14 +112,14 @@ var Tweenable = (function () {
    * targetState.
    */
   function tweenProps (forPosition, currentState, originalState, targetState,
-      duration, timestamp, easing) {
+    duration, timestamp, easing) {
     var normalizedPosition = (forPosition - timestamp) / duration;
 
     var prop;
     for (prop in currentState) {
       if (currentState.hasOwnProperty(prop)) {
-          currentState[prop] = tweenProp(originalState[prop],
-              targetState[prop], formula[easing[prop]], normalizedPosition);
+        currentState[prop] = tweenProp(originalState[prop],
+          targetState[prop], formula[easing[prop]], normalizedPosition);
       }
     }
 
@@ -172,7 +172,7 @@ var Tweenable = (function () {
    * @param {Function(Function,number)}} schedule
    */
   function timeoutHandler (tweenable, timestamp, duration, currentState,
-      originalState, targetState, easing, step, schedule) {
+    originalState, targetState, easing, step, schedule) {
     timeoutHandler_endTime = timestamp + duration;
     timeoutHandler_currentTime = Math.min(now(), timeoutHandler_endTime);
     timeoutHandler_isEnded = timeoutHandler_currentTime >= timeoutHandler_endTime;
@@ -182,7 +182,7 @@ var Tweenable = (function () {
 
       applyFilter(tweenable, 'beforeTween');
       tweenProps(timeoutHandler_currentTime, currentState, originalState,
-          targetState, duration, timestamp, easing);
+        targetState, duration, timestamp, easing);
       applyFilter(tweenable, 'afterTween');
 
       step(currentState);
@@ -291,10 +291,10 @@ var Tweenable = (function () {
     defaults(targetState, currentState);
 
     this._easing = composeEasingObject(
-        currentState, config.easing || DEFAULT_EASING);
+      currentState, config.easing || DEFAULT_EASING);
 
     this._filterArgs =
-        [currentState, this._originalState, targetState, this._easing];
+      [currentState, this._originalState, targetState, this._easing];
 
     applyFilter(this, 'tweenCreated');
     return this;
@@ -341,8 +341,8 @@ var Tweenable = (function () {
     var self = this;
     this._timeoutHandler = function () {
       timeoutHandler(self, self._timestamp, self._duration, self._currentState,
-          self._originalState, self._targetState, self._easing, self._step,
-          self._scheduleFunction);
+        self._originalState, self._targetState, self._easing, self._step,
+        self._scheduleFunction);
     };
 
     this._timeoutHandler();
@@ -443,7 +443,7 @@ var Tweenable = (function () {
     module.exports = Tweenable;
   } else if (typeof define === 'function' && define.amd) {
     // AMD
-    define(function () { return Tweenable; });
+    define(function () {return Tweenable;});
   } else if (typeof root.Tweenable === 'undefined') {
     // Browser: Make `Tweenable` globally accessible.
     root.Tweenable = Tweenable;
@@ -468,180 +468,180 @@ var Tweenable = (function () {
 ;(function () {
 
   Tweenable.shallowCopy(Tweenable.prototype.formula, {
-    easeInQuad: function(pos){
-       return Math.pow(pos, 2);
+    easeInQuad: function (pos) {
+      return Math.pow(pos, 2);
     },
 
-    easeOutQuad: function(pos){
-      return -(Math.pow((pos-1), 2) -1);
+    easeOutQuad: function (pos) {
+      return -(Math.pow((pos - 1), 2) - 1);
     },
 
-    easeInOutQuad: function(pos){
-      if ((pos/=0.5) < 1) {return 0.5*Math.pow(pos,2);}
-      return -0.5 * ((pos-=2)*pos - 2);
+    easeInOutQuad: function (pos) {
+      if ((pos /= 0.5) < 1) {return 0.5 * Math.pow(pos,2);}
+      return -0.5 * ((pos -= 2) * pos - 2);
     },
 
-    easeInCubic: function(pos){
+    easeInCubic: function (pos) {
       return Math.pow(pos, 3);
     },
 
-    easeOutCubic: function(pos){
-      return (Math.pow((pos-1), 3) +1);
+    easeOutCubic: function (pos) {
+      return (Math.pow((pos - 1), 3) + 1);
     },
 
-    easeInOutCubic: function(pos){
-      if ((pos/=0.5) < 1) {return 0.5*Math.pow(pos,3);}
-      return 0.5 * (Math.pow((pos-2),3) + 2);
+    easeInOutCubic: function (pos) {
+      if ((pos /= 0.5) < 1) {return 0.5 * Math.pow(pos,3);}
+      return 0.5 * (Math.pow((pos - 2),3) + 2);
     },
 
-    easeInQuart: function(pos){
+    easeInQuart: function (pos) {
       return Math.pow(pos, 4);
     },
 
-    easeOutQuart: function(pos){
-      return -(Math.pow((pos-1), 4) -1);
+    easeOutQuart: function (pos) {
+      return -(Math.pow((pos - 1), 4) - 1);
     },
 
-    easeInOutQuart: function(pos){
-      if ((pos/=0.5) < 1) {return 0.5*Math.pow(pos,4);}
-      return -0.5 * ((pos-=2)*Math.pow(pos,3) - 2);
+    easeInOutQuart: function (pos) {
+      if ((pos /= 0.5) < 1) {return 0.5 * Math.pow(pos,4);}
+      return -0.5 * ((pos -= 2) * Math.pow(pos,3) - 2);
     },
 
-    easeInQuint: function(pos){
+    easeInQuint: function (pos) {
       return Math.pow(pos, 5);
     },
 
-    easeOutQuint: function(pos){
-      return (Math.pow((pos-1), 5) +1);
+    easeOutQuint: function (pos) {
+      return (Math.pow((pos - 1), 5) + 1);
     },
 
-    easeInOutQuint: function(pos){
-      if ((pos/=0.5) < 1) {return 0.5*Math.pow(pos,5);}
-      return 0.5 * (Math.pow((pos-2),5) + 2);
+    easeInOutQuint: function (pos) {
+      if ((pos /= 0.5) < 1) {return 0.5 * Math.pow(pos,5);}
+      return 0.5 * (Math.pow((pos - 2),5) + 2);
     },
 
-    easeInSine: function(pos){
-      return -Math.cos(pos * (Math.PI/2)) + 1;
+    easeInSine: function (pos) {
+      return -Math.cos(pos * (Math.PI / 2)) + 1;
     },
 
-    easeOutSine: function(pos){
-      return Math.sin(pos * (Math.PI/2));
+    easeOutSine: function (pos) {
+      return Math.sin(pos * (Math.PI / 2));
     },
 
-    easeInOutSine: function(pos){
-      return (-0.5 * (Math.cos(Math.PI*pos) -1));
+    easeInOutSine: function (pos) {
+      return (-0.5 * (Math.cos(Math.PI * pos) - 1));
     },
 
-    easeInExpo: function(pos){
-      return (pos===0) ? 0 : Math.pow(2, 10 * (pos - 1));
+    easeInExpo: function (pos) {
+      return (pos === 0) ? 0 : Math.pow(2, 10 * (pos - 1));
     },
 
-    easeOutExpo: function(pos){
-      return (pos===1) ? 1 : -Math.pow(2, -10 * pos) + 1;
+    easeOutExpo: function (pos) {
+      return (pos === 1) ? 1 : -Math.pow(2, -10 * pos) + 1;
     },
 
-    easeInOutExpo: function(pos){
-      if(pos===0) {return 0;}
-      if(pos===1) {return 1;}
-      if((pos/=0.5) < 1) {return 0.5 * Math.pow(2,10 * (pos-1));}
+    easeInOutExpo: function (pos) {
+      if (pos === 0) {return 0;}
+      if (pos === 1) {return 1;}
+      if ((pos /= 0.5) < 1) {return 0.5 * Math.pow(2,10 * (pos - 1));}
       return 0.5 * (-Math.pow(2, -10 * --pos) + 2);
     },
 
-    easeInCirc: function(pos){
-      return -(Math.sqrt(1 - (pos*pos)) - 1);
+    easeInCirc: function (pos) {
+      return -(Math.sqrt(1 - (pos * pos)) - 1);
     },
 
-    easeOutCirc: function(pos){
-      return Math.sqrt(1 - Math.pow((pos-1), 2));
+    easeOutCirc: function (pos) {
+      return Math.sqrt(1 - Math.pow((pos - 1), 2));
     },
 
-    easeInOutCirc: function(pos){
-      if((pos/=0.5) < 1) {return -0.5 * (Math.sqrt(1 - pos*pos) - 1);}
-      return 0.5 * (Math.sqrt(1 - (pos-=2)*pos) + 1);
+    easeInOutCirc: function (pos) {
+      if ((pos /= 0.5) < 1) {return -0.5 * (Math.sqrt(1 - pos * pos) - 1);}
+      return 0.5 * (Math.sqrt(1 - (pos -= 2) * pos) + 1);
     },
 
-    easeOutBounce: function(pos){
-      if ((pos) < (1/2.75)) {
-        return (7.5625*pos*pos);
-      } else if (pos < (2/2.75)) {
-        return (7.5625*(pos-=(1.5/2.75))*pos + 0.75);
-      } else if (pos < (2.5/2.75)) {
-        return (7.5625*(pos-=(2.25/2.75))*pos + 0.9375);
+    easeOutBounce: function (pos) {
+      if ((pos) < (1 / 2.75)) {
+        return (7.5625 * pos * pos);
+      } else if (pos < (2 / 2.75)) {
+        return (7.5625 * (pos -= (1.5 / 2.75)) * pos + 0.75);
+      } else if (pos < (2.5 / 2.75)) {
+        return (7.5625 * (pos -= (2.25 / 2.75)) * pos + 0.9375);
       } else {
-        return (7.5625*(pos-=(2.625/2.75))*pos + 0.984375);
+        return (7.5625 * (pos -= (2.625 / 2.75)) * pos + 0.984375);
       }
     },
 
-    easeInBack: function(pos){
+    easeInBack: function (pos) {
       var s = 1.70158;
-      return (pos)*pos*((s+1)*pos - s);
+      return (pos) * pos * ((s + 1) * pos - s);
     },
 
-    easeOutBack: function(pos){
+    easeOutBack: function (pos) {
       var s = 1.70158;
-      return (pos=pos-1)*pos*((s+1)*pos + s) + 1;
+      return (pos = pos - 1) * pos * ((s + 1) * pos + s) + 1;
     },
 
-    easeInOutBack: function(pos){
+    easeInOutBack: function (pos) {
       var s = 1.70158;
-      if((pos/=0.5) < 1) {return 0.5*(pos*pos*(((s*=(1.525))+1)*pos -s));}
-      return 0.5*((pos-=2)*pos*(((s*=(1.525))+1)*pos +s) +2);
+      if ((pos /= 0.5) < 1) {return 0.5 * (pos * pos * (((s *= (1.525)) + 1) * pos - s));}
+      return 0.5 * ((pos -= 2) * pos * (((s *= (1.525)) + 1) * pos + s) + 2);
     },
 
-    elastic: function(pos) {
-      return -1 * Math.pow(4,-8*pos) * Math.sin((pos*6-1)*(2*Math.PI)/2) + 1;
+    elastic: function (pos) {
+      return -1 * Math.pow(4,-8 * pos) * Math.sin((pos * 6 - 1) * (2 * Math.PI) / 2) + 1;
     },
 
-    swingFromTo: function(pos) {
+    swingFromTo: function (pos) {
       var s = 1.70158;
-      return ((pos/=0.5) < 1) ? 0.5*(pos*pos*(((s*=(1.525))+1)*pos - s)) :
-      0.5*((pos-=2)*pos*(((s*=(1.525))+1)*pos + s) + 2);
+      return ((pos /= 0.5) < 1) ? 0.5 * (pos * pos * (((s *= (1.525)) + 1) * pos - s)) :
+          0.5 * ((pos -= 2) * pos * (((s *= (1.525)) + 1) * pos + s) + 2);
     },
 
-    swingFrom: function(pos) {
+    swingFrom: function (pos) {
       var s = 1.70158;
-      return pos*pos*((s+1)*pos - s);
+      return pos * pos * ((s + 1) * pos - s);
     },
 
-    swingTo: function(pos) {
+    swingTo: function (pos) {
       var s = 1.70158;
-      return (pos-=1)*pos*((s+1)*pos + s) + 1;
+      return (pos -= 1) * pos * ((s + 1) * pos + s) + 1;
     },
 
-    bounce: function(pos) {
-      if (pos < (1/2.75)) {
-        return (7.5625*pos*pos);
-      } else if (pos < (2/2.75)) {
-        return (7.5625*(pos-=(1.5/2.75))*pos + 0.75);
-      } else if (pos < (2.5/2.75)) {
-        return (7.5625*(pos-=(2.25/2.75))*pos + 0.9375);
+    bounce: function (pos) {
+      if (pos < (1 / 2.75)) {
+        return (7.5625 * pos * pos);
+      } else if (pos < (2 / 2.75)) {
+        return (7.5625 * (pos -= (1.5 / 2.75)) * pos + 0.75);
+      } else if (pos < (2.5 / 2.75)) {
+        return (7.5625 * (pos -= (2.25 / 2.75)) * pos + 0.9375);
       } else {
-        return (7.5625*(pos-=(2.625/2.75))*pos + 0.984375);
+        return (7.5625 * (pos -= (2.625 / 2.75)) * pos + 0.984375);
       }
     },
 
-    bouncePast: function(pos) {
-      if (pos < (1/2.75)) {
-        return (7.5625*pos*pos);
-      } else if (pos < (2/2.75)) {
-        return 2 - (7.5625*(pos-=(1.5/2.75))*pos + 0.75);
-      } else if (pos < (2.5/2.75)) {
-        return 2 - (7.5625*(pos-=(2.25/2.75))*pos + 0.9375);
+    bouncePast: function (pos) {
+      if (pos < (1 / 2.75)) {
+        return (7.5625 * pos * pos);
+      } else if (pos < (2 / 2.75)) {
+        return 2 - (7.5625 * (pos -= (1.5 / 2.75)) * pos + 0.75);
+      } else if (pos < (2.5 / 2.75)) {
+        return 2 - (7.5625 * (pos -= (2.25 / 2.75)) * pos + 0.9375);
       } else {
-        return 2 - (7.5625*(pos-=(2.625/2.75))*pos + 0.984375);
+        return 2 - (7.5625 * (pos -= (2.625 / 2.75)) * pos + 0.984375);
       }
     },
 
-    easeFromTo: function(pos) {
-      if ((pos/=0.5) < 1) {return 0.5*Math.pow(pos,4);}
-      return -0.5 * ((pos-=2)*Math.pow(pos,3) - 2);
+    easeFromTo: function (pos) {
+      if ((pos /= 0.5) < 1) {return 0.5 * Math.pow(pos,4);}
+      return -0.5 * ((pos -= 2) * Math.pow(pos,3) - 2);
     },
 
-    easeFrom: function(pos) {
+    easeFrom: function (pos) {
       return Math.pow(pos,4);
     },
 
-    easeTo: function(pos) {
+    easeTo: function (pos) {
       return Math.pow(pos,0.25);
     }
   });
@@ -684,24 +684,24 @@ var Tweenable = (function () {
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-;(function(){
+;(function () {
   // port of webkit cubic bezier handling by http://www.netzgesta.de/dev/
   function cubicBezierAtTime(t,p1x,p1y,p2x,p2y,duration) {
-    var ax=0,bx=0,cx=0,ay=0,by=0,cy=0;
-    function sampleCurveX(t) {return ((ax*t+bx)*t+cx)*t;}
-    function sampleCurveY(t) {return ((ay*t+by)*t+cy)*t;}
-    function sampleCurveDerivativeX(t) {return (3.0*ax*t+2.0*bx)*t+cx;}
-    function solveEpsilon(duration) {return 1.0/(200.0*duration);}
+    var ax = 0,bx = 0,cx = 0,ay = 0,by = 0,cy = 0;
+    function sampleCurveX(t) {return ((ax * t + bx) * t + cx) * t;}
+    function sampleCurveY(t) {return ((ay * t + by) * t + cy) * t;}
+    function sampleCurveDerivativeX(t) {return (3.0 * ax * t + 2.0 * bx) * t + cx;}
+    function solveEpsilon(duration) {return 1.0 / (200.0 * duration);}
     function solve(x,epsilon) {return sampleCurveY(solveCurveX(x,epsilon));}
-    function fabs(n) {if(n>=0) {return n;}else {return 0-n;}}
+    function fabs(n) {if (n >= 0) {return n;}else {return 0 - n;}}
     function solveCurveX(x,epsilon) {
       var t0,t1,t2,x2,d2,i;
-      for(t2=x, i=0; i<8; i++) {x2=sampleCurveX(t2)-x; if(fabs(x2)<epsilon) {return t2;} d2=sampleCurveDerivativeX(t2); if(fabs(d2)<1e-6) {break;} t2=t2-x2/d2;}
-      t0=0.0; t1=1.0; t2=x; if(t2<t0) {return t0;} if(t2>t1) {return t1;}
-      while(t0<t1) {x2=sampleCurveX(t2); if(fabs(x2-x)<epsilon) {return t2;} if(x>x2) {t0=t2;}else {t1=t2;} t2=(t1-t0)*0.5+t0;}
+      for (t2 = x, i = 0; i < 8; i++) {x2 = sampleCurveX(t2) - x; if (fabs(x2) < epsilon) {return t2;} d2 = sampleCurveDerivativeX(t2); if (fabs(d2) < 1e-6) {break;} t2 = t2 - x2 / d2;}
+      t0 = 0.0; t1 = 1.0; t2 = x; if (t2 < t0) {return t0;} if (t2 > t1) {return t1;}
+      while (t0 < t1) {x2 = sampleCurveX(t2); if (fabs(x2 - x) < epsilon) {return t2;} if (x > x2) {t0 = t2;}else {t1 = t2;} t2 = (t1 - t0) * 0.5 + t0;}
       return t2; // Failure.
     }
-    cx=3.0*p1x; bx=3.0*(p2x-p1x)-cx; ax=1.0-cx-bx; cy=3.0*p1y; by=3.0*(p2y-p1y)-cy; ay=1.0-cy-by;
+    cx = 3.0 * p1x; bx = 3.0 * (p2x - p1x) - cx; ax = 1.0 - cx - bx; cy = 3.0 * p1y; by = 3.0 * (p2y - p1y) - cy; ay = 1.0 - cy - by;
     return solve(t, solveEpsilon(duration));
   }
   /*!
@@ -721,8 +721,8 @@ var Tweenable = (function () {
    *  @param {number} y2
    *  @return {function}
    */
-  function getCubicBezierTransition (x1, y1, x2, y2){
-    return function(pos){
+  function getCubicBezierTransition (x1, y1, x2, y2) {
+    return function (pos) {
       return cubicBezierAtTime(pos,x1,y1,x2,y2,1);
     };
   }
@@ -764,9 +764,9 @@ var Tweenable = (function () {
 ;(function () {
 
   function getInterpolatedValues (
-      from, current, targetState, position, easing) {
+    from, current, targetState, position, easing) {
     return Tweenable.tweenProps(
-        position, current, from, targetState, 1, 0, easing);
+      position, current, from, targetState, 1, 0, easing);
   }
 
   // Fake a Tweenable and patch some internals.  This approach allows us to
@@ -804,7 +804,7 @@ var Tweenable = (function () {
   Tweenable.interpolate = function (from, targetState, position, easing) {
     var current = Tweenable.shallowCopy({}, from);
     var easingObject = Tweenable.composeEasingObject(
-        from, easing || 'linear');
+      from, easing || 'linear');
 
     mockTweenable.set({});
 
@@ -821,7 +821,7 @@ var Tweenable = (function () {
     Tweenable.applyFilter(mockTweenable, 'beforeTween');
 
     var interpolatedValues = getInterpolatedValues(
-        from, current, targetState, position, easingObject);
+      from, current, targetState, position, easingObject);
 
     // Transform values back into their original format
     Tweenable.applyFilter(mockTweenable, 'afterTween');
@@ -967,9 +967,9 @@ var Tweenable = (function () {
  *
  * The order of the space-separated easing curves correspond the token values they apply to.  If there are more token values than easing curves listed, the last easing curve listed is used.
  */
- function token () {
-   // Functionality for this extension runs implicitly if it is loaded.
- } /*!*/
+function token () {
+  // Functionality for this extension runs implicitly if it is loaded.
+} /*!*/
 
 // token function is defined above only so that dox-foundation sees it as
 // documentation and renders it.  It is never used, and is optimized away at
@@ -990,9 +990,9 @@ var Tweenable = (function () {
   var R_FORMAT_CHUNKS = /([^\-0-9\.]+)/g;
   var R_UNFORMATTED_VALUES = /[0-9.\-]+/g;
   var R_RGB = new RegExp(
-      'rgb\\(' + R_UNFORMATTED_VALUES.source +
-      (/,\s*/.source) + R_UNFORMATTED_VALUES.source +
-      (/,\s*/.source) + R_UNFORMATTED_VALUES.source + '\\)', 'g');
+    'rgb\\(' + R_UNFORMATTED_VALUES.source +
+    (/,\s*/.source) + R_UNFORMATTED_VALUES.source +
+    (/,\s*/.source) + R_UNFORMATTED_VALUES.source + '\\)', 'g');
   var R_RGB_PREFIX = /^.*\(/;
   var R_HEX = /#([0-9]|[a-f]){3,6}/gi;
   var VALUE_PLACEHOLDER = 'VAL';
@@ -1134,7 +1134,7 @@ var Tweenable = (function () {
       for (var i = 0; i < pattenMatchesLength; i++) {
         currentChunk = pattenMatches.shift();
         filteredString = filteredString.replace(
-            VALUE_PLACEHOLDER, filter(currentChunk));
+          VALUE_PLACEHOLDER, filter(currentChunk));
       }
     }
 
@@ -1222,11 +1222,11 @@ var Tweenable = (function () {
     Tweenable.each(formatManifests, function (prop) {
       var currentProp = stateObject[prop];
       var formatChunks = extractPropertyChunks(
-          stateObject, formatManifests[prop].chunkNames);
+        stateObject, formatManifests[prop].chunkNames);
       var valuesList = getValuesList(
-          formatChunks, formatManifests[prop].chunkNames);
+        formatChunks, formatManifests[prop].chunkNames);
       currentProp = getFormattedValues(
-          formatManifests[prop].formatString, valuesList);
+        formatManifests[prop].formatString, valuesList);
       stateObject[prop] = sanitizeRGBChunks(currentProp);
     });
   }
@@ -1280,7 +1280,7 @@ var Tweenable = (function () {
 
     for (var i = 0; i < rawValuesLength; i++) {
       formattedValueString = formattedValueString.replace(
-          VALUE_PLACEHOLDER, +rawValues[i].toFixed(4));
+        VALUE_PLACEHOLDER, +rawValues[i].toFixed(4));
     }
 
     return formattedValueString;

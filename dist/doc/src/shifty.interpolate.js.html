@@ -237,7 +237,7 @@ code {
 </pre></div></div></div><div class="section"><p data-section-title class="title"><a href="#">Source</a></p><div data-section-content class="content"><pre><code class="language-javascript">Tweenable.interpolate = function (from, targetState, position, easing) {
     var current = Tweenable.shallowCopy({}, from);
     var easingObject = Tweenable.composeEasingObject(
-        from, easing || 'linear');
+      from, easing || 'linear');
 
     mockTweenable.set({});
 
@@ -254,7 +254,7 @@ code {
     Tweenable.applyFilter(mockTweenable, 'beforeTween');
 
     var interpolatedValues = getInterpolatedValues(
-        from, current, targetState, position, easingObject);
+      from, current, targetState, position, easingObject);
 
     // Transform values back into their original format
     Tweenable.applyFilter(mockTweenable, 'afterTween');

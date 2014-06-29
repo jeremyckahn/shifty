@@ -25,23 +25,23 @@ var Tweenable = (function () {
   var UPDATE_TIME = 1000 / 60;
 
   var _now = Date.now
-      ? Date.now
-      : function () { return +new Date(); };
+       ? Date.now
+       : function () {return +new Date();};
 
   var now = SHIFTY_DEBUG_NOW
-      ? SHIFTY_DEBUG_NOW
-      : _now;
+       ? SHIFTY_DEBUG_NOW
+       : _now;
 
   if (typeof window !== 'undefined') {
     // requestAnimationFrame() shim by Paul Irish (modified for Shifty)
     // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
     DEFAULT_SCHEDULE_FUNCTION = window.requestAnimationFrame
-      || window.webkitRequestAnimationFrame
-      || window.oRequestAnimationFrame
-      || window.msRequestAnimationFrame
-      || (window.mozCancelRequestAnimationFrame
-          && window.mozRequestAnimationFrame)
-      || setTimeout;
+       || window.webkitRequestAnimationFrame
+       || window.oRequestAnimationFrame
+       || window.msRequestAnimationFrame
+       || (window.mozCancelRequestAnimationFrame
+       && window.mozRequestAnimationFrame)
+       || setTimeout;
   } else {
     DEFAULT_SCHEDULE_FUNCTION = setTimeout;
   }
@@ -109,14 +109,14 @@ var Tweenable = (function () {
    * targetState.
    */
   function tweenProps (forPosition, currentState, originalState, targetState,
-      duration, timestamp, easing) {
+    duration, timestamp, easing) {
     var normalizedPosition = (forPosition - timestamp) / duration;
 
     var prop;
     for (prop in currentState) {
       if (currentState.hasOwnProperty(prop)) {
-          currentState[prop] = tweenProp(originalState[prop],
-              targetState[prop], formula[easing[prop]], normalizedPosition);
+        currentState[prop] = tweenProp(originalState[prop],
+          targetState[prop], formula[easing[prop]], normalizedPosition);
       }
     }
 
@@ -169,7 +169,7 @@ var Tweenable = (function () {
    * @param {Function(Function,number)}} schedule
    */
   function timeoutHandler (tweenable, timestamp, duration, currentState,
-      originalState, targetState, easing, step, schedule) {
+    originalState, targetState, easing, step, schedule) {
     timeoutHandler_endTime = timestamp + duration;
     timeoutHandler_currentTime = Math.min(now(), timeoutHandler_endTime);
     timeoutHandler_isEnded = timeoutHandler_currentTime >= timeoutHandler_endTime;
@@ -179,7 +179,7 @@ var Tweenable = (function () {
 
       applyFilter(tweenable, 'beforeTween');
       tweenProps(timeoutHandler_currentTime, currentState, originalState,
-          targetState, duration, timestamp, easing);
+        targetState, duration, timestamp, easing);
       applyFilter(tweenable, 'afterTween');
 
       step(currentState);
@@ -288,10 +288,10 @@ var Tweenable = (function () {
     defaults(targetState, currentState);
 
     this._easing = composeEasingObject(
-        currentState, config.easing || DEFAULT_EASING);
+      currentState, config.easing || DEFAULT_EASING);
 
     this._filterArgs =
-        [currentState, this._originalState, targetState, this._easing];
+      [currentState, this._originalState, targetState, this._easing];
 
     applyFilter(this, 'tweenCreated');
     return this;
@@ -338,8 +338,8 @@ var Tweenable = (function () {
     var self = this;
     this._timeoutHandler = function () {
       timeoutHandler(self, self._timestamp, self._duration, self._currentState,
-          self._originalState, self._targetState, self._easing, self._step,
-          self._scheduleFunction);
+        self._originalState, self._targetState, self._easing, self._step,
+        self._scheduleFunction);
     };
 
     this._timeoutHandler();
@@ -440,7 +440,7 @@ var Tweenable = (function () {
     module.exports = Tweenable;
   } else if (typeof define === 'function' && define.amd) {
     // AMD
-    define(function () { return Tweenable; });
+    define(function () {return Tweenable;});
   } else if (typeof root.Tweenable === 'undefined') {
     // Browser: Make `Tweenable` globally accessible.
     root.Tweenable = Tweenable;

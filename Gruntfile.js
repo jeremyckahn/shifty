@@ -7,6 +7,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-bump');
+  grunt.loadNpmTasks('grunt-codepainter');
   grunt.loadNpmTasks('grunt-dox');
 
   var banner = [
@@ -109,6 +110,19 @@ module.exports = function(grunt) {
         tagName: '%VERSION%',
         tagMessage: 'Version %VERSION%',
         push: false
+      }
+    },
+    codepainter: {
+      source: {
+        options: {
+          json: '.codepainterrc'
+        },
+        files: [{
+          expand: true,
+          cwd: 'src/',
+          src: ['shifty.!(intro|outro|const)*.js'],
+          dest: 'src/'
+        }]
       }
     }
   });

@@ -134,9 +134,9 @@
  *
  * The order of the space-separated easing curves correspond the token values they apply to.  If there are more token values than easing curves listed, the last easing curve listed is used.
  */
- function token () {
-   // Functionality for this extension runs implicitly if it is loaded.
- } /*!*/
+function token () {
+  // Functionality for this extension runs implicitly if it is loaded.
+} /*!*/
 
 // token function is defined above only so that dox-foundation sees it as
 // documentation and renders it.  It is never used, and is optimized away at
@@ -157,9 +157,9 @@
   var R_FORMAT_CHUNKS = /([^\-0-9\.]+)/g;
   var R_UNFORMATTED_VALUES = /[0-9.\-]+/g;
   var R_RGB = new RegExp(
-      'rgb\\(' + R_UNFORMATTED_VALUES.source +
-      (/,\s*/.source) + R_UNFORMATTED_VALUES.source +
-      (/,\s*/.source) + R_UNFORMATTED_VALUES.source + '\\)', 'g');
+    'rgb\\(' + R_UNFORMATTED_VALUES.source +
+    (/,\s*/.source) + R_UNFORMATTED_VALUES.source +
+    (/,\s*/.source) + R_UNFORMATTED_VALUES.source + '\\)', 'g');
   var R_RGB_PREFIX = /^.*\(/;
   var R_HEX = /#([0-9]|[a-f]){3,6}/gi;
   var VALUE_PLACEHOLDER = 'VAL';
@@ -301,7 +301,7 @@
       for (var i = 0; i < pattenMatchesLength; i++) {
         currentChunk = pattenMatches.shift();
         filteredString = filteredString.replace(
-            VALUE_PLACEHOLDER, filter(currentChunk));
+          VALUE_PLACEHOLDER, filter(currentChunk));
       }
     }
 
@@ -389,11 +389,11 @@
     Tweenable.each(formatManifests, function (prop) {
       var currentProp = stateObject[prop];
       var formatChunks = extractPropertyChunks(
-          stateObject, formatManifests[prop].chunkNames);
+        stateObject, formatManifests[prop].chunkNames);
       var valuesList = getValuesList(
-          formatChunks, formatManifests[prop].chunkNames);
+        formatChunks, formatManifests[prop].chunkNames);
       currentProp = getFormattedValues(
-          formatManifests[prop].formatString, valuesList);
+        formatManifests[prop].formatString, valuesList);
       stateObject[prop] = sanitizeRGBChunks(currentProp);
     });
   }
@@ -447,7 +447,7 @@
 
     for (var i = 0; i < rawValuesLength; i++) {
       formattedValueString = formattedValueString.replace(
-          VALUE_PLACEHOLDER, +rawValues[i].toFixed(4));
+        VALUE_PLACEHOLDER, +rawValues[i].toFixed(4));
     }
 
     return formattedValueString;

@@ -273,10 +273,10 @@ code {
     defaults(targetState, currentState);
 
     this._easing = composeEasingObject(
-        currentState, config.easing || DEFAULT_EASING);
+      currentState, config.easing || DEFAULT_EASING);
 
     this._filterArgs =
-        [currentState, this._originalState, targetState, this._easing];
+      [currentState, this._originalState, targetState, this._easing];
 
     applyFilter(this, 'tweenCreated');
     return this;
@@ -299,8 +299,8 @@ code {
     var self = this;
     this._timeoutHandler = function () {
       timeoutHandler(self, self._timestamp, self._duration, self._currentState,
-          self._originalState, self._targetState, self._easing, self._step,
-          self._scheduleFunction);
+        self._originalState, self._targetState, self._easing, self._step,
+        self._scheduleFunction);
     };
 
     this._timeoutHandler();
