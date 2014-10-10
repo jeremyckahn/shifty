@@ -154,6 +154,7 @@ function token () {
 
   // CONSTANTS
 
+  var R_NUMBER_COMPONENT = /(\d|\-|\.)/;
   var R_FORMAT_CHUNKS = /([^\-0-9\.]+)/g;
   var R_UNFORMATTED_VALUES = /[0-9.\-]+/g;
   var R_RGB = new RegExp(
@@ -199,7 +200,16 @@ function token () {
       // formattedString (for example, if formattedString is '2').  Coerce
       // chunks to be useful here.
       chunks = ['', ''];
-    } else if (chunks.length === 1) {
+
+      // If there is only one chunk, assume that the string is a number
+      // followed by a token...
+      // NOTE: This may be an unwise assumption.
+    } else if (chunks.length === 1 ||
+        // ...or if the string starts with a number component (".", "-", or a
+        // digit)...
+        formattedString[0].match(R_NUMBER_COMPONENT)) {
+      // ...prepend an empty string here to make sure that the formatted number
+      // is properly replaced by VALUE_PLACEHOLDER
       chunks.unshift('');
     }
 

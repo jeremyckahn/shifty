@@ -327,6 +327,14 @@
             'Token-less strings were successfully interpolated');
     });
 
+    test('Can tween CSS value pairs', function () {
+      var from = { x: '0px 0px' };
+      var to = { x: '100px 100px' };
+
+      var interpolated = Tweenable.interpolate(from, to, .5);
+      equals(interpolated.x, '50px 50px', 'The string was interpolated correctly');
+    });
+
 
     module('Bezier extension');
 
