@@ -1,6 +1,6 @@
 {
   "name": "shifty",
-  "version": "1.2.2",
+  "version": "1.2.2.1",
   "homepage": "http://jeremyckahn.github.io/shifty",
   "author": "Jeremy Kahn <jeremyckahn@gmail.com>",
   "description": "A teeny tiny tweening engine in JavaScript.",
@@ -34,6 +34,10 @@
     {
       "name": "Jonathan Raoult",
       "email": "jesuisjonathan@gmx.fr"
+    },
+    {
+      "name": "Adrian Voica",
+      "email": "adrian.voica@nanokyte.com"
     }
   ],
   "license": "MIT"

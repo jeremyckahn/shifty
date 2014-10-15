@@ -182,9 +182,9 @@ var Tweenable = (function () {
         targetState, duration, timestamp, easing);
       applyFilter(tweenable, 'afterTween');
 
-      step(currentState);
+      step(currentState, tweenable._attachment);
     } else if (timeoutHandler_isEnded) {
-      step(targetState);
+      step(targetState, tweenable._attachment);
       tweenable.stop(true);
     }
   }
@@ -248,7 +248,7 @@ var Tweenable = (function () {
       this.setConfig(opt_config);
     }
 
-    this._start(this.get());
+    this._start(this.get(), this._attachment);
     return this.resume();
   };
 
@@ -258,16 +258,20 @@ var Tweenable = (function () {
    * - __from__ (_Object=_): Starting position.  If omitted, the current state is used.
    * - __to__ (_Object=_): Ending position.
    * - __duration__ (_number=_): How many milliseconds to animate for.
-   * - __start__ (_Function(Object)=_): Function to execute when the tween begins.  Receives the state of the tween as the only parameter.
-   * - __step__ (_Function(Object)=_): Function to execute on every tick.  Receives the state of the tween as the only parameter.  This function is not called on the final step of the animation, but `finish` is.
-   * - __finish__ (_Function(Object)=_): Function to execute upon tween completion.  Receives the state of the tween as the only parameter.
+   * - __start__ (_Function(Object)=_): Function to execute when the tween begins.  Receives the state of the tween as the first parameter. Attachment as the second parameter.
+   * - __step__ (_Function(Object)=_): Function to execute on every tick.  Receives the state of the tween as the first parameter. Attachment as the second parameter. This function is not called on the final step of the animation, but `finish` is.
+   * - __finish__ (_Function(Object)=_): Function to execute upon tween completion.  Receives the state of the tween as the fisrt parameter. Attachment as the second parameter.
    * - __easing__ (_Object|string=_): Easing curve name(s) to use for the tween.
+   * - __attachment__ (_Object|string|any=_): Entity that is attached to this instance and passed on to the step/start/finish methods.
    * @param {Object} config
    * @return {Tweenable}
    */
   Tweenable.prototype.setConfig = function (config) {
     config = config || {};
     this._configured = true;
+
+    // Attach something to this Tweenable instance (e.g.: a DOM element, an object, a string, etc.);
+    this._attachment = config.attachment || null;
 
     // Init the internal state
     this._pausedAtTime = null;
@@ -360,7 +364,7 @@ var Tweenable = (function () {
     if (gotoEnd) {
       shallowCopy(this._currentState, this._targetState);
       applyFilter(this, 'afterTweenEnd');
-      this._finish.call(this, this._currentState);
+      this._finish.call(this, this._currentState, this._attachment);
     }
 
     return this;
