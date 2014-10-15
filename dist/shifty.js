@@ -274,7 +274,7 @@ var Tweenable = (function () {
     this._configured = true;
 
     // Attach something to this Tweenable instance (e.g.: a DOM element, an object, a string, etc.);
-    this._attachment = config.attachment || null;
+    this._attachment = config.attachment;
 
     // Init the internal state
     this._pausedAtTime = null;
