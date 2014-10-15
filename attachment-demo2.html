@@ -67,15 +67,20 @@
         </div>
         <script src="dist/shifty.min.js"></script>
         <script>
-            var TA = [];
+            var TA = []; // Array of tweenables;
+            var TP = []; // Current state;
+            var TE = []; // Elements;
+            
             document.addEventListener("DOMContentLoaded", domReady, false);
+            
             function domReady() {
 	            for (var i=1; i<=20; i++) {
+	            	TE[i] = document.getElementById('fig' + i.toString());
 	                TA[i] = new Tweenable();
 	                TA[i].setConfig({     
 
 	                    // We attach (and thus, cache) the corresponding DOM element for each Tweenable insance;
-	                    attachment : document.getElementById('fig' + i.toString()),
+	                    attachment : [i, TE[i]],
 	                    
 	                    from : {
 	                        'x' : 0,
@@ -93,18 +98,15 @@
 	                        'backgroundColor' : '#ffff00'
 	                    },        
 
-	                    duration : (2000 * Math.random() + 1000),        
+	                    duration : (2000 * Math.random() + 500),        
 
 	                    step : function(currentState, currentAttachment) {       
 	                        if (!currentAttachment) 
-	                            return;
-	                        currentAttachment.style.webkitTransform = 'translate(' + currentState.x + 'px, ' + currentState.y + 'px)';
-	                        currentAttachment.style.webkitTransform += ' scale(' + currentState.scale + ')';
-	                        currentAttachment.style.webkitTransform += ' rotate(' + currentState.rot + 'deg)';
-	                        currentAttachment.style.backgroundColor = currentState.backgroundColor;
+	                            return;	                            
+	    			TP[currentAttachment[0]] = currentState;                        
 	                    },        
 
-	                    easing : 'easeInOutQuad'
+	                    easing : 'bounce'
 
 	                });
 	            }
@@ -113,6 +115,14 @@
 	                TA[i].tween();
 	            }
             }
+            setInterval(function(){
+            	for (var i=1; i<=20; i++) {
+            		var ce = TE[i];
+            		var cp = TP[i];
+	                ce.style.webkitTransform = 'translate(' + cp.x + 'px, ' + cp.y + 'px) scale(' + cp.scale + ') rotate(' + cp.rot + 'deg)';
+	                ce.style.backgroundColor = cp.backgroundColor;	
+            	}
+	    }, 1000/60);
         </script>
     </body>
 </html>
