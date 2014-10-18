@@ -352,6 +352,33 @@ var Tweenable = (function () {
   };
 
   /**
+   * Move the state of the animation to specific point in the tween's animation
+   * timeline.  If the animation is not running, this will cause the `step`
+   * handlers to be called.
+   * @param {millisecond} millisecond The millisecond of the animation to seek to.
+   * @return {Tweenable}
+   */
+  Tweenable.prototype.seek = function (millisecond) {
+    this._timestamp = now() - millisecond;
+
+    if (!this.isPlaying()) {
+      this._isTweening = true;
+      this._isPaused = false;
+
+      // If the animation is not running, call timeoutHandler to make sure that
+      // any step handlers are run.
+      timeoutHandler(this, this._timestamp, this._duration, this._currentState,
+        this._originalState, this._targetState, this._easing, this._step,
+        this._scheduleFunction);
+
+      this._timeoutHandler();
+      this.pause();
+    }
+
+    return this;
+  };
+
+  /**
    * Stops and cancels a tween.
    * @param {boolean=} gotoEnd If false or omitted, the tween just stops at its current state, and the "finish" handler is not invoked.  If true, the tweened object's values are instantly set to the target values, and "finish" is invoked.
    * @return {Tweenable}
