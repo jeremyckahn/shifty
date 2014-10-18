@@ -37,6 +37,18 @@ are:
   easing formulas adapted from
   [Scripty2](https://github.com/madrobby/scripty2).
 
+## Installation
+
+Shifty is available through NPM and Bower:
+
+````
+npm install --save shifty
+````
+
+````
+bower install --save shifty
+````
+
 ## Using Shifty
 
 Shifty has no dependencies, so you can just load

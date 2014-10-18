@@ -64,26 +64,30 @@
     </ul>
     <div id="main">
       <a href="https://github.com/jeremyckahn/shifty"><img style="position: absolute; top: 0; left: 0; border: 0;" src="asset/img/forkme.png" alt="Fork me on GitHub"></a>
-      <p>Shifty is a JavaScript tweening engine designed to fit any number of tweening needs.  Its features include:</p>
+      <p>Shifty is a JavaScript tweening engine designed to fit all of your animation needs. Core features include:</p>
       <ul>
           <li>Speed: Shifty is optimized for performance.</li>
-          <li>Playback control (play/pause/stop)</li>
+          <li>Playback control (play/pause/stop).</li>
+          <li>Flexibility: Shifty provides numerous low-level APIs to hook into the animtion pipeline.</li>
           <li>Extensibility: Shifty's <code>Tweenable</code> object works well as the base in a prototype chain.</li>
-          <li>Small download size: The standard distribution (which includes all extensions) is less than 2Kb when minified and gzipped.  The core of the library (<code><a href="https://github.com/jeremyckahn/shifty/blob/master/src/shifty.core.js" target="_blank">shifty.core.js</a></code>) is less than 1Kb.</li>
+          <li>Small download size: The standard distribution (which includes all extensions) is less than 4Kb when minified and gzipped.  The core of the library (<code><a href="https://github.com/jeremyckahn/shifty/blob/master/src/shifty.core.js" target="_blank">shifty.core.js</a></code>) is less than 2Kb when minified and gzipped.</li>
       </ul>
-      <p>Shifty is an excellent animation solution for scenarios in which jQuery's <code>animate()</code> function is either unavailable or insufficient.  It's particularly effective for creating <code>&lt;canvas&gt;</code> animations.</p>
-      <p>Another use for Shifty is computing single, specific frames of a tween, as it is used to do in <a href="http://rekapi.com/" target="_blank">Rekapi</a> and Joe Lambert's <a href="https://github.com/joelambert/morf" target="_blank">Morf</a> library.  Using Shifty in this way would also be very useful in a non-browser environment such as <a href="http://nodejs.org/" target="_blank">Node.js</a>.</p>
+      <p>Shifty is a low-level animation solution.  This means that it does not perform any rendering, but it can be integrated into whatever rendering mechanism is most appropriate for your project.  Shifty is meant to be a simpler, more lightweight and flexible alternative to richer tools like the excellent <a href="https://greensock.com/" target="_blank">Greensock animation platform</a>.</p>
+      <p>Shifty is the heart of <a href="http://rekapi.com/" target="_blank">Rekapi</a>, a higher-level library for making keyframe animations.</p>
       <p>If used without an AMD or CommonJS script loader, Shifty exposes only one object globally: <code>Tweenable</code>.  To create a basic tween, you could have something like this:</p>
       <p data-height="342" data-theme-id="0" data-slug-hash="ulLaI" data-default-tab="js" data-user="jeremyckahn" class='codepen'>See the Pen <a href='http://codepen.io/jeremyckahn/pen/ulLaI/'>Super simple Shifty sample</a> by Jeremy Kahn (<a href='http://codepen.io/jeremyckahn'>@jeremyckahn</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
       <script async src="//codepen.io/assets/embed/ei.js"></script>
-      <p>This snippet tweens the <code>x</code> variable from 0 to 10 over one second, and then alerts the final value.  You can tween as many properties at once as you'd like.</p>
-      <p>Shifty also allows you to define filters to transform tweened values (for example, to support data types more complex than JavaScript <code>number</code>s.  The standard distribution of Shifty provides support for CSS strings and is capable of animating the DOM.  All of this functionality is described in detail in the <a href="dist/doc/src/shifty.core.js.html">API documentation</a> and project <a href="https://github.com/jeremyckahn/shifty/blob/master/README.md">README</a>.</p>
-      <p>A collection of Robert Penner's easing functions have been adapted for use with Shifty and are included in the standard download.</p>
-      <p>Please fork, use and contribute to Shifty!  It is distributed under the MIT License, and experimentation is encouraged.  If you find a bug or have a question about Shifty, please submit it the the <a href="https://github.com/jeremyckahn/shifty/issues" target="_blank">Github issue tracker</a>.</p>
-      <p>Here's another example of Shifty in use:</p>
+      <p>This snippet tweens and prints the <code>x</code> variable from 0 to 10 over one second, and then prints the final value.  You can animate as many properties in a single tween as you'd like.</p>
+      <p>Shifty also allows you to define filters to transform tweened values (for example, to support data types more complex than JavaScript <code>number</code>s.  The standard distribution of Shifty provides <a href="dist/doc/src/shifty.token.js.html">support for CSS strings</a> and is capable of animating DOM elements.  All of this functionality is described in detail in the <a href="dist/doc/src/shifty.core.js.html">API documentation</a> and project <a href="https://github.com/jeremyckahn/shifty/blob/master/README.md">README</a>.</p>
+      <p>A collection of Robert Penner's easing functions have been adapted for use with Shifty and are included in the standard distribution.</p>
+      <p>Please fork, use and contribute to Shifty!  It is distributed under the MIT License, and experimentation is encouraged.  If you find a bug or have a question about Shifty, please submit it via the <a href="https://github.com/jeremyckahn/shifty/issues" target="_blank">Github issue tracker</a>.</p>
+      <h2>More examples</h2>
+      <h3>Bouncing blocks</h3>
+      <p data-height="560" data-theme-id="0" data-slug-hash="mnLvB" data-default-tab="result" data-user="jeremyckahn" class='codepen'>See the Pen <a href='http://codepen.io/jeremyckahn/pen/mnLvB/'>Shifty Attachment Demo</a> by Jeremy Kahn (<a href='http://codepen.io/jeremyckahn'>@jeremyckahn</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
+      <script async src="//codepen.io/assets/embed/ei.js"></script>
+      <h3>A helix!</h3>
       <p data-height="700" data-theme-id="0" data-slug-hash="brzKu" data-default-tab="result" data-user="jeremyckahn" class='codepen'>See the Pen <a href='http://codepen.io/jeremyckahn/pen/brzKu/'>Shifty Helix Demo</a> by Jeremy Kahn (<a href='http://codepen.io/jeremyckahn'>@jeremyckahn</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
       <script async src="//codepen.io/assets/embed/ei.js"></script>
-      <h2>More examples</h2>
       <h3>Tweening a number and printing it</h3>
       <p data-height="315" data-theme-id="0" data-slug-hash="mDqhB" data-default-tab="js" data-user="jeremyckahn" class='codepen'>See the Pen <a href='http://codepen.io/jeremyckahn/pen/mDqhB/'>Tweening a number and printing it</a> by Jeremy Kahn (<a href='http://codepen.io/jeremyckahn'>@jeremyckahn</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
       <script async src="//codepen.io/assets/embed/ei.js"></script>
