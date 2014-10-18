@@ -92,6 +92,22 @@
     });
 
 
+    module('Tweenable.prototype.seek');
+
+    test('pause() moves the end time of the tween', function () {
+      var tweenable = new Tweenable();
+      mockTime = function () {return 0;};
+      tweenable.tween({
+        from: { x: 0 },
+        to: { x: 100 },
+        duration: 1000
+      });
+
+      tweenable.seek(500);
+      equals(tweenable._timestamp, -500, 'The timestamp was properly offset');
+    });
+
+
     module('Tweenable.prototype.stop');
 
     test('stop(undefined) leaves a tween where it was stopped', function () {
