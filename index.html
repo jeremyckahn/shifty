@@ -11,13 +11,6 @@
       line-height: 1.7em;
     }
 
-    pre {
-      background: #e8e8e8;
-      font-size: 1.3em;
-      line-height: 1.4em;
-      padding: 24px 0px;
-    }
-
     p {
       font-size: 1.2em;
     }
@@ -48,37 +41,6 @@
         display: block;
         margin: 0 auto;
       }
-
-    .segment {
-      background-color: #05f;
-      clear: both;
-      float: left;
-      left: 0px;
-      position: relative;
-      height: 20px;
-      width: 20px;
-      -webkit-border-radius: 15px;
-      -moz-border-radius: 15px;
-      border-radius: 15px;
-    }
-
-    #helix-container {
-      background: #eaeaea;
-      border: solid 1px #000;
-      overflow: hidden;
-      margin: 0px auto 40px;
-      padding: 50px;
-      width: 320px;
-    }
-
-    .big-button {
-      display: block;
-      font-size: 30px;
-      font-weight: bold;
-      margin: 15px auto 10px;
-      height: 60px;
-      width: 420px;
-    }
 
     footer {
       font-size: 12px;
@@ -112,69 +74,20 @@
       <p>Shifty is an excellent animation solution for scenarios in which jQuery's <code>animate()</code> function is either unavailable or insufficient.  It's particularly effective for creating <code>&lt;canvas&gt;</code> animations.</p>
       <p>Another use for Shifty is computing single, specific frames of a tween, as it is used to do in <a href="http://rekapi.com/" target="_blank">Rekapi</a> and Joe Lambert's <a href="https://github.com/joelambert/morf" target="_blank">Morf</a> library.  Using Shifty in this way would also be very useful in a non-browser environment such as <a href="http://nodejs.org/" target="_blank">Node.js</a>.</p>
       <p>If used without an AMD or CommonJS script loader, Shifty exposes only one object globally: <code>Tweenable</code>.  To create a basic tween, you could have something like this:</p>
-      <button class="big-button" onclick="javascript:eval(document.getElementById('sample-snippet').innerHTML);">Run this snippet</button>
-      <pre id="sample-snippet">
-        var tweenable = new Tweenable();
-
-        tweenable.tween({
-          from:     { 'x': 0  },
-          to:       { 'x': 10 },
-          duration: 1000,
-          finish: function (state) {
-            alert('Hooray, all done!  Final value: ' + state.x);
-          }
-        });</pre>
+      <p data-height="342" data-theme-id="0" data-slug-hash="ulLaI" data-default-tab="js" data-user="jeremyckahn" class='codepen'>See the Pen <a href='http://codepen.io/jeremyckahn/pen/ulLaI/'>Super simple Shifty sample</a> by Jeremy Kahn (<a href='http://codepen.io/jeremyckahn'>@jeremyckahn</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
+      <script async src="//codepen.io/assets/embed/ei.js"></script>
       <p>This snippet tweens the <code>x</code> variable from 0 to 10 over one second, and then alerts the final value.  You can tween as many properties at once as you'd like.</p>
       <p>Shifty also allows you to define filters to transform tweened values (for example, to support data types more complex than JavaScript <code>number</code>s.  The standard distribution of Shifty provides support for CSS strings and is capable of animating the DOM.  All of this functionality is described in detail in the <a href="dist/doc/src/shifty.core.js.html">API documentation</a> and project <a href="https://github.com/jeremyckahn/shifty/blob/master/README.md">README</a>.</p>
       <p>A collection of Robert Penner's easing functions have been adapted for use with Shifty and are included in the standard download.</p>
       <p>Please fork, use and contribute to Shifty!  It is distributed under the MIT License, and experimentation is encouraged.  If you find a bug or have a question about Shifty, please submit it the the <a href="https://github.com/jeremyckahn/shifty/issues" target="_blank">Github issue tracker</a>.</p>
       <p>Here's another example of Shifty in use:</p>
-      <button id="btnHelixStart" class="big-button">Go go helix!</button>
-      <div id="helix-container">
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-          <span class="segment">&nbsp;</span>
-      </div>
+      <p data-height="700" data-theme-id="0" data-slug-hash="brzKu" data-default-tab="result" data-user="jeremyckahn" class='codepen'>See the Pen <a href='http://codepen.io/jeremyckahn/pen/brzKu/'>Shifty Helix Demo</a> by Jeremy Kahn (<a href='http://codepen.io/jeremyckahn'>@jeremyckahn</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
+      <script async src="//codepen.io/assets/embed/ei.js"></script>
     </div>
     <footer>
       Shifty is an open source project by <a href="http://jeremyckahn.com/">Jeremy Kahn</a>.  He's a nice guy and likes to make things for your web browser.
     </footer>
   </div> <!--! end of #container -->
   <script type="text/javascript" src="dist/shifty.js" charset="utf-8"></script>
-  <script type="text/javascript" src="asset/helix.js" charset="utf-8"></script>
 </body>
 </html>
