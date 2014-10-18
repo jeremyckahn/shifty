@@ -352,7 +352,7 @@ var Tweenable = (function () {
   };
 
   /**
-   * Move the state of the animation to specific point in the tween's timeline.
+   * Move the state of the animation to a specific point in the tween's timeline.
    * If the animation is not running, this will cause the `step` handlers to be
    * called.
    * @param {millisecond} millisecond The millisecond of the animation to seek to.
