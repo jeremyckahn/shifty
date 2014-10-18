@@ -17,20 +17,18 @@
    *
    * Example:
    *
-   * ```
-   *  var interpolatedValues = Tweenable.interpolate({
-   *    width: '100px',
-   *    opacity: 0,
-   *    color: '#fff'
-   *  }, {
-   *    width: '200px',
-   *    opacity: 1,
-   *    color: '#000'
-   *  }, 0.5);
+   *     var interpolatedValues = Tweenable.interpolate({
+   *       width: '100px',
+   *       opacity: 0,
+   *       color: '#fff'
+   *     }, {
+   *       width: '200px',
+   *       opacity: 1,
+   *       color: '#000'
+   *     }, 0.5);
    *
-   *  console.log(interpolatedValues);
-   *  // {opacity: 0.5, width: "150px", color: "rgb(127,127,127)"}
-   * ```
+   *     console.log(interpolatedValues);
+   *     // {opacity: 0.5, width: "150px", color: "rgb(127,127,127)"}
    *
    * @param {Object} from The starting values to tween from.
    * @param {Object} targetState The ending values to tween to.

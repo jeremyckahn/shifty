@@ -1,4 +1,4 @@
-/*! shifty - v1.2.3 - 2014-10-15 - http://jeremyckahn.github.io/shifty */
+/*! shifty - v1.2.3 - 2014-10-18 - http://jeremyckahn.github.io/shifty */
 ;(function (root) {
 
 /*!
@@ -784,20 +784,18 @@ var Tweenable = (function () {
    *
    * Example:
    *
-   * ```
-   *  var interpolatedValues = Tweenable.interpolate({
-   *    width: '100px',
-   *    opacity: 0,
-   *    color: '#fff'
-   *  }, {
-   *    width: '200px',
-   *    opacity: 1,
-   *    color: '#000'
-   *  }, 0.5);
+   *     var interpolatedValues = Tweenable.interpolate({
+   *       width: '100px',
+   *       opacity: 0,
+   *       color: '#fff'
+   *     }, {
+   *       width: '200px',
+   *       opacity: 1,
+   *       color: '#000'
+   *     }, 0.5);
    *
-   *  console.log(interpolatedValues);
-   *  // {opacity: 0.5, width: "150px", color: "rgb(127,127,127)"}
-   * ```
+   *     console.log(interpolatedValues);
+   *     // {opacity: 0.5, width: "150px", color: "rgb(127,127,127)"}
    *
    * @param {Object} from The starting values to tween from.
    * @param {Object} targetState The ending values to tween to.
@@ -838,138 +836,144 @@ var Tweenable = (function () {
 /**
  * Adds string interpolation support to Shifty.
  *
- * The Token extension allows Shifty to tween numbers inside of strings.  Among other things, this allows you to animate CSS properties.  For example, you can do this:
+ * The Token extension allows Shifty to tween numbers inside of strings.  Among
+ * other things, this allows you to animate CSS properties.  For example, you
+ * can do this:
  *
- * ```
- * var tweenable = new Tweenable();
- * tweenable.tween({
- *   from: { transform: 'translateX(45px)'},
- *   to: { transform: 'translateX(90xp)'}
- * });
- * ```
+ *     var tweenable = new Tweenable();
+ *     tweenable.tween({
+ *       from: { transform: 'translateX(45px)'},
+ *       to: { transform: 'translateX(90xp)'}
+ *     });
  *
+ * ` `
  * `translateX(45)` will be tweened to `translateX(90)`.  To demonstrate:
  *
- * ```
- * var tweenable = new Tweenable();
- * tweenable.tween({
- *   from: { transform: 'translateX(45px)'},
- *   to: { transform: 'translateX(90px)'},
- *   step: function (state) {
- *     console.log(state.transform);
- *   }
- * });
- * ```
+ *     var tweenable = new Tweenable();
+ *     tweenable.tween({
+ *       from: { transform: 'translateX(45px)'},
+ *       to: { transform: 'translateX(90px)'},
+ *       step: function (state) {
+ *         console.log(state.transform);
+ *       }
+ *     });
  *
+ * ` `
  * The above snippet will log something like this in the console:
  *
- * ```
- * translateX(60.3px)
- * ...
- * translateX(76.05px)
- * ...
- * translateX(90px)
- * ```
+ *     translateX(60.3px)
+ *     ...
+ *     translateX(76.05px)
+ *     ...
+ *     translateX(90px)
  *
+ * ` `
  * Another use for this is animating colors:
  *
- * ```
- * var tweenable = new Tweenable();
- * tweenable.tween({
- *   from: { color: 'rgb(0,255,0)'},
- *   to: { color: 'rgb(255,0,255)'},
- *   step: function (state) {
- *     console.log(state.color);
- *   }
- * });
- * ```
+ *     var tweenable = new Tweenable();
+ *     tweenable.tween({
+ *       from: { color: 'rgb(0,255,0)'},
+ *       to: { color: 'rgb(255,0,255)'},
+ *       step: function (state) {
+ *         console.log(state.color);
+ *       }
+ *     });
  *
+ * ` `
  * The above snippet will log something like this:
  *
- * ```
- * rgb(84,170,84)
- * ...
- * rgb(170,84,170)
- * ...
- * rgb(255,0,255)
- * ```
+ *     rgb(84,170,84)
+ *     ...
+ *     rgb(170,84,170)
+ *     ...
+ *     rgb(255,0,255)
  *
- * This extension also supports hexadecimal colors, in both long (`#ff00ff`) and short (`#f0f`) forms.  Be aware that hexadecimal input values will be converted into the equivalent RGB output values.  This is done to optimize for performance.
+ * ` `
+ * This extension also supports hexadecimal colors, in both long (`#ff00ff`)
+ * and short (`#f0f`) forms.  Be aware that hexadecimal input values will be
+ * converted into the equivalent RGB output values.  This is done to optimize
+ * for performance.
  *
- * ```
- * var tweenable = new Tweenable();
- * tweenable.tween({
- *   from: { color: '#0f0'},
- *   to: { color: '#f0f'},
- *   step: function (state) {
- *     console.log(state.color);
- *   }
- * });
- * ```
+ *     var tweenable = new Tweenable();
+ *     tweenable.tween({
+ *       from: { color: '#0f0'},
+ *       to: { color: '#f0f'},
+ *       step: function (state) {
+ *         console.log(state.color);
+ *       }
+ *     });
  *
- * This snippet will generate the same output as the one before it because equivalent values were supplied (just in hexadecimal form rather than RGB):
+ * ` `
+ * This snippet will generate the same output as the one before it because
+ * equivalent values were supplied (just in hexadecimal form rather than RGB):
  *
- * ```
- * rgb(84,170,84)
- * ...
- * rgb(170,84,170)
- * ...
- * rgb(255,0,255)
- * ```
+ *     rgb(84,170,84)
+ *     ...
+ *     rgb(170,84,170)
+ *     ...
+ *     rgb(255,0,255)
  *
+ * ` `
+ * ` `
  * ## Easing support
  *
- * Easing works somewhat differently in the Token extension.  This is because some CSS properties have multiple values in them, and you might need to tween each value along its own easing curve.  A basic example:
+ * Easing works somewhat differently in the Token extension.  This is because
+ * some CSS properties have multiple values in them, and you might need to
+ * tween each value along its own easing curve.  A basic example:
  *
- * ```
- * var tweenable = new Tweenable();
- * tweenable.tween({
- *   from: { transform: 'translateX(0px) translateY(0px)'},
- *   to: { transform:   'translateX(100px) translateY(100px)'},
- *   easing: { transform: 'easeInQuad' },
- *   step: function (state) {
- *     console.log(state.transform);
- *   }
- * });
- * ```
+ *     var tweenable = new Tweenable();
+ *     tweenable.tween({
+ *       from: { transform: 'translateX(0px) translateY(0px)'},
+ *       to: { transform:   'translateX(100px) translateY(100px)'},
+ *       easing: { transform: 'easeInQuad' },
+ *       step: function (state) {
+ *         console.log(state.transform);
+ *       }
+ *     });
  *
+ * ` `
  * The above snippet create values like this:
  *
- * ```
- * translateX(11.560000000000002px) translateY(11.560000000000002px)
- * ...
- * translateX(46.24000000000001px) translateY(46.24000000000001px)
- * ...
- * translateX(100px) translateY(100px)
- * ```
+ *     translateX(11.560000000000002px) translateY(11.560000000000002px)
+ *     ...
+ *     translateX(46.24000000000001px) translateY(46.24000000000001px)
+ *     ...
+ *     translateX(100px) translateY(100px)
  *
- * In this case, the values for `translateX` and `translateY` are always the same for each step of the tween, because they have the same start and end points and both use the same easing curve.  We can also tween `translateX` and `translateY` along independent curves:
+ * ` `
+ * In this case, the values for `translateX` and `translateY` are always the
+ * same for each step of the tween, because they have the same start and end
+ * points and both use the same easing curve.  We can also tween `translateX`
+ * and `translateY` along independent curves:
  *
- * ```
- * var tweenable = new Tweenable();
- * tweenable.tween({
- *   from: { transform: 'translateX(0px) translateY(0px)'},
- *   to: { transform:   'translateX(100px) translateY(100px)'},
- *   easing: { transform: 'easeInQuad bounce' },
- *   step: function (state) {
- *     console.log(state.transform);
- *   }
- * });
- * ```
+ *     var tweenable = new Tweenable();
+ *     tweenable.tween({
+ *       from: { transform: 'translateX(0px) translateY(0px)'},
+ *       to: { transform:   'translateX(100px) translateY(100px)'},
+ *       easing: { transform: 'easeInQuad bounce' },
+ *       step: function (state) {
+ *         console.log(state.transform);
+ *       }
+ *     });
  *
+ * ` `
  * The above snippet create values like this:
  *
- * ```
- * translateX(10.89px) translateY(82.355625px)
- * ...
- * translateX(44.89000000000001px) translateY(86.73062500000002px)
- * ...
- * translateX(100px) translateY(100px)
- * ```
+ *     translateX(10.89px) translateY(82.355625px)
+ *     ...
+ *     translateX(44.89000000000001px) translateY(86.73062500000002px)
+ *     ...
+ *     translateX(100px) translateY(100px)
  *
- * `translateX` and `translateY` are not in sync anymore, because `easeInQuad` was specified for `translateX` and `bounce` for `translateY`.  Mixing and matching easing curves can make for some interesting motion in your animations.
+ * ` `
+ * `translateX` and `translateY` are not in sync anymore, because `easeInQuad`
+ * was specified for `translateX` and `bounce` for `translateY`.  Mixing and
+ * matching easing curves can make for some interesting motion in your
+ * animations.
  *
- * The order of the space-separated easing curves correspond the token values they apply to.  If there are more token values than easing curves listed, the last easing curve listed is used.
+ * The order of the space-separated easing curves correspond the token values
+ * they apply to.  If there are more token values than easing curves listed,
+ * the last easing curve listed is used.
  */
 function token () {
   // Functionality for this extension runs implicitly if it is loaded.
