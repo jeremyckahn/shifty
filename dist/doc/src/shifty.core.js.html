@@ -246,9 +246,9 @@ code {
 <li><strong>from</strong> (<em>Object=</em>): Starting position.  If omitted, the current state is used.</li>
 <li><strong>to</strong> (<em>Object=</em>): Ending position.</li>
 <li><strong>duration</strong> (<em>number=</em>): How many milliseconds to animate for.</li>
-<li><strong>start</strong> (<em>Function(Object)=</em>): Function to execute when the tween begins.  Receives the state of the tween as the first parameter. Attachment is the second parameter.</li>
-<li><strong>step</strong> (<em>Function(Object)=</em>, *, number): Function to execute on every tick.  Receives the state of the tween as the first parameter. Attachment is the second parameter, and the time elapsed since the start of the tween is the third parameter. This function is not called on the final step of the animation, but <code>finish</code> is.</li>
-<li><strong>finish</strong> (<em>Function(Object)=</em>, *): Function to execute upon tween completion.  Receives the state of the tween as the first parameter. Attachment is the second parameter.</li>
+<li><strong>start</strong> (<em>Function(Object)</em>): Function to execute when the tween begins.  Receives the state of the tween as the first parameter. Attachment is the second parameter.</li>
+<li><strong>step</strong> (<em>Function(Object, *, number)</em>): Function to execute on every tick.  Receives the state of the tween as the first parameter. Attachment is the second parameter, and the time elapsed since the start of the tween is the third parameter. This function is not called on the final step of the animation, but <code>finish</code> is.</li>
+<li><strong>finish</strong> (<em>Function(Object, *)</em>): Function to execute upon tween completion.  Receives the state of the tween as the first parameter. Attachment is the second parameter.</li>
 <li><strong>easing</strong> (<em>Object|string=</em>): Easing curve name(s) to use for the tween.</li>
 <li><strong>attachment</strong> (<em>Object|string|any=</em>): Entity that is attached to this instance and passed on to the step/start/finish methods.</li>
 </ul></div></div><div class="section"><p data-section-title class="title"><a href="#">Source</a></p><div data-section-content class="content"><pre><code class="language-javascript">Tweenable.prototype.setConfig = function (config) {
