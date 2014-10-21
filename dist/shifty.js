@@ -1,4 +1,4 @@
-/*! shifty - v1.3.0 - 2014-10-18 - http://jeremyckahn.github.io/shifty */
+/*! shifty - v1.3.1 - 2014-10-20 - http://jeremyckahn.github.io/shifty */
 ;(function (root) {
 
 /*!
@@ -159,6 +159,7 @@ var Tweenable = (function () {
   var timeoutHandler_endTime;
   var timeoutHandler_currentTime;
   var timeoutHandler_isEnded;
+  var timeoutHandler_offset;
   /*!
    * Handles the update logic for one step of a tween.
    * @param {Tweenable} tweenable
@@ -168,14 +169,18 @@ var Tweenable = (function () {
    * @param {Object} originalState
    * @param {Object} targetState
    * @param {Object} easing
-   * @param {Function} step
+   * @param {Function(Object, *, number)} step
    * @param {Function(Function,number)}} schedule
    */
   function timeoutHandler (tweenable, timestamp, duration, currentState,
     originalState, targetState, easing, step, schedule) {
     timeoutHandler_endTime = timestamp + duration;
     timeoutHandler_currentTime = Math.min(now(), timeoutHandler_endTime);
-    timeoutHandler_isEnded = timeoutHandler_currentTime >= timeoutHandler_endTime;
+    timeoutHandler_isEnded =
+      timeoutHandler_currentTime >= timeoutHandler_endTime;
+
+    timeoutHandler_offset = duration - (
+        timeoutHandler_endTime - timeoutHandler_currentTime);
 
     if (tweenable.isPlaying() && !timeoutHandler_isEnded) {
       schedule(tweenable._timeoutHandler, UPDATE_TIME);
@@ -185,9 +190,9 @@ var Tweenable = (function () {
         targetState, duration, timestamp, easing);
       applyFilter(tweenable, 'afterTween');
 
-      step(currentState, tweenable._attachment);
+      step(currentState, tweenable._attachment, timeoutHandler_offset);
     } else if (timeoutHandler_isEnded) {
-      step(targetState, tweenable._attachment);
+      step(targetState, tweenable._attachment, timeoutHandler_offset);
       tweenable.stop(true);
     }
   }
@@ -262,8 +267,8 @@ var Tweenable = (function () {
    * - __to__ (_Object=_): Ending position.
    * - __duration__ (_number=_): How many milliseconds to animate for.
    * - __start__ (_Function(Object)=_): Function to execute when the tween begins.  Receives the state of the tween as the first parameter. Attachment is the second parameter.
-   * - __step__ (_Function(Object)=_): Function to execute on every tick.  Receives the state of the tween as the first parameter. Attachment is the second parameter. This function is not called on the final step of the animation, but `finish` is.
-   * - __finish__ (_Function(Object)=_): Function to execute upon tween completion.  Receives the state of the tween as the first parameter. Attachment is the second parameter.
+   * - __step__ (_Function(Object)=_, *, number): Function to execute on every tick.  Receives the state of the tween as the first parameter. Attachment is the second parameter, and the time elapsed since the start of the tween is the third parameter. This function is not called on the final step of the animation, but `finish` is.
+   * - __finish__ (_Function(Object)=_, *): Function to execute upon tween completion.  Receives the state of the tween as the first parameter. Attachment is the second parameter.
    * - __easing__ (_Object|string=_): Easing curve name(s) to use for the tween.
    * - __attachment__ (_Object|string|any=_): Entity that is attached to this instance and passed on to the step/start/finish methods.
    * @param {Object} config

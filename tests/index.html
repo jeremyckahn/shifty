@@ -63,6 +63,25 @@
           'Anything after end of the tween equates to 1.0 of the target value');
     });
 
+    test('step handler receives timestamp offset', function () {
+      var tweenable = new Tweenable();
+      mockTime = function () {return 0;};
+      var capturedOffset;
+      tweenable.tween({
+        from: { x: 0 }
+        ,to: { x: 100 }
+        ,duration: 1000
+        ,step: function (state, attachment, offset) {
+          capturedOffset = offset;
+        }
+      });
+
+      mockTime = function () {return 500;};
+      forceInternalUpdate(tweenable);
+      equals(capturedOffset, 500,
+          'The offset was passed along to the step handler');
+    });
+
 
     module('Tweenable.prototype.pause');
 
