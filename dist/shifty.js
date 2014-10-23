@@ -1,4 +1,4 @@
-/*! shifty - v1.3.1 - 2014-10-20 - http://jeremyckahn.github.io/shifty */
+/*! shifty - v1.3.2 - 2014-10-22 - http://jeremyckahn.github.io/shifty */
 ;(function (root) {
 
 /*!
@@ -183,7 +183,7 @@ var Tweenable = (function () {
         timeoutHandler_endTime - timeoutHandler_currentTime);
 
     if (tweenable.isPlaying() && !timeoutHandler_isEnded) {
-      schedule(tweenable._timeoutHandler, UPDATE_TIME);
+      tweenable._scheduleId = schedule(tweenable._timeoutHandler, UPDATE_TIME);
 
       applyFilter(tweenable, 'beforeTween');
       tweenProps(timeoutHandler_currentTime, currentState, originalState,
@@ -256,6 +256,7 @@ var Tweenable = (function () {
       this.setConfig(opt_config);
     }
 
+    this._timestamp = now();
     this._start(this.get(), this._attachment);
     return this.resume();
   };
@@ -270,7 +271,7 @@ var Tweenable = (function () {
    * - __step__ (_Function(Object, *, number)_): Function to execute on every tick.  Receives the state of the tween as the first parameter. Attachment is the second parameter, and the time elapsed since the start of the tween is the third parameter. This function is not called on the final step of the animation, but `finish` is.
    * - __finish__ (_Function(Object, *)_): Function to execute upon tween completion.  Receives the state of the tween as the first parameter. Attachment is the second parameter.
    * - __easing__ (_Object|string=_): Easing curve name(s) to use for the tween.
-   * - __attachment__ (_Object|string|any=_): Entity that is attached to this instance and passed on to the step/start/finish methods.
+   * - __attachment__ (_Object|string|any=_): Value that is attached to this instance and passed on to the step/start/finish methods.
    * @param {Object} config
    * @return {Tweenable}
    */
@@ -283,6 +284,7 @@ var Tweenable = (function () {
 
     // Init the internal state
     this._pausedAtTime = null;
+    this._scheduleId = null;
     this._start = config.start || noop;
     this._step = config.step || noop;
     this._finish = config.finish || noop;
@@ -290,7 +292,6 @@ var Tweenable = (function () {
     this._currentState = config.from || this.get();
     this._originalState = this.get();
     this._targetState = config.to || this.get();
-    this._timestamp = now();
 
     // Aliases used below
     var currentState = this._currentState;
@@ -395,6 +396,13 @@ var Tweenable = (function () {
     this._isTweening = false;
     this._isPaused = false;
     this._timeoutHandler = noop;
+
+    (root.cancelAnimationFrame            ||
+      root.webkitCancelAnimationFrame     ||
+      root.oCancelAnimationFrame          ||
+      root.msCancelAnimationFrame         ||
+      root.mozCancelRequestAnimationFrame ||
+      root.clearTimeout)(this._scheduleId);
 
     if (gotoEnd) {
       shallowCopy(this._currentState, this._targetState);
