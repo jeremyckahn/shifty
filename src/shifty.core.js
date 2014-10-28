@@ -3,14 +3,6 @@
  * By Jeremy Kahn - jeremyckahn@gmail.com
  */
 
-// UglifyJS define hack.  Used for unit testing.  Contents of this if are
-// compiled away.
-if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
-  SHIFTY_DEBUG_NOW = function () {
-    return +new Date();
-  };
-}
-
 var Tweenable = (function () {
 
   'use strict';
@@ -28,9 +20,7 @@ var Tweenable = (function () {
        ? Date.now
        : function () {return +new Date();};
 
-  var now = SHIFTY_DEBUG_NOW
-       ? SHIFTY_DEBUG_NOW
-       : _now;
+  var now = typeof SHIFTY_DEBUG_NOW !== 'undefined' ? SHIFTY_DEBUG_NOW : _now;
 
   if (typeof window !== 'undefined') {
     // requestAnimationFrame() shim by Paul Irish (modified for Shifty)

@@ -127,10 +127,23 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('default', ['jshint', 'qunit']);
-  grunt.registerTask('build',
-    ['concat:forRekapi', 'uglify:standardTarget', 'concat:forRekapiDebug', 'dox']);
-  grunt.registerTask('build-minimal',
-    ['concat:minimal', 'uglify:standardTarget', 'concat:minimalDebug', 'dox']);
+  grunt.registerTask('default', [
+      'jshint',
+      'qunit'
+    ]);
+
+  grunt.registerTask('build', [
+      'concat:forRekapi',
+      'uglify:standardTarget',
+      'concat:forRekapiDebug',
+      'dox'
+    ]);
+
+  grunt.registerTask('build-minimal', [
+      'concat:minimal',
+      'uglify:standardTarget',
+      'concat:minimalDebug',
+      'dox'
+    ]);
 
 };

@@ -1,18 +1,10 @@
-/*! shifty - v1.3.2 - 2014-10-22 - http://jeremyckahn.github.io/shifty */
+/*! shifty - v1.3.3 - 2014-10-27 - http://jeremyckahn.github.io/shifty */
 ;(function (root) {
 
 /*!
  * Shifty Core
  * By Jeremy Kahn - jeremyckahn@gmail.com
  */
-
-// UglifyJS define hack.  Used for unit testing.  Contents of this if are
-// compiled away.
-if (typeof SHIFTY_DEBUG_NOW === 'undefined') {
-  SHIFTY_DEBUG_NOW = function () {
-    return +new Date();
-  };
-}
 
 var Tweenable = (function () {
 
@@ -31,9 +23,7 @@ var Tweenable = (function () {
        ? Date.now
        : function () {return +new Date();};
 
-  var now = SHIFTY_DEBUG_NOW
-       ? SHIFTY_DEBUG_NOW
-       : _now;
+  var now = typeof SHIFTY_DEBUG_NOW !== 'undefined' ? SHIFTY_DEBUG_NOW : _now;
 
   if (typeof window !== 'undefined') {
     // requestAnimationFrame() shim by Paul Irish (modified for Shifty)
