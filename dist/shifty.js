@@ -1,4 +1,4 @@
-/*! shifty - v1.3.3 - 2014-10-27 - http://jeremyckahn.github.io/shifty */
+/*! shifty - v1.3.4 - 2014-10-29 - http://jeremyckahn.github.io/shifty */
 ;(function (root) {
 
 /*!

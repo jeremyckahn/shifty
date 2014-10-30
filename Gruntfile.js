@@ -34,7 +34,7 @@ module.exports = function(grunt) {
     },
     jshint: {
       all_files: [
-        'src/shifty.!(intro|outro|const)*.js'
+        'src/shifty.!(intro|outro)*.js'
       ],
       options: {
         jshintrc: '.jshintrc'
@@ -47,7 +47,6 @@ module.exports = function(grunt) {
       minimal: {
         src: [
           'src/shifty.intro.js',
-          'src/shifty.const.js',
           'src/shifty.core.js',
           'src/shifty.outro.js'
         ],
@@ -65,7 +64,6 @@ module.exports = function(grunt) {
       forRekapi: {
         src: [
           'src/shifty.intro.js',
-          'src/shifty.const.js',
           'src/shifty.core.js',
           'src/shifty.formulas.js',
           'src/shifty.bezier.js',
@@ -120,7 +118,7 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           cwd: 'src/',
-          src: ['shifty.!(intro|outro|const)*.js'],
+          src: ['shifty.!(intro|outro)*.js'],
           dest: 'src/'
         }]
       }
