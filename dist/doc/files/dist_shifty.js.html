@@ -1,3 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>dist/shifty.js - Shifty</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../../../asset/img/shifty-logo-200.png" title="Shifty"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 1.3.6</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Tweenable.html">Tweenable</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/Tweenable.html">Tweenable</a></li>
+            
+                <li><a href="../modules/Tweenable.token.html">Tweenable.token</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: dist/shifty.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
 /*! shifty - v1.3.6 - 2014-11-11 - http://jeremyckahn.github.io/shifty */
 ;(function () {
   var root = this;
@@ -9,14 +101,14 @@
 
 var Tweenable = (function () {
 
-  'use strict';
+  &#x27;use strict&#x27;;
 
   // Aliases that get defined later in this function
   var formula;
 
   // CONSTANTS
   var DEFAULT_SCHEDULE_FUNCTION;
-  var DEFAULT_EASING = 'linear';
+  var DEFAULT_EASING = &#x27;linear&#x27;;
   var DEFAULT_DURATION = 500;
   var UPDATE_TIME = 1000 / 60;
 
@@ -24,9 +116,9 @@ var Tweenable = (function () {
        ? Date.now
        : function () {return +new Date();};
 
-  var now = typeof SHIFTY_DEBUG_NOW !== 'undefined' ? SHIFTY_DEBUG_NOW : _now;
+  var now = typeof SHIFTY_DEBUG_NOW !== &#x27;undefined&#x27; ? SHIFTY_DEBUG_NOW : _now;
 
-  if (typeof window !== 'undefined') {
+  if (typeof window !== &#x27;undefined&#x27;) {
     // requestAnimationFrame() shim by Paul Irish (modified for Shifty)
     // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
     DEFAULT_SCHEDULE_FUNCTION = window.requestAnimationFrame
@@ -34,7 +126,7 @@ var Tweenable = (function () {
        || window.oRequestAnimationFrame
        || window.msRequestAnimationFrame
        || (window.mozCancelRequestAnimationFrame
-       && window.mozRequestAnimationFrame)
+       &amp;&amp; window.mozRequestAnimationFrame)
        || setTimeout;
   } else {
     DEFAULT_SCHEDULE_FUNCTION = setTimeout;
@@ -45,7 +137,7 @@ var Tweenable = (function () {
   }
 
   /*!
-   * Handy shortcut for doing a for-in loop. This is not a "normal" each
+   * Handy shortcut for doing a for-in loop. This is not a &quot;normal&quot; each
    * function, it is optimized for Shifty.  The iterator function only receives
    * the property name, not the value.
    * @param {Object} obj
@@ -64,7 +156,7 @@ var Tweenable = (function () {
    * Perform a shallow copy of Object properties.
    * @param {Object} targetObject The object to copy into
    * @param {Object} srcObject The object to copy from
-   * @return {Object} A reference to the augmented `targetObj` Object
+   * @return {Object} A reference to the augmented &#x60;targetObj&#x60; Object
    */
   function shallowCopy (targetObj, srcObj) {
     each(srcObj, function (prop) {
@@ -82,7 +174,7 @@ var Tweenable = (function () {
    */
   function defaults (target, src) {
     each(src, function (prop) {
-      if (typeof target[prop] === 'undefined') {
+      if (typeof target[prop] === &#x27;undefined&#x27;) {
         target[prop] = src[prop];
       }
     });
@@ -99,7 +191,7 @@ var Tweenable = (function () {
    * is tweening to.
    * @param {number} duration: The length of the tween in milliseconds.
    * @param {number} timestamp: The UNIX epoch time at which the tween began.
-   * @param {Object} easing: This Object's keys must correspond to the keys in
+   * @param {Object} easing: This Object&#x27;s keys must correspond to the keys in
    * targetState.
    */
   function tweenProps (forPosition, currentState, originalState, targetState,
@@ -123,7 +215,7 @@ var Tweenable = (function () {
    * @param {number} end The value that the tween should end at.
    * @param {Function} easingFunc The easing curve to apply to the tween.
    * @param {number} position The normalized position (between 0.0 and 1.0) to
-   * calculate the midpoint of 'start' and 'end' against.
+   * calculate the midpoint of &#x27;start&#x27; and &#x27;end&#x27; against.
    * @return {number} The tweened value.
    */
   function tweenProp (start, end, easingFunc, position) {
@@ -132,7 +224,7 @@ var Tweenable = (function () {
 
   /*!
    * Applies a filter to Tweenable instance.
-   * @param {Tweenable} tweenable The `Tweenable` instance to call the filter
+   * @param {Tweenable} tweenable The &#x60;Tweenable&#x60; instance to call the filter
    * upon.
    * @param {String} filterName The name of the filter to apply.
    */
@@ -141,7 +233,7 @@ var Tweenable = (function () {
     var args = tweenable._filterArgs;
 
     each(filters, function (name) {
-      if (typeof filters[name][filterName] !== 'undefined') {
+      if (typeof filters[name][filterName] !== &#x27;undefined&#x27;) {
         filters[name][filterName].apply(tweenable, args);
       }
     });
@@ -168,18 +260,18 @@ var Tweenable = (function () {
     timeoutHandler_endTime = timestamp + duration;
     timeoutHandler_currentTime = Math.min(now(), timeoutHandler_endTime);
     timeoutHandler_isEnded =
-      timeoutHandler_currentTime >= timeoutHandler_endTime;
+      timeoutHandler_currentTime &gt;= timeoutHandler_endTime;
 
     timeoutHandler_offset = duration - (
         timeoutHandler_endTime - timeoutHandler_currentTime);
 
-    if (tweenable.isPlaying() && !timeoutHandler_isEnded) {
+    if (tweenable.isPlaying() &amp;&amp; !timeoutHandler_isEnded) {
       tweenable._scheduleId = schedule(tweenable._timeoutHandler, UPDATE_TIME);
 
-      applyFilter(tweenable, 'beforeTween');
+      applyFilter(tweenable, &#x27;beforeTween&#x27;);
       tweenProps(timeoutHandler_currentTime, currentState, originalState,
         targetState, duration, timestamp, easing);
-      applyFilter(tweenable, 'afterTween');
+      applyFilter(tweenable, &#x27;afterTween&#x27;);
 
       step(currentState, tweenable._attachment, timeoutHandler_offset);
     } else if (timeoutHandler_isEnded) {
@@ -191,15 +283,15 @@ var Tweenable = (function () {
 
   /*!
    * Creates a usable easing Object from either a string or another easing
-   * Object.  If `easing` is an Object, then this function clones it and fills
-   * in the missing properties with "linear".
+   * Object.  If &#x60;easing&#x60; is an Object, then this function clones it and fills
+   * in the missing properties with &quot;linear&quot;.
    * @param {Object} fromTweenParams
    * @param {Object|string} easing
    */
   function composeEasingObject (fromTweenParams, easing) {
     var composedEasing = {};
 
-    if (typeof easing === 'string') {
+    if (typeof easing === &#x27;string&#x27;) {
       each(fromTweenParams, function (prop) {
         composedEasing[prop] = easing;
       });
@@ -217,11 +309,11 @@ var Tweenable = (function () {
   /**
    * Tweenable constructor.
    * @param {Object=} opt_initialState The values that the initial tween should
-   * start at if a `from` object is not provided to `{{#crossLink
-   * "Tweenable/tween:method"}}{{/crossLink}}` or `{{#crossLink
-   * "Tweenable/setConfig:method"}}{{/crossLink}}`.
+   * start at if a &#x60;from&#x60; object is not provided to &#x60;{{#crossLink
+   * &quot;Tweenable/tween:method&quot;}}{{/crossLink}}&#x60; or &#x60;{{#crossLink
+   * &quot;Tweenable/setConfig:method&quot;}}{{/crossLink}}&#x60;.
    * @param {Object=} opt_config Configuration object to be passed to
-   * `{{#crossLink "Tweenable/setConfig:method"}}{{/crossLink}}`.
+   * &#x60;{{#crossLink &quot;Tweenable/setConfig:method&quot;}}{{/crossLink}}&#x60;.
    * @module Tweenable
    * @class Tweenable
    * @constructor
@@ -234,7 +326,7 @@ var Tweenable = (function () {
     // To prevent unnecessary calls to setConfig do not set default
     // configuration here.  Only set default configuration immediately before
     // tweening if none has been set.
-    if (typeof opt_config !== 'undefined') {
+    if (typeof opt_config !== &#x27;undefined&#x27;) {
       this.setConfig(opt_config);
     }
   }
@@ -243,7 +335,7 @@ var Tweenable = (function () {
    * Configure and start a tween.
    * @method tween
    * @param {Object=} opt_config Configuration object to be passed to
-   * `{{#crossLink "Tweenable/setConfig:method"}}{{/crossLink}}`.
+   * &#x60;{{#crossLink &quot;Tweenable/setConfig:method&quot;}}{{/crossLink}}&#x60;.
    * @chainable
    */
   Tweenable.prototype.tween = function (opt_config) {
@@ -267,26 +359,26 @@ var Tweenable = (function () {
    *
    * @method setConfig
    * @param {Object} config The following values are valid:
-   * - __from__ (_Object=_): Starting position.  If omitted, `{{#crossLink
-   *   "Tweenable/get:method"}}get(){{/crossLink}}` is used.
+   * - __from__ (_Object=_): Starting position.  If omitted, &#x60;{{#crossLink
+   *   &quot;Tweenable/get:method&quot;}}get(){{/crossLink}}&#x60; is used.
    * - __to__ (_Object=_): Ending position.
    * - __duration__ (_number=_): How many milliseconds to animate for.
    * - __start__ (_Function(Object, *)_): Function to execute when the tween
    *   begins.  Receives the state of the tween as the first parameter and
-   *   `attachment` as the second parameter.
+   *   &#x60;attachment&#x60; as the second parameter.
    * - __step__ (_Function(Object, *, number)_): Function to execute on every
-   *   tick.  Receives `{{#crossLink
-   *   "Tweenable/get:method"}}get(){{/crossLink}}` as the first parameter,
-   *   `attachment` as the second parameter, and the time elapsed since the
+   *   tick.  Receives &#x60;{{#crossLink
+   *   &quot;Tweenable/get:method&quot;}}get(){{/crossLink}}&#x60; as the first parameter,
+   *   &#x60;attachment&#x60; as the second parameter, and the time elapsed since the
    *   start of the tween as the third. This function is not called on the
-   *   final step of the animation, but `finish` is.
+   *   final step of the animation, but &#x60;finish&#x60; is.
    * - __finish__ (_Function(Object, *)_): Function to execute upon tween
    *   completion.  Receives the state of the tween as the first parameter and
-   *   `attachment` as the second parameter.
+   *   &#x60;attachment&#x60; as the second parameter.
    * - __easing__ (_Object|string=_): Easing curve name(s) to use for the
    *   tween.
    * - __attachment__ (_*_): Cached value that is passed to the
-   *   `step`/`start`/`finish` methods.
+   *   &#x60;step&#x60;/&#x60;start&#x60;/&#x60;finish&#x60; methods.
    * @chainable
    */
   Tweenable.prototype.setConfig = function (config) {
@@ -321,7 +413,7 @@ var Tweenable = (function () {
     this._filterArgs =
       [currentState, this._originalState, targetState, this._easing];
 
-    applyFilter(this, 'tweenCreated');
+    applyFilter(this, &#x27;tweenCreated&#x27;);
     return this;
   };
 
@@ -343,8 +435,8 @@ var Tweenable = (function () {
 
   /**
    * Pause a tween.  Paused tweens can be resumed from the point at which they
-   * were paused.  This is different from `{{#crossLink
-   * "Tweenable/stop:method"}}{{/crossLink}}`, as that method
+   * were paused.  This is different from &#x60;{{#crossLink
+   * &quot;Tweenable/stop:method&quot;}}{{/crossLink}}&#x60;, as that method
    * causes a tween to start over when it is resumed.
    * @method pause
    * @chainable
@@ -381,8 +473,8 @@ var Tweenable = (function () {
   };
 
   /**
-   * Move the state of the animation to a specific point in the tween's
-   * timeline.  If the animation is not running, this will cause the `step`
+   * Move the state of the animation to a specific point in the tween&#x27;s
+   * timeline.  If the animation is not running, this will cause the &#x60;step&#x60;
    * handlers to be called.
    * @method seek
    * @param {millisecond} millisecond The millisecond of the animation to seek
@@ -411,10 +503,10 @@ var Tweenable = (function () {
 
   /**
    * Stops and cancels a tween.
-   * @param {boolean=} gotoEnd If `false` or omitted, the tween just stops at
-   * its current state, and the `finish` handler is not invoked.  If `true`,
-   * the tweened object's values are instantly set to the target values, and
-   * `finish` is invoked.
+   * @param {boolean=} gotoEnd If &#x60;false&#x60; or omitted, the tween just stops at
+   * its current state, and the &#x60;finish&#x60; handler is not invoked.  If &#x60;true&#x60;,
+   * the tweened object&#x27;s values are instantly set to the target values, and
+   * &#x60;finish&#x60; is invoked.
    * @method stop
    * @chainable
    */
@@ -432,7 +524,7 @@ var Tweenable = (function () {
 
     if (gotoEnd) {
       shallowCopy(this._currentState, this._targetState);
-      applyFilter(this, 'afterTweenEnd');
+      applyFilter(this, &#x27;afterTweenEnd&#x27;);
       this._finish.call(this, this._currentState, this._attachment);
     }
 
@@ -444,16 +536,16 @@ var Tweenable = (function () {
    * @return {boolean} Whether or not a tween is running.
    */
   Tweenable.prototype.isPlaying = function () {
-    return this._isTweening && !this._isPaused;
+    return this._isTweening &amp;&amp; !this._isPaused;
   };
 
   /**
    * Set a custom schedule function.
    *
    * If a custom function is not set,
-   * [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window.requestAnimationFrame)
+   * [&#x60;requestAnimationFrame&#x60;](https://developer.mozilla.org/en-US/docs/Web/API/window.requestAnimationFrame)
    * is used if available, otherwise
-   * [`setTimeout`](https://developer.mozilla.org/en-US/docs/Web/API/Window.setTimeout)
+   * [&#x60;setTimeout&#x60;](https://developer.mozilla.org/en-US/docs/Web/API/Window.setTimeout)
    * is used.
    * @method setScheduleFunction
    * @param {Function(Function,number)} scheduleFunction The function to be
@@ -464,7 +556,7 @@ var Tweenable = (function () {
   };
 
   /**
-   * `delete` all "own" properties.  Call this when the `Tweenable` instance
+   * &#x60;delete&#x60; all &quot;own&quot; properties.  Call this when the &#x60;Tweenable&#x60; instance
    * is no longer needed to free memory.
    * @method dispose
    */
@@ -479,16 +571,16 @@ var Tweenable = (function () {
 
   /*!
    * Filters are used for transforming the properties of a tween at various
-   * points in a Tweenable's life cycle.  See the README for more info on this.
+   * points in a Tweenable&#x27;s life cycle.  See the README for more info on this.
    */
   Tweenable.prototype.filter = {};
 
   /**
    * This object contains all of the tweens available to Shifty.  It is
-   * extensible - simply attach properties to the `Tweenable.prototype.formula`
-   * Object following the same format as `linear`.
+   * extensible - simply attach properties to the &#x60;Tweenable.prototype.formula&#x60;
+   * Object following the same format as &#x60;linear&#x60;.
    *
-   * `pos` should be a normalized `number` (between 0 and 1).
+   * &#x60;pos&#x60; should be a normalized &#x60;number&#x60; (between 0 and 1).
    * @property formula
    * @type {Object(function)}
    */
@@ -501,32 +593,32 @@ var Tweenable = (function () {
   formula = Tweenable.prototype.formula;
 
   shallowCopy(Tweenable, {
-    'now': now
-    ,'each': each
-    ,'tweenProps': tweenProps
-    ,'tweenProp': tweenProp
-    ,'applyFilter': applyFilter
-    ,'shallowCopy': shallowCopy
-    ,'defaults': defaults
-    ,'composeEasingObject': composeEasingObject
+    &#x27;now&#x27;: now
+    ,&#x27;each&#x27;: each
+    ,&#x27;tweenProps&#x27;: tweenProps
+    ,&#x27;tweenProp&#x27;: tweenProp
+    ,&#x27;applyFilter&#x27;: applyFilter
+    ,&#x27;shallowCopy&#x27;: shallowCopy
+    ,&#x27;defaults&#x27;: defaults
+    ,&#x27;composeEasingObject&#x27;: composeEasingObject
   });
 
-  // `root` is provided in the intro/outro files.
+  // &#x60;root&#x60; is provided in the intro/outro files.
 
   // A hook used for unit testing.
-  if (typeof SHIFTY_DEBUG_NOW === 'function') {
+  if (typeof SHIFTY_DEBUG_NOW === &#x27;function&#x27;) {
     root.timeoutHandler = timeoutHandler;
   }
 
   // Bootstrap Tweenable appropriately for the environment.
-  if (typeof exports === 'object') {
+  if (typeof exports === &#x27;object&#x27;) {
     // CommonJS
     module.exports = Tweenable;
-  } else if (typeof define === 'function' && define.amd) {
+  } else if (typeof define === &#x27;function&#x27; &amp;&amp; define.amd) {
     // AMD
     define(function () {return Tweenable;});
-  } else if (typeof root.Tweenable === 'undefined') {
-    // Browser: Make `Tweenable` globally accessible.
+  } else if (typeof root.Tweenable === &#x27;undefined&#x27;) {
+    // Browser: Make &#x60;Tweenable&#x60; globally accessible.
     root.Tweenable = Tweenable;
   }
 
@@ -535,7 +627,7 @@ var Tweenable = (function () {
 } ());
 
 /*!
- * All equations are adapted from Thomas Fuchs' [Scripty2](https://github.com/madrobby/scripty2/blob/master/src/effects/transitions/penner.js).
+ * All equations are adapted from Thomas Fuchs&#x27; [Scripty2](https://github.com/madrobby/scripty2/blob/master/src/effects/transitions/penner.js).
  *
  * Based on Easing Equations (c) 2003 [Robert Penner](http://www.robertpenner.com/), all rights reserved. This work is [subject to terms](http://www.robertpenner.com/easing_terms_of_use.html).
  */
@@ -558,7 +650,7 @@ var Tweenable = (function () {
     },
 
     easeInOutQuad: function (pos) {
-      if ((pos /= 0.5) < 1) {return 0.5 * Math.pow(pos,2);}
+      if ((pos /= 0.5) &lt; 1) {return 0.5 * Math.pow(pos,2);}
       return -0.5 * ((pos -= 2) * pos - 2);
     },
 
@@ -571,7 +663,7 @@ var Tweenable = (function () {
     },
 
     easeInOutCubic: function (pos) {
-      if ((pos /= 0.5) < 1) {return 0.5 * Math.pow(pos,3);}
+      if ((pos /= 0.5) &lt; 1) {return 0.5 * Math.pow(pos,3);}
       return 0.5 * (Math.pow((pos - 2),3) + 2);
     },
 
@@ -584,7 +676,7 @@ var Tweenable = (function () {
     },
 
     easeInOutQuart: function (pos) {
-      if ((pos /= 0.5) < 1) {return 0.5 * Math.pow(pos,4);}
+      if ((pos /= 0.5) &lt; 1) {return 0.5 * Math.pow(pos,4);}
       return -0.5 * ((pos -= 2) * Math.pow(pos,3) - 2);
     },
 
@@ -597,7 +689,7 @@ var Tweenable = (function () {
     },
 
     easeInOutQuint: function (pos) {
-      if ((pos /= 0.5) < 1) {return 0.5 * Math.pow(pos,5);}
+      if ((pos /= 0.5) &lt; 1) {return 0.5 * Math.pow(pos,5);}
       return 0.5 * (Math.pow((pos - 2),5) + 2);
     },
 
@@ -624,7 +716,7 @@ var Tweenable = (function () {
     easeInOutExpo: function (pos) {
       if (pos === 0) {return 0;}
       if (pos === 1) {return 1;}
-      if ((pos /= 0.5) < 1) {return 0.5 * Math.pow(2,10 * (pos - 1));}
+      if ((pos /= 0.5) &lt; 1) {return 0.5 * Math.pow(2,10 * (pos - 1));}
       return 0.5 * (-Math.pow(2, -10 * --pos) + 2);
     },
 
@@ -637,16 +729,16 @@ var Tweenable = (function () {
     },
 
     easeInOutCirc: function (pos) {
-      if ((pos /= 0.5) < 1) {return -0.5 * (Math.sqrt(1 - pos * pos) - 1);}
+      if ((pos /= 0.5) &lt; 1) {return -0.5 * (Math.sqrt(1 - pos * pos) - 1);}
       return 0.5 * (Math.sqrt(1 - (pos -= 2) * pos) + 1);
     },
 
     easeOutBounce: function (pos) {
-      if ((pos) < (1 / 2.75)) {
+      if ((pos) &lt; (1 / 2.75)) {
         return (7.5625 * pos * pos);
-      } else if (pos < (2 / 2.75)) {
+      } else if (pos &lt; (2 / 2.75)) {
         return (7.5625 * (pos -= (1.5 / 2.75)) * pos + 0.75);
-      } else if (pos < (2.5 / 2.75)) {
+      } else if (pos &lt; (2.5 / 2.75)) {
         return (7.5625 * (pos -= (2.25 / 2.75)) * pos + 0.9375);
       } else {
         return (7.5625 * (pos -= (2.625 / 2.75)) * pos + 0.984375);
@@ -665,7 +757,7 @@ var Tweenable = (function () {
 
     easeInOutBack: function (pos) {
       var s = 1.70158;
-      if ((pos /= 0.5) < 1) {return 0.5 * (pos * pos * (((s *= (1.525)) + 1) * pos - s));}
+      if ((pos /= 0.5) &lt; 1) {return 0.5 * (pos * pos * (((s *= (1.525)) + 1) * pos - s));}
       return 0.5 * ((pos -= 2) * pos * (((s *= (1.525)) + 1) * pos + s) + 2);
     },
 
@@ -675,7 +767,7 @@ var Tweenable = (function () {
 
     swingFromTo: function (pos) {
       var s = 1.70158;
-      return ((pos /= 0.5) < 1) ? 0.5 * (pos * pos * (((s *= (1.525)) + 1) * pos - s)) :
+      return ((pos /= 0.5) &lt; 1) ? 0.5 * (pos * pos * (((s *= (1.525)) + 1) * pos - s)) :
           0.5 * ((pos -= 2) * pos * (((s *= (1.525)) + 1) * pos + s) + 2);
     },
 
@@ -690,11 +782,11 @@ var Tweenable = (function () {
     },
 
     bounce: function (pos) {
-      if (pos < (1 / 2.75)) {
+      if (pos &lt; (1 / 2.75)) {
         return (7.5625 * pos * pos);
-      } else if (pos < (2 / 2.75)) {
+      } else if (pos &lt; (2 / 2.75)) {
         return (7.5625 * (pos -= (1.5 / 2.75)) * pos + 0.75);
-      } else if (pos < (2.5 / 2.75)) {
+      } else if (pos &lt; (2.5 / 2.75)) {
         return (7.5625 * (pos -= (2.25 / 2.75)) * pos + 0.9375);
       } else {
         return (7.5625 * (pos -= (2.625 / 2.75)) * pos + 0.984375);
@@ -702,11 +794,11 @@ var Tweenable = (function () {
     },
 
     bouncePast: function (pos) {
-      if (pos < (1 / 2.75)) {
+      if (pos &lt; (1 / 2.75)) {
         return (7.5625 * pos * pos);
-      } else if (pos < (2 / 2.75)) {
+      } else if (pos &lt; (2 / 2.75)) {
         return 2 - (7.5625 * (pos -= (1.5 / 2.75)) * pos + 0.75);
-      } else if (pos < (2.5 / 2.75)) {
+      } else if (pos &lt; (2.5 / 2.75)) {
         return 2 - (7.5625 * (pos -= (2.25 / 2.75)) * pos + 0.9375);
       } else {
         return 2 - (7.5625 * (pos -= (2.625 / 2.75)) * pos + 0.984375);
@@ -714,7 +806,7 @@ var Tweenable = (function () {
     },
 
     easeFromTo: function (pos) {
-      if ((pos /= 0.5) < 1) {return 0.5 * Math.pow(pos,4);}
+      if ((pos /= 0.5) &lt; 1) {return 0.5 * Math.pow(pos,4);}
       return -0.5 * ((pos -= 2) * Math.pow(pos,3) - 2);
     },
 
@@ -755,7 +847,7 @@ var Tweenable = (function () {
  *  this software without specific prior written permission.
  *
  *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ *  &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  *  THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
  *  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
  *  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
@@ -774,27 +866,27 @@ var Tweenable = (function () {
     function sampleCurveDerivativeX(t) {return (3.0 * ax * t + 2.0 * bx) * t + cx;}
     function solveEpsilon(duration) {return 1.0 / (200.0 * duration);}
     function solve(x,epsilon) {return sampleCurveY(solveCurveX(x,epsilon));}
-    function fabs(n) {if (n >= 0) {return n;}else {return 0 - n;}}
+    function fabs(n) {if (n &gt;= 0) {return n;}else {return 0 - n;}}
     function solveCurveX(x,epsilon) {
       var t0,t1,t2,x2,d2,i;
-      for (t2 = x, i = 0; i < 8; i++) {x2 = sampleCurveX(t2) - x; if (fabs(x2) < epsilon) {return t2;} d2 = sampleCurveDerivativeX(t2); if (fabs(d2) < 1e-6) {break;} t2 = t2 - x2 / d2;}
-      t0 = 0.0; t1 = 1.0; t2 = x; if (t2 < t0) {return t0;} if (t2 > t1) {return t1;}
-      while (t0 < t1) {x2 = sampleCurveX(t2); if (fabs(x2 - x) < epsilon) {return t2;} if (x > x2) {t0 = t2;}else {t1 = t2;} t2 = (t1 - t0) * 0.5 + t0;}
+      for (t2 = x, i = 0; i &lt; 8; i++) {x2 = sampleCurveX(t2) - x; if (fabs(x2) &lt; epsilon) {return t2;} d2 = sampleCurveDerivativeX(t2); if (fabs(d2) &lt; 1e-6) {break;} t2 = t2 - x2 / d2;}
+      t0 = 0.0; t1 = 1.0; t2 = x; if (t2 &lt; t0) {return t0;} if (t2 &gt; t1) {return t1;}
+      while (t0 &lt; t1) {x2 = sampleCurveX(t2); if (fabs(x2 - x) &lt; epsilon) {return t2;} if (x &gt; x2) {t0 = t2;}else {t1 = t2;} t2 = (t1 - t0) * 0.5 + t0;}
       return t2; // Failure.
     }
     cx = 3.0 * p1x; bx = 3.0 * (p2x - p1x) - cx; ax = 1.0 - cx - bx; cy = 3.0 * p1y; by = 3.0 * (p2y - p1y) - cy; ay = 1.0 - cy - by;
     return solve(t, solveEpsilon(duration));
   }
   /*!
-   *  getCubicBezierTransition(x1, y1, x2, y2) -> Function
+   *  getCubicBezierTransition(x1, y1, x2, y2) -&gt; Function
    *
    *  Generates a transition easing function that is compatible
-   *  with WebKit's CSS transitions `-webkit-transition-timing-function`
+   *  with WebKit&#x27;s CSS transitions &#x60;-webkit-transition-timing-function&#x60;
    *  CSS property.
    *
    *  The W3C has more information about
-   *  <a href="http://www.w3.org/TR/css3-transitions/#transition-timing-function_tag">
-   *  CSS3 transition timing functions</a>.
+   *  &lt;a href=&quot;http://www.w3.org/TR/css3-transitions/#transition-timing-function_tag&quot;&gt;
+   *  CSS3 transition timing functions&lt;/a&gt;.
    *
    *  @param {number} x1
    *  @param {number} y1
@@ -810,15 +902,15 @@ var Tweenable = (function () {
   // End ported code
 
   /**
-   * Create a Bezier easing function and attach it to `{{#crossLink
-   * "Tweenable/formula:property"}}Tweenable#formula{{/crossLink}}`.  This
-   * function gives you total control over the easing curve.  Matthew Lein's
+   * Create a Bezier easing function and attach it to &#x60;{{#crossLink
+   * &quot;Tweenable/formula:property&quot;}}Tweenable#formula{{/crossLink}}&#x60;.  This
+   * function gives you total control over the easing curve.  Matthew Lein&#x27;s
    * [Ceaser](http://matthewlein.com/ceaser/) is a useful tool for visualizing
    * the curves you can make with this function.
    * @method setBezierFunction
    * @param {string} name The name of the easing curve.  Overwrites the old
-   * easing function on `{{#crossLink
-   * "Tweenable/formula:property"}}Tweenable#formula{{/crossLink}}` if it
+   * easing function on &#x60;{{#crossLink
+   * &quot;Tweenable/formula:property&quot;}}Tweenable#formula{{/crossLink}}&#x60; if it
    * exists.
    * @param {number} x1
    * @param {number} y1
@@ -838,10 +930,10 @@ var Tweenable = (function () {
 
 
   /**
-   * `delete` an easing function from `{{#crossLink
-   * "Tweenable/formula:property"}}Tweenable#formula{{/crossLink}}`.  Be
-   * careful with this method, as it `delete`s whatever easing formula matches
-   * `name` (which means you can delete standard Shifty easing functions).
+   * &#x60;delete&#x60; an easing function from &#x60;{{#crossLink
+   * &quot;Tweenable/formula:property&quot;}}Tweenable#formula{{/crossLink}}&#x60;.  Be
+   * careful with this method, as it &#x60;delete&#x60;s whatever easing formula matches
+   * &#x60;name&#x60; (which means you can delete standard Shifty easing functions).
    * @method unsetBezierFunction
    * @param {string} name The name of the easing function to delete.
    * @return {function}
@@ -868,39 +960,39 @@ var Tweenable = (function () {
 
   /**
    * Compute the midpoint of two Objects.  This method effectively calculates a
-   * specific frame of animation that `{{#crossLink
-   * "Tweenable/tween:method"}}{{/crossLink}}` does many times over the course
+   * specific frame of animation that &#x60;{{#crossLink
+   * &quot;Tweenable/tween:method&quot;}}{{/crossLink}}&#x60; does many times over the course
    * of a full tween.
    *
    *     var interpolatedValues = Tweenable.interpolate({
-   *       width: '100px',
+   *       width: &#x27;100px&#x27;,
    *       opacity: 0,
-   *       color: '#fff'
+   *       color: &#x27;#fff&#x27;
    *     }, {
-   *       width: '200px',
+   *       width: &#x27;200px&#x27;,
    *       opacity: 1,
-   *       color: '#000'
+   *       color: &#x27;#000&#x27;
    *     }, 0.5);
    *
    *     console.log(interpolatedValues);
-   *     // {opacity: 0.5, width: "150px", color: "rgb(127,127,127)"}
+   *     // {opacity: 0.5, width: &quot;150px&quot;, color: &quot;rgb(127,127,127)&quot;}
    *
    * @static
    * @method interpolate
    * @param {Object} from The starting values to tween from.
    * @param {Object} targetState The ending values to tween to.
    * @param {number} position The normalized position value (between 0.0 and
-   * 1.0) to interpolate the values between `from` and `to` for.  `from`
-   * represents 0 and `to` represents 1.
+   * 1.0) to interpolate the values between &#x60;from&#x60; and &#x60;to&#x60; for.  &#x60;from&#x60;
+   * represents 0 and &#x60;to&#x60; represents 1.
    * @param {string|Object} easing The easing curve(s) to calculate the
    * midpoint against.  You can reference any easing function attached to
-   * `Tweenable.prototype.formula`.  If omitted, this defaults to "linear".
+   * &#x60;Tweenable.prototype.formula&#x60;.  If omitted, this defaults to &quot;linear&quot;.
    * @return {Object}
    */
   Tweenable.interpolate = function (from, targetState, position, easing) {
     var current = Tweenable.shallowCopy({}, from);
     var easingObject = Tweenable.composeEasingObject(
-      from, easing || 'linear');
+      from, easing || &#x27;linear&#x27;);
 
     mockTweenable.set({});
 
@@ -913,14 +1005,14 @@ var Tweenable = (function () {
     filterArgs[3] = easingObject;
 
     // Any defined value transformation must be applied
-    Tweenable.applyFilter(mockTweenable, 'tweenCreated');
-    Tweenable.applyFilter(mockTweenable, 'beforeTween');
+    Tweenable.applyFilter(mockTweenable, &#x27;tweenCreated&#x27;);
+    Tweenable.applyFilter(mockTweenable, &#x27;beforeTween&#x27;);
 
     var interpolatedValues = getInterpolatedValues(
       from, current, targetState, position, easingObject);
 
     // Transform values back into their original format
-    Tweenable.applyFilter(mockTweenable, 'afterTween');
+    Tweenable.applyFilter(mockTweenable, &#x27;afterTween&#x27;);
 
     return interpolatedValues;
   };
@@ -936,16 +1028,16 @@ var Tweenable = (function () {
  *
  *     var tweenable = new Tweenable();
  *     tweenable.tween({
- *       from: { transform: 'translateX(45px)' },
- *       to: { transform: 'translateX(90xp)' }
+ *       from: { transform: &#x27;translateX(45px)&#x27; },
+ *       to: { transform: &#x27;translateX(90xp)&#x27; }
  *     });
  *
- * `translateX(45)` will be tweened to `translateX(90)`.  To demonstrate:
+ * &#x60;translateX(45)&#x60; will be tweened to &#x60;translateX(90)&#x60;.  To demonstrate:
  *
  *     var tweenable = new Tweenable();
  *     tweenable.tween({
- *       from: { transform: 'translateX(45px)' },
- *       to: { transform: 'translateX(90px)' },
+ *       from: { transform: &#x27;translateX(45px)&#x27; },
+ *       to: { transform: &#x27;translateX(90px)&#x27; },
  *       step: function (state) {
  *         console.log(state.transform);
  *       }
@@ -963,8 +1055,8 @@ var Tweenable = (function () {
  *
  *     var tweenable = new Tweenable();
  *     tweenable.tween({
- *       from: { color: 'rgb(0,255,0)' },
- *       to: { color: 'rgb(255,0,255)' },
+ *       from: { color: &#x27;rgb(0,255,0)&#x27; },
+ *       to: { color: &#x27;rgb(255,0,255)&#x27; },
  *       step: function (state) {
  *         console.log(state.color);
  *       }
@@ -978,15 +1070,15 @@ var Tweenable = (function () {
  *     ...
  *     rgb(255,0,255)
  *
- * This extension also supports hexadecimal colors, in both long (`#ff00ff`)
- * and short (`#f0f`) forms.  Be aware that hexadecimal input values will be
+ * This extension also supports hexadecimal colors, in both long (&#x60;#ff00ff&#x60;)
+ * and short (&#x60;#f0f&#x60;) forms.  Be aware that hexadecimal input values will be
  * converted into the equivalent RGB output values.  This is done to optimize
  * for performance.
  *
  *     var tweenable = new Tweenable();
  *     tweenable.tween({
- *       from: { color: '#0f0' },
- *       to: { color: '#f0f' },
+ *       from: { color: &#x27;#0f0&#x27; },
+ *       to: { color: &#x27;#f0f&#x27; },
  *       step: function (state) {
  *         console.log(state.color);
  *       }
@@ -1009,9 +1101,9 @@ var Tweenable = (function () {
  *
  *     var tweenable = new Tweenable();
  *     tweenable.tween({
- *       from: { transform: 'translateX(0px) translateY(0px)' },
- *       to: { transform:   'translateX(100px) translateY(100px)' },
- *       easing: { transform: 'easeInQuad' },
+ *       from: { transform: &#x27;translateX(0px) translateY(0px)&#x27; },
+ *       to: { transform:   &#x27;translateX(100px) translateY(100px)&#x27; },
+ *       easing: { transform: &#x27;easeInQuad&#x27; },
  *       step: function (state) {
  *         console.log(state.transform);
  *       }
@@ -1025,16 +1117,16 @@ var Tweenable = (function () {
  *     ...
  *     translateX(100px) translateY(100px)
  *
- * In this case, the values for `translateX` and `translateY` are always the
+ * In this case, the values for &#x60;translateX&#x60; and &#x60;translateY&#x60; are always the
  * same for each step of the tween, because they have the same start and end
- * points and both use the same easing curve.  We can also tween `translateX`
- * and `translateY` along independent curves:
+ * points and both use the same easing curve.  We can also tween &#x60;translateX&#x60;
+ * and &#x60;translateY&#x60; along independent curves:
  *
  *     var tweenable = new Tweenable();
  *     tweenable.tween({
- *       from: { transform: 'translateX(0px) translateY(0px)' },
- *       to: { transform:   'translateX(100px) translateY(100px)' },
- *       easing: { transform: 'easeInQuad bounce' },
+ *       from: { transform: &#x27;translateX(0px) translateY(0px)&#x27; },
+ *       to: { transform:   &#x27;translateX(100px) translateY(100px)&#x27; },
+ *       easing: { transform: &#x27;easeInQuad bounce&#x27; },
  *       step: function (state) {
  *         console.log(state.transform);
  *       }
@@ -1048,8 +1140,8 @@ var Tweenable = (function () {
  *     ...
  *     translateX(100px) translateY(100px)
  *
- * `translateX` and `translateY` are not in sync anymore, because `easeInQuad`
- * was specified for `translateX` and `bounce` for `translateY`.  Mixing and
+ * &#x60;translateX&#x60; and &#x60;translateY&#x60; are not in sync anymore, because &#x60;easeInQuad&#x60;
+ * was specified for &#x60;translateX&#x60; and &#x60;bounce&#x60; for &#x60;translateY&#x60;.  Mixing and
  * matching easing curves can make for some interesting motion in your
  * animations.
  *
@@ -1068,7 +1160,7 @@ var Tweenable = (function () {
   /*!
    * @typedef {{
    *   formatString: string
-   *   chunkNames: Array.<string>
+   *   chunkNames: Array.&lt;string&gt;
    * }}
    */
   var formatManifest;
@@ -1079,12 +1171,12 @@ var Tweenable = (function () {
   var R_FORMAT_CHUNKS = /([^\-0-9\.]+)/g;
   var R_UNFORMATTED_VALUES = /[0-9.\-]+/g;
   var R_RGB = new RegExp(
-    'rgb\\(' + R_UNFORMATTED_VALUES.source +
+    &#x27;rgb\\(&#x27; + R_UNFORMATTED_VALUES.source +
     (/,\s*/.source) + R_UNFORMATTED_VALUES.source +
-    (/,\s*/.source) + R_UNFORMATTED_VALUES.source + '\\)', 'g');
+    (/,\s*/.source) + R_UNFORMATTED_VALUES.source + &#x27;\\)&#x27;, &#x27;g&#x27;);
   var R_RGB_PREFIX = /^.*\(/;
   var R_HEX = /#([0-9]|[a-f]){3,6}/gi;
-  var VALUE_PLACEHOLDER = 'VAL';
+  var VALUE_PLACEHOLDER = &#x27;VAL&#x27;;
 
   // HELPERS
 
@@ -1093,7 +1185,7 @@ var Tweenable = (function () {
    * @param {Array.number} rawValues
    * @param {string} prefix
    *
-   * @return {Array.<string>}
+   * @return {Array.&lt;string&gt;}
    */
   function getFormatChunksFrom (rawValues, prefix) {
     getFormatChunksFrom_accumulator.length = 0;
@@ -1101,8 +1193,8 @@ var Tweenable = (function () {
     var rawValuesLength = rawValues.length;
     var i;
 
-    for (i = 0; i < rawValuesLength; i++) {
-      getFormatChunksFrom_accumulator.push('_' + prefix + '_' + i);
+    for (i = 0; i &lt; rawValuesLength; i++) {
+      getFormatChunksFrom_accumulator.push(&#x27;_&#x27; + prefix + &#x27;_&#x27; + i);
     }
 
     return getFormatChunksFrom_accumulator;
@@ -1118,20 +1210,20 @@ var Tweenable = (function () {
 
     if (!chunks) {
       // chunks will be null if there were no tokens to parse in
-      // formattedString (for example, if formattedString is '2').  Coerce
+      // formattedString (for example, if formattedString is &#x27;2&#x27;).  Coerce
       // chunks to be useful here.
-      chunks = ['', ''];
+      chunks = [&#x27;&#x27;, &#x27;&#x27;];
 
       // If there is only one chunk, assume that the string is a number
       // followed by a token...
       // NOTE: This may be an unwise assumption.
     } else if (chunks.length === 1 ||
-        // ...or if the string starts with a number component (".", "-", or a
+        // ...or if the string starts with a number component (&quot;.&quot;, &quot;-&quot;, or a
         // digit)...
         formattedString[0].match(R_NUMBER_COMPONENT)) {
       // ...prepend an empty string here to make sure that the formatted number
       // is properly replaced by VALUE_PLACEHOLDER
-      chunks.unshift('');
+      chunks.unshift(&#x27;&#x27;);
     }
 
     return chunks.join(VALUE_PLACEHOLDER);
@@ -1148,7 +1240,7 @@ var Tweenable = (function () {
     Tweenable.each(stateObject, function (prop) {
       var currentProp = stateObject[prop];
 
-      if (typeof currentProp === 'string' && currentProp.match(R_HEX)) {
+      if (typeof currentProp === &#x27;string&#x27; &amp;&amp; currentProp.match(R_HEX)) {
         stateObject[prop] = sanitizeHexChunksToRGB(currentProp);
       }
     });
@@ -1170,7 +1262,7 @@ var Tweenable = (function () {
    */
   function convertHexToRGB (hexString) {
     var rgbArr = hexToRGBArray(hexString);
-    return 'rgb(' + rgbArr[0] + ',' + rgbArr[1] + ',' + rgbArr[2] + ')';
+    return &#x27;rgb(&#x27; + rgbArr[0] + &#x27;,&#x27; + rgbArr[1] + &#x27;,&#x27; + rgbArr[2] + &#x27;)&#x27;;
   }
 
   var hexToRGBArray_returnArray = [];
@@ -1180,17 +1272,17 @@ var Tweenable = (function () {
    *
    * @param {string} hex A hexadecimal string.
    *
-   * @returns {Array.<number>} The converted Array of RGB values if `hex` is a
-   * valid string, or an Array of three 0's.
+   * @returns {Array.&lt;number&gt;} The converted Array of RGB values if &#x60;hex&#x60; is a
+   * valid string, or an Array of three 0&#x27;s.
    */
   function hexToRGBArray (hex) {
 
-    hex = hex.replace(/#/, '');
+    hex = hex.replace(/#/, &#x27;&#x27;);
 
     // If the string is a shorthand three digit hex notation, normalize it to
     // the standard six digit notation
     if (hex.length === 3) {
-      hex = hex.split('');
+      hex = hex.split(&#x27;&#x27;);
       hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
     }
 
@@ -1206,7 +1298,7 @@ var Tweenable = (function () {
    *
    * @param {Number|String} hex The value to convert
    *
-   * @returns {Number} The base-10 equivalent of `hex`.
+   * @returns {Number} The base-10 equivalent of &#x60;hex&#x60;.
    */
   function hexToDec (hex) {
     return parseInt(hex, 16);
@@ -1229,7 +1321,7 @@ var Tweenable = (function () {
       var pattenMatchesLength = pattenMatches.length;
       var currentChunk;
 
-      for (var i = 0; i < pattenMatchesLength; i++) {
+      for (var i = 0; i &lt; pattenMatchesLength; i++) {
         currentChunk = pattenMatches.shift();
         filteredString = filteredString.replace(
           VALUE_PLACEHOLDER, filter(currentChunk));
@@ -1260,11 +1352,11 @@ var Tweenable = (function () {
     var numbersLength = numbers.length;
     var sanitizedString = rgbChunk.match(R_RGB_PREFIX)[0];
 
-    for (var i = 0; i < numbersLength; i++) {
-      sanitizedString += parseInt(numbers[i], 10) + ',';
+    for (var i = 0; i &lt; numbersLength; i++) {
+      sanitizedString += parseInt(numbers[i], 10) + &#x27;,&#x27;;
     }
 
-    sanitizedString = sanitizedString.slice(0, -1) + ')';
+    sanitizedString = sanitizedString.slice(0, -1) + &#x27;)&#x27;;
 
     return sanitizedString;
   }
@@ -1281,12 +1373,12 @@ var Tweenable = (function () {
     Tweenable.each(stateObject, function (prop) {
       var currentProp = stateObject[prop];
 
-      if (typeof currentProp === 'string') {
+      if (typeof currentProp === &#x27;string&#x27;) {
         var rawValues = getValuesFrom(currentProp);
 
         manifestAccumulator[prop] = {
-          'formatString': getFormatStringFrom(currentProp)
-          ,'chunkNames': getFormatChunksFrom(rawValues, prop)
+          &#x27;formatString&#x27;: getFormatStringFrom(currentProp)
+          ,&#x27;chunkNames&#x27;: getFormatChunksFrom(rawValues, prop)
         };
       }
     });
@@ -1304,7 +1396,7 @@ var Tweenable = (function () {
       var rawValues = getValuesFrom(currentProp);
       var rawValuesLength = rawValues.length;
 
-      for (var i = 0; i < rawValuesLength; i++) {
+      for (var i = 0; i &lt; rawValuesLength; i++) {
         stateObject[formatManifests[prop].chunkNames[i]] = +rawValues[i];
       }
 
@@ -1331,7 +1423,7 @@ var Tweenable = (function () {
 
   /*!
    * @param {Object} stateObject
-   * @param {Array.<string>} chunkNames
+   * @param {Array.&lt;string&gt;} chunkNames
    *
    * @return {Object} The extracted value chunks.
    */
@@ -1339,7 +1431,7 @@ var Tweenable = (function () {
     var extractedValues = {};
     var currentChunkName, chunkNamesLength = chunkNames.length;
 
-    for (var i = 0; i < chunkNamesLength; i++) {
+    for (var i = 0; i &lt; chunkNamesLength; i++) {
       currentChunkName = chunkNames[i];
       extractedValues[currentChunkName] = stateObject[currentChunkName];
       delete stateObject[currentChunkName];
@@ -1351,15 +1443,15 @@ var Tweenable = (function () {
   var getValuesList_accumulator = [];
   /*!
    * @param {Object} stateObject
-   * @param {Array.<string>} chunkNames
+   * @param {Array.&lt;string&gt;} chunkNames
    *
-   * @return {Array.<number>}
+   * @return {Array.&lt;number&gt;}
    */
   function getValuesList (stateObject, chunkNames) {
     getValuesList_accumulator.length = 0;
     var chunkNamesLength = chunkNames.length;
 
-    for (var i = 0; i < chunkNamesLength; i++) {
+    for (var i = 0; i &lt; chunkNamesLength; i++) {
       getValuesList_accumulator.push(stateObject[chunkNames[i]]);
     }
 
@@ -1368,7 +1460,7 @@ var Tweenable = (function () {
 
   /*!
    * @param {string} formatString
-   * @param {Array.<number>} rawValues
+   * @param {Array.&lt;number&gt;} rawValues
    *
    * @return {string}
    */
@@ -1376,7 +1468,7 @@ var Tweenable = (function () {
     var formattedValueString = formatString;
     var rawValuesLength = rawValues.length;
 
-    for (var i = 0; i < rawValuesLength; i++) {
+    for (var i = 0; i &lt; rawValuesLength; i++) {
       formattedValueString = formattedValueString.replace(
         VALUE_PLACEHOLDER, +rawValues[i].toFixed(4));
     }
@@ -1385,12 +1477,12 @@ var Tweenable = (function () {
   }
 
   /*!
-   * Note: It's the duty of the caller to convert the Array elements of the
+   * Note: It&#x27;s the duty of the caller to convert the Array elements of the
    * return value into numbers.  This is a performance optimization.
    *
    * @param {string} formattedString
    *
-   * @return {Array.<string>|null}
+   * @return {Array.&lt;string&gt;|null}
    */
   function getValuesFrom (formattedString) {
     return formattedString.match(R_UNFORMATTED_VALUES);
@@ -1405,10 +1497,10 @@ var Tweenable = (function () {
       var currentProp = tokenData[prop];
       var chunkNames = currentProp.chunkNames;
       var chunkLength = chunkNames.length;
-      var easingChunks = easingObject[prop].split(' ');
+      var easingChunks = easingObject[prop].split(&#x27; &#x27;);
       var lastEasingChunk = easingChunks[easingChunks.length - 1];
 
-      for (var i = 0; i < chunkLength; i++) {
+      for (var i = 0; i &lt; chunkLength; i++) {
         easingObject[chunkNames[i]] = easingChunks[i] || lastEasingChunk;
       }
 
@@ -1425,10 +1517,10 @@ var Tweenable = (function () {
       var currentProp = tokenData[prop];
       var chunkNames = currentProp.chunkNames;
       var chunkLength = chunkNames.length;
-      var composedEasingString = '';
+      var composedEasingString = &#x27;&#x27;;
 
-      for (var i = 0; i < chunkLength; i++) {
-        composedEasingString += ' ' + easingObject[chunkNames[i]];
+      for (var i = 0; i &lt; chunkLength; i++) {
+        composedEasingString += &#x27; &#x27; + easingObject[chunkNames[i]];
         delete easingObject[chunkNames[i]];
       }
 
@@ -1437,21 +1529,21 @@ var Tweenable = (function () {
   }
 
   Tweenable.prototype.filter.token = {
-    'tweenCreated': function (currentState, fromState, toState, easingObject) {
+    &#x27;tweenCreated&#x27;: function (currentState, fromState, toState, easingObject) {
       sanitizeObjectForHexProps(currentState);
       sanitizeObjectForHexProps(fromState);
       sanitizeObjectForHexProps(toState);
       this._tokenData = getFormatManifests(currentState);
     },
 
-    'beforeTween': function (currentState, fromState, toState, easingObject) {
+    &#x27;beforeTween&#x27;: function (currentState, fromState, toState, easingObject) {
       expandEasingObject(easingObject, this._tokenData);
       expandFormattedProperties(currentState, this._tokenData);
       expandFormattedProperties(fromState, this._tokenData);
       expandFormattedProperties(toState, this._tokenData);
     },
 
-    'afterTween': function (currentState, fromState, toState, easingObject) {
+    &#x27;afterTween&#x27;: function (currentState, fromState, toState, easingObject) {
       collapseFormattedProperties(currentState, this._tokenData);
       collapseFormattedProperties(fromState, this._tokenData);
       collapseFormattedProperties(toState, this._tokenData);
@@ -1462,3 +1554,23 @@ var Tweenable = (function () {
 } (Tweenable));
 
 }).call(null);
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

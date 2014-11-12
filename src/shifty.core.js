@@ -212,8 +212,14 @@ var Tweenable = (function () {
 
   /**
    * Tweenable constructor.
-   * @param {Object=} opt_initialState The values that the initial tween should start at if a "from" object is not provided to Tweenable#tween.
-   * @param {Object=} opt_config See Tweenable.prototype.setConfig()
+   * @param {Object=} opt_initialState The values that the initial tween should
+   * start at if a `from` object is not provided to `{{#crossLink
+   * "Tweenable/tween:method"}}{{/crossLink}}` or `{{#crossLink
+   * "Tweenable/setConfig:method"}}{{/crossLink}}`.
+   * @param {Object=} opt_config Configuration object to be passed to
+   * `{{#crossLink "Tweenable/setConfig:method"}}{{/crossLink}}`.
+   * @module Tweenable
+   * @class Tweenable
    * @constructor
    */
   function Tweenable (opt_initialState, opt_config) {
@@ -221,8 +227,9 @@ var Tweenable = (function () {
     this._configured = false;
     this._scheduleFunction = DEFAULT_SCHEDULE_FUNCTION;
 
-    // To prevent unnecessary calls to setConfig do not set default configuration here.
-    // Only set default configuration immediately before tweening if none has been set.
+    // To prevent unnecessary calls to setConfig do not set default
+    // configuration here.  Only set default configuration immediately before
+    // tweening if none has been set.
     if (typeof opt_config !== 'undefined') {
       this.setConfig(opt_config);
     }
@@ -230,15 +237,18 @@ var Tweenable = (function () {
 
   /**
    * Configure and start a tween.
-   * @param {Object=} opt_config See Tweenable.prototype.setConfig()
-   * @return {Tweenable}
+   * @method tween
+   * @param {Object=} opt_config Configuration object to be passed to
+   * `{{#crossLink "Tweenable/setConfig:method"}}{{/crossLink}}`.
+   * @chainable
    */
   Tweenable.prototype.tween = function (opt_config) {
     if (this._isTweening) {
       return this;
     }
 
-    // Only set default config if no configuration has been set previously and none is provided now.
+    // Only set default config if no configuration has been set previously and
+    // none is provided now.
     if (opt_config !== undefined || !this._configured) {
       this.setConfig(opt_config);
     }
@@ -249,24 +259,38 @@ var Tweenable = (function () {
   };
 
   /**
-   * Sets the tween configuration. `config` may have the following options:
+   * Configure a tween that will start at some point in the future.
    *
-   * - __from__ (_Object=_): Starting position.  If omitted, the current state is used.
+   * @method setConfig
+   * @param {Object} config The following values are valid:
+   * - __from__ (_Object=_): Starting position.  If omitted, `{{#crossLink
+   *   "Tweenable/get:method"}}get(){{/crossLink}}` is used.
    * - __to__ (_Object=_): Ending position.
    * - __duration__ (_number=_): How many milliseconds to animate for.
-   * - __start__ (_Function(Object)_): Function to execute when the tween begins.  Receives the state of the tween as the first parameter. Attachment is the second parameter.
-   * - __step__ (_Function(Object, *, number)_): Function to execute on every tick.  Receives the state of the tween as the first parameter. Attachment is the second parameter, and the time elapsed since the start of the tween is the third parameter. This function is not called on the final step of the animation, but `finish` is.
-   * - __finish__ (_Function(Object, *)_): Function to execute upon tween completion.  Receives the state of the tween as the first parameter. Attachment is the second parameter.
-   * - __easing__ (_Object|string=_): Easing curve name(s) to use for the tween.
-   * - __attachment__ (_Object|string|any=_): Value that is attached to this instance and passed on to the step/start/finish methods.
-   * @param {Object} config
-   * @return {Tweenable}
+   * - __start__ (_Function(Object, *)_): Function to execute when the tween
+   *   begins.  Receives the state of the tween as the first parameter and
+   *   `attachment` as the second parameter.
+   * - __step__ (_Function(Object, *, number)_): Function to execute on every
+   *   tick.  Receives `{{#crossLink
+   *   "Tweenable/get:method"}}get(){{/crossLink}}` as the first parameter,
+   *   `attachment` as the second parameter, and the time elapsed since the
+   *   start of the tween as the third. This function is not called on the
+   *   final step of the animation, but `finish` is.
+   * - __finish__ (_Function(Object, *)_): Function to execute upon tween
+   *   completion.  Receives the state of the tween as the first parameter and
+   *   `attachment` as the second parameter.
+   * - __easing__ (_Object|string=_): Easing curve name(s) to use for the
+   *   tween.
+   * - __attachment__ (_*_): Cached value that is passed to the
+   *   `step`/`start`/`finish` methods.
+   * @chainable
    */
   Tweenable.prototype.setConfig = function (config) {
     config = config || {};
     this._configured = true;
 
-    // Attach something to this Tweenable instance (e.g.: a DOM element, an object, a string, etc.);
+    // Attach something to this Tweenable instance (e.g.: a DOM element, an
+    // object, a string, etc.);
     this._attachment = config.attachment;
 
     // Init the internal state
@@ -298,24 +322,28 @@ var Tweenable = (function () {
   };
 
   /**
-   * Gets the current state.
-   * @return {Object}
+   * @method get
+   * @return {Object} The current state.
    */
   Tweenable.prototype.get = function () {
     return shallowCopy({}, this._currentState);
   };
 
   /**
-   * Sets the current state.
-   * @param {Object} state
+   * @method set
+   * @param {Object} state The current state.
    */
   Tweenable.prototype.set = function (state) {
     this._currentState = state;
   };
 
   /**
-   * Pauses a tween.  Paused tweens can be resumed from the point at which they were paused.  This is different than [`stop()`](#stop), as that method causes a tween to start over when it is resumed.
-   * @return {Tweenable}
+   * Pause a tween.  Paused tweens can be resumed from the point at which they
+   * were paused.  This is different from `{{#crossLink
+   * "Tweenable/stop:method"}}{{/crossLink}}`, as that method
+   * causes a tween to start over when it is resumed.
+   * @method pause
+   * @chainable
    */
   Tweenable.prototype.pause = function () {
     this._pausedAtTime = now();
@@ -324,8 +352,9 @@ var Tweenable = (function () {
   };
 
   /**
-   * Resumes a paused tween.
-   * @return {Tweenable}
+   * Resume a paused tween.
+   * @method resume
+   * @chainable
    */
   Tweenable.prototype.resume = function () {
     if (this._isPaused) {
@@ -348,11 +377,13 @@ var Tweenable = (function () {
   };
 
   /**
-   * Move the state of the animation to a specific point in the tween's timeline.
-   * If the animation is not running, this will cause the `step` handlers to be
-   * called.
-   * @param {millisecond} millisecond The millisecond of the animation to seek to.
-   * @return {Tweenable}
+   * Move the state of the animation to a specific point in the tween's
+   * timeline.  If the animation is not running, this will cause the `step`
+   * handlers to be called.
+   * @method seek
+   * @param {millisecond} millisecond The millisecond of the animation to seek
+   * to.
+   * @chainable
    */
   Tweenable.prototype.seek = function (millisecond) {
     this._timestamp = now() - millisecond;
@@ -376,8 +407,12 @@ var Tweenable = (function () {
 
   /**
    * Stops and cancels a tween.
-   * @param {boolean=} gotoEnd If false or omitted, the tween just stops at its current state, and the "finish" handler is not invoked.  If true, the tweened object's values are instantly set to the target values, and "finish" is invoked.
-   * @return {Tweenable}
+   * @param {boolean=} gotoEnd If `false` or omitted, the tween just stops at
+   * its current state, and the `finish` handler is not invoked.  If `true`,
+   * the tweened object's values are instantly set to the target values, and
+   * `finish` is invoked.
+   * @method stop
+   * @chainable
    */
   Tweenable.prototype.stop = function (gotoEnd) {
     this._isTweening = false;
@@ -401,26 +436,33 @@ var Tweenable = (function () {
   };
 
   /**
-   * Returns whether or not a tween is running.
-   * @return {boolean}
+   * @method isPlaying
+   * @return {boolean} Whether or not a tween is running.
    */
   Tweenable.prototype.isPlaying = function () {
     return this._isTweening && !this._isPaused;
   };
 
   /**
-   * Sets a custom schedule function.
+   * Set a custom schedule function.
    *
-   * If a custom function is not set the default one is used [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window.requestAnimationFrame) if available, otherwise [`setTimeout`](https://developer.mozilla.org/en-US/docs/Web/API/Window.setTimeout)).
-   *
-   * @param {Function(Function,number)} scheduleFunction The function to be called to schedule the next frame to be rendered
+   * If a custom function is not set,
+   * [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window.requestAnimationFrame)
+   * is used if available, otherwise
+   * [`setTimeout`](https://developer.mozilla.org/en-US/docs/Web/API/Window.setTimeout)
+   * is used.
+   * @method setScheduleFunction
+   * @param {Function(Function,number)} scheduleFunction The function to be
+   * used to schedule the next frame to be rendered.
    */
   Tweenable.prototype.setScheduleFunction = function (scheduleFunction) {
     this._scheduleFunction = scheduleFunction;
   };
 
   /**
-   * `delete`s all "own" properties.  Call this when the `Tweenable` instance is no longer needed to free memory.
+   * `delete` all "own" properties.  Call this when the `Tweenable` instance
+   * is no longer needed to free memory.
+   * @method dispose
    */
   Tweenable.prototype.dispose = function () {
     var prop;
@@ -437,10 +479,14 @@ var Tweenable = (function () {
    */
   Tweenable.prototype.filter = {};
 
-  /*!
-   * This object contains all of the tweens available to Shifty.  It is extendible - simply attach properties to the Tweenable.prototype.formula Object following the same format at linear.
+  /**
+   * This object contains all of the tweens available to Shifty.  It is
+   * extensible - simply attach properties to the `Tweenable.prototype.formula`
+   * Object following the same format as `linear`.
    *
    * `pos` should be a normalized `number` (between 0 and 1).
+   * @property formula
+   * @type {Object(function)}
    */
   Tweenable.prototype.formula = {
     linear: function (pos) {

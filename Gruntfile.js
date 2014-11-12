@@ -8,7 +8,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-codepainter');
-  grunt.loadNpmTasks('grunt-dox');
+  grunt.loadNpmTasks('grunt-contrib-yuidoc');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
   var banner = [
         '/*! <%= pkg.name %> - v<%= pkg.version %> - ',
@@ -86,20 +87,6 @@ module.exports = function(grunt) {
         dest: 'dist/shifty.js'
       }
     },
-    dox: {
-      options: {
-        title: 'Shifty'
-      },
-      files: {
-        src: [
-          'src/shifty.core.js',
-          'src/shifty.interpolate.js',
-          'src/shifty.bezier.js',
-          'src/shifty.token.js'
-        ],
-        dest: 'dist/doc'
-      }
-    },
     bump: {
       options: {
         files: ['package.json', 'bower.json'],
@@ -122,6 +109,30 @@ module.exports = function(grunt) {
           dest: 'src/'
         }]
       }
+    },
+    yuidoc: {
+      compile: {
+        name: 'Shifty',
+        description: '<%= pkg.description %>',
+        version: '<%= pkg.version %>',
+        url: '<%= pkg.homepage %>',
+        logo: '../../asset/img/shifty-logo-200.png',
+        options: {
+          paths: ['dist'],
+          recurse: false,
+          outdir: 'dist/doc'
+        }
+      }
+    },
+    copy: {
+      redirects: {
+        files: [
+          { src: ['redirects/src/shifty.bezier.js.html'], dest: 'dist/doc/src/shifty.bezier.js.html' },
+          { src: ['redirects/src/shifty.core.js.html'], dest: 'dist/doc/src/shifty.core.js.html' },
+          { src: ['redirects/src/shifty.interpolate.js.html'], dest: 'dist/doc/src/shifty.interpolate.js.html' },
+          { src: ['redirects/src/shifty.token.js.html'], dest: 'dist/doc/src/shifty.token.js.html' },
+        ]
+      }
     }
   });
 
@@ -134,14 +145,15 @@ module.exports = function(grunt) {
       'concat:forRekapi',
       'uglify:standardTarget',
       'concat:forRekapiDebug',
-      'dox'
+      'yuidoc',
+      'copy:redirects'
     ]);
 
   grunt.registerTask('build-minimal', [
       'concat:minimal',
       'uglify:standardTarget',
       'concat:minimalDebug',
-      'dox'
+      'yuidoc',
+      'copy:redirects'
     ]);
-
 };

@@ -13,9 +13,10 @@
   mockTweenable._filterArgs = [];
 
   /**
-   * Compute the midpoint of two Objects.  This method effectively calculates a specific frame of animation that [Tweenable#tween](shifty.core.js.html#tween) does many times over the course of a tween.
-   *
-   * Example:
+   * Compute the midpoint of two Objects.  This method effectively calculates a
+   * specific frame of animation that `{{#crossLink
+   * "Tweenable/tween:method"}}{{/crossLink}}` does many times over the course
+   * of a full tween.
    *
    *     var interpolatedValues = Tweenable.interpolate({
    *       width: '100px',
@@ -30,10 +31,16 @@
    *     console.log(interpolatedValues);
    *     // {opacity: 0.5, width: "150px", color: "rgb(127,127,127)"}
    *
+   * @static
+   * @method interpolate
    * @param {Object} from The starting values to tween from.
    * @param {Object} targetState The ending values to tween to.
-   * @param {number} position The normalized position value (between 0.0 and 1.0) to interpolate the values between `from` and `to` for.  `from` represents 0 and `to` represents `1`.
-   * @param {string|Object} easing The easing curve(s) to calculate the midpoint against.  You can reference any easing function attached to `Tweenable.prototype.formula`.  If omitted, this defaults to "linear".
+   * @param {number} position The normalized position value (between 0.0 and
+   * 1.0) to interpolate the values between `from` and `to` for.  `from`
+   * represents 0 and `to` represents 1.
+   * @param {string|Object} easing The easing curve(s) to calculate the
+   * midpoint against.  You can reference any easing function attached to
+   * `Tweenable.prototype.formula`.  If omitted, this defaults to "linear".
    * @return {Object}
    */
   Tweenable.interpolate = function (from, targetState, position, easing) {
