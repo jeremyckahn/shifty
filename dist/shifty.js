@@ -1,5 +1,6 @@
-/*! shifty - v1.3.4 - 2014-10-29 - http://jeremyckahn.github.io/shifty */
-;(function (root) {
+/*! shifty - v1.3.5 - 2014-11-11 - http://jeremyckahn.github.io/shifty */
+;(function () {
+  var root = this;
 
 /*!
  * Shifty Core
@@ -1411,4 +1412,4 @@ function token () {
 
 } (Tweenable));
 
-}(this));
+}).call(null);
