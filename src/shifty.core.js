@@ -304,6 +304,13 @@ var Tweenable = (function () {
     this._originalState = this.get();
     this._targetState = config.to || this.get();
 
+    var self = this;
+    this._timeoutHandler = function () {
+      timeoutHandler(self, self._timestamp, self._duration, self._currentState,
+        self._originalState, self._targetState, self._easing, self._step,
+        self._scheduleFunction);
+    };
+
     // Aliases used below
     var currentState = this._currentState;
     var targetState = this._targetState;
@@ -364,13 +371,6 @@ var Tweenable = (function () {
     this._isPaused = false;
     this._isTweening = true;
 
-    var self = this;
-    this._timeoutHandler = function () {
-      timeoutHandler(self, self._timestamp, self._duration, self._currentState,
-        self._originalState, self._targetState, self._easing, self._step,
-        self._scheduleFunction);
-    };
-
     this._timeoutHandler();
 
     return this;
@@ -382,10 +382,11 @@ var Tweenable = (function () {
    * handlers to be called.
    * @method seek
    * @param {millisecond} millisecond The millisecond of the animation to seek
-   * to.
+   * to.  This must not be less than `0`.
    * @chainable
    */
   Tweenable.prototype.seek = function (millisecond) {
+    millisecond = Math.max(millisecond, 0);
     this._timestamp = now() - millisecond;
 
     if (!this.isPlaying()) {
@@ -394,11 +395,8 @@ var Tweenable = (function () {
 
       // If the animation is not running, call timeoutHandler to make sure that
       // any step handlers are run.
-      timeoutHandler(this, this._timestamp, this._duration, this._currentState,
-        this._originalState, this._targetState, this._easing, this._step,
-        this._scheduleFunction);
-
       this._timeoutHandler();
+
       this.pause();
     }
 

@@ -113,7 +113,7 @@
 
     module('Tweenable.prototype.seek');
 
-    test('pause() moves the end time of the tween', function () {
+    test('seek() forces the tween to a specific point on the timeline', function () {
       var tweenable = new Tweenable();
       mockTime = function () {return 0;};
       tweenable.tween({
@@ -124,6 +124,19 @@
 
       tweenable.seek(500);
       equals(tweenable._timestamp, -500, 'The timestamp was properly offset');
+    });
+
+    test('The seek() parameter cannot be less than 0', function () {
+      var tweenable = new Tweenable();
+      mockTime = function () {return 0;};
+      tweenable.tween({
+        from: { x: 0 },
+        to: { x: 100 },
+        duration: 1000
+      });
+
+      tweenable.seek(-500);
+      equals(tweenable._timestamp, 0, 'The seek() parameter was forced to 0');
     });
 
 
