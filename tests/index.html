@@ -116,13 +116,16 @@
     test('seek() forces the tween to a specific point on the timeline', function () {
       var tweenable = new Tweenable();
       mockTime = function () {return 0;};
-      tweenable.tween({
+      var config = {
         from: { x: 0 },
         to: { x: 100 },
         duration: 1000
       });
+      tweenable.tween(config);
 
       tweenable.seek(500);
+      equals(config.from.x, 0);
+      equals(config.to.x, 100); 
       equals(tweenable._timestamp, -500, 'The timestamp was properly offset');
     });
 
