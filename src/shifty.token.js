@@ -159,7 +159,6 @@
 
   // HELPERS
 
-  var getFormatChunksFrom_accumulator = [];
   /*!
    * @param {Array.number} rawValues
    * @param {string} prefix
@@ -167,16 +166,16 @@
    * @return {Array.<string>}
    */
   function getFormatChunksFrom (rawValues, prefix) {
-    getFormatChunksFrom_accumulator.length = 0;
+    var accumulator = [];
 
     var rawValuesLength = rawValues.length;
     var i;
 
     for (i = 0; i < rawValuesLength; i++) {
-      getFormatChunksFrom_accumulator.push('_' + prefix + '_' + i);
+      accumulator.push('_' + prefix + '_' + i);
     }
 
-    return getFormatChunksFrom_accumulator;
+    return accumulator;
   }
 
   /*!

@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.3.7</em>
+            <em>API Docs for: 1.3.8</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -90,7 +90,7 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-/*! shifty - v1.3.7 - 2014-11-13 - http://jeremyckahn.github.io/shifty */
+/*! shifty - v1.3.8 - 2014-11-18 - http://jeremyckahn.github.io/shifty */
 ;(function () {
   var root = this;
 
@@ -1178,7 +1178,6 @@ var Tweenable = (function () {
 
   // HELPERS
 
-  var getFormatChunksFrom_accumulator = [];
   /*!
    * @param {Array.number} rawValues
    * @param {string} prefix
@@ -1186,16 +1185,16 @@ var Tweenable = (function () {
    * @return {Array.&lt;string&gt;}
    */
   function getFormatChunksFrom (rawValues, prefix) {
-    getFormatChunksFrom_accumulator.length = 0;
+    var accumulator = [];
 
     var rawValuesLength = rawValues.length;
     var i;
 
     for (i = 0; i &lt; rawValuesLength; i++) {
-      getFormatChunksFrom_accumulator.push(&#x27;_&#x27; + prefix + &#x27;_&#x27; + i);
+      accumulator.push(&#x27;_&#x27; + prefix + &#x27;_&#x27; + i);
     }
 
-    return getFormatChunksFrom_accumulator;
+    return accumulator;
   }
 
   /*!

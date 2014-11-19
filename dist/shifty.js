@@ -1,4 +1,4 @@
-/*! shifty - v1.3.7 - 2014-11-13 - http://jeremyckahn.github.io/shifty */
+/*! shifty - v1.3.8 - 2014-11-18 - http://jeremyckahn.github.io/shifty */
 ;(function () {
   var root = this;
 
@@ -1086,7 +1086,6 @@ var Tweenable = (function () {
 
   // HELPERS
 
-  var getFormatChunksFrom_accumulator = [];
   /*!
    * @param {Array.number} rawValues
    * @param {string} prefix
@@ -1094,16 +1093,16 @@ var Tweenable = (function () {
    * @return {Array.<string>}
    */
   function getFormatChunksFrom (rawValues, prefix) {
-    getFormatChunksFrom_accumulator.length = 0;
+    var accumulator = [];
 
     var rawValuesLength = rawValues.length;
     var i;
 
     for (i = 0; i < rawValuesLength; i++) {
-      getFormatChunksFrom_accumulator.push('_' + prefix + '_' + i);
+      accumulator.push('_' + prefix + '_' + i);
     }
 
-    return getFormatChunksFrom_accumulator;
+    return accumulator;
   }
 
   /*!
