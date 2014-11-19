@@ -184,6 +184,11 @@ var Tweenable = (function () {
     }
   }
 
+  function clone (obj) {
+    if (obj) {
+      return JSON.parse(JSON.stringify(obj));
+    }
+  }
 
   /*!
    * Creates a usable easing Object from either a string or another easing
@@ -300,9 +305,9 @@ var Tweenable = (function () {
     this._step = config.step || noop;
     this._finish = config.finish || noop;
     this._duration = config.duration || DEFAULT_DURATION;
-    this._currentState = config.from || this.get();
+    this._currentState = clone(config.from) || this.get();
     this._originalState = this.get();
-    this._targetState = config.to || this.get();
+    this._targetState = clone(config.to) || this.get();
 
     var self = this;
     this._timeoutHandler = function () {
