@@ -112,9 +112,6 @@ tweenable.tween({
 });
 ````
 
-__Important!__  A reference to the `from` object is retained throughout the
-life of the tween and is modified by Shifty.
-
 ## Advanced usage
 
 You can control the state of a tween with the following methods:
