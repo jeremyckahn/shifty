@@ -1,4 +1,4 @@
-/*! shifty - v1.3.9 - 2014-11-20 - http://jeremyckahn.github.io/shifty */
+/*! shifty - v1.3.10 - 2014-11-20 - http://jeremyckahn.github.io/shifty */
 ;(function () {
   var root = this;
 
@@ -162,11 +162,18 @@ var Tweenable = (function () {
    * @param {Object} easing
    * @param {Function(Object, *, number)} step
    * @param {Function(Function,number)}} schedule
+   * @param {number=} opt_currentTimeOverride Needed for accurate timestamp in
+   * Tweenable#seek.
    */
   function timeoutHandler (tweenable, timestamp, duration, currentState,
-    originalState, targetState, easing, step, schedule) {
+    originalState, targetState, easing, step, schedule,
+    opt_currentTimeOverride) {
+
     timeoutHandler_endTime = timestamp + duration;
-    timeoutHandler_currentTime = Math.min(now(), timeoutHandler_endTime);
+
+    timeoutHandler_currentTime =
+      Math.min(opt_currentTimeOverride || now(), timeoutHandler_endTime);
+
     timeoutHandler_isEnded =
       timeoutHandler_currentTime >= timeoutHandler_endTime;
 
@@ -391,7 +398,8 @@ var Tweenable = (function () {
    */
   Tweenable.prototype.seek = function (millisecond) {
     millisecond = Math.max(millisecond, 0);
-    this._timestamp = now() - millisecond;
+    var currentTime = now();
+    this._timestamp = currentTime - millisecond;
 
     if (!this.isPlaying()) {
       this._isTweening = true;
@@ -399,7 +407,9 @@ var Tweenable = (function () {
 
       // If the animation is not running, call timeoutHandler to make sure that
       // any step handlers are run.
-      this._timeoutHandler();
+      timeoutHandler(this, this._timestamp, this._duration, this._currentState,
+        this._originalState, this._targetState, this._easing, this._step,
+        this._scheduleFunction, currentTime);
 
       this.pause();
     }

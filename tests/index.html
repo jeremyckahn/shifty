@@ -139,6 +139,26 @@
       equals(tweenable._timestamp, 0, 'The seek() parameter was forced to 0');
     });
 
+    test('seek() keep time reference (rel #60)', function () {
+      var tweenable = new Tweenable({}, {
+        from: { x: 0 },
+        to: { x: 100 },
+        duration: 100
+      });
+
+      // express a delay in time between the both time it's called
+      mockTime = function () {
+        mockTime = function () {return 100;};
+        return 98;
+      };
+
+      tweenable.stop = function () {
+        throw new Error('stop shouldn\'t be called');
+      };
+
+      tweenable.seek(98);
+    });
+
 
     module('Tweenable.prototype.stop');
 

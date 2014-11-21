@@ -1,6 +1,6 @@
 {
   "name": "shifty",
-  "version": "1.3.9",
+  "version": "1.3.10",
   "homepage": "http://jeremyckahn.github.io/shifty",
   "author": "Jeremy Kahn <jeremyckahn@gmail.com>",
   "description": "A teeny tiny tweening engine in JavaScript.",
