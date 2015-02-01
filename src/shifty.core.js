@@ -219,6 +219,7 @@ var Tweenable = (function () {
 
   /**
    * Tweenable constructor.
+   * @class Tweenable
    * @param {Object=} opt_initialState The values that the initial tween should
    * start at if a `from` object is not provided to `{{#crossLink
    * "Tweenable/tween:method"}}{{/crossLink}}` or `{{#crossLink
@@ -226,7 +227,6 @@ var Tweenable = (function () {
    * @param {Object=} opt_config Configuration object to be passed to
    * `{{#crossLink "Tweenable/setConfig:method"}}{{/crossLink}}`.
    * @module Tweenable
-   * @class Tweenable
    * @constructor
    */
   function Tweenable (opt_initialState, opt_config) {

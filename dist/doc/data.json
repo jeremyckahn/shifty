@@ -34,20 +34,7 @@
             "tag": "module",
             "file": "dist/shifty.js",
             "line": 224,
-            "description": "Tweenable constructor.",
-            "params": [
-                {
-                    "name": "opt_initialState",
-                    "description": "The values that the initial tween should\nstart at if a `from` object is not provided to `{{#crossLink\n\"Tweenable/tween:method\"}}{{/crossLink}}` or `{{#crossLink\n\"Tweenable/setConfig:method\"}}{{/crossLink}}`.",
-                    "type": "Object="
-                },
-                {
-                    "name": "opt_config",
-                    "description": "Configuration object to be passed to\n`{{#crossLink \"Tweenable/setConfig:method\"}}{{/crossLink}}`.",
-                    "type": "Object="
-                }
-            ],
-            "is_constructor": 1
+            "description": "Tweenable constructor."
         },
         "Tweenable.token": {
             "name": "Tweenable.token",
@@ -75,7 +62,6 @@
             "plugin_for": [],
             "extension_for": [],
             "module": "Tweenable",
-            "namespace": "",
             "file": "dist/shifty.js",
             "line": 224,
             "description": "Tweenable constructor.",
@@ -91,6 +77,7 @@
                     "type": "Object="
                 }
             ],
+            "is_constructor": 1,
             "submodule": "Tweenable.token"
         }
     },
