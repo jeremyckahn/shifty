@@ -152,11 +152,13 @@
         return 98;
       };
 
+      var callCount = 0;
       tweenable.stop = function () {
-        throw new Error('stop shouldn\'t be called');
+        callCount += 1;
       };
 
       tweenable.seek(98);
+      equals(callCount, 0, 'stop should not have been called');
     });
 
 
