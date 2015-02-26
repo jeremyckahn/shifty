@@ -395,6 +395,11 @@ var Tweenable = (function () {
   Tweenable.prototype.seek = function (millisecond) {
     millisecond = Math.max(millisecond, 0);
     var currentTime = now();
+
+    if ((this._timestamp + millisecond) === 0) {
+      return this;
+    }
+
     this._timestamp = currentTime - millisecond;
 
     if (!this.isPlaying()) {

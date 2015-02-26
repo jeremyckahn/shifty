@@ -139,6 +139,27 @@
       equals(tweenable._timestamp, 0, 'The seek() parameter was forced to 0');
     });
 
+    test('Seeking to the current millisecond is a no-op', function () {
+      var tweenable = new Tweenable();
+      var stepHandlerCallCount = 0;
+      mockTime = function () {return 0;};
+
+      tweenable.tween({
+        from: { x: 0 },
+        to: { x: 100 },
+        duration: 1000,
+        step: function () {
+          stepHandlerCallCount++;
+        }
+      });
+
+      tweenable.seek(50);
+      tweenable.stop();
+      tweenable.seek(50);
+      equals(stepHandlerCallCount, 1,
+        'The second seek() call did not trigger any handlers');
+    });
+
     test('seek() keep time reference (rel #60)', function () {
       var tweenable = new Tweenable({}, {
         from: { x: 0 },

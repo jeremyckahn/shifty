@@ -1,4 +1,4 @@
-/*! shifty - v1.3.10 - 2015-02-01 - http://jeremyckahn.github.io/shifty */
+/*! shifty - v1.3.11 - 2015-02-25 - http://jeremyckahn.github.io/shifty */
 ;(function () {
   var root = this;
 
@@ -399,6 +399,11 @@ var Tweenable = (function () {
   Tweenable.prototype.seek = function (millisecond) {
     millisecond = Math.max(millisecond, 0);
     var currentTime = now();
+
+    if ((this._timestamp + millisecond) === 0) {
+      return this;
+    }
+
     this._timestamp = currentTime - millisecond;
 
     if (!this.isPlaying()) {

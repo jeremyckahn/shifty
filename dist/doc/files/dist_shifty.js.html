@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.3.10</em>
+            <em>API Docs for: 1.3.11</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -90,7 +90,7 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-/*! shifty - v1.3.10 - 2015-02-01 - http://jeremyckahn.github.io/shifty */
+/*! shifty - v1.3.11 - 2015-02-25 - http://jeremyckahn.github.io/shifty */
 ;(function () {
   var root = this;
 
@@ -491,6 +491,11 @@ var Tweenable = (function () {
   Tweenable.prototype.seek = function (millisecond) {
     millisecond = Math.max(millisecond, 0);
     var currentTime = now();
+
+    if ((this._timestamp + millisecond) === 0) {
+      return this;
+    }
+
     this._timestamp = currentTime - millisecond;
 
     if (!this.isPlaying()) {
