@@ -2,7 +2,7 @@
     "project": {
         "name": "Shifty",
         "description": "A teeny tiny tweening engine in JavaScript.",
-        "version": "1.3.10",
+        "version": "1.3.11",
         "url": "http://jeremyckahn.github.io/shifty",
         "logo": "../../asset/img/shifty-logo-200.png"
     },
@@ -182,7 +182,7 @@
         },
         {
             "file": "dist/shifty.js",
-            "line": 420,
+            "line": 425,
             "description": "Stops and cancels a tween.",
             "params": [
                 {
@@ -199,7 +199,7 @@
         },
         {
             "file": "dist/shifty.js",
-            "line": 450,
+            "line": 455,
             "itemtype": "method",
             "name": "isPlaying",
             "return": {
@@ -211,7 +211,7 @@
         },
         {
             "file": "dist/shifty.js",
-            "line": 458,
+            "line": 463,
             "description": "Set a custom schedule function.\n\nIf a custom function is not set,\n[`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window.requestAnimationFrame)\nis used if available, otherwise\n[`setTimeout`](https://developer.mozilla.org/en-US/docs/Web/API/Window.setTimeout)\nis used.",
             "itemtype": "method",
             "name": "setScheduleFunction",
@@ -227,7 +227,7 @@
         },
         {
             "file": "dist/shifty.js",
-            "line": 474,
+            "line": 479,
             "description": "`delete` all \"own\" properties.  Call this when the `Tweenable` instance\nis no longer needed to free memory.",
             "itemtype": "method",
             "name": "dispose",
@@ -236,7 +236,7 @@
         },
         {
             "file": "dist/shifty.js",
-            "line": 494,
+            "line": 499,
             "description": "This object contains all of the tweens available to Shifty.  It is\nextensible - simply attach properties to the `Tweenable.prototype.formula`\nObject following the same format as `linear`.\n\n`pos` should be a normalized `number` (between 0 and 1).",
             "itemtype": "property",
             "name": "formula",
@@ -246,7 +246,7 @@
         },
         {
             "file": "dist/shifty.js",
-            "line": 820,
+            "line": 825,
             "description": "Create a Bezier easing function and attach it to `{{#crossLink\n\"Tweenable/formula:property\"}}Tweenable#formula{{/crossLink}}`.  This\nfunction gives you total control over the easing curve.  Matthew Lein's\n[Ceaser](http://matthewlein.com/ceaser/) is a useful tool for visualizing\nthe curves you can make with this function.",
             "itemtype": "method",
             "name": "setBezierFunction",
@@ -286,7 +286,7 @@
         },
         {
             "file": "dist/shifty.js",
-            "line": 848,
+            "line": 853,
             "description": "`delete` an easing function from `{{#crossLink\n\"Tweenable/formula:property\"}}Tweenable#formula{{/crossLink}}`.  Be\ncareful with this method, as it `delete`s whatever easing formula matches\n`name` (which means you can delete standard Shifty easing functions).",
             "itemtype": "method",
             "name": "unsetBezierFunction",
@@ -306,7 +306,7 @@
         },
         {
             "file": "dist/shifty.js",
-            "line": 877,
+            "line": 882,
             "description": "Compute the midpoint of two Objects.  This method effectively calculates a\nspecific frame of animation that `{{#crossLink\n\"Tweenable/tween:method\"}}{{/crossLink}}` does many times over the course\nof a full tween.\n\n    var interpolatedValues = Tweenable.interpolate({\n      width: '100px',\n      opacity: 0,\n      color: '#fff'\n    }, {\n      width: '200px',\n      opacity: 1,\n      color: '#000'\n    }, 0.5);\n\n    console.log(interpolatedValues);\n    // {opacity: 0.5, width: \"150px\", color: \"rgb(127,127,127)\"}",
             "static": 1,
             "itemtype": "method",
