@@ -524,6 +524,33 @@
           'The tween ends does not go past position 1 after completing');
     });
 
+    test('pause() functionality is not affected by delay', function () {
+      var tweenable = new Tweenable();
+      var delay = 5000;
+      mockTime = function () {return 0;};
+      tweenable.tween({
+        from: { x: 0 },
+        to: { x: 100 },
+        delay: delay,
+        duration: 1000
+      });
+
+      mockTime = function () {return 500 + delay;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 50,
+          'Pre-pause: The middle of the tween equates to .5 of the target value');
+      tweenable.pause();
+      mockTime = function () {return 2000 + delay;};
+      tweenable.resume();
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 50,
+          'The tween has not changed in the time that it has been paused');
+      mockTime = function () {return 2500 + delay;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 100,
+          'The tween ends at the modified end time');
+    });
+
   } ());
 </script>
 
