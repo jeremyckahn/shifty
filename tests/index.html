@@ -490,6 +490,40 @@
       equals(easingFunction.y2, .8, 'Easing function was decorated with y2');
     });
 
+
+    module('delay');
+
+    test('Tween does not start until delay is met.', function () {
+
+      var tweenable = new Tweenable();
+      mockTime = function () {return 0;};
+      tweenable.tween({
+        from: { x: 0 }
+        ,to: { x: 10 }
+        ,delay: 500
+        ,duration: 1000
+      });
+
+      equals(tweenable.get().x, 0,
+          'The tween starts at the initial value');
+      mockTime = function () {return 250;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 0,
+          'The tween is interpolated for position 0 until the delay has been met');
+      mockTime = function () {return 1000;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 5,
+          'The delay offset is accounted for during the tween');
+      mockTime = function () {return 1500;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 10,
+          'The tween ends at position 1 with the delay');
+      mockTime = function () {return 99999;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 10,
+          'The tween ends does not go past position 1 after completing');
+    });
+
   } ());
 </script>
 
