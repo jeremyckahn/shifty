@@ -284,6 +284,8 @@ var Tweenable = (function () {
    *   "Tweenable/get:method"}}get(){{/crossLink}}` is used.
    * - __to__ (_Object=_): Ending position.
    * - __duration__ (_number=_): How many milliseconds to animate for.
+   * - __delay__ (_delay=_): How many milliseconds to wait before starting the
+   *   tween.
    * - __start__ (_Function(Object, *)_): Function to execute when the tween
    *   begins.  Receives the state of the tween as the first parameter and
    *   `attachment` as the second parameter.
