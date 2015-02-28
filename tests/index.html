@@ -32,9 +32,17 @@
     var log = console.log;
 
     function forceInternalUpdate (tweenable) {
-      timeoutHandler(tweenable, tweenable._timestamp, tweenable._duration,
-      tweenable._currentState, tweenable._originalState,
-      tweenable._targetState, tweenable._easing, tweenable._step, tweenable._scheduleFunction);
+      timeoutHandler(tweenable,
+        tweenable._timestamp,
+        tweenable._delay,
+        tweenable._duration,
+        tweenable._currentState,
+        tweenable._originalState,
+        tweenable._targetState,
+        tweenable._easing,
+        tweenable._step,
+        tweenable._scheduleFunction
+      );
     }
 
     module('Tweenable.prototype.tween (longhand format)');
