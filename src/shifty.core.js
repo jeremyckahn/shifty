@@ -151,6 +151,7 @@ var Tweenable = (function () {
    * Handles the update logic for one step of a tween.
    * @param {Tweenable} tweenable
    * @param {number} timestamp
+   * @param {number} delay
    * @param {number} duration
    * @param {Object} currentState
    * @param {Object} originalState
@@ -161,11 +162,11 @@ var Tweenable = (function () {
    * @param {number=} opt_currentTimeOverride Needed for accurate timestamp in
    * Tweenable#seek.
    */
-  function timeoutHandler (tweenable, timestamp, duration, currentState,
+  function timeoutHandler (tweenable, timestamp, delay, duration, currentState,
     originalState, targetState, easing, step, schedule,
     opt_currentTimeOverride) {
 
-    timeoutHandler_endTime = timestamp + duration;
+    timeoutHandler_endTime = timestamp + delay + duration;
 
     timeoutHandler_currentTime =
       Math.min(opt_currentTimeOverride || now(), timeoutHandler_endTime);
@@ -180,8 +181,17 @@ var Tweenable = (function () {
       tweenable._scheduleId = schedule(tweenable._timeoutHandler, UPDATE_TIME);
 
       applyFilter(tweenable, 'beforeTween');
-      tweenProps(timeoutHandler_currentTime, currentState, originalState,
-        targetState, duration, timestamp, easing);
+
+      // If the animation has not yet reached the start point (e.g., there was
+      // delay that has not yet completed), just interpolate the starting
+      // position of the tween.
+      if (timeoutHandler_currentTime < (timestamp + delay)) {
+        tweenProps(1, currentState, originalState, targetState, 1, 1, easing);
+      } else {
+        tweenProps(timeoutHandler_currentTime, currentState, originalState,
+          targetState, duration, timestamp + delay, easing);
+      }
+
       applyFilter(tweenable, 'afterTween');
 
       step(currentState, tweenable._attachment, timeoutHandler_offset);
@@ -274,6 +284,8 @@ var Tweenable = (function () {
    *   "Tweenable/get:method"}}get(){{/crossLink}}` is used.
    * - __to__ (_Object=_): Ending position.
    * - __duration__ (_number=_): How many milliseconds to animate for.
+   * - __delay__ (_delay=_): How many milliseconds to wait before starting the
+   *   tween.
    * - __start__ (_Function(Object, *)_): Function to execute when the tween
    *   begins.  Receives the state of the tween as the first parameter and
    *   `attachment` as the second parameter.
@@ -303,6 +315,7 @@ var Tweenable = (function () {
     // Init the internal state
     this._pausedAtTime = null;
     this._scheduleId = null;
+    this._delay = config.delay || 0;
     this._start = config.start || noop;
     this._step = config.step || noop;
     this._finish = config.finish || noop;
@@ -313,9 +326,17 @@ var Tweenable = (function () {
 
     var self = this;
     this._timeoutHandler = function () {
-      timeoutHandler(self, self._timestamp, self._duration, self._currentState,
-        self._originalState, self._targetState, self._easing, self._step,
-        self._scheduleFunction);
+      timeoutHandler(self,
+          self._timestamp,
+          self._delay,
+          self._duration,
+          self._currentState,
+          self._originalState,
+          self._targetState,
+          self._easing,
+          self._step,
+          self._scheduleFunction
+        );
     };
 
     // Aliases used below
@@ -408,9 +429,18 @@ var Tweenable = (function () {
 
       // If the animation is not running, call timeoutHandler to make sure that
       // any step handlers are run.
-      timeoutHandler(this, this._timestamp, this._duration, this._currentState,
-        this._originalState, this._targetState, this._easing, this._step,
-        this._scheduleFunction, currentTime);
+      timeoutHandler(this,
+          this._timestamp,
+          this._duration,
+          this._delay,
+          this._currentState,
+          this._originalState,
+          this._targetState,
+          this._easing,
+          this._step,
+          this._scheduleFunction,
+          currentTime
+        );
 
       this.pause();
     }
