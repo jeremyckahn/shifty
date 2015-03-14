@@ -1,9 +1,9 @@
 ;(function () {
 
   function getInterpolatedValues (
-    from, current, targetState, position, easing) {
+    from, current, targetState, position, easing, delay) {
     return Tweenable.tweenProps(
-      position, current, from, targetState, 1, 0, easing);
+      position, current, from, targetState, 1, delay, easing);
   }
 
   // Fake a Tweenable and patch some internals.  This approach allows us to
@@ -43,8 +43,9 @@
    * `Tweenable.prototype.formula`.  If omitted, this defaults to "linear".
    * @return {Object}
    */
-  Tweenable.interpolate = function (from, targetState, position, easing) {
+  Tweenable.interpolate = function (from, targetState, position, easing, opt_delay) {
     var current = Tweenable.shallowCopy({}, from);
+    var delay = opt_delay || 0;
     var easingObject = Tweenable.composeEasingObject(
       from, easing || 'linear');
 
@@ -63,7 +64,7 @@
     Tweenable.applyFilter(mockTweenable, 'beforeTween');
 
     var interpolatedValues = getInterpolatedValues(
-      from, current, targetState, position, easingObject);
+      from, current, targetState, position, easingObject, delay);
 
     // Transform values back into their original format
     Tweenable.applyFilter(mockTweenable, 'afterTween');
