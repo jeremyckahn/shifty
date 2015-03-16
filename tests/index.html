@@ -281,11 +281,11 @@
       equals(interpolated.x, 0, 'Beginning of delayed tween was computed');
 
       interpolated = Tweenable.interpolate(
-        { x: 0 }, { x: 10 }, .75, 'linear', .5);
+        { x: 0 }, { x: 10 }, 1.0, 'linear', .5);
       equals(interpolated.x, 5, 'Midpoint delayed tween was computed');
 
       interpolated = Tweenable.interpolate(
-        { x: 0 }, { x: 10 }, 1, 'linear', .5);
+        { x: 0 }, { x: 10 }, 1.5, 'linear', .5);
       equals(interpolated.x, 10, 'End of delayed tween was computed');
     });
 
