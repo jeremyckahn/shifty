@@ -100,7 +100,8 @@ var Tweenable = (function () {
    */
   function tweenProps (forPosition, currentState, originalState, targetState,
     duration, timestamp, easing) {
-    var normalizedPosition = (forPosition - timestamp) / duration;
+      var normalizedPosition = forPosition < timestamp ? 0 : (forPosition - timestamp) / duration;
+
 
     var prop;
     for (prop in currentState) {
