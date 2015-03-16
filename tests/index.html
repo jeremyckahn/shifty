@@ -258,7 +258,7 @@
 
     module('interpolate');
 
-    test('Static - Interpolate can compute the midpoint of two numbers',
+    test('Interpolate can compute the midpoint of two numbers',
         function () {
 
       var interpolated = Tweenable.interpolate({ x: 0 }, { x: 10 }, .5);
@@ -273,6 +273,20 @@
 
       equals('rgb(127,127,127)', interpolated.color,
           'Midpoint color was computed');
+    });
+
+    test('Interpolate accounts for optional delay', function () {
+      var interpolated = Tweenable.interpolate(
+        { x: 0 }, { x: 10 }, .5, 'linear', .5);
+      equals(interpolated.x, 0, 'Beginning of delayed tween was computed');
+
+      interpolated = Tweenable.interpolate(
+        { x: 0 }, { x: 10 }, 1.0, 'linear', .5);
+      equals(interpolated.x, 5, 'Midpoint delayed tween was computed');
+
+      interpolated = Tweenable.interpolate(
+        { x: 0 }, { x: 10 }, 1.5, 'linear', .5);
+      equals(interpolated.x, 10, 'End of delayed tween was computed');
     });
 
 
