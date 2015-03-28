@@ -3,6 +3,10 @@
   "version": "1.4.0",
   "homepage": "http://jeremyckahn.github.io/shifty",
   "author": "Jeremy Kahn <jeremyckahn@gmail.com>",
+  "repository" : {
+    "type": "git",
+    "url": "https://github.com/jeremyckahn/shifty.git"
+  },
   "description": "A teeny tiny tweening engine in JavaScript.",
   "main": "dist/shifty.js",
   "devDependencies": {
