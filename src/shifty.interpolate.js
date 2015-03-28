@@ -47,7 +47,9 @@
    * increase all valid values of `position` to numbers between `0` and `1.5`.
    * @return {Object}
    */
-  Tweenable.interpolate = function (from, targetState, position, easing, opt_delay) {
+  Tweenable.interpolate = function (
+    from, targetState, position, easing, opt_delay) {
+
     var current = Tweenable.shallowCopy({}, from);
     var delay = opt_delay || 0;
     var easingObject = Tweenable.composeEasingObject(

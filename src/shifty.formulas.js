@@ -132,17 +132,21 @@
 
     easeInOutBack: function (pos) {
       var s = 1.70158;
-      if ((pos /= 0.5) < 1) {return 0.5 * (pos * pos * (((s *= (1.525)) + 1) * pos - s));}
+      if ((pos /= 0.5) < 1) {
+        return 0.5 * (pos * pos * (((s *= (1.525)) + 1) * pos - s));
+      }
       return 0.5 * ((pos -= 2) * pos * (((s *= (1.525)) + 1) * pos + s) + 2);
     },
 
     elastic: function (pos) {
+      // jshint maxlen:90
       return -1 * Math.pow(4,-8 * pos) * Math.sin((pos * 6 - 1) * (2 * Math.PI) / 2) + 1;
     },
 
     swingFromTo: function (pos) {
       var s = 1.70158;
-      return ((pos /= 0.5) < 1) ? 0.5 * (pos * pos * (((s *= (1.525)) + 1) * pos - s)) :
+      return ((pos /= 0.5) < 1) ?
+          0.5 * (pos * pos * (((s *= (1.525)) + 1) * pos - s)) :
           0.5 * ((pos -= 2) * pos * (((s *= (1.525)) + 1) * pos + s) + 2);
     },
 
