@@ -33,8 +33,8 @@ are:
   Define custom easing curves based on a [cubic Bezier
   curve](http://en.wikipedia.org/wiki/B%C3%A9zier_curve#Cubic_B.C3.A9zier_curves).
   Take a look at [cubic-bezier.com](http://cubic-bezier.com/) for a visual aid.
-* `shifty.formulas.js`: A bunch of [Robert Penner](http://robertpenner.com/)
-  easing formulas adapted from
+* [`shifty.formulas.js`](src/shifty.formulas.js): A bunch of [Robert
+  Penner](http://robertpenner.com/) easing formulas adapted from
   [Scripty2](https://github.com/madrobby/scripty2).
 
 ## Installation
@@ -111,6 +111,12 @@ tweenable.tween({
   finish: function () { console.log('And I\'m done!'); }
 });
 ````
+
+## Easing formulas
+
+Shifty supports a number of easing formulas, which you can see in
+[`shifty.formulas.js`](src/shifty.formulas.js).  You can add new easing
+formulas by attaching methods to `Tweenable.prototype.formula`.
 
 ## Advanced usage
 

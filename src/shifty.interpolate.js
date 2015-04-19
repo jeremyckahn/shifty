@@ -1,9 +1,9 @@
 ;(function () {
 
   function getInterpolatedValues (
-    from, current, targetState, position, easing) {
+    from, current, targetState, position, easing, delay) {
     return Tweenable.tweenProps(
-      position, current, from, targetState, 1, 0, easing);
+      position, current, from, targetState, 1, delay, easing);
   }
 
   // Fake a Tweenable and patch some internals.  This approach allows us to
@@ -35,16 +35,23 @@
    * @method interpolate
    * @param {Object} from The starting values to tween from.
    * @param {Object} targetState The ending values to tween to.
-   * @param {number} position The normalized position value (between 0.0 and
-   * 1.0) to interpolate the values between `from` and `to` for.  `from`
-   * represents 0 and `to` represents 1.
+   * @param {number} position The normalized position value (between `0.0` and
+   * `1.0`) to interpolate the values between `from` and `to` for.  `from`
+   * represents `0` and `to` represents `1`.
    * @param {string|Object} easing The easing curve(s) to calculate the
    * midpoint against.  You can reference any easing function attached to
    * `Tweenable.prototype.formula`.  If omitted, this defaults to "linear".
+   * @param {number=} opt_delay Optional delay to pad the beginning of the
+   * interpolated tween with.  This increases the range of `position` from (`0`
+   * through `1`) to (`0` through `1 + opt_delay`).  So, a delay of `0.5` would
+   * increase all valid values of `position` to numbers between `0` and `1.5`.
    * @return {Object}
    */
-  Tweenable.interpolate = function (from, targetState, position, easing) {
+  Tweenable.interpolate = function (
+    from, targetState, position, easing, opt_delay) {
+
     var current = Tweenable.shallowCopy({}, from);
+    var delay = opt_delay || 0;
     var easingObject = Tweenable.composeEasingObject(
       from, easing || 'linear');
 
@@ -63,7 +70,7 @@
     Tweenable.applyFilter(mockTweenable, 'beforeTween');
 
     var interpolatedValues = getInterpolatedValues(
-      from, current, targetState, position, easingObject);
+      from, current, targetState, position, easingObject, delay);
 
     // Transform values back into their original format
     Tweenable.applyFilter(mockTweenable, 'afterTween');

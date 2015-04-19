@@ -100,7 +100,9 @@ var Tweenable = (function () {
    */
   function tweenProps (forPosition, currentState, originalState, targetState,
     duration, timestamp, easing) {
-    var normalizedPosition = (forPosition - timestamp) / duration;
+    var normalizedPosition =
+        forPosition < timestamp ? 0 : (forPosition - timestamp) / duration;
+
 
     var prop;
     for (prop in currentState) {
@@ -169,13 +171,13 @@ var Tweenable = (function () {
     timeoutHandler_endTime = timestamp + delay + duration;
 
     timeoutHandler_currentTime =
-      Math.min(opt_currentTimeOverride || now(), timeoutHandler_endTime);
+    Math.min(opt_currentTimeOverride || now(), timeoutHandler_endTime);
 
     timeoutHandler_isEnded =
       timeoutHandler_currentTime >= timeoutHandler_endTime;
 
     timeoutHandler_offset = duration - (
-        timeoutHandler_endTime - timeoutHandler_currentTime);
+      timeoutHandler_endTime - timeoutHandler_currentTime);
 
     if (tweenable.isPlaying() && !timeoutHandler_isEnded) {
       tweenable._scheduleId = schedule(tweenable._timeoutHandler, UPDATE_TIME);
@@ -327,16 +329,16 @@ var Tweenable = (function () {
     var self = this;
     this._timeoutHandler = function () {
       timeoutHandler(self,
-          self._timestamp,
-          self._delay,
-          self._duration,
-          self._currentState,
-          self._originalState,
-          self._targetState,
-          self._easing,
-          self._step,
-          self._scheduleFunction
-        );
+        self._timestamp,
+        self._delay,
+        self._duration,
+        self._currentState,
+        self._originalState,
+        self._targetState,
+        self._easing,
+        self._step,
+        self._scheduleFunction
+      );
     };
 
     // Aliases used below
@@ -430,17 +432,17 @@ var Tweenable = (function () {
       // If the animation is not running, call timeoutHandler to make sure that
       // any step handlers are run.
       timeoutHandler(this,
-          this._timestamp,
-          this._duration,
-          this._delay,
-          this._currentState,
-          this._originalState,
-          this._targetState,
-          this._easing,
-          this._step,
-          this._scheduleFunction,
-          currentTime
-        );
+        this._timestamp,
+        this._duration,
+        this._delay,
+        this._currentState,
+        this._originalState,
+        this._targetState,
+        this._easing,
+        this._step,
+        this._scheduleFunction,
+        currentTime
+      );
 
       this.pause();
     }
@@ -463,11 +465,11 @@ var Tweenable = (function () {
     this._timeoutHandler = noop;
 
     (root.cancelAnimationFrame            ||
-      root.webkitCancelAnimationFrame     ||
-      root.oCancelAnimationFrame          ||
-      root.msCancelAnimationFrame         ||
-      root.mozCancelRequestAnimationFrame ||
-      root.clearTimeout)(this._scheduleId);
+    root.webkitCancelAnimationFrame     ||
+    root.oCancelAnimationFrame          ||
+    root.msCancelAnimationFrame         ||
+    root.mozCancelRequestAnimationFrame ||
+    root.clearTimeout)(this._scheduleId);
 
     if (gotoEnd) {
       shallowCopy(this._currentState, this._targetState);

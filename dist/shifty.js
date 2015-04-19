@@ -1,4 +1,4 @@
-/*! shifty - v1.4.0 - 2015-02-28 - http://jeremyckahn.github.io/shifty */
+/*! shifty - v1.4.1 - 2015-04-19 - http://jeremyckahn.github.io/shifty */
 ;(function () {
   var root = this;
 
@@ -104,7 +104,9 @@ var Tweenable = (function () {
    */
   function tweenProps (forPosition, currentState, originalState, targetState,
     duration, timestamp, easing) {
-    var normalizedPosition = (forPosition - timestamp) / duration;
+    var normalizedPosition =
+        forPosition < timestamp ? 0 : (forPosition - timestamp) / duration;
+
 
     var prop;
     for (prop in currentState) {
@@ -173,13 +175,13 @@ var Tweenable = (function () {
     timeoutHandler_endTime = timestamp + delay + duration;
 
     timeoutHandler_currentTime =
-      Math.min(opt_currentTimeOverride || now(), timeoutHandler_endTime);
+    Math.min(opt_currentTimeOverride || now(), timeoutHandler_endTime);
 
     timeoutHandler_isEnded =
       timeoutHandler_currentTime >= timeoutHandler_endTime;
 
     timeoutHandler_offset = duration - (
-        timeoutHandler_endTime - timeoutHandler_currentTime);
+      timeoutHandler_endTime - timeoutHandler_currentTime);
 
     if (tweenable.isPlaying() && !timeoutHandler_isEnded) {
       tweenable._scheduleId = schedule(tweenable._timeoutHandler, UPDATE_TIME);
@@ -331,16 +333,16 @@ var Tweenable = (function () {
     var self = this;
     this._timeoutHandler = function () {
       timeoutHandler(self,
-          self._timestamp,
-          self._delay,
-          self._duration,
-          self._currentState,
-          self._originalState,
-          self._targetState,
-          self._easing,
-          self._step,
-          self._scheduleFunction
-        );
+        self._timestamp,
+        self._delay,
+        self._duration,
+        self._currentState,
+        self._originalState,
+        self._targetState,
+        self._easing,
+        self._step,
+        self._scheduleFunction
+      );
     };
 
     // Aliases used below
@@ -434,17 +436,17 @@ var Tweenable = (function () {
       // If the animation is not running, call timeoutHandler to make sure that
       // any step handlers are run.
       timeoutHandler(this,
-          this._timestamp,
-          this._duration,
-          this._delay,
-          this._currentState,
-          this._originalState,
-          this._targetState,
-          this._easing,
-          this._step,
-          this._scheduleFunction,
-          currentTime
-        );
+        this._timestamp,
+        this._duration,
+        this._delay,
+        this._currentState,
+        this._originalState,
+        this._targetState,
+        this._easing,
+        this._step,
+        this._scheduleFunction,
+        currentTime
+      );
 
       this.pause();
     }
@@ -467,11 +469,11 @@ var Tweenable = (function () {
     this._timeoutHandler = noop;
 
     (root.cancelAnimationFrame            ||
-      root.webkitCancelAnimationFrame     ||
-      root.oCancelAnimationFrame          ||
-      root.msCancelAnimationFrame         ||
-      root.mozCancelRequestAnimationFrame ||
-      root.clearTimeout)(this._scheduleId);
+    root.webkitCancelAnimationFrame     ||
+    root.oCancelAnimationFrame          ||
+    root.msCancelAnimationFrame         ||
+    root.mozCancelRequestAnimationFrame ||
+    root.clearTimeout)(this._scheduleId);
 
     if (gotoEnd) {
       shallowCopy(this._currentState, this._targetState);
@@ -578,9 +580,12 @@ var Tweenable = (function () {
 } ());
 
 /*!
- * All equations are adapted from Thomas Fuchs' [Scripty2](https://github.com/madrobby/scripty2/blob/master/src/effects/transitions/penner.js).
+ * All equations are adapted from Thomas Fuchs'
+ * [Scripty2](https://github.com/madrobby/scripty2/blob/master/src/effects/transitions/penner.js).
  *
- * Based on Easing Equations (c) 2003 [Robert Penner](http://www.robertpenner.com/), all rights reserved. This work is [subject to terms](http://www.robertpenner.com/easing_terms_of_use.html).
+ * Based on Easing Equations (c) 2003 [Robert
+ * Penner](http://www.robertpenner.com/), all rights reserved. This work is
+ * [subject to terms](http://www.robertpenner.com/easing_terms_of_use.html).
  */
 
 /*!
@@ -708,17 +713,21 @@ var Tweenable = (function () {
 
     easeInOutBack: function (pos) {
       var s = 1.70158;
-      if ((pos /= 0.5) < 1) {return 0.5 * (pos * pos * (((s *= (1.525)) + 1) * pos - s));}
+      if ((pos /= 0.5) < 1) {
+        return 0.5 * (pos * pos * (((s *= (1.525)) + 1) * pos - s));
+      }
       return 0.5 * ((pos -= 2) * pos * (((s *= (1.525)) + 1) * pos + s) + 2);
     },
 
     elastic: function (pos) {
+      // jshint maxlen:90
       return -1 * Math.pow(4,-8 * pos) * Math.sin((pos * 6 - 1) * (2 * Math.PI) / 2) + 1;
     },
 
     swingFromTo: function (pos) {
       var s = 1.70158;
-      return ((pos /= 0.5) < 1) ? 0.5 * (pos * pos * (((s *= (1.525)) + 1) * pos - s)) :
+      return ((pos /= 0.5) < 1) ?
+          0.5 * (pos * pos * (((s *= (1.525)) + 1) * pos - s)) :
           0.5 * ((pos -= 2) * pos * (((s *= (1.525)) + 1) * pos + s) + 2);
     },
 
@@ -772,6 +781,7 @@ var Tweenable = (function () {
 
 }());
 
+// jshint maxlen:100
 /*!
  * The Bezier magic in this file is adapted/copied almost wholesale from
  * [Scripty2](https://github.com/madrobby/scripty2/blob/master/src/effects/transitions/cubic-bezier.js),
@@ -797,35 +807,86 @@ var Tweenable = (function () {
  *  contributors may be used to endorse or promote products derived from
  *  this software without specific prior written permission.
  *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- *  THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- *  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- *  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- *  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- *  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- *  ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ *  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ *  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ *  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ *  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ *  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ *  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ *  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ *  POSSIBILITY OF SUCH DAMAGE.
  */
 ;(function () {
   // port of webkit cubic bezier handling by http://www.netzgesta.de/dev/
   function cubicBezierAtTime(t,p1x,p1y,p2x,p2y,duration) {
     var ax = 0,bx = 0,cx = 0,ay = 0,by = 0,cy = 0;
-    function sampleCurveX(t) {return ((ax * t + bx) * t + cx) * t;}
-    function sampleCurveY(t) {return ((ay * t + by) * t + cy) * t;}
-    function sampleCurveDerivativeX(t) {return (3.0 * ax * t + 2.0 * bx) * t + cx;}
-    function solveEpsilon(duration) {return 1.0 / (200.0 * duration);}
-    function solve(x,epsilon) {return sampleCurveY(solveCurveX(x,epsilon));}
-    function fabs(n) {if (n >= 0) {return n;}else {return 0 - n;}}
-    function solveCurveX(x,epsilon) {
+    function sampleCurveX(t) {
+      return ((ax * t + bx) * t + cx) * t;
+    }
+    function sampleCurveY(t) {
+      return ((ay * t + by) * t + cy) * t;
+    }
+    function sampleCurveDerivativeX(t) {
+      return (3.0 * ax * t + 2.0 * bx) * t + cx;
+    }
+    function solveEpsilon(duration) {
+      return 1.0 / (200.0 * duration);
+    }
+    function solve(x,epsilon) {
+      return sampleCurveY(solveCurveX(x, epsilon));
+    }
+    function fabs(n) {
+      if (n >= 0) {
+        return n;
+      } else {
+        return 0 - n;
+      }
+    }
+    function solveCurveX(x, epsilon) {
       var t0,t1,t2,x2,d2,i;
-      for (t2 = x, i = 0; i < 8; i++) {x2 = sampleCurveX(t2) - x; if (fabs(x2) < epsilon) {return t2;} d2 = sampleCurveDerivativeX(t2); if (fabs(d2) < 1e-6) {break;} t2 = t2 - x2 / d2;}
-      t0 = 0.0; t1 = 1.0; t2 = x; if (t2 < t0) {return t0;} if (t2 > t1) {return t1;}
-      while (t0 < t1) {x2 = sampleCurveX(t2); if (fabs(x2 - x) < epsilon) {return t2;} if (x > x2) {t0 = t2;}else {t1 = t2;} t2 = (t1 - t0) * 0.5 + t0;}
+      for (t2 = x, i = 0; i < 8; i++) {
+        x2 = sampleCurveX(t2) - x;
+        if (fabs(x2) < epsilon) {
+          return t2;
+        }
+        d2 = sampleCurveDerivativeX(t2);
+        if (fabs(d2) < 1e-6) {
+          break;
+        }
+        t2 = t2 - x2 / d2;
+      }
+      t0 = 0.0;
+      t1 = 1.0;
+      t2 = x;
+      if (t2 < t0) {
+        return t0;
+      }
+      if (t2 > t1) {
+        return t1;
+      }
+      while (t0 < t1) {
+        x2 = sampleCurveX(t2);
+        if (fabs(x2 - x) < epsilon) {
+          return t2;
+        }
+        if (x > x2) {
+          t0 = t2;
+        }else {
+          t1 = t2;
+        }
+        t2 = (t1 - t0) * 0.5 + t0;
+      }
       return t2; // Failure.
     }
-    cx = 3.0 * p1x; bx = 3.0 * (p2x - p1x) - cx; ax = 1.0 - cx - bx; cy = 3.0 * p1y; by = 3.0 * (p2y - p1y) - cy; ay = 1.0 - cy - by;
+    cx = 3.0 * p1x;
+    bx = 3.0 * (p2x - p1x) - cx;
+    ax = 1.0 - cx - bx;
+    cy = 3.0 * p1y;
+    by = 3.0 * (p2y - p1y) - cy;
+    ay = 1.0 - cy - by;
     return solve(t, solveEpsilon(duration));
   }
   /*!
@@ -835,9 +896,8 @@ var Tweenable = (function () {
    *  with WebKit's CSS transitions `-webkit-transition-timing-function`
    *  CSS property.
    *
-   *  The W3C has more information about
-   *  <a href="http://www.w3.org/TR/css3-transitions/#transition-timing-function_tag">
-   *  CSS3 transition timing functions</a>.
+   *  The W3C has more information about CSS3 transition timing functions:
+   *  http://www.w3.org/TR/css3-transitions/#transition-timing-function_tag
    *
    *  @param {number} x1
    *  @param {number} y1
@@ -867,10 +927,12 @@ var Tweenable = (function () {
    * @param {number} y1
    * @param {number} x2
    * @param {number} y2
-   * @return {function} The easing function that was attached to Tweenable.prototype.formula.
+   * @return {function} The easing function that was attached to
+   * Tweenable.prototype.formula.
    */
   Tweenable.setBezierFunction = function (name, x1, y1, x2, y2) {
     var cubicBezierTransition = getCubicBezierTransition(x1, y1, x2, y2);
+    cubicBezierTransition.displayName = name;
     cubicBezierTransition.x1 = x1;
     cubicBezierTransition.y1 = y1;
     cubicBezierTransition.x2 = x2;
@@ -898,9 +960,9 @@ var Tweenable = (function () {
 ;(function () {
 
   function getInterpolatedValues (
-    from, current, targetState, position, easing) {
+    from, current, targetState, position, easing, delay) {
     return Tweenable.tweenProps(
-      position, current, from, targetState, 1, 0, easing);
+      position, current, from, targetState, 1, delay, easing);
   }
 
   // Fake a Tweenable and patch some internals.  This approach allows us to
@@ -932,16 +994,23 @@ var Tweenable = (function () {
    * @method interpolate
    * @param {Object} from The starting values to tween from.
    * @param {Object} targetState The ending values to tween to.
-   * @param {number} position The normalized position value (between 0.0 and
-   * 1.0) to interpolate the values between `from` and `to` for.  `from`
-   * represents 0 and `to` represents 1.
+   * @param {number} position The normalized position value (between `0.0` and
+   * `1.0`) to interpolate the values between `from` and `to` for.  `from`
+   * represents `0` and `to` represents `1`.
    * @param {string|Object} easing The easing curve(s) to calculate the
    * midpoint against.  You can reference any easing function attached to
    * `Tweenable.prototype.formula`.  If omitted, this defaults to "linear".
+   * @param {number=} opt_delay Optional delay to pad the beginning of the
+   * interpolated tween with.  This increases the range of `position` from (`0`
+   * through `1`) to (`0` through `1 + opt_delay`).  So, a delay of `0.5` would
+   * increase all valid values of `position` to numbers between `0` and `1.5`.
    * @return {Object}
    */
-  Tweenable.interpolate = function (from, targetState, position, easing) {
+  Tweenable.interpolate = function (
+    from, targetState, position, easing, opt_delay) {
+
     var current = Tweenable.shallowCopy({}, from);
+    var delay = opt_delay || 0;
     var easingObject = Tweenable.composeEasingObject(
       from, easing || 'linear');
 
@@ -960,7 +1029,7 @@ var Tweenable = (function () {
     Tweenable.applyFilter(mockTweenable, 'beforeTween');
 
     var interpolatedValues = getInterpolatedValues(
-      from, current, targetState, position, easingObject);
+      from, current, targetState, position, easingObject, delay);
 
     // Transform values back into their original format
     Tweenable.applyFilter(mockTweenable, 'afterTween');
@@ -1168,9 +1237,9 @@ var Tweenable = (function () {
       // followed by a token...
       // NOTE: This may be an unwise assumption.
     } else if (chunks.length === 1 ||
-        // ...or if the string starts with a number component (".", "-", or a
-        // digit)...
-        formattedString[0].match(R_NUMBER_COMPONENT)) {
+      // ...or if the string starts with a number component (".", "-", or a
+      // digit)...
+    formattedString[0].match(R_NUMBER_COMPONENT)) {
       // ...prepend an empty string here to make sure that the formatted number
       // is properly replaced by VALUE_PLACEHOLDER
       chunks.unshift('');
