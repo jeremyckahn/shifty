@@ -149,6 +149,7 @@
    */
   Tweenable.setBezierFunction = function (name, x1, y1, x2, y2) {
     var cubicBezierTransition = getCubicBezierTransition(x1, y1, x2, y2);
+    cubicBezierTransition.displayName = name;
     cubicBezierTransition.x1 = x1;
     cubicBezierTransition.y1 = y1;
     cubicBezierTransition.x2 = x2;
