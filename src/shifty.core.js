@@ -197,7 +197,7 @@ var Tweenable = (function () {
       applyFilter(tweenable, 'afterTween');
 
       step(currentState, tweenable._attachment, timeoutHandler_offset);
-    } else if (timeoutHandler_isEnded) {
+    } else if (tweenable.isPlaying() && timeoutHandler_isEnded) {
       step(targetState, tweenable._attachment, timeoutHandler_offset);
       tweenable.stop(true);
     }
