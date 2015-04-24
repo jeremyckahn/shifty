@@ -433,8 +433,8 @@ var Tweenable = (function () {
       // any step handlers are run.
       timeoutHandler(this,
         this._timestamp,
-        this._duration,
         this._delay,
+        this._duration,
         this._currentState,
         this._originalState,
         this._targetState,

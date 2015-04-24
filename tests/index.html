@@ -134,6 +134,21 @@
       equals(tweenable._timestamp, -500, 'The timestamp was properly offset');
     });
 
+    test('seek() provides correct value to step handler via seek() (issue #77)', function () {
+      var computedX;
+      var tweenable = new Tweenable(null, {
+        from: { x: 0 },
+        to: { x: 100 },
+        duration: 1000,
+        step: function (state) {
+          computedX = state.x;
+        }
+      });
+
+      tweenable.seek(500);
+      equals(computedX, 50, 'Step handler got correct state value');
+    });
+
     test('The seek() parameter cannot be less than 0', function () {
       var tweenable = new Tweenable();
       mockTime = function () {return 0;};
