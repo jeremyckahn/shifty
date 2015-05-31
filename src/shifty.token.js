@@ -475,11 +475,22 @@
       var currentProp = tokenData[prop];
       var chunkNames = currentProp.chunkNames;
       var chunkLength = chunkNames.length;
-      var easingChunks = easingObject[prop].split(' ');
-      var lastEasingChunk = easingChunks[easingChunks.length - 1];
 
-      for (var i = 0; i < chunkLength; i++) {
-        easingObject[chunkNames[i]] = easingChunks[i] || lastEasingChunk;
+      var easing = easingObject[prop];
+      var i;
+
+      if (typeof easing === 'string') {
+        var easingChunks = easing.split(' ');
+        var lastEasingChunk = easingChunks[easingChunks.length - 1];
+
+        for (i = 0; i < chunkLength; i++) {
+          easingObject[chunkNames[i]] = easingChunks[i] || lastEasingChunk;
+        }
+
+      } else {
+        for (i = 0; i < chunkLength; i++) {
+          easingObject[chunkNames[i]] = easing;
+        }
       }
 
       delete easingObject[prop];
@@ -495,14 +506,22 @@
       var currentProp = tokenData[prop];
       var chunkNames = currentProp.chunkNames;
       var chunkLength = chunkNames.length;
-      var composedEasingString = '';
 
-      for (var i = 0; i < chunkLength; i++) {
-        composedEasingString += ' ' + easingObject[chunkNames[i]];
-        delete easingObject[chunkNames[i]];
+      var firstEasing = easingObject[chunkNames[0]];
+      var typeofEasings = typeof firstEasing;
+
+      if (typeofEasings === 'string') {
+        var composedEasingString = '';
+
+        for (var i = 0; i < chunkLength; i++) {
+          composedEasingString += ' ' + easingObject[chunkNames[i]];
+          delete easingObject[chunkNames[i]];
+        }
+
+        easingObject[prop] = composedEasingString.substr(1);
+      } else {
+        easingObject[prop] = firstEasing;
       }
-
-      easingObject[prop] = composedEasingString.substr(1);
     });
   }
 

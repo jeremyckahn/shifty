@@ -147,7 +147,7 @@ straight line.  You can make curves!  To do this, simply supply `easing` as an
 Object, rather than a string to `tween()`:
 
 ````javascript
-var tweenable = new Tweenable(tweenableConfig);
+var tweenable = new Tweenable();
 
 tweenable.tween({
   from: {
@@ -167,6 +167,50 @@ tweenable.tween({
 
 The Interpolate extension also supports both string and object parameter types
 for `easing`.
+
+## Per-tween custom easing functions
+
+You are not limited to attaching functions to `Tweenable.prototype.formula`.
+You can also supply a custom easing curve directly to a `tween()` call:
+
+````javascript
+var tweenable = new Tweenable();
+var easingFunction = function (pos) {
+  // This sample function is the same as easeInQuad
+  return Math.pow(pos, 2);
+};
+
+tweenable.tween({
+  from: {
+    x: 0,
+    y: 0
+  },
+  to: {
+    x: 250,
+    y: 150
+  },
+  easing: easingFunction
+});
+````
+
+Or even an Object of mixed strings and functions:
+
+````javascript
+tweenable.tween({
+  from: {
+    x: 0,
+    y: 0
+  },
+  to: {
+    x: 250,
+    y: 150
+  },
+  easing: {
+    x: easingFunction,
+    y: 'linear'
+  }
+});
+````
 
 ## Filters
 

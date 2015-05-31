@@ -91,6 +91,101 @@
     });
 
 
+    module('Non-Tweenable#formula easing functions');
+
+
+    test('.tween can be given an easing function directly', function () {
+
+      var tweenable = new Tweenable();
+      var easingFn = function (pos) {
+        return pos * 2;
+      };
+
+      mockTime = function () {return 0;};
+      tweenable.tween({
+        from: { x: 0 }
+        ,to: { x: 10 }
+        ,duration: 1000
+        ,easing: easingFn
+      });
+
+      equals(tweenable.get().x, 0,
+          'The easing curve is used at the beginning of the tween');
+
+      mockTime = function () {return 500;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 10,
+          'The easing curve is used at the middle of the tween');
+
+      mockTime = function () {return 1000;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 20,
+          'The easing curve is used at the end of the tween');
+    });
+
+
+    test('.tween can be given an Object of easing functions directly',
+        function () {
+
+      var tweenable = new Tweenable();
+      var easingFn = function (pos) {
+        return pos * 2;
+      };
+
+      mockTime = function () {return 0;};
+      tweenable.tween({
+        from: { x: 0 }
+        ,to: { x: 10 }
+        ,duration: 1000
+        ,easing: { x: easingFn }
+      });
+
+      equals(tweenable.get().x, 0,
+          'The easing curve is used at the beginning of the tween');
+
+      mockTime = function () {return 500;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 10,
+          'The easing curve is used at the middle of the tween');
+
+      mockTime = function () {return 1000;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 20,
+          'The easing curve is used at the end of the tween');
+    });
+
+
+    test('Tokens are supported',
+        function () {
+
+      var tweenable = new Tweenable();
+      var easingFn = function (pos) {
+        return pos * 1;
+      };
+
+      mockTime = function () {return 0;};
+      tweenable.tween({
+        from: { x: 'rgb(0,0,0)' }
+        ,to: { x: 'rgb(255,255,255)' }
+        ,duration: 1000
+        ,easing: { x: easingFn }
+      });
+
+      equals(tweenable.get().x, 'rgb(0,0,0)',
+          'The easing curve is used at the beginning of the tween');
+
+      mockTime = function () {return 500;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 'rgb(127,127,127)',
+          'The easing curve is used at the middle of the tween');
+
+      mockTime = function () {return 1000;};
+      forceInternalUpdate(tweenable);
+      equals(tweenable.get().x, 'rgb(255,255,255)',
+          'The easing curve is used at the end of the tween');
+    });
+
+
     module('Tweenable.prototype.pause');
 
     test('pause() moves the end time of the tween', function () {
@@ -302,6 +397,17 @@
       interpolated = Tweenable.interpolate(
         { x: 0 }, { x: 10 }, 1.5, 'linear', .5);
       equals(interpolated.x, 10, 'End of delayed tween was computed');
+    });
+
+    test('Supports per-interpolation custom easing curves', function () {
+      var easingFn = function (pos) {
+        return pos * 2;
+      };
+
+      var interpolated = Tweenable.interpolate(
+        { x: 0 }, { x: 10 }, .5, easingFn);
+      equals(interpolated.x, 10,
+        'Accepts and applies non-Tweenable#formula easing function');
     });
 
 

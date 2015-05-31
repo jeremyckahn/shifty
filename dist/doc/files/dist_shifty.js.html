@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.4.2</em>
+            <em>API Docs for: 1.5.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -90,7 +90,7 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-/*! shifty - v1.4.2 - 2015-04-24 - http://jeremyckahn.github.io/shifty */
+/*! shifty - v1.5.0 - 2015-05-31 - http://jeremyckahn.github.io/shifty */
 ;(function () {
   var root = this;
 
@@ -201,10 +201,21 @@ var Tweenable = (function () {
 
 
     var prop;
+    var easingObjectProp;
+    var easingFn;
     for (prop in currentState) {
       if (currentState.hasOwnProperty(prop)) {
-        currentState[prop] = tweenProp(originalState[prop],
-          targetState[prop], formula[easing[prop]], normalizedPosition);
+        easingObjectProp = easing[prop];
+        easingFn = typeof easingObjectProp === &#x27;function&#x27;
+          ? easingObjectProp
+          : formula[easingObjectProp];
+
+        currentState[prop] = tweenProp(
+          originalState[prop],
+          targetState[prop],
+          easingFn,
+          normalizedPosition
+        );
       }
     }
 
@@ -301,16 +312,18 @@ var Tweenable = (function () {
 
 
   /*!
-   * Creates a usable easing Object from either a string or another easing
+   * Creates a usable easing Object from a string, a function or another easing
    * Object.  If &#x60;easing&#x60; is an Object, then this function clones it and fills
-   * in the missing properties with &quot;linear&quot;.
-   * @param {Object} fromTweenParams
-   * @param {Object|string} easing
+   * in the missing properties with &#x60;&quot;linear&quot;&#x60;.
+   * @param {Object.&lt;string|Function&gt;} fromTweenParams
+   * @param {Object|string|Function} easing
+   * @return {Object.&lt;string|Function&gt;}
    */
   function composeEasingObject (fromTweenParams, easing) {
     var composedEasing = {};
+    var typeofEasing = typeof easing;
 
-    if (typeof easing === &#x27;string&#x27;) {
+    if (typeofEasing === &#x27;string&#x27; || typeofEasing === &#x27;function&#x27;) {
       each(fromTweenParams, function (prop) {
         composedEasing[prop] = easing;
       });
@@ -396,8 +409,8 @@ var Tweenable = (function () {
    * - __finish__ (_Function(Object, *)_): Function to execute upon tween
    *   completion.  Receives the state of the tween as the first parameter and
    *   &#x60;attachment&#x60; as the second parameter.
-   * - __easing__ (_Object|string=_): Easing curve name(s) to use for the
-   *   tween.
+   * - __easing__ (_Object.&lt;string|Function&gt;|string|Function=_): Easing curve
+   *   name(s) or function(s) to use for the tween.
    * - __attachment__ (_*_): Cached value that is passed to the
    *   &#x60;step&#x60;/&#x60;start&#x60;/&#x60;finish&#x60; methods.
    * @chainable
@@ -568,7 +581,17 @@ var Tweenable = (function () {
     root.clearTimeout)(this._scheduleId);
 
     if (gotoEnd) {
-      shallowCopy(this._currentState, this._targetState);
+      applyFilter(this, &#x27;beforeTween&#x27;);
+      tweenProps(
+        1,
+        this._currentState,
+        this._originalState,
+        this._targetState,
+        1,
+        0,
+        this._easing
+      );
+      applyFilter(this, &#x27;afterTween&#x27;);
       applyFilter(this, &#x27;afterTweenEnd&#x27;);
       this._finish.call(this, this._currentState, this._attachment);
     }
@@ -1089,9 +1112,10 @@ var Tweenable = (function () {
    * @param {number} position The normalized position value (between &#x60;0.0&#x60; and
    * &#x60;1.0&#x60;) to interpolate the values between &#x60;from&#x60; and &#x60;to&#x60; for.  &#x60;from&#x60;
    * represents &#x60;0&#x60; and &#x60;to&#x60; represents &#x60;1&#x60;.
-   * @param {string|Object} easing The easing curve(s) to calculate the
-   * midpoint against.  You can reference any easing function attached to
-   * &#x60;Tweenable.prototype.formula&#x60;.  If omitted, this defaults to &quot;linear&quot;.
+   * @param {Object.&lt;string|Function&gt;|string|Function} easing The easing
+   * curve(s) to calculate the midpoint against.  You can reference any easing
+   * function attached to &#x60;Tweenable.prototype.formula&#x60;, or provide the easing
+   * function(s) directly.  If omitted, this defaults to &quot;linear&quot;.
    * @param {number=} opt_delay Optional delay to pad the beginning of the
    * interpolated tween with.  This increases the range of &#x60;position&#x60; from (&#x60;0&#x60;
    * through &#x60;1&#x60;) to (&#x60;0&#x60; through &#x60;1 + opt_delay&#x60;).  So, a delay of &#x60;0.5&#x60; would
@@ -1608,11 +1632,22 @@ var Tweenable = (function () {
       var currentProp = tokenData[prop];
       var chunkNames = currentProp.chunkNames;
       var chunkLength = chunkNames.length;
-      var easingChunks = easingObject[prop].split(&#x27; &#x27;);
-      var lastEasingChunk = easingChunks[easingChunks.length - 1];
 
-      for (var i = 0; i &lt; chunkLength; i++) {
-        easingObject[chunkNames[i]] = easingChunks[i] || lastEasingChunk;
+      var easing = easingObject[prop];
+      var i;
+
+      if (typeof easing === &#x27;string&#x27;) {
+        var easingChunks = easing.split(&#x27; &#x27;);
+        var lastEasingChunk = easingChunks[easingChunks.length - 1];
+
+        for (i = 0; i &lt; chunkLength; i++) {
+          easingObject[chunkNames[i]] = easingChunks[i] || lastEasingChunk;
+        }
+
+      } else {
+        for (i = 0; i &lt; chunkLength; i++) {
+          easingObject[chunkNames[i]] = easing;
+        }
       }
 
       delete easingObject[prop];
@@ -1628,14 +1663,22 @@ var Tweenable = (function () {
       var currentProp = tokenData[prop];
       var chunkNames = currentProp.chunkNames;
       var chunkLength = chunkNames.length;
-      var composedEasingString = &#x27;&#x27;;
 
-      for (var i = 0; i &lt; chunkLength; i++) {
-        composedEasingString += &#x27; &#x27; + easingObject[chunkNames[i]];
-        delete easingObject[chunkNames[i]];
+      var firstEasing = easingObject[chunkNames[0]];
+      var typeofEasings = typeof firstEasing;
+
+      if (typeofEasings === &#x27;string&#x27;) {
+        var composedEasingString = &#x27;&#x27;;
+
+        for (var i = 0; i &lt; chunkLength; i++) {
+          composedEasingString += &#x27; &#x27; + easingObject[chunkNames[i]];
+          delete easingObject[chunkNames[i]];
+        }
+
+        easingObject[prop] = composedEasingString.substr(1);
+      } else {
+        easingObject[prop] = firstEasing;
       }
-
-      easingObject[prop] = composedEasingString.substr(1);
     });
   }
 
