@@ -1,4 +1,4 @@
-/*! shifty - v1.4.2 - 2015-04-24 - http://jeremyckahn.github.io/shifty */
+/*! shifty - v1.5.0 - 2015-05-31 - http://jeremyckahn.github.io/shifty */
 ;(function () {
   var root = this;
 
@@ -109,10 +109,21 @@ var Tweenable = (function () {
 
 
     var prop;
+    var easingObjectProp;
+    var easingFn;
     for (prop in currentState) {
       if (currentState.hasOwnProperty(prop)) {
-        currentState[prop] = tweenProp(originalState[prop],
-          targetState[prop], formula[easing[prop]], normalizedPosition);
+        easingObjectProp = easing[prop];
+        easingFn = typeof easingObjectProp === 'function'
+          ? easingObjectProp
+          : formula[easingObjectProp];
+
+        currentState[prop] = tweenProp(
+          originalState[prop],
+          targetState[prop],
+          easingFn,
+          normalizedPosition
+        );
       }
     }
 
@@ -209,16 +220,18 @@ var Tweenable = (function () {
 
 
   /*!
-   * Creates a usable easing Object from either a string or another easing
+   * Creates a usable easing Object from a string, a function or another easing
    * Object.  If `easing` is an Object, then this function clones it and fills
-   * in the missing properties with "linear".
-   * @param {Object} fromTweenParams
-   * @param {Object|string} easing
+   * in the missing properties with `"linear"`.
+   * @param {Object.<string|Function>} fromTweenParams
+   * @param {Object|string|Function} easing
+   * @return {Object.<string|Function>}
    */
   function composeEasingObject (fromTweenParams, easing) {
     var composedEasing = {};
+    var typeofEasing = typeof easing;
 
-    if (typeof easing === 'string') {
+    if (typeofEasing === 'string' || typeofEasing === 'function') {
       each(fromTweenParams, function (prop) {
         composedEasing[prop] = easing;
       });
@@ -304,8 +317,8 @@ var Tweenable = (function () {
    * - __finish__ (_Function(Object, *)_): Function to execute upon tween
    *   completion.  Receives the state of the tween as the first parameter and
    *   `attachment` as the second parameter.
-   * - __easing__ (_Object|string=_): Easing curve name(s) to use for the
-   *   tween.
+   * - __easing__ (_Object.<string|Function>|string|Function=_): Easing curve
+   *   name(s) or function(s) to use for the tween.
    * - __attachment__ (_*_): Cached value that is passed to the
    *   `step`/`start`/`finish` methods.
    * @chainable
@@ -476,7 +489,17 @@ var Tweenable = (function () {
     root.clearTimeout)(this._scheduleId);
 
     if (gotoEnd) {
-      shallowCopy(this._currentState, this._targetState);
+      applyFilter(this, 'beforeTween');
+      tweenProps(
+        1,
+        this._currentState,
+        this._originalState,
+        this._targetState,
+        1,
+        0,
+        this._easing
+      );
+      applyFilter(this, 'afterTween');
       applyFilter(this, 'afterTweenEnd');
       this._finish.call(this, this._currentState, this._attachment);
     }
@@ -997,9 +1020,10 @@ var Tweenable = (function () {
    * @param {number} position The normalized position value (between `0.0` and
    * `1.0`) to interpolate the values between `from` and `to` for.  `from`
    * represents `0` and `to` represents `1`.
-   * @param {string|Object} easing The easing curve(s) to calculate the
-   * midpoint against.  You can reference any easing function attached to
-   * `Tweenable.prototype.formula`.  If omitted, this defaults to "linear".
+   * @param {Object.<string|Function>|string|Function} easing The easing
+   * curve(s) to calculate the midpoint against.  You can reference any easing
+   * function attached to `Tweenable.prototype.formula`, or provide the easing
+   * function(s) directly.  If omitted, this defaults to "linear".
    * @param {number=} opt_delay Optional delay to pad the beginning of the
    * interpolated tween with.  This increases the range of `position` from (`0`
    * through `1`) to (`0` through `1 + opt_delay`).  So, a delay of `0.5` would
@@ -1516,11 +1540,22 @@ var Tweenable = (function () {
       var currentProp = tokenData[prop];
       var chunkNames = currentProp.chunkNames;
       var chunkLength = chunkNames.length;
-      var easingChunks = easingObject[prop].split(' ');
-      var lastEasingChunk = easingChunks[easingChunks.length - 1];
 
-      for (var i = 0; i < chunkLength; i++) {
-        easingObject[chunkNames[i]] = easingChunks[i] || lastEasingChunk;
+      var easing = easingObject[prop];
+      var i;
+
+      if (typeof easing === 'string') {
+        var easingChunks = easing.split(' ');
+        var lastEasingChunk = easingChunks[easingChunks.length - 1];
+
+        for (i = 0; i < chunkLength; i++) {
+          easingObject[chunkNames[i]] = easingChunks[i] || lastEasingChunk;
+        }
+
+      } else {
+        for (i = 0; i < chunkLength; i++) {
+          easingObject[chunkNames[i]] = easing;
+        }
       }
 
       delete easingObject[prop];
@@ -1536,14 +1571,22 @@ var Tweenable = (function () {
       var currentProp = tokenData[prop];
       var chunkNames = currentProp.chunkNames;
       var chunkLength = chunkNames.length;
-      var composedEasingString = '';
 
-      for (var i = 0; i < chunkLength; i++) {
-        composedEasingString += ' ' + easingObject[chunkNames[i]];
-        delete easingObject[chunkNames[i]];
+      var firstEasing = easingObject[chunkNames[0]];
+      var typeofEasings = typeof firstEasing;
+
+      if (typeofEasings === 'string') {
+        var composedEasingString = '';
+
+        for (var i = 0; i < chunkLength; i++) {
+          composedEasingString += ' ' + easingObject[chunkNames[i]];
+          delete easingObject[chunkNames[i]];
+        }
+
+        easingObject[prop] = composedEasingString.substr(1);
+      } else {
+        easingObject[prop] = firstEasing;
       }
-
-      easingObject[prop] = composedEasingString.substr(1);
     });
   }
 
