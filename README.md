@@ -296,7 +296,7 @@ $: grunt
 To generate the documentation:
 
 ````
-$: grunt dox
+$: grunt yuidoc
 ````
 
 ## AMD and NodeJS
