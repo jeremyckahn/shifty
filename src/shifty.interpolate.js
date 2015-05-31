@@ -38,9 +38,10 @@
    * @param {number} position The normalized position value (between `0.0` and
    * `1.0`) to interpolate the values between `from` and `to` for.  `from`
    * represents `0` and `to` represents `1`.
-   * @param {string|Object} easing The easing curve(s) to calculate the
-   * midpoint against.  You can reference any easing function attached to
-   * `Tweenable.prototype.formula`.  If omitted, this defaults to "linear".
+   * @param {Object.<string|Function>|string|Function} easing The easing
+   * curve(s) to calculate the midpoint against.  You can reference any easing
+   * function attached to `Tweenable.prototype.formula`, or provide the easing
+   * function(s) directly.  If omitted, this defaults to "linear".
    * @param {number=} opt_delay Optional delay to pad the beginning of the
    * interpolated tween with.  This increases the range of `position` from (`0`
    * through `1`) to (`0` through `1 + opt_delay`).  So, a delay of `0.5` would

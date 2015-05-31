@@ -105,10 +105,21 @@ var Tweenable = (function () {
 
 
     var prop;
+    var easingObjectProp;
+    var easingFn;
     for (prop in currentState) {
       if (currentState.hasOwnProperty(prop)) {
-        currentState[prop] = tweenProp(originalState[prop],
-          targetState[prop], formula[easing[prop]], normalizedPosition);
+        easingObjectProp = easing[prop];
+        easingFn = typeof easingObjectProp === 'function'
+          ? easingObjectProp
+          : formula[easingObjectProp];
+
+        currentState[prop] = tweenProp(
+          originalState[prop],
+          targetState[prop],
+          easingFn,
+          normalizedPosition
+        );
       }
     }
 
@@ -205,16 +216,18 @@ var Tweenable = (function () {
 
 
   /*!
-   * Creates a usable easing Object from either a string or another easing
+   * Creates a usable easing Object from a string, a function or another easing
    * Object.  If `easing` is an Object, then this function clones it and fills
-   * in the missing properties with "linear".
-   * @param {Object} fromTweenParams
-   * @param {Object|string} easing
+   * in the missing properties with `"linear"`.
+   * @param {Object.<string|Function>} fromTweenParams
+   * @param {Object|string|Function} easing
+   * @return {Object.<string|Function>}
    */
   function composeEasingObject (fromTweenParams, easing) {
     var composedEasing = {};
+    var typeofEasing = typeof easing;
 
-    if (typeof easing === 'string') {
+    if (typeofEasing === 'string' || typeofEasing === 'function') {
       each(fromTweenParams, function (prop) {
         composedEasing[prop] = easing;
       });
@@ -300,8 +313,8 @@ var Tweenable = (function () {
    * - __finish__ (_Function(Object, *)_): Function to execute upon tween
    *   completion.  Receives the state of the tween as the first parameter and
    *   `attachment` as the second parameter.
-   * - __easing__ (_Object|string=_): Easing curve name(s) to use for the
-   *   tween.
+   * - __easing__ (_Object.<string|Function>|string|Function=_): Easing curve
+   *   name(s) or function(s) to use for the tween.
    * - __attachment__ (_*_): Cached value that is passed to the
    *   `step`/`start`/`finish` methods.
    * @chainable
@@ -472,7 +485,17 @@ var Tweenable = (function () {
     root.clearTimeout)(this._scheduleId);
 
     if (gotoEnd) {
-      shallowCopy(this._currentState, this._targetState);
+      applyFilter(this, 'beforeTween');
+      tweenProps(
+        1,
+        this._currentState,
+        this._originalState,
+        this._targetState,
+        1,
+        0,
+        this._easing
+      );
+      applyFilter(this, 'afterTween');
       applyFilter(this, 'afterTweenEnd');
       this._finish.call(this, this._currentState, this._attachment);
     }
