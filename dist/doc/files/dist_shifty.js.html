@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.5.0</em>
+            <em>API Docs for: 1.5.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -90,9 +90,9 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-/*! shifty - v1.5.0 - 2015-05-31 - http://jeremyckahn.github.io/shifty */
+/*! shifty - v1.5.1 - 2015-08-28 - http://jeremyckahn.github.io/shifty */
 ;(function () {
-  var root = this;
+  var root = this || Function(&#x27;return this&#x27;)();
 
 /*!
  * Shifty Core
@@ -286,27 +286,30 @@ var Tweenable = (function () {
     timeoutHandler_offset = duration - (
       timeoutHandler_endTime - timeoutHandler_currentTime);
 
-    if (tweenable.isPlaying() &amp;&amp; !timeoutHandler_isEnded) {
-      tweenable._scheduleId = schedule(tweenable._timeoutHandler, UPDATE_TIME);
-
-      applyFilter(tweenable, &#x27;beforeTween&#x27;);
-
-      // If the animation has not yet reached the start point (e.g., there was
-      // delay that has not yet completed), just interpolate the starting
-      // position of the tween.
-      if (timeoutHandler_currentTime &lt; (timestamp + delay)) {
-        tweenProps(1, currentState, originalState, targetState, 1, 1, easing);
+    if (tweenable.isPlaying()) {
+      if (timeoutHandler_isEnded) {
+        step(targetState, tweenable._attachment, timeoutHandler_offset);
+        tweenable.stop(true);
       } else {
-        tweenProps(timeoutHandler_currentTime, currentState, originalState,
-          targetState, duration, timestamp + delay, easing);
+        tweenable._scheduleId =
+          schedule(tweenable._timeoutHandler, UPDATE_TIME);
+
+        applyFilter(tweenable, &#x27;beforeTween&#x27;);
+
+        // If the animation has not yet reached the start point (e.g., there was
+        // delay that has not yet completed), just interpolate the starting
+        // position of the tween.
+        if (timeoutHandler_currentTime &lt; (timestamp + delay)) {
+          tweenProps(1, currentState, originalState, targetState, 1, 1, easing);
+        } else {
+          tweenProps(timeoutHandler_currentTime, currentState, originalState,
+            targetState, duration, timestamp + delay, easing);
+        }
+
+        applyFilter(tweenable, &#x27;afterTween&#x27;);
+
+        step(currentState, tweenable._attachment, timeoutHandler_offset);
       }
-
-      applyFilter(tweenable, &#x27;afterTween&#x27;);
-
-      step(currentState, tweenable._attachment, timeoutHandler_offset);
-    } else if (tweenable.isPlaying() &amp;&amp; timeoutHandler_isEnded) {
-      step(targetState, tweenable._attachment, timeoutHandler_offset);
-      tweenable.stop(true);
     }
   }
 

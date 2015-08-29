@@ -2,7 +2,7 @@
     "project": {
         "name": "Shifty",
         "description": "A teeny tiny tweening engine in JavaScript.",
-        "version": "1.5.0",
+        "version": "1.5.1",
         "url": "http://jeremyckahn.github.io/shifty",
         "logo": "../../asset/img/shifty-logo-200.png"
     },
@@ -33,7 +33,7 @@
             "namespaces": {},
             "tag": "module",
             "file": "dist/shifty.js",
-            "line": 249,
+            "line": 252,
             "description": "Tweenable constructor."
         },
         "Tweenable.token": {
@@ -48,7 +48,7 @@
             "module": "Tweenable",
             "namespace": "",
             "file": "dist/shifty.js",
-            "line": 249,
+            "line": 252,
             "description": "This module adds string interpolation support to Shifty.\n\nThe Token extension allows Shifty to tween numbers inside of strings.  Among\nother things, this allows you to animate CSS properties.  For example, you\ncan do this:\n\n    var tweenable = new Tweenable();\n    tweenable.tween({\n      from: { transform: 'translateX(45px)' },\n      to: { transform: 'translateX(90xp)' }\n    });\n\n`translateX(45)` will be tweened to `translateX(90)`.  To demonstrate:\n\n    var tweenable = new Tweenable();\n    tweenable.tween({\n      from: { transform: 'translateX(45px)' },\n      to: { transform: 'translateX(90px)' },\n      step: function (state) {\n        console.log(state.transform);\n      }\n    });\n\nThe above snippet will log something like this in the console:\n\n    translateX(60.3px)\n    ...\n    translateX(76.05px)\n    ...\n    translateX(90px)\n\nAnother use for this is animating colors:\n\n    var tweenable = new Tweenable();\n    tweenable.tween({\n      from: { color: 'rgb(0,255,0)' },\n      to: { color: 'rgb(255,0,255)' },\n      step: function (state) {\n        console.log(state.color);\n      }\n    });\n\nThe above snippet will log something like this:\n\n    rgb(84,170,84)\n    ...\n    rgb(170,84,170)\n    ...\n    rgb(255,0,255)\n\nThis extension also supports hexadecimal colors, in both long (`#ff00ff`)\nand short (`#f0f`) forms.  Be aware that hexadecimal input values will be\nconverted into the equivalent RGB output values.  This is done to optimize\nfor performance.\n\n    var tweenable = new Tweenable();\n    tweenable.tween({\n      from: { color: '#0f0' },\n      to: { color: '#f0f' },\n      step: function (state) {\n        console.log(state.color);\n      }\n    });\n\nThis snippet will generate the same output as the one before it because\nequivalent values were supplied (just in hexadecimal form rather than RGB):\n\n    rgb(84,170,84)\n    ...\n    rgb(170,84,170)\n    ...\n    rgb(255,0,255)\n\n## Easing support\n\nEasing works somewhat differently in the Token extension.  This is because\nsome CSS properties have multiple values in them, and you might need to\ntween each value along its own easing curve.  A basic example:\n\n    var tweenable = new Tweenable();\n    tweenable.tween({\n      from: { transform: 'translateX(0px) translateY(0px)' },\n      to: { transform:   'translateX(100px) translateY(100px)' },\n      easing: { transform: 'easeInQuad' },\n      step: function (state) {\n        console.log(state.transform);\n      }\n    });\n\nThe above snippet will create values like this:\n\n    translateX(11.56px) translateY(11.56px)\n    ...\n    translateX(46.24px) translateY(46.24px)\n    ...\n    translateX(100px) translateY(100px)\n\nIn this case, the values for `translateX` and `translateY` are always the\nsame for each step of the tween, because they have the same start and end\npoints and both use the same easing curve.  We can also tween `translateX`\nand `translateY` along independent curves:\n\n    var tweenable = new Tweenable();\n    tweenable.tween({\n      from: { transform: 'translateX(0px) translateY(0px)' },\n      to: { transform:   'translateX(100px) translateY(100px)' },\n      easing: { transform: 'easeInQuad bounce' },\n      step: function (state) {\n        console.log(state.transform);\n      }\n    });\n\nThe above snippet will create values like this:\n\n    translateX(10.89px) translateY(82.35px)\n    ...\n    translateX(44.89px) translateY(86.73px)\n    ...\n    translateX(100px) translateY(100px)\n\n`translateX` and `translateY` are not in sync anymore, because `easeInQuad`\nwas specified for `translateX` and `bounce` for `translateY`.  Mixing and\nmatching easing curves can make for some interesting motion in your\nanimations.\n\nThe order of the space-separated easing curves correspond the token values\nthey apply to.  If there are more token values than easing curves listed,\nthe last easing curve listed is used."
         }
     },
@@ -63,7 +63,7 @@
             "extension_for": [],
             "module": "Tweenable",
             "file": "dist/shifty.js",
-            "line": 249,
+            "line": 252,
             "description": "Tweenable constructor.",
             "params": [
                 {
@@ -84,7 +84,7 @@
     "classitems": [
         {
             "file": "dist/shifty.js",
-            "line": 274,
+            "line": 277,
             "description": "Configure and start a tween.",
             "itemtype": "method",
             "name": "tween",
@@ -101,7 +101,7 @@
         },
         {
             "file": "dist/shifty.js",
-            "line": 297,
+            "line": 300,
             "description": "Configure a tween that will start at some point in the future.",
             "itemtype": "method",
             "name": "setConfig",
@@ -118,7 +118,7 @@
         },
         {
             "file": "dist/shifty.js",
-            "line": 378,
+            "line": 381,
             "itemtype": "method",
             "name": "get",
             "return": {
@@ -130,7 +130,7 @@
         },
         {
             "file": "dist/shifty.js",
-            "line": 386,
+            "line": 389,
             "itemtype": "method",
             "name": "set",
             "params": [
@@ -145,7 +145,7 @@
         },
         {
             "file": "dist/shifty.js",
-            "line": 394,
+            "line": 397,
             "description": "Pause a tween.  Paused tweens can be resumed from the point at which they\nwere paused.  This is different from `{{#crossLink\n\"Tweenable/stop:method\"}}{{/crossLink}}`, as that method\ncauses a tween to start over when it is resumed.",
             "itemtype": "method",
             "name": "pause",
@@ -155,7 +155,7 @@
         },
         {
             "file": "dist/shifty.js",
-            "line": 408,
+            "line": 411,
             "description": "Resume a paused tween.",
             "itemtype": "method",
             "name": "resume",
@@ -165,7 +165,7 @@
         },
         {
             "file": "dist/shifty.js",
-            "line": 426,
+            "line": 429,
             "description": "Move the state of the animation to a specific point in the tween's\ntimeline.  If the animation is not running, this will cause the `step`\nhandlers to be called.",
             "itemtype": "method",
             "name": "seek",
@@ -182,7 +182,7 @@
         },
         {
             "file": "dist/shifty.js",
-            "line": 470,
+            "line": 473,
             "description": "Stops and cancels a tween.",
             "params": [
                 {
@@ -199,7 +199,7 @@
         },
         {
             "file": "dist/shifty.js",
-            "line": 510,
+            "line": 513,
             "itemtype": "method",
             "name": "isPlaying",
             "return": {
@@ -211,7 +211,7 @@
         },
         {
             "file": "dist/shifty.js",
-            "line": 518,
+            "line": 521,
             "description": "Set a custom schedule function.\n\nIf a custom function is not set,\n[`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window.requestAnimationFrame)\nis used if available, otherwise\n[`setTimeout`](https://developer.mozilla.org/en-US/docs/Web/API/Window.setTimeout)\nis used.",
             "itemtype": "method",
             "name": "setScheduleFunction",
@@ -227,7 +227,7 @@
         },
         {
             "file": "dist/shifty.js",
-            "line": 534,
+            "line": 537,
             "description": "`delete` all \"own\" properties.  Call this when the `Tweenable` instance\nis no longer needed to free memory.",
             "itemtype": "method",
             "name": "dispose",
@@ -236,7 +236,7 @@
         },
         {
             "file": "dist/shifty.js",
-            "line": 554,
+            "line": 557,
             "description": "This object contains all of the tweens available to Shifty.  It is\nextensible - simply attach properties to the `Tweenable.prototype.formula`\nObject following the same format as `linear`.\n\n`pos` should be a normalized `number` (between 0 and 1).",
             "itemtype": "property",
             "name": "formula",
@@ -246,7 +246,7 @@
         },
         {
             "file": "dist/shifty.js",
-            "line": 938,
+            "line": 941,
             "description": "Create a Bezier easing function and attach it to `{{#crossLink\n\"Tweenable/formula:property\"}}Tweenable#formula{{/crossLink}}`.  This\nfunction gives you total control over the easing curve.  Matthew Lein's\n[Ceaser](http://matthewlein.com/ceaser/) is a useful tool for visualizing\nthe curves you can make with this function.",
             "itemtype": "method",
             "name": "setBezierFunction",
@@ -286,7 +286,7 @@
         },
         {
             "file": "dist/shifty.js",
-            "line": 968,
+            "line": 971,
             "description": "`delete` an easing function from `{{#crossLink\n\"Tweenable/formula:property\"}}Tweenable#formula{{/crossLink}}`.  Be\ncareful with this method, as it `delete`s whatever easing formula matches\n`name` (which means you can delete standard Shifty easing functions).",
             "itemtype": "method",
             "name": "unsetBezierFunction",
@@ -306,7 +306,7 @@
         },
         {
             "file": "dist/shifty.js",
-            "line": 997,
+            "line": 1000,
             "description": "Compute the midpoint of two Objects.  This method effectively calculates a\nspecific frame of animation that `{{#crossLink\n\"Tweenable/tween:method\"}}{{/crossLink}}` does many times over the course\nof a full tween.\n\n    var interpolatedValues = Tweenable.interpolate({\n      width: '100px',\n      opacity: 0,\n      color: '#fff'\n    }, {\n      width: '200px',\n      opacity: 1,\n      color: '#000'\n    }, 0.5);\n\n    console.log(interpolatedValues);\n    // {opacity: 0.5, width: \"150px\", color: \"rgb(127,127,127)\"}",
             "static": 1,
             "itemtype": "method",
