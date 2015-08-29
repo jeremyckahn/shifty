@@ -1,2 +1,2 @@
 ;(function () {
-  var root = this;
+  var root = this || Function('return this')();
