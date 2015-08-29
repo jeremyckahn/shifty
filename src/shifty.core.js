@@ -190,27 +190,30 @@ var Tweenable = (function () {
     timeoutHandler_offset = duration - (
       timeoutHandler_endTime - timeoutHandler_currentTime);
 
-    if (tweenable.isPlaying() && !timeoutHandler_isEnded) {
-      tweenable._scheduleId = schedule(tweenable._timeoutHandler, UPDATE_TIME);
-
-      applyFilter(tweenable, 'beforeTween');
-
-      // If the animation has not yet reached the start point (e.g., there was
-      // delay that has not yet completed), just interpolate the starting
-      // position of the tween.
-      if (timeoutHandler_currentTime < (timestamp + delay)) {
-        tweenProps(1, currentState, originalState, targetState, 1, 1, easing);
+    if (tweenable.isPlaying()) {
+      if (timeoutHandler_isEnded) {
+        step(targetState, tweenable._attachment, timeoutHandler_offset);
+        tweenable.stop(true);
       } else {
-        tweenProps(timeoutHandler_currentTime, currentState, originalState,
-          targetState, duration, timestamp + delay, easing);
+        tweenable._scheduleId =
+          schedule(tweenable._timeoutHandler, UPDATE_TIME);
+
+        applyFilter(tweenable, 'beforeTween');
+
+        // If the animation has not yet reached the start point (e.g., there was
+        // delay that has not yet completed), just interpolate the starting
+        // position of the tween.
+        if (timeoutHandler_currentTime < (timestamp + delay)) {
+          tweenProps(1, currentState, originalState, targetState, 1, 1, easing);
+        } else {
+          tweenProps(timeoutHandler_currentTime, currentState, originalState,
+            targetState, duration, timestamp + delay, easing);
+        }
+
+        applyFilter(tweenable, 'afterTween');
+
+        step(currentState, tweenable._attachment, timeoutHandler_offset);
       }
-
-      applyFilter(tweenable, 'afterTween');
-
-      step(currentState, tweenable._attachment, timeoutHandler_offset);
-    } else if (tweenable.isPlaying() && timeoutHandler_isEnded) {
-      step(targetState, tweenable._attachment, timeoutHandler_offset);
-      tweenable.stop(true);
     }
   }
 
