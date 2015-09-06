@@ -97,7 +97,7 @@ Make a basic tween by specifying some options:
   * start (function): Function to execute when the tween begins (after the
     first tick).
   * step (function): Function to execute every tick.
-  * callback (function): Function to execute upon completion.
+  * finish (function): Function to execute upon completion.
 
 ````javascript
 var tweenable = new Tweenable();
