@@ -12,7 +12,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
 
   var banner = [
-        '/*! <%= pkg.name %> - v<%= pkg.version %> - ',
+        '/* <%= pkg.name %> - v<%= pkg.version %> - ',
         '<%= grunt.template.today("yyyy-mm-dd") %> - <%= pkg.homepage %> */\n'
       ].join('');
 

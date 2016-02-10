@@ -136,11 +136,12 @@
 
 ;(function (Tweenable) {
 
-  /*!
+  /**
    * @typedef {{
    *   formatString: string
    *   chunkNames: Array.<string>
    * }}
+   * @private
    */
   var formatManifest;
 
@@ -159,11 +160,12 @@
 
   // HELPERS
 
-  /*!
+  /**
    * @param {Array.number} rawValues
    * @param {string} prefix
    *
    * @return {Array.<string>}
+   * @private
    */
   function getFormatChunksFrom (rawValues, prefix) {
     var accumulator = [];
@@ -178,10 +180,11 @@
     return accumulator;
   }
 
-  /*!
+  /**
    * @param {string} formattedString
    *
    * @return {string}
+   * @private
    */
   function getFormatStringFrom (formattedString) {
     var chunks = formattedString.match(R_FORMAT_CHUNKS);
@@ -207,12 +210,13 @@
     return chunks.join(VALUE_PLACEHOLDER);
   }
 
-  /*!
+  /**
    * Convert all hex color values within a string to an rgb string.
    *
    * @param {Object} stateObject
    *
    * @return {Object} The modified obj
+   * @private
    */
   function sanitizeObjectForHexProps (stateObject) {
     Tweenable.each(stateObject, function (prop) {
@@ -224,19 +228,21 @@
     });
   }
 
-  /*!
+  /**
    * @param {string} str
    *
    * @return {string}
+   * @private
    */
   function  sanitizeHexChunksToRGB (str) {
     return filterStringChunks(R_HEX, str, convertHexToRGB);
   }
 
-  /*!
+  /**
    * @param {string} hexString
    *
    * @return {string}
+   * @private
    */
   function convertHexToRGB (hexString) {
     var rgbArr = hexToRGBArray(hexString);
@@ -244,7 +250,7 @@
   }
 
   var hexToRGBArray_returnArray = [];
-  /*!
+  /**
    * Convert a hexadecimal string to an array with three items, one each for
    * the red, blue, and green decimal values.
    *
@@ -252,6 +258,7 @@
    *
    * @returns {Array.<number>} The converted Array of RGB values if `hex` is a
    * valid string, or an Array of three 0's.
+   * @private
    */
   function hexToRGBArray (hex) {
 
@@ -271,18 +278,19 @@
     return hexToRGBArray_returnArray;
   }
 
-  /*!
+  /**
    * Convert a base-16 number to base-10.
    *
    * @param {Number|String} hex The value to convert
    *
    * @returns {Number} The base-10 equivalent of `hex`.
+   * @private
    */
   function hexToDec (hex) {
     return parseInt(hex, 16);
   }
 
-  /*!
+  /**
    * Runs a filter operation on all chunks of a string that match a RegExp
    *
    * @param {RegExp} pattern
@@ -290,6 +298,7 @@
    * @param {function(string)} filter
    *
    * @return {string}
+   * @private
    */
   function filterStringChunks (pattern, unfilteredString, filter) {
     var pattenMatches = unfilteredString.match(pattern);
@@ -309,21 +318,23 @@
     return filteredString;
   }
 
-  /*!
+  /**
    * Check for floating point values within rgb strings and rounds them.
    *
    * @param {string} formattedString
    *
    * @return {string}
+   * @private
    */
   function sanitizeRGBChunks (formattedString) {
     return filterStringChunks(R_RGB, formattedString, sanitizeRGBChunk);
   }
 
-  /*!
+  /**
    * @param {string} rgbChunk
    *
    * @return {string}
+   * @private
    */
   function sanitizeRGBChunk (rgbChunk) {
     var numbers = rgbChunk.match(R_UNFORMATTED_VALUES);
@@ -339,11 +350,12 @@
     return sanitizedString;
   }
 
-  /*!
+  /**
    * @param {Object} stateObject
    *
    * @return {Object} An Object of formatManifests that correspond to
    * the string properties of stateObject
+   * @private
    */
   function getFormatManifests (stateObject) {
     var manifestAccumulator = {};
@@ -364,9 +376,10 @@
     return manifestAccumulator;
   }
 
-  /*!
+  /**
    * @param {Object} stateObject
    * @param {Object} formatManifests
+   * @private
    */
   function expandFormattedProperties (stateObject, formatManifests) {
     Tweenable.each(formatManifests, function (prop) {
@@ -382,9 +395,10 @@
     });
   }
 
-  /*!
+  /**
    * @param {Object} stateObject
    * @param {Object} formatManifests
+   * @private
    */
   function collapseFormattedProperties (stateObject, formatManifests) {
     Tweenable.each(formatManifests, function (prop) {
@@ -399,11 +413,12 @@
     });
   }
 
-  /*!
+  /**
    * @param {Object} stateObject
    * @param {Array.<string>} chunkNames
    *
    * @return {Object} The extracted value chunks.
+   * @private
    */
   function extractPropertyChunks (stateObject, chunkNames) {
     var extractedValues = {};
@@ -419,11 +434,12 @@
   }
 
   var getValuesList_accumulator = [];
-  /*!
+  /**
    * @param {Object} stateObject
    * @param {Array.<string>} chunkNames
    *
    * @return {Array.<number>}
+   * @private
    */
   function getValuesList (stateObject, chunkNames) {
     getValuesList_accumulator.length = 0;
@@ -436,11 +452,12 @@
     return getValuesList_accumulator;
   }
 
-  /*!
+  /**
    * @param {string} formatString
    * @param {Array.<number>} rawValues
    *
    * @return {string}
+   * @private
    */
   function getFormattedValues (formatString, rawValues) {
     var formattedValueString = formatString;
@@ -454,21 +471,23 @@
     return formattedValueString;
   }
 
-  /*!
+  /**
    * Note: It's the duty of the caller to convert the Array elements of the
    * return value into numbers.  This is a performance optimization.
    *
    * @param {string} formattedString
    *
    * @return {Array.<string>|null}
+   * @private
    */
   function getValuesFrom (formattedString) {
     return formattedString.match(R_UNFORMATTED_VALUES);
   }
 
-  /*!
+  /**
    * @param {Object} easingObject
    * @param {Object} tokenData
+   * @private
    */
   function expandEasingObject (easingObject, tokenData) {
     Tweenable.each(tokenData, function (prop) {
@@ -497,9 +516,10 @@
     });
   }
 
-  /*!
+  /**
    * @param {Object} easingObject
    * @param {Object} tokenData
+   * @private
    */
   function collapseEasingObject (easingObject, tokenData) {
     Tweenable.each(tokenData, function (prop) {
