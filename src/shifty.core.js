@@ -1,4 +1,4 @@
-/*!
+/**
  * Shifty Core
  * By Jeremy Kahn - jeremyckahn@gmail.com
  */
@@ -40,12 +40,13 @@ var Tweenable = (function () {
     // NOOP!
   }
 
-  /*!
+  /**
    * Handy shortcut for doing a for-in loop. This is not a "normal" each
    * function, it is optimized for Shifty.  The iterator function only receives
    * the property name, not the value.
    * @param {Object} obj
    * @param {Function(string)} fn
+   * @private
    */
   function each (obj, fn) {
     var key;
@@ -56,11 +57,12 @@ var Tweenable = (function () {
     }
   }
 
-  /*!
+  /**
    * Perform a shallow copy of Object properties.
    * @param {Object} targetObject The object to copy into
    * @param {Object} srcObject The object to copy from
    * @return {Object} A reference to the augmented `targetObj` Object
+   * @private
    */
   function shallowCopy (targetObj, srcObj) {
     each(srcObj, function (prop) {
@@ -70,11 +72,12 @@ var Tweenable = (function () {
     return targetObj;
   }
 
-  /*!
+  /**
    * Copies each property from src onto target, but only if the property to
    * copy to target is undefined.
    * @param {Object} target Missing properties in this Object are filled in
    * @param {Object} src
+   * @private
    */
   function defaults (target, src) {
     each(src, function (prop) {
@@ -84,7 +87,7 @@ var Tweenable = (function () {
     });
   }
 
-  /*!
+  /**
    * Calculates the interpolated tween values of an Object for a given
    * timestamp.
    * @param {Number} forPosition The position to compute the state for.
@@ -97,6 +100,7 @@ var Tweenable = (function () {
    * @param {number} timestamp: The UNIX epoch time at which the tween began.
    * @param {Object} easing: This Object's keys must correspond to the keys in
    * targetState.
+   * @private
    */
   function tweenProps (forPosition, currentState, originalState, targetState,
     duration, timestamp, easing) {
@@ -126,7 +130,7 @@ var Tweenable = (function () {
     return currentState;
   }
 
-  /*!
+  /**
    * Tweens a single property.
    * @param {number} start The value that the tween started from.
    * @param {number} end The value that the tween should end at.
@@ -134,16 +138,18 @@ var Tweenable = (function () {
    * @param {number} position The normalized position (between 0.0 and 1.0) to
    * calculate the midpoint of 'start' and 'end' against.
    * @return {number} The tweened value.
+   * @private
    */
   function tweenProp (start, end, easingFunc, position) {
     return start + (end - start) * easingFunc(position);
   }
 
-  /*!
+  /**
    * Applies a filter to Tweenable instance.
    * @param {Tweenable} tweenable The `Tweenable` instance to call the filter
    * upon.
    * @param {String} filterName The name of the filter to apply.
+   * @private
    */
   function applyFilter (tweenable, filterName) {
     var filters = Tweenable.prototype.filter;
@@ -160,7 +166,7 @@ var Tweenable = (function () {
   var timeoutHandler_currentTime;
   var timeoutHandler_isEnded;
   var timeoutHandler_offset;
-  /*!
+  /**
    * Handles the update logic for one step of a tween.
    * @param {Tweenable} tweenable
    * @param {number} timestamp
@@ -174,6 +180,7 @@ var Tweenable = (function () {
    * @param {Function(Function,number)}} schedule
    * @param {number=} opt_currentTimeOverride Needed for accurate timestamp in
    * Tweenable#seek.
+   * @private
    */
   function timeoutHandler (tweenable, timestamp, delay, duration, currentState,
     originalState, targetState, easing, step, schedule,
@@ -218,13 +225,14 @@ var Tweenable = (function () {
   }
 
 
-  /*!
+  /**
    * Creates a usable easing Object from a string, a function or another easing
    * Object.  If `easing` is an Object, then this function clones it and fills
    * in the missing properties with `"linear"`.
    * @param {Object.<string|Function>} fromTweenParams
    * @param {Object|string|Function} easing
    * @return {Object.<string|Function>}
+   * @private
    */
   function composeEasingObject (fromTweenParams, easing) {
     var composedEasing = {};
@@ -544,9 +552,10 @@ var Tweenable = (function () {
     }
   };
 
-  /*!
+  /**
    * Filters are used for transforming the properties of a tween at various
    * points in a Tweenable's life cycle.  See the README for more info on this.
+   * @private
    */
   Tweenable.prototype.filter = {};
 

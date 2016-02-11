@@ -1,5 +1,5 @@
 // jshint maxlen:100
-/*!
+/**
  * The Bezier magic in this file is adapted/copied almost wholesale from
  * [Scripty2](https://github.com/madrobby/scripty2/blob/master/src/effects/transitions/cubic-bezier.js),
  * which was adapted from Apple code (which probably came from
@@ -7,7 +7,7 @@
  * Special thanks to Apple and Thomas Fuchs for much of this code.
  */
 
-/*!
+/**
  *  Copyright (c) 2006 Apple Computer, Inc. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -106,7 +106,7 @@
     ay = 1.0 - cy - by;
     return solve(t, solveEpsilon(duration));
   }
-  /*!
+  /**
    *  getCubicBezierTransition(x1, y1, x2, y2) -> Function
    *
    *  Generates a transition easing function that is compatible
@@ -121,6 +121,7 @@
    *  @param {number} x2
    *  @param {number} y2
    *  @return {function}
+   *  @private
    */
   function getCubicBezierTransition (x1, y1, x2, y2) {
     return function (pos) {

@@ -1,6 +1,6 @@
 {
   "name": "shifty",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "main": "./dist/shifty.min.js",
   "homepage": "http://jeremyckahn.github.io/shifty",
   "description": "A teeny tiny tweening engine in JavaScript.",
