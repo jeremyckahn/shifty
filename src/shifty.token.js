@@ -201,7 +201,7 @@
     } else if (chunks.length === 1 ||
       // ...or if the string starts with a number component (".", "-", or a
       // digit)...
-    formattedString[0].match(R_NUMBER_COMPONENT)) {
+    formattedString.charAt(0).match(R_NUMBER_COMPONENT)) {
       // ...prepend an empty string here to make sure that the formatted number
       // is properly replaced by VALUE_PLACEHOLDER
       chunks.unshift('');
