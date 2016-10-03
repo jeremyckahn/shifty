@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 1.5.2</em>
+            <em>API Docs for: 1.5.3</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -90,7 +90,7 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-/* shifty - v1.5.2 - 2016-02-10 - http://jeremyckahn.github.io/shifty */
+/* shifty - v1.5.3 - 2016-10-03 - http://jeremyckahn.github.io/shifty */
 ;(function () {
   var root = this || Function(&#x27;return this&#x27;)();
 
@@ -1371,7 +1371,7 @@ var Tweenable = (function () {
     } else if (chunks.length === 1 ||
       // ...or if the string starts with a number component (&quot;.&quot;, &quot;-&quot;, or a
       // digit)...
-    formattedString[0].match(R_NUMBER_COMPONENT)) {
+    formattedString.charAt(0).match(R_NUMBER_COMPONENT)) {
       // ...prepend an empty string here to make sure that the formatted number
       // is properly replaced by VALUE_PLACEHOLDER
       chunks.unshift(&#x27;&#x27;);

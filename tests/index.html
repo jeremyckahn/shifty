@@ -29,7 +29,9 @@
 
 <script>
   (function () {
-    var log = console.log;
+    window.console = window.console || {
+      log: function () {}
+    };
 
     function forceInternalUpdate (tweenable) {
       timeoutHandler(tweenable,

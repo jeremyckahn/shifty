@@ -1,4 +1,4 @@
-/* shifty - v1.5.2 - 2016-02-10 - http://jeremyckahn.github.io/shifty */
+/* shifty - v1.5.3 - 2016-10-03 - http://jeremyckahn.github.io/shifty */
 ;(function () {
   var root = this || Function('return this')();
 
@@ -1279,7 +1279,7 @@ var Tweenable = (function () {
     } else if (chunks.length === 1 ||
       // ...or if the string starts with a number component (".", "-", or a
       // digit)...
-    formattedString[0].match(R_NUMBER_COMPONENT)) {
+    formattedString.charAt(0).match(R_NUMBER_COMPONENT)) {
       // ...prepend an empty string here to make sure that the formatted number
       // is properly replaced by VALUE_PLACEHOLDER
       chunks.unshift('');

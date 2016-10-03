@@ -49,6 +49,11 @@ npm install --save shifty
 bower install --save shifty
 ````
 
+## Browser compatibility
+
+Shifty officially supports Internet Explorer 8 and up, as well as all Evergreen
+browsers.
+
 ## Using Shifty
 
 Shifty has no dependencies, so you can just load
