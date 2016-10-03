@@ -2,7 +2,7 @@
     "project": {
         "name": "Shifty",
         "description": "A teeny tiny tweening engine in JavaScript.",
-        "version": "1.5.2",
+        "version": "1.5.3",
         "url": "http://jeremyckahn.github.io/shifty",
         "logo": "../../asset/img/shifty-logo-200.png"
     },
