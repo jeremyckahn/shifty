@@ -1,4 +1,4 @@
-/* shifty - v1.5.3 - 2016-10-03 - http://jeremyckahn.github.io/shifty */
+/* shifty - v1.5.3 - 2016-11-29 - http://jeremyckahn.github.io/shifty */
 ;(function () {
   var root = this || Function('return this')();
 
@@ -350,9 +350,9 @@ var Tweenable = (function () {
     this._step = config.step || noop;
     this._finish = config.finish || noop;
     this._duration = config.duration || DEFAULT_DURATION;
-    this._currentState = shallowCopy({}, config.from) || this.get();
+    this._currentState = shallowCopy({}, config.from || this.get());
     this._originalState = this.get();
-    this._targetState = shallowCopy({}, config.to) || this.get();
+    this._targetState = shallowCopy({}, config.to || this.get());
 
     var self = this;
     this._timeoutHandler = function () {
