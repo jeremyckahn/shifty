@@ -47,6 +47,28 @@
       );
     }
 
+    module('Tweenable constructor');
+
+    test('Can accept initial state', function () {
+      var tweenable = new Tweenable({ x: 5 });
+      var state;
+
+      mockTime = function () {return 0;};
+      tweenable.tween({
+        to: { x: 10 }
+        ,duration: 1000
+        ,step: function (_state) {
+          state = _state;
+        }
+      });
+
+      mockTime = function () {return 500;};
+      forceInternalUpdate(tweenable);
+      equals(state.x, 7.5,
+        'data provided to the constuctor was used as "from" state');
+    });
+
+
     module('Tweenable.prototype.tween (longhand format)');
 
     test('Midpoints of a tween are correctly computed', function () {
