@@ -12,10 +12,11 @@
  *  Open source under the BSD License.
  *  Easing Equations (c) 2003 Robert Penner, all rights reserved.
  */
-
-import { Tweenable, shallowCopy } from './shifty.core';
-
 export default {
+  linear: function (pos) {
+    return pos;
+  },
+
   easeInQuad: function (pos) {
     return Math.pow(pos, 2);
   },

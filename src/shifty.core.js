@@ -1,3 +1,5 @@
+import easingFunctions from './shifty.easing-functions';
+
 // Aliases that get defined later in this function
 var formula;
 
@@ -555,6 +557,7 @@ Tweenable.prototype.dispose = function () {
  */
 Tweenable.prototype.filter = {};
 
+// FIXME: Find a more reasonable way to handle easing curves in v2
 /**
  * This object contains all of the tweens available to Shifty.  It is
  * extensible - simply attach properties to the `Tweenable.prototype.formula`
@@ -564,11 +567,7 @@ Tweenable.prototype.filter = {};
  * @property formula
  * @type {Object(function)}
  */
-Tweenable.prototype.formula = {
-  linear: function (pos) {
-    return pos;
-  }
-};
+Tweenable.prototype.formula = shallowCopy({}, easingFunctions);
 
 formula = Tweenable.prototype.formula;
 
