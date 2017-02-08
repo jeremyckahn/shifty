@@ -1,4 +1,4 @@
-import Tweenable from './shifty.core';
+import { Tweenable, clone } from './shifty.core';
 
 function getInterpolatedValues (
   from, current, targetState, position, easing, delay) {
@@ -51,7 +51,7 @@ mockTweenable._filterArgs = [];
 export function interpolate (
   from, targetState, position, easing, opt_delay) {
 
-  var current = Tweenable.shallowCopy({}, from);
+  var current = clone(from);
   var delay = opt_delay || 0;
   var easingObject = Tweenable.composeEasingObject(
     from, easing || 'linear');

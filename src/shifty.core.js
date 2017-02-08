@@ -53,7 +53,6 @@ export function each (obj, fn) {
  * @param {Object} targetObject The object to copy into
  * @param {Object} srcObject The object to copy from
  * @return {Object} A reference to the augmented `targetObj` Object
- * @private
  */
 export function shallowCopy (targetObj, srcObj) {
   each(srcObj, function (prop) {
@@ -61,6 +60,14 @@ export function shallowCopy (targetObj, srcObj) {
   });
 
   return targetObj;
+}
+
+/**
+ * @param {Object} obj
+ * @return {Object}
+ */
+export function clone (obj) {
+  return shallowCopy({}, obj);
 }
 
 /**
@@ -344,9 +351,9 @@ Tweenable.prototype.setConfig = function (config) {
   this._step = config.step || noop;
   this._finish = config.finish || noop;
   this._duration = config.duration || DEFAULT_DURATION;
-  this._currentState = shallowCopy({}, config.from || this.get());
+  this._currentState = clone(config.from || this.get());
   this._originalState = this.get();
-  this._targetState = shallowCopy({}, config.to || this.get());
+  this._targetState = clone(config.to || this.get());
 
   var self = this;
   this._timeoutHandler = function () {
@@ -385,7 +392,7 @@ Tweenable.prototype.setConfig = function (config) {
  * @return {Object} The current state.
  */
 Tweenable.prototype.get = function () {
-  return shallowCopy({}, this._currentState);
+  return clone(this._currentState);
 };
 
 /**
@@ -567,7 +574,7 @@ Tweenable.prototype.filter = {};
  * @property formula
  * @type {Object(function)}
  */
-Tweenable.prototype.formula = shallowCopy({}, easingFunctions);
+Tweenable.prototype.formula = clone(easingFunctions);
 
 formula = Tweenable.prototype.formula;
 
