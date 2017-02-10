@@ -1,5 +1,5 @@
 import * as easingFunctions from './shifty.easing-functions';
-import { token } from './shifty.token';
+import * as token from './shifty.token';
 
 // Aliases that get defined later in this function
 var formula;

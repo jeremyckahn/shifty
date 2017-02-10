@@ -1,4 +1,3 @@
-import { Tweenable } from './shifty.core';
 /**
  * This module adds string interpolation support to Shifty.
  *
@@ -134,6 +133,8 @@ import { Tweenable } from './shifty.core';
 // token function is defined above only so that dox-foundation sees it as
 // documentation and renders it.  It is never used, and is optimized away at
 // build time.
+
+import { Tweenable } from './shifty.core';
 
 /**
  * @typedef {{
@@ -544,27 +545,23 @@ function collapseEasingObject (easingObject, tokenData) {
   });
 }
 
-const token = {
-  'tweenCreated': function (currentState, fromState, toState, easingObject) {
-    sanitizeObjectForHexProps(currentState);
-    sanitizeObjectForHexProps(fromState);
-    sanitizeObjectForHexProps(toState);
-    this._tokenData = getFormatManifests(currentState);
-  },
+export function tweenCreated (currentState, fromState, toState, easingObject) {
+  sanitizeObjectForHexProps(currentState);
+  sanitizeObjectForHexProps(fromState);
+  sanitizeObjectForHexProps(toState);
+  this._tokenData = getFormatManifests(currentState);
+}
 
-  'beforeTween': function (currentState, fromState, toState, easingObject) {
-    expandEasingObject(easingObject, this._tokenData);
-    expandFormattedProperties(currentState, this._tokenData);
-    expandFormattedProperties(fromState, this._tokenData);
-    expandFormattedProperties(toState, this._tokenData);
-  },
+export function beforeTween (currentState, fromState, toState, easingObject) {
+  expandEasingObject(easingObject, this._tokenData);
+  expandFormattedProperties(currentState, this._tokenData);
+  expandFormattedProperties(fromState, this._tokenData);
+  expandFormattedProperties(toState, this._tokenData);
+}
 
-  'afterTween': function (currentState, fromState, toState, easingObject) {
-    collapseFormattedProperties(currentState, this._tokenData);
-    collapseFormattedProperties(fromState, this._tokenData);
-    collapseFormattedProperties(toState, this._tokenData);
-    collapseEasingObject(easingObject, this._tokenData);
-  }
-};
-
-export { token };
+export function afterTween (currentState, fromState, toState, easingObject) {
+  collapseFormattedProperties(currentState, this._tokenData);
+  collapseFormattedProperties(fromState, this._tokenData);
+  collapseFormattedProperties(toState, this._tokenData);
+  collapseEasingObject(easingObject, this._tokenData);
+}
