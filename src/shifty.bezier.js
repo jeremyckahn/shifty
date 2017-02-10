@@ -1,5 +1,5 @@
 // jshint maxlen:100
-import Tweenable from './shifty.core';
+import { Tweenable } from './shifty.core';
 /**
  * The Bezier magic in this file is adapted/copied almost wholesale from
  * [Scripty2](https://github.com/madrobby/scripty2/blob/master/src/effects/transitions/cubic-bezier.js),

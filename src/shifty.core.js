@@ -1,4 +1,5 @@
-import easingFunctions from './shifty.easing-functions';
+import { easingFunctions } from './shifty.easing-functions';
+import { token } from './shifty.token';
 
 // Aliases that get defined later in this function
 var formula;
@@ -562,7 +563,7 @@ Tweenable.prototype.dispose = function () {
  * points in a Tweenable's life cycle.  See the README for more info on this.
  * @private
  */
-Tweenable.prototype.filter = {};
+Tweenable.prototype.filter = { token };
 
 // FIXME: Find a more reasonable way to handle easing curves in v2
 /**

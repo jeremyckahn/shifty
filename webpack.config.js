@@ -53,9 +53,9 @@ module.exports = {
       }
     }),
     new Webpack.BannerPlugin(version),
-    new Webpack.DefinePlugin({
-      SHIFTY_DEBUG_NOW: true
-    })
+    //new Webpack.DefinePlugin({
+      //SHIFTY_DEBUG_NOW: true
+    //})
   ],
   devServer: {
     port: 9009

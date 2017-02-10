@@ -21,14 +21,16 @@
   // Needed for `root` reference in uncompiled source files.
   window.root = this;
 </script>
-<script src="../src/shifty.core.js"></script>
-<script src="../src/shifty.formulas.js"></script>
-<script src="../src/shifty.interpolate.js"></script>
-<script src="../src/shifty.token.js"></script>
-<script src="../src/shifty.bezier.js"></script>
+  <script src="/assets/shifty.js"></script>
 
 <script>
   (function () {
+    var Tweenable = shifty.Tweenable;
+    var now = shifty.now;
+    var interpolate = shifty.interpolate;
+    var setBezierFunction = shifty.setBezierFunction;
+    var unsetBezierFunction = shifty.unsetBezierFunction;
+
     window.console = window.console || {
       log: function () {}
     };
@@ -395,7 +397,7 @@
     test('Interpolate can compute the midpoint of two numbers',
         function () {
 
-      var interpolated = Tweenable.interpolate({ x: 0 }, { x: 10 }, .5);
+      var interpolated = interpolate({ x: 0 }, { x: 10 }, .5);
 
       equals(5, interpolated.x, 'Midpoint was computed');
     });
@@ -403,22 +405,22 @@
     test('Interpolate can compute the midpoint of two token strings',
         function () {
 
-      var interpolated = Tweenable.interpolate({ color: '#000' }, { color: '#fff' }, .5);
+      var interpolated = interpolate({ color: '#000' }, { color: '#fff' }, .5);
 
       equals('rgb(127,127,127)', interpolated.color,
           'Midpoint color was computed');
     });
 
     test('Interpolate accounts for optional delay', function () {
-      var interpolated = Tweenable.interpolate(
+      var interpolated = interpolate(
         { x: 0 }, { x: 10 }, .5, 'linear', .5);
       equals(interpolated.x, 0, 'Beginning of delayed tween was computed');
 
-      interpolated = Tweenable.interpolate(
+      interpolated = interpolate(
         { x: 0 }, { x: 10 }, 1.0, 'linear', .5);
       equals(interpolated.x, 5, 'Midpoint delayed tween was computed');
 
-      interpolated = Tweenable.interpolate(
+      interpolated = interpolate(
         { x: 0 }, { x: 10 }, 1.5, 'linear', .5);
       equals(interpolated.x, 10, 'End of delayed tween was computed');
     });
@@ -428,7 +430,7 @@
         return pos * 2;
       };
 
-      var interpolated = Tweenable.interpolate(
+      var interpolated = interpolate(
         { x: 0 }, { x: 10 }, .5, easingFn);
       equals(interpolated.x, 10,
         'Accepts and applies non-Tweenable#formula easing function');
@@ -441,13 +443,13 @@
       var from = { color: 'rgb(0,128,255)' }
           ,to = { color: 'rgb(128,255,0)' };
 
-      var interpolated = Tweenable.interpolate(from, to, 0);
+      var interpolated = interpolate(from, to, 0);
       equals(interpolated.color, from.color,
           'The initial interpolated value is the same as the initial color');
-      interpolated = Tweenable.interpolate(from, to, .5);
+      interpolated = interpolate(from, to, .5);
       equals(interpolated.color, 'rgb(64,191,127)',
           'The interpolated value at 50% is a 50/50 mixture of the start and end colors');
-      interpolated = Tweenable.interpolate(from, to, 1);
+      interpolated = interpolate(from, to, 1);
       equals(interpolated.color, to.color,
           'The final interpolated value is the same as the target color');
     });
@@ -456,15 +458,15 @@
       var from = { color: 'rgb(0,128,255)', x: 0 }
           ,to =  { color: 'rgb(128,255,0)', x: 10 };
 
-      var interpolated = Tweenable.interpolate(from, to, 0);
+      var interpolated = interpolate(from, to, 0);
       equals(interpolated.color, from.color,
           'The initial interpolated value is the same as the initial color');
-      interpolated = Tweenable.interpolate(from, to, .5);
+      interpolated = interpolate(from, to, .5);
       equals(interpolated.color, 'rgb(64,191,127)',
           'The interpolated color value at 50% is a 50/50 mixture of the start and end colors');
       equals(interpolated.x, 5,
           'The interpolated x value at 50% is the midpoint of the start and end x values');
-      interpolated = Tweenable.interpolate(from, to, 1);
+      interpolated = interpolate(from, to, 1);
       equals(interpolated.color, to.color,
           'The final interpolated value is the same as the target color');
     });
@@ -473,13 +475,13 @@
       var from = { color: '#ff00ff' }
           ,to =  { color: '#00ff00' };
 
-      var interpolated = Tweenable.interpolate(from, to, 0);
+      var interpolated = interpolate(from, to, 0);
       equals(interpolated.color, 'rgb(255,0,255)',
           'The initial interpolated value is the rgb equivalent as the initial color');
-      interpolated = Tweenable.interpolate(from, to, .5);
+      interpolated = interpolate(from, to, .5);
       equals(interpolated.color, 'rgb(127,127,127)',
           'The interpolated value at 50% is a 50/50 mixture of the start and end colors');
-      interpolated = Tweenable.interpolate(from, to, 1);
+      interpolated = interpolate(from, to, 1);
       equals(interpolated.color, 'rgb(0,255,0)',
           'The final interpolated value is the rgb equivalent as the target color');
     });
@@ -488,13 +490,13 @@
       var from = { color: 'rgb(0,128,255) rgb(255,0,255)' }
           ,to =  { color: 'rgb(128,255,0) rgb(0,255,0)' };
 
-      var interpolated = Tweenable.interpolate(from, to, 0);
+      var interpolated = interpolate(from, to, 0);
       equals(interpolated.color, from.color,
           'The initial interpolated value is the same as the initial color');
-      interpolated = Tweenable.interpolate(from, to, .5);
+      interpolated = interpolate(from, to, .5);
       equals(interpolated.color, 'rgb(64,191,127) rgb(127,127,127)',
           'The interpolated value at 50% is a 50/50 mixture of the start and end colors');
-      interpolated = Tweenable.interpolate(from, to, 1);
+      interpolated = interpolate(from, to, 1);
       equals(interpolated.color, to.color,
           'The final interpolated value is the same as the target color');
     });
@@ -504,12 +506,12 @@
           ,to =  { color: 'rgb(255,255,255)' }
           ,easing = 'linear easeInQuad easeInCubic';
 
-      var interpolated = Tweenable.interpolate(from, to, .5, easing);
-      var interpolatedR = parseInt(Tweenable.interpolate(
+      var interpolated = interpolate(from, to, .5, easing);
+      var interpolatedR = parseInt(interpolate(
                             {r:0}, {r:255}, .5, 'linear').r, 10);
-      var interpolatedG = parseInt(Tweenable.interpolate(
+      var interpolatedG = parseInt(interpolate(
                             {g:0}, {g:255}, .5, 'easeInQuad').g, 10);
-      var interpolatedB = parseInt(Tweenable.interpolate(
+      var interpolatedB = parseInt(interpolate(
                             {b:0}, {b:255}, .5, 'easeInCubic').b, 10);
       var targetString = 'rgb(' + interpolatedR + ',' + interpolatedG + ','
           + interpolatedB + ')';
@@ -523,12 +525,12 @@
           ,to =  { color: 'rgb(255,255,255)' }
           ,easing = 'linear easeInQuad';
 
-      var interpolated = Tweenable.interpolate(from, to, .5, easing);
-      var interpolatedR = parseInt(Tweenable.interpolate(
+      var interpolated = interpolate(from, to, .5, easing);
+      var interpolatedR = parseInt(interpolate(
                             {r:0}, {r:255}, .5, 'linear').r, 10);
-      var interpolatedG = parseInt(Tweenable.interpolate(
+      var interpolatedG = parseInt(interpolate(
                             {g:0}, {g:255}, .5, 'easeInQuad').g, 10);
-      var interpolatedB = parseInt(Tweenable.interpolate(
+      var interpolatedB = parseInt(interpolate(
                             {b:0}, {b:255}, .5, 'easeInQuad').b, 10);
       var targetString = 'rgb(' + interpolatedR + ',' + interpolatedG + ','
           + interpolatedB + ')';
@@ -542,13 +544,13 @@
           ,to =  { transform: 'translateX(50)' }
           ,easing = 'linear';
 
-      var interpolated = Tweenable.interpolate(from, to, 0);
+      var interpolated = interpolate(from, to, 0);
       equals(interpolated.transform, 'translateX(-50)',
           'The initial interpolated value is the same as the initial transform');
-      interpolated = Tweenable.interpolate(from, to, .5);
+      interpolated = interpolate(from, to, .5);
       equals(interpolated.transform, 'translateX(0)',
           'The interpolated value at 50% is at the midpoint of the start and end translations');
-      interpolated = Tweenable.interpolate(from, to, 1);
+      interpolated = interpolate(from, to, 1);
       equals(interpolated.transform, 'translateX(50)',
           'The final interpolated value is the same as the target transform');
     });
@@ -579,7 +581,7 @@
         function () {
         var from = { x: '2' };
         var to = { x: '3' };
-        var interpolated = Tweenable.interpolate(from, to, 0.5);
+        var interpolated = interpolate(from, to, 0.5);
 
         equals(interpolated.x, '2.5',
             'Token-less strings were successfully interpolated');
@@ -589,7 +591,7 @@
       var from = { x: '0px 0px' };
       var to = { x: '100px 100px' };
 
-      var interpolated = Tweenable.interpolate(from, to, .5);
+      var interpolated = interpolate(from, to, .5);
       equals(interpolated.x, '50px 50px', 'The string was interpolated correctly');
     });
 
@@ -597,42 +599,42 @@
     module('Bezier extension');
 
     test('Can create a linear Bezier easing curve', function () {
-      Tweenable.setBezierFunction('bezier-linear', 0.250, 0.250, 0.750, 0.750);
+      setBezierFunction('bezier-linear', 0.250, 0.250, 0.750, 0.750);
 
       equals(
-        Tweenable.interpolate({x: 0}, {x: 10}, 0.25, 'linear').x.toFixed(1),
-        Tweenable.interpolate({x: 0}, {x: 10}, 0.25, 'bezier-linear').x.toFixed(1),
+        interpolate({x: 0}, {x: 10}, 0.25, 'linear').x.toFixed(1),
+        interpolate({x: 0}, {x: 10}, 0.25, 'bezier-linear').x.toFixed(1),
         'linear and dynamic bezier-linear are reasonably equivalent at 0.25');
       equals(
-        Tweenable.interpolate({x: 0}, {x: 10}, 0.5, 'linear').x.toFixed(1),
-        Tweenable.interpolate({x: 0}, {x: 10}, 0.5, 'bezier-linear').x.toFixed(1),
+        interpolate({x: 0}, {x: 10}, 0.5, 'linear').x.toFixed(1),
+        interpolate({x: 0}, {x: 10}, 0.5, 'bezier-linear').x.toFixed(1),
         'linear and dynamic bezier-linear are reasonably equivalent at 0.5');
       equals(
-        Tweenable.interpolate({x: 0}, {x: 10}, 0.75, 'linear').x.toFixed(1),
-        Tweenable.interpolate({x: 0}, {x: 10}, 0.75, 'bezier-linear').x.toFixed(1),
+        interpolate({x: 0}, {x: 10}, 0.75, 'linear').x.toFixed(1),
+        interpolate({x: 0}, {x: 10}, 0.75, 'bezier-linear').x.toFixed(1),
         'linear and dynamic bezier-linear are reasonably equivalent at 0.75');
     });
 
     test('Can create a "stretched" linear Bezier easing curve', function () {
-      Tweenable.setBezierFunction('bezier-stretched-linear', 0, 0, 1, 1);
+      setBezierFunction('bezier-stretched-linear', 0, 0, 1, 1);
 
       equals(
-        Tweenable.interpolate({x: 0}, {x: 10}, 0.25, 'linear').x.toFixed(1),
-        Tweenable.interpolate({x: 0}, {x: 10}, 0.25, 'bezier-stretched-linear').x.toFixed(1),
+        interpolate({x: 0}, {x: 10}, 0.25, 'linear').x.toFixed(1),
+        interpolate({x: 0}, {x: 10}, 0.25, 'bezier-stretched-linear').x.toFixed(1),
         'linear and dynamic bezier-stretched-linear are reasonably equivalent at 0.25');
       equals(
-        Tweenable.interpolate({x: 0}, {x: 10}, 0.5, 'linear').x.toFixed(1),
-        Tweenable.interpolate({x: 0}, {x: 10}, 0.5, 'bezier-stretched-linear').x.toFixed(1),
+        interpolate({x: 0}, {x: 10}, 0.5, 'linear').x.toFixed(1),
+        interpolate({x: 0}, {x: 10}, 0.5, 'bezier-stretched-linear').x.toFixed(1),
         'linear and dynamic bezier-stretched-linear are reasonably equivalent at 0.5');
       equals(
-        Tweenable.interpolate({x: 0}, {x: 10}, 0.75, 'linear').x.toFixed(1),
-        Tweenable.interpolate({x: 0}, {x: 10}, 0.75, 'bezier-stretched-linear').x.toFixed(1),
+        interpolate({x: 0}, {x: 10}, 0.75, 'linear').x.toFixed(1),
+        interpolate({x: 0}, {x: 10}, 0.75, 'bezier-stretched-linear').x.toFixed(1),
         'linear and dynamic bezier-stretched-linear are reasonably equivalent at 0.75');
     });
 
     test('Can remove a Bezier easing curve', function () {
-      Tweenable.setBezierFunction('bezier-linear', 0, 0, 1, 1);
-      Tweenable.unsetBezierFunction('bezier-linear');
+      setBezierFunction('bezier-linear', 0, 0, 1, 1);
+      unsetBezierFunction('bezier-linear');
       ok(!Tweenable.prototype['bezier-linear'],
         '"bezier-linear" was deleted');
     });
@@ -641,7 +643,7 @@
         function () {
 
       var easingFunction =
-          Tweenable.setBezierFunction('decoration-test', .2, .4, .6, .8);
+          setBezierFunction('decoration-test', .2, .4, .6, .8);
 
       equals(easingFunction.displayName, 'decoration-test',
         'Easing function was decorated with name');

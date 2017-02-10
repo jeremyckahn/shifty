@@ -12,7 +12,7 @@
  *  Open source under the BSD License.
  *  Easing Equations (c) 2003 Robert Penner, all rights reserved.
  */
-export default {
+const easingFunctions = {
   linear: function (pos) {
     return pos;
   },
@@ -197,4 +197,5 @@ export default {
     return Math.pow(pos,0.25);
   }
 };
-//});
+
+export { easingFunctions };
