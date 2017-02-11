@@ -9,10 +9,6 @@ const DEFAULT_EASING = 'linear';
 const DEFAULT_DURATION = 500;
 const UPDATE_TIME = 1000 / 60;
 
-export const now = typeof SHIFTY_DEBUG_NOW !== 'undefined' ?
-  SHIFTY_DEBUG_NOW
-  : (Date.now || (_ => +new Date()));
-
 const DEFAULT_SCHEDULE_FUNCTION = (typeof window !== 'undefined') ?
   // requestAnimationFrame() shim by Paul Irish (modified for Shifty)
   // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
@@ -127,7 +123,6 @@ export function tweenProps (
   var normalizedPosition =
       forPosition < timestamp ? 0 : (forPosition - timestamp) / duration;
 
-
   var prop;
   var easingObjectProp;
   var easingFn;
@@ -188,14 +183,14 @@ var timeoutHandler_offset;
  * Tweenable#seek.
  * @private
  */
-function timeoutHandler (tweenable, timestamp, delay, duration, currentState,
+function _timeoutHandler (tweenable, timestamp, delay, duration, currentState,
   originalState, targetState, easing, step, schedule,
   opt_currentTimeOverride) {
 
   timeoutHandler_endTime = timestamp + delay + duration;
 
   timeoutHandler_currentTime =
-  Math.min(opt_currentTimeOverride || now(), timeoutHandler_endTime);
+  Math.min(opt_currentTimeOverride || Tweenable.now(), timeoutHandler_endTime);
 
   timeoutHandler_isEnded =
     timeoutHandler_currentTime >= timeoutHandler_endTime;
@@ -284,6 +279,9 @@ export function Tweenable (opt_initialState, opt_config) {
   }
 }
 
+Tweenable._timeoutHandler = _timeoutHandler;
+Tweenable.now = (Date.now || (_ => +new Date()));
+
 /**
  * Configure and start a tween.
  * @method tween
@@ -302,7 +300,7 @@ Tweenable.prototype.tween = function (opt_config) {
     this.setConfig(opt_config);
   }
 
-  this._timestamp = now();
+  this._timestamp = Tweenable.now();
   this._start(this.get(), this._attachment);
   return this.resume();
 };
@@ -358,7 +356,7 @@ Tweenable.prototype.setConfig = function (config) {
 
   var self = this;
   this._timeoutHandler = function () {
-    timeoutHandler(self,
+    Tweenable._timeoutHandler(self,
       self._timestamp,
       self._delay,
       self._duration,
@@ -413,7 +411,7 @@ Tweenable.prototype.set = function (state) {
  * @chainable
  */
 Tweenable.prototype.pause = function () {
-  this._pausedAtTime = now();
+  this._pausedAtTime = Tweenable.now();
   this._isPaused = true;
   return this;
 };
@@ -425,7 +423,7 @@ Tweenable.prototype.pause = function () {
  */
 Tweenable.prototype.resume = function () {
   if (this._isPaused) {
-    this._timestamp += now() - this._pausedAtTime;
+    this._timestamp += Tweenable.now() - this._pausedAtTime;
   }
 
   this._isPaused = false;
@@ -447,7 +445,7 @@ Tweenable.prototype.resume = function () {
  */
 Tweenable.prototype.seek = function (millisecond) {
   millisecond = Math.max(millisecond, 0);
-  var currentTime = now();
+  var currentTime = Tweenable.now();
 
   if ((this._timestamp + millisecond) === 0) {
     return this;
@@ -459,9 +457,9 @@ Tweenable.prototype.seek = function (millisecond) {
     this._isTweening = true;
     this._isPaused = false;
 
-    // If the animation is not running, call timeoutHandler to make sure that
+    // If the animation is not running, call _timeoutHandler to make sure that
     // any step handlers are run.
-    timeoutHandler(this,
+    Tweenable._timeoutHandler(this,
       this._timestamp,
       this._delay,
       this._duration,
@@ -580,8 +578,7 @@ Tweenable.prototype.formula = clone(easingFunctions);
 formula = Tweenable.prototype.formula;
 
 shallowCopy(Tweenable, {
-  'now': now
-  ,'each': each
+  'each': each
   ,'tweenProps': tweenProps
   ,'tweenProp': tweenProp
   ,'applyFilter': applyFilter
@@ -591,8 +588,3 @@ shallowCopy(Tweenable, {
 });
 
 // `root` is provided in the intro/outro files.
-
-// A hook used for unit testing.
-if (typeof SHIFTY_DEBUG_NOW === 'function') {
-  root.timeoutHandler = timeoutHandler;
-}

@@ -1,4 +1,3 @@
-// jshint maxlen:100
 import { Tweenable } from './shifty.core';
 /**
  * The Bezier magic in this file is adapted/copied almost wholesale from
