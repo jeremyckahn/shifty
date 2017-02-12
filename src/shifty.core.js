@@ -10,24 +10,18 @@ const DEFAULT_DURATION = 500;
 const UPDATE_TIME = 1000 / 60;
 const root = typeof window !== 'undefined' ? window : global;
 
-const DEFAULT_SCHEDULE_FUNCTION = (typeof window !== 'undefined') ?
-  // requestAnimationFrame() shim by Paul Irish (modified for Shifty)
-  // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-  (
-    window.requestAnimationFrame
-    || window.webkitRequestAnimationFrame
-    || window.oRequestAnimationFrame
-    || window.msRequestAnimationFrame
-    || (window.mozCancelRequestAnimationFrame &&
-        window.mozRequestAnimationFrame)
-    || setTimeout
-  )
-  :
-  setTimeout;
+// requestAnimationFrame() shim by Paul Irish (modified for Shifty)
+// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+const DEFAULT_SCHEDULE_FUNCTION = (
+  root.requestAnimationFrame
+  || root.webkitRequestAnimationFrame
+  || root.oRequestAnimationFrame
+  || root.msRequestAnimationFrame
+  || (root.mozCancelRequestAnimationFrame && root.mozRequestAnimationFrame)
+  || setTimeout
+);
 
-function noop () {
-  // NOOP!
-}
+const noop = () => {};
 
 /**
  * Handy shortcut for doing a for-in loop. This is not a "normal" each
