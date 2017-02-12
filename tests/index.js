@@ -99,7 +99,7 @@ describe('shifty', function () {
       });
 
       describe('custom easing functions', () => {
-        const easingFn = pos => pos * 2;
+        let easingFn = pos => pos * 2;
 
         it('can be given an easing function directly', function () {
           Tweenable.now = _ => 0;
@@ -114,12 +114,12 @@ describe('shifty', function () {
             'The easing curve is used at the beginning of the tween');
 
           Tweenable.now = _ => 500;
-          forceInternalUpdate(tweenable);
+          forceInternalUpdate();
           assert.equal(tweenable.get().x, 10,
             'The easing curve is used at the middle of the tween');
 
           Tweenable.now = _ => 1000;
-          forceInternalUpdate(tweenable);
+          forceInternalUpdate();
           assert.equal(tweenable.get().x, 20,
             'The easing curve is used at the end of the tween');
         });
@@ -138,14 +138,38 @@ describe('shifty', function () {
             'The easing curve is used at the beginning of the tween');
 
           Tweenable.now = _ => 500;
-          forceInternalUpdate(tweenable);
+          forceInternalUpdate();
           assert.equal(tweenable.get().x, 10,
             'The easing curve is used at the middle of the tween');
 
           Tweenable.now = _ => 1000;
-          forceInternalUpdate(tweenable);
+          forceInternalUpdate();
           assert.equal(tweenable.get().x, 20,
             'The easing curve is used at the end of the tween');
+        });
+
+        it('supports tokens', () => {
+          Tweenable.now = _ => 0;
+          easingFn = pos => pos;
+          tweenable.tween({
+            from: { x: 'rgb(0,0,0)' }
+            ,to: { x: 'rgb(255,255,255)' }
+            ,duration: 1000
+            ,easing: { x: easingFn }
+          });
+
+          assert.equal(tweenable.get().x, 'rgb(0,0,0)',
+              'The easing curve is used at the beginning of the tween');
+
+          Tweenable.now = _ => 500;
+          forceInternalUpdate();
+          assert.equal(tweenable.get().x, 'rgb(127,127,127)',
+              'The easing curve is used at the middle of the tween');
+
+          Tweenable.now = _ => 1000;
+          forceInternalUpdate();
+          assert.equal(tweenable.get().x, 'rgb(255,255,255)',
+              'The easing curve is used at the end of the tween');
         });
       });
     });
