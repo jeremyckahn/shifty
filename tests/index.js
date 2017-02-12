@@ -172,6 +172,118 @@ describe('shifty', function () {
               'The easing curve is used at the end of the tween');
         });
       });
+
+      describe('#pause', () => {
+        it('moves the end time of the tween', function () {
+          Tweenable.now = _ => 0;
+          tweenable.tween({
+            from: { x: 0 },
+            to: { x: 100 },
+            duration: 1000
+          });
+
+          Tweenable.now = _ => 500;
+          forceInternalUpdate();
+          assert.equal(tweenable.get().x, 50,
+              'Pre-pause: The middle of the tween equates to .5 of the target value');
+          tweenable.pause();
+
+          Tweenable.now = _ => 2000;
+          tweenable.resume();
+          forceInternalUpdate();
+          assert.equal(tweenable.get().x, 50,
+              'The tween has not changed in the time that it has been paused');
+
+          Tweenable.now = _ => 2500;
+          forceInternalUpdate();
+          assert.equal(tweenable.get().x, 100,
+              'The tween ends at the modified end time');
+        });
+      });
+
+      describe('#seek', () => {
+        it('forces the tween to a specific point on the timeline', function () {
+          Tweenable.now = _ => 0;
+          tweenable.tween({
+            from: { x: 0 },
+            to: { x: 100 },
+            duration: 1000
+          });
+
+          tweenable.seek(500);
+          assert.equal(tweenable._timestamp, -500, 'The timestamp was properly offset');
+        });
+
+        it('provides correct value to step handler via seek() (issue #77)', function () {
+          var computedX;
+          var tweenable = new Tweenable(null, {
+            from: { x: 0 },
+            to: { x: 100 },
+            duration: 1000,
+            step: function (state) {
+              computedX = state.x;
+            }
+          });
+
+          tweenable.seek(500);
+          assert.equal(computedX, 50, 'Step handler got correct state value');
+        });
+
+        it('The seek() parameter cannot be less than 0', function () {
+          Tweenable.now = _ => 0;
+          tweenable.tween({
+            from: { x: 0 },
+            to: { x: 100 },
+            duration: 1000
+          });
+
+          tweenable.seek(-500);
+          assert.equal(tweenable._timestamp, 0, 'The seek() parameter was forced to 0');
+        });
+
+        it('no-ops if seeking to the current millisecond', function () {
+          var stepHandlerCallCount = 0;
+          Tweenable.now = _ => 0;
+
+          tweenable.tween({
+            from: { x: 0 },
+            to: { x: 100 },
+            duration: 1000,
+            step: function () {
+              stepHandlerCallCount++;
+            }
+          });
+
+          tweenable.seek(50);
+          tweenable.stop();
+          tweenable.seek(50);
+          assert.equal(stepHandlerCallCount, 1,
+            'The second seek() call did not trigger any handlers');
+        });
+
+        it('keeps time reference (rel #60)', function () {
+          var tweenable = new Tweenable({}, {
+            from: { x: 0 },
+            to: { x: 100 },
+            duration: 100
+          });
+
+          // express a delay in time between the both time it's called
+          // TODO: This could probably be written in a much clearer way.
+          Tweenable.now = function () {
+            Tweenable.now = function () {return 100;};
+            return 98;
+          };
+
+          var callCount = 0;
+          tweenable.stop = function () {
+            callCount += 1;
+          };
+
+          tweenable.seek(98);
+          assert.equal(callCount, 0, 'stop should not have been called');
+        });
+      });
     });
   });
 });
