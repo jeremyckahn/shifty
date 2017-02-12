@@ -57,7 +57,7 @@ describe('shifty', function () {
     });
 
     describe('#tween', () => {
-      it('Midpoints of a tween are correctly computed', function () {
+      it('midpoints of a tween are correctly computed', function () {
         Tweenable.now = _ => 0;
         tweenable.tween({
           from: { x: 0 }
@@ -69,15 +69,84 @@ describe('shifty', function () {
         Tweenable.now = _ => 500;
         forceInternalUpdate();
         assert.equal(tweenable.get().x, 50,
-            'The middle of the tween equates to .5 of the target value');
+          'The middle of the tween equates to .5 of the target value');
         Tweenable.now = _ => 1000;
         forceInternalUpdate();
         assert.equal(tweenable.get().x, 100,
-            'The end of the tween equates to 1.0 of the target value');
+          'The end of the tween equates to 1.0 of the target value');
         Tweenable.now = _ => 100000;
         forceInternalUpdate();
         assert.equal(tweenable.get().x, 100,
-            'Anything after end of the tween equates to 1.0 of the target value');
+          'Anything after end of the tween equates to 1.0 of the target value');
+      });
+
+      it('step handler receives timestamp offset', function () {
+        Tweenable.now = _ => 0;
+        var capturedOffset;
+        tweenable.tween({
+          from: { x: 0 }
+          ,to: { x: 100 }
+          ,duration: 1000
+          ,step: function (state, attachment, offset) {
+            capturedOffset = offset;
+          }
+        });
+
+        Tweenable.now = _ => 500;
+        forceInternalUpdate();
+        assert.equal(capturedOffset, 500,
+          'The offset was passed along to the step handler');
+      });
+
+      describe('custom easing functions', () => {
+        const easingFn = pos => pos * 2;
+
+        it('can be given an easing function directly', function () {
+          Tweenable.now = _ => 0;
+          tweenable.tween({
+            from: { x: 0 }
+            ,to: { x: 10 }
+            ,duration: 1000
+            ,easing: easingFn
+          });
+
+          assert.equal(tweenable.get().x, 0,
+            'The easing curve is used at the beginning of the tween');
+
+          Tweenable.now = _ => 500;
+          forceInternalUpdate(tweenable);
+          assert.equal(tweenable.get().x, 10,
+            'The easing curve is used at the middle of the tween');
+
+          Tweenable.now = _ => 1000;
+          forceInternalUpdate(tweenable);
+          assert.equal(tweenable.get().x, 20,
+            'The easing curve is used at the end of the tween');
+        });
+
+        it('can be given an Object of easing functions directly',
+            function () {
+          Tweenable.now = _ => 0;
+          tweenable.tween({
+            from: { x: 0 }
+            ,to: { x: 10 }
+            ,duration: 1000
+            ,easing: { x: easingFn }
+          });
+
+          assert.equal(tweenable.get().x, 0,
+            'The easing curve is used at the beginning of the tween');
+
+          Tweenable.now = _ => 500;
+          forceInternalUpdate(tweenable);
+          assert.equal(tweenable.get().x, 10,
+            'The easing curve is used at the middle of the tween');
+
+          Tweenable.now = _ => 1000;
+          forceInternalUpdate(tweenable);
+          assert.equal(tweenable.get().x, 20,
+            'The easing curve is used at the end of the tween');
+        });
       });
     });
   });
