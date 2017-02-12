@@ -349,6 +349,70 @@ describe('shifty', function () {
       });
     });
 
+    describe('delay support', () => {
+      it('tween does not start until delay is met', function () {
+        Tweenable.now = _ => 0;
+        tweenable.tween({
+          from: { x: 0 }
+          ,to: { x: 10 }
+          ,delay: 500
+          ,duration: 1000
+        });
+
+        assert.equal(tweenable.get().x, 0,
+          'The tween starts at the initial value');
+
+        Tweenable.now = _ => 250;
+        forceInternalUpdate(tweenable);
+        assert.equal(tweenable.get().x, 0,
+          'The tween is interpolated for position 0 until the delay has been met');
+
+        Tweenable.now = _ => 1000;
+        forceInternalUpdate(tweenable);
+        assert.equal(tweenable.get().x, 5,
+          'The delay offset is accounted for during the tween');
+
+        Tweenable.now = _ => 1500;
+        forceInternalUpdate(tweenable);
+        assert.equal(tweenable.get().x, 10,
+          'The tween ends at position 1 with the delay');
+
+        Tweenable.now = _ => 99999;
+        forceInternalUpdate(tweenable);
+        assert.equal(tweenable.get().x, 10,
+          'The tween ends does not go past position 1 after completing');
+      });
+
+      it('pause() functionality is not affected by delay', function () {
+        var delay = 5000;
+        Tweenable.now = _ => 0;
+
+        tweenable.tween({
+          from: { x: 0 },
+          to: { x: 100 },
+          delay: delay,
+          duration: 1000
+        });
+
+        Tweenable.now = _ => 500 + delay;
+        forceInternalUpdate(tweenable);
+        assert.equal(tweenable.get().x, 50,
+          'Pre-pause: The middle of the tween equates to .5 of the target value');
+
+        tweenable.pause();
+        Tweenable.now = _ => 2000 + delay;
+        tweenable.resume();
+        forceInternalUpdate(tweenable);
+        assert.equal(tweenable.get().x, 50,
+          'The tween has not changed in the time that it has been paused');
+
+        Tweenable.now = _ => 2500 + delay;
+        forceInternalUpdate(tweenable);
+        assert.equal(tweenable.get().x, 100,
+          'The tween ends at the modified end time');
+      });
+    });
+
     describe('interpolate', () => {
       it('computes the midpoint of two numbers', function () {
         var interpolated = interpolate({ x: 0 }, { x: 10 }, 0.5);
