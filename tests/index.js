@@ -385,6 +385,143 @@ describe('shifty', function () {
         assert.equal(interpolated.x, 10,
           'Accepts and applies non-Tweenable#formula easing function');
       });
+
+      describe('token support', () => {
+        it('can tween an rgb color', function () {
+          var from = { color: 'rgb(0,128,255)' }
+              ,to = { color: 'rgb(128,255,0)' };
+
+          var interpolated = interpolate(from, to, 0);
+          assert.equal(interpolated.color, from.color,
+            'The initial interpolated value is the same as the initial color');
+          interpolated = interpolate(from, to, 0.5);
+          assert.equal(interpolated.color, 'rgb(64,191,127)',
+            'The interpolated value at 50% is a 50/50 mixture of the start and end colors');
+          interpolated = interpolate(from, to, 1);
+          assert.equal(interpolated.color, to.color,
+            'The final interpolated value is the same as the target color');
+        });
+
+        it('can tween an rgb color with a number in the tween', function () {
+          var from = { color: 'rgb(0,128,255)', x: 0 }
+              ,to =  { color: 'rgb(128,255,0)', x: 10 };
+
+          var interpolated = interpolate(from, to, 0);
+          assert.equal(interpolated.color, from.color,
+            'The initial interpolated value is the same as the initial color');
+          interpolated = interpolate(from, to, 0.5);
+          assert.equal(interpolated.color, 'rgb(64,191,127)',
+            'The interpolated color value at 50% is a 50/50 mixture of the start and end colors');
+          assert.equal(interpolated.x, 5,
+            'The interpolated x value at 50% is the midpoint of the start and end x values');
+          interpolated = interpolate(from, to, 1);
+          assert.equal(interpolated.color, to.color,
+            'The final interpolated value is the same as the target color');
+        });
+
+        it('can tween hex color values', function () {
+          var from = { color: '#ff00ff' }
+              ,to =  { color: '#00ff00' };
+
+          var interpolated = interpolate(from, to, 0);
+          assert.equal(interpolated.color, 'rgb(255,0,255)',
+            'The initial interpolated value is the rgb equivalent as the initial color');
+          interpolated = interpolate(from, to, 0.5);
+          assert.equal(interpolated.color, 'rgb(127,127,127)',
+            'The interpolated value at 50% is a 50/50 mixture of the start and end colors');
+          interpolated = interpolate(from, to, 1);
+          assert.equal(interpolated.color, 'rgb(0,255,0)',
+            'The final interpolated value is the rgb equivalent as the target color');
+        });
+
+
+        it('can tween multiple rgb color tokens', function () {
+          var from = { color: 'rgb(0,128,255) rgb(255,0,255)' }
+              ,to =  { color: 'rgb(128,255,0) rgb(0,255,0)' };
+
+          var interpolated = interpolate(from, to, 0);
+          assert.equal(interpolated.color, from.color,
+            'The initial interpolated value is the same as the initial color');
+          interpolated = interpolate(from, to, 0.5);
+          assert.equal(interpolated.color, 'rgb(64,191,127) rgb(127,127,127)',
+            'The interpolated value at 50% is a 50/50 mixture of the start and end colors');
+          interpolated = interpolate(from, to, 1);
+          assert.equal(interpolated.color, to.color,
+            'The final interpolated value is the same as the target color');
+        });
+
+        it('each token chunk can have it\'s own easing curve', function () {
+          var from = { color: 'rgb(0,0,0)' }
+              ,to =  { color: 'rgb(255,255,255)' }
+              ,easing = 'linear easeInQuad easeInCubic';
+
+          var interpolated = interpolate(from, to, 0.5, easing);
+          var interpolatedR = parseInt(interpolate(
+            {r:0}, {r:255}, 0.5, 'linear').r, 10);
+          var interpolatedG = parseInt(interpolate(
+            {g:0}, {g:255}, 0.5, 'easeInQuad').g, 10);
+          var interpolatedB = parseInt(interpolate(
+            {b:0}, {b:255}, 0.5, 'easeInCubic').b, 10);
+          var targetString = 'rgb(' + interpolatedR + ',' + interpolatedG + ','
+            + interpolatedB + ')';
+
+          assert.equal(interpolated.color, targetString,
+            'The computed tween value respects the easing strings supplied and their cardinality');
+        });
+
+        it('missing token eases inherit from the last easing listed', function () {
+          var from = { color: 'rgb(0,0,0)' }
+              ,to =  { color: 'rgb(255,255,255)' }
+              ,easing = 'linear easeInQuad';
+
+          var interpolated = interpolate(from, to, 0.5, easing);
+          var interpolatedR = parseInt(interpolate(
+            {r:0}, {r:255}, 0.5, 'linear').r, 10);
+          var interpolatedG = parseInt(interpolate(
+            {g:0}, {g:255}, 0.5, 'easeInQuad').g, 10);
+          var interpolatedB = parseInt(interpolate(
+            {b:0}, {b:255}, 0.5, 'easeInQuad').b, 10);
+          var targetString = 'rgb(' + interpolatedR + ',' + interpolatedG + ','
+            + interpolatedB + ')';
+
+          assert.equal(interpolated.color, targetString,
+            'The computed tween value inherits the last tween listed if there is a cardinality mismatch');
+        });
+
+        it('can tween a negative value token to a positive value', function () {
+          var from = { transform: 'translateX(-50)' }
+              ,to =  { transform: 'translateX(50)' }
+              ,easing = 'linear';
+
+          var interpolated = interpolate(from, to, 0);
+          assert.equal(interpolated.transform, 'translateX(-50)',
+            'The initial interpolated value is the same as the initial transform');
+          interpolated = interpolate(from, to, 0.5);
+          assert.equal(interpolated.transform, 'translateX(0)',
+            'The interpolated value at 50% is at the midpoint of the start and end translations');
+          interpolated = interpolate(from, to, 1);
+          assert.equal(interpolated.transform, 'translateX(50)',
+            'The final interpolated value is the same as the target transform');
+        });
+
+        it('can interpolate two number strings that have no non-number token structure',
+          function () {
+          var from = { x: '2' };
+          var to = { x: '3' };
+          var interpolated = interpolate(from, to, 0.5);
+
+          assert.equal(interpolated.x, '2.5',
+            'Token-less strings were successfully interpolated');
+        });
+
+        it('can tween css value pairs', function () {
+          var from = { x: '0px 0px' };
+          var to = { x: '100px 100px' };
+
+          var interpolated = interpolate(from, to, 0.5);
+          assert.equal(interpolated.x, '50px 50px', 'The string was interpolated correctly');
+        });
+      });
     });
   });
 });
