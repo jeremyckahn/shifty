@@ -1,4 +1,4 @@
-/* global describe:true, it: true */
+/* global describe:true, it:true, beforeEach:true, afterEach:true */
 import assert from 'assert';
 
 import {
@@ -8,25 +8,38 @@ import {
   unsetBezierFunction
 } from '../src/main';
 
-function forceInternalUpdate (tweenable) {
-  Tweenable._timeoutHandler(tweenable,
-    tweenable._timestamp,
-    tweenable._delay,
-    tweenable._duration,
-    tweenable._currentState,
-    tweenable._originalState,
-    tweenable._targetState,
-    tweenable._easing,
-    tweenable._step,
-    _ => _ // schedule
-  );
-}
+const now = Tweenable.now;
 
 describe('shifty', function () {
+  let tweenable, state;
+
+  function forceInternalUpdate () {
+    Tweenable._timeoutHandler(tweenable,
+      tweenable._timestamp,
+      tweenable._delay,
+      tweenable._duration,
+      tweenable._currentState,
+      tweenable._originalState,
+      tweenable._targetState,
+      tweenable._easing,
+      tweenable._step,
+      _ => _ // schedule
+    );
+  }
+
   describe('Tweenable', () => {
+    beforeEach(() => {
+      tweenable = new Tweenable();
+    });
+
+    afterEach(() => {
+      tweenable = undefined;
+      state = undefined;
+      Tweenable.now = now;
+    });
+
     it('can accept initial state', function () {
-      var tweenable = new Tweenable({ x: 5 });
-      var state;
+      tweenable = new Tweenable({ x: 5 });
 
       Tweenable.now = _ => 0;
       tweenable.tween({
@@ -38,7 +51,7 @@ describe('shifty', function () {
       });
 
       Tweenable.now = _ => 500;
-      forceInternalUpdate(tweenable);
+      forceInternalUpdate();
       assert.equal(state.x, 7.5,
         'data provided to the constuctor was used as "from" state');
     });
