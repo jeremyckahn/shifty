@@ -522,6 +522,63 @@ describe('shifty', function () {
           assert.equal(interpolated.x, '50px 50px', 'The string was interpolated correctly');
         });
       });
+
+      describe('bezier support', () => {
+        it('can create a linear bezier easing curve', function () {
+          setBezierFunction('bezier-linear', 0.250, 0.250, 0.750, 0.750);
+
+          assert.equal(
+            interpolate({x: 0}, {x: 10}, 0.25, 'linear').x.toFixed(1),
+            interpolate({x: 0}, {x: 10}, 0.25, 'bezier-linear').x.toFixed(1),
+            'linear and dynamic bezier-linear are reasonably equivalent at 0.25');
+          assert.equal(
+            interpolate({x: 0}, {x: 10}, 0.5, 'linear').x.toFixed(1),
+            interpolate({x: 0}, {x: 10}, 0.5, 'bezier-linear').x.toFixed(1),
+            'linear and dynamic bezier-linear are reasonably equivalent at 0.5');
+          assert.equal(
+            interpolate({x: 0}, {x: 10}, 0.75, 'linear').x.toFixed(1),
+            interpolate({x: 0}, {x: 10}, 0.75, 'bezier-linear').x.toFixed(1),
+            'linear and dynamic bezier-linear are reasonably equivalent at 0.75');
+        });
+
+        it('can create a "stretched" linear bezier easing curve', function () {
+          setBezierFunction('bezier-stretched-linear', 0, 0, 1, 1);
+
+          assert.equal(
+            interpolate({x: 0}, {x: 10}, 0.25, 'linear').x.toFixed(1),
+            interpolate({x: 0}, {x: 10}, 0.25, 'bezier-stretched-linear').x.toFixed(1),
+            'linear and dynamic bezier-stretched-linear are reasonably equivalent at 0.25');
+          assert.equal(
+            interpolate({x: 0}, {x: 10}, 0.5, 'linear').x.toFixed(1),
+            interpolate({x: 0}, {x: 10}, 0.5, 'bezier-stretched-linear').x.toFixed(1),
+            'linear and dynamic bezier-stretched-linear are reasonably equivalent at 0.5');
+          assert.equal(
+            interpolate({x: 0}, {x: 10}, 0.75, 'linear').x.toFixed(1),
+            interpolate({x: 0}, {x: 10}, 0.75, 'bezier-stretched-linear').x.toFixed(1),
+            'linear and dynamic bezier-stretched-linear are reasonably equivalent at 0.75');
+        });
+
+        it('can remove a bezier easing curve', function () {
+          setBezierFunction('bezier-linear', 0, 0, 1, 1);
+          unsetBezierFunction('bezier-linear');
+          assert(!Tweenable.prototype['bezier-linear'],
+            '"bezier-linear" was deleted');
+        });
+
+        it('bezier handle positions are stored on a custom easing function',
+          function () {
+
+          var easingFunction =
+            setBezierFunction('decoration-test', 0.2, 0.4, 0.6, 0.8);
+
+          assert.equal(easingFunction.displayName, 'decoration-test',
+            'Easing function was decorated with name');
+          assert.equal(easingFunction.x1, 0.2, 'Easing function was decorated with x1');
+          assert.equal(easingFunction.y1, 0.4, 'Easing function was decorated with y1');
+          assert.equal(easingFunction.x2, 0.6, 'Easing function was decorated with x2');
+          assert.equal(easingFunction.y2, 0.8, 'Easing function was decorated with y2');
+        });
+      });
     });
   });
 });
