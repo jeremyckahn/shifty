@@ -8,6 +8,7 @@ var formula;
 const DEFAULT_EASING = 'linear';
 const DEFAULT_DURATION = 500;
 const UPDATE_TIME = 1000 / 60;
+const root = typeof window !== 'undefined' ? window : global;
 
 const DEFAULT_SCHEDULE_FUNCTION = (typeof window !== 'undefined') ?
   // requestAnimationFrame() shim by Paul Irish (modified for Shifty)
@@ -586,5 +587,3 @@ shallowCopy(Tweenable, {
   ,'defaults': defaults
   ,'composeEasingObject': composeEasingObject
 });
-
-// `root` is provided in the intro/outro files.
