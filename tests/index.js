@@ -284,6 +284,69 @@ describe('shifty', function () {
           assert.equal(callCount, 0, 'stop should not have been called');
         });
       });
+
+      describe('#stop', () => {
+        it('stop(undefined) leaves a tween where it was stopped', function () {
+          Tweenable.now = _ => 0;
+          tweenable.tween({
+            from: { x: 0 },
+            to: { x: 100 },
+            duration: 1000
+          });
+
+          Tweenable.now = _ => 500;
+          forceInternalUpdate();
+          tweenable.stop();
+          assert.equal(tweenable.get().x, 50,
+            'The tweened value did not go to the end, it was left at its last updated position');
+          assert.equal(tweenable._isTweening, false,
+            'The internal state of the Tweenable indicates it is not running (updating)');
+        });
+
+        it('stop(true) skips a tween to the end', function () {
+          var tweenable = new Tweenable();
+          Tweenable.now = _ => 0;
+          tweenable.tween({
+            from: { x: 0 },
+            to: { x: 100 },
+            duration: 1000
+          });
+
+          Tweenable.now = _ => 500;
+          forceInternalUpdate();
+          tweenable.stop(true);
+          assert.equal(tweenable.get().x, 100,
+            'The tweened value jumps to the end');
+        });
+      });
+
+      describe('#setScheduleFunction', () => {
+        it('calling setScheduleFunction change the internal schedule function', function () {
+          var mockScheduleFunctionCalls = [];
+          function mockScheduleFunction(fn, delay) {
+            mockScheduleFunctionCalls.push({fn, delay});
+          }
+
+          tweenable.setScheduleFunction(mockScheduleFunction);
+          Tweenable.now = _ => 0;
+          tweenable.tween({
+            from: { x: 0 },
+            to: { x: 100 },
+            duration: 1000
+          });
+
+          Tweenable.now = _ => 500;
+          forceInternalUpdate(tweenable);
+          tweenable.stop(true);
+
+          assert(mockScheduleFunctionCalls.length,
+            'The custom schedule function has been called');
+          assert.equal(typeof mockScheduleFunctionCalls[0].fn, 'function',
+            'The first given parameter to the custom schedule function was a function');
+          assert.equal(typeof mockScheduleFunctionCalls[0].delay, 'number',
+            'The second given parameter to the custom schedule function was a number');
+        });
+      });
     });
   });
 });
