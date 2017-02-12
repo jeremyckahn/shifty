@@ -10,7 +10,7 @@ import {
 
 const now = Tweenable.now;
 
-describe('shifty', function () {
+describe('shifty', () => {
   let tweenable, state;
 
   function forceInternalUpdate () {
@@ -38,7 +38,7 @@ describe('shifty', function () {
       Tweenable.now = now;
     });
 
-    it('can accept initial state', function () {
+    it('can accept initial state', () => {
       tweenable = new Tweenable({ x: 5 });
 
       Tweenable.now = _ => 0;
@@ -57,7 +57,7 @@ describe('shifty', function () {
     });
 
     describe('#tween', () => {
-      it('midpoints of a tween are correctly computed', function () {
+      it('midpoints of a tween are correctly computed', () => {
         Tweenable.now = _ => 0;
         tweenable.tween({
           from: { x: 0 }
@@ -80,7 +80,7 @@ describe('shifty', function () {
           'Anything after end of the tween equates to 1.0 of the target value');
       });
 
-      it('step handler receives timestamp offset', function () {
+      it('step handler receives timestamp offset', () => {
         Tweenable.now = _ => 0;
         var capturedOffset;
         tweenable.tween({
@@ -101,7 +101,7 @@ describe('shifty', function () {
       describe('custom easing functions', () => {
         let easingFn = pos => pos * 2;
 
-        it('can be given an easing function directly', function () {
+        it('can be given an easing function directly', () => {
           Tweenable.now = _ => 0;
           tweenable.tween({
             from: { x: 0 }
@@ -125,7 +125,7 @@ describe('shifty', function () {
         });
 
         it('can be given an Object of easing functions directly',
-            function () {
+            () => {
           Tweenable.now = _ => 0;
           tweenable.tween({
             from: { x: 0 }
@@ -174,7 +174,7 @@ describe('shifty', function () {
       });
 
       describe('#pause', () => {
-        it('moves the end time of the tween', function () {
+        it('moves the end time of the tween', () => {
           Tweenable.now = _ => 0;
           tweenable.tween({
             from: { x: 0 },
@@ -202,7 +202,7 @@ describe('shifty', function () {
       });
 
       describe('#seek', () => {
-        it('forces the tween to a specific point on the timeline', function () {
+        it('forces the tween to a specific point on the timeline', () => {
           Tweenable.now = _ => 0;
           tweenable.tween({
             from: { x: 0 },
@@ -214,7 +214,7 @@ describe('shifty', function () {
           assert.equal(tweenable._timestamp, -500, 'The timestamp was properly offset');
         });
 
-        it('provides correct value to step handler via seek() (issue #77)', function () {
+        it('provides correct value to step handler via seek() (issue #77)', () => {
           var computedX;
           var tweenable = new Tweenable(null, {
             from: { x: 0 },
@@ -229,7 +229,7 @@ describe('shifty', function () {
           assert.equal(computedX, 50, 'Step handler got correct state value');
         });
 
-        it('The seek() parameter cannot be less than 0', function () {
+        it('The seek() parameter cannot be less than 0', () => {
           Tweenable.now = _ => 0;
           tweenable.tween({
             from: { x: 0 },
@@ -241,7 +241,7 @@ describe('shifty', function () {
           assert.equal(tweenable._timestamp, 0, 'The seek() parameter was forced to 0');
         });
 
-        it('no-ops if seeking to the current millisecond', function () {
+        it('no-ops if seeking to the current millisecond', () => {
           var stepHandlerCallCount = 0;
           Tweenable.now = _ => 0;
 
@@ -249,7 +249,7 @@ describe('shifty', function () {
             from: { x: 0 },
             to: { x: 100 },
             duration: 1000,
-            step: function () {
+            step: () => {
               stepHandlerCallCount++;
             }
           });
@@ -261,7 +261,7 @@ describe('shifty', function () {
             'The second seek() call did not trigger any handlers');
         });
 
-        it('keeps time reference (rel #60)', function () {
+        it('keeps time reference (rel #60)', () => {
           var tweenable = new Tweenable({}, {
             from: { x: 0 },
             to: { x: 100 },
@@ -270,13 +270,13 @@ describe('shifty', function () {
 
           // express a delay in time between the both time it's called
           // TODO: This could probably be written in a much clearer way.
-          Tweenable.now = function () {
-            Tweenable.now = function () {return 100;};
+          Tweenable.now = () => {
+            Tweenable.now = () => {return 100;};
             return 98;
           };
 
           var callCount = 0;
-          tweenable.stop = function () {
+          tweenable.stop = () => {
             callCount += 1;
           };
 
@@ -286,7 +286,7 @@ describe('shifty', function () {
       });
 
       describe('#stop', () => {
-        it('stop(undefined) leaves a tween where it was stopped', function () {
+        it('stop(undefined) leaves a tween where it was stopped', () => {
           Tweenable.now = _ => 0;
           tweenable.tween({
             from: { x: 0 },
@@ -303,7 +303,7 @@ describe('shifty', function () {
             'The internal state of the Tweenable indicates it is not running (updating)');
         });
 
-        it('stop(true) skips a tween to the end', function () {
+        it('stop(true) skips a tween to the end', () => {
           var tweenable = new Tweenable();
           Tweenable.now = _ => 0;
           tweenable.tween({
@@ -321,7 +321,7 @@ describe('shifty', function () {
       });
 
       describe('#setScheduleFunction', () => {
-        it('calling setScheduleFunction change the internal schedule function', function () {
+        it('calling setScheduleFunction change the internal schedule function', () => {
           var mockScheduleFunctionCalls = [];
           function mockScheduleFunction(fn, delay) {
             mockScheduleFunctionCalls.push({fn, delay});
@@ -350,7 +350,7 @@ describe('shifty', function () {
     });
 
     describe('delay support', () => {
-      it('tween does not start until delay is met', function () {
+      it('tween does not start until delay is met', () => {
         Tweenable.now = _ => 0;
         tweenable.tween({
           from: { x: 0 }
@@ -383,7 +383,7 @@ describe('shifty', function () {
           'The tween ends does not go past position 1 after completing');
       });
 
-      it('pause() functionality is not affected by delay', function () {
+      it('pause() functionality is not affected by delay', () => {
         var delay = 5000;
         Tweenable.now = _ => 0;
 
@@ -414,20 +414,20 @@ describe('shifty', function () {
     });
 
     describe('interpolate', () => {
-      it('computes the midpoint of two numbers', function () {
+      it('computes the midpoint of two numbers', () => {
         var interpolated = interpolate({ x: 0 }, { x: 10 }, 0.5);
 
         assert.equal(5, interpolated.x, 'Midpoint was computed');
       });
 
-      it('computes the midpoint of two token strings', function () {
+      it('computes the midpoint of two token strings', () => {
         var interpolated = interpolate({ color: '#000' }, { color: '#fff' }, 0.5);
 
         assert.equal('rgb(127,127,127)', interpolated.color,
           'Midpoint color was computed');
       });
 
-      it('accounts for optional delay', function () {
+      it('accounts for optional delay', () => {
         var interpolated = interpolate(
           { x: 0 }, { x: 10 }, 0.5, 'linear', 0.5);
         assert.equal(interpolated.x, 0, 'Beginning of delayed tween was computed');
@@ -441,7 +441,7 @@ describe('shifty', function () {
         assert.equal(interpolated.x, 10, 'End of delayed tween was computed');
       });
 
-      it('supports per-interpolation custom easing curves', function () {
+      it('supports per-interpolation custom easing curves', () => {
         var easingFn = pos => pos * 2;
 
         var interpolated = interpolate(
@@ -451,7 +451,7 @@ describe('shifty', function () {
       });
 
       describe('token support', () => {
-        it('can tween an rgb color', function () {
+        it('can tween an rgb color', () => {
           var from = { color: 'rgb(0,128,255)' }
               ,to = { color: 'rgb(128,255,0)' };
 
@@ -466,7 +466,7 @@ describe('shifty', function () {
             'The final interpolated value is the same as the target color');
         });
 
-        it('can tween an rgb color with a number in the tween', function () {
+        it('can tween an rgb color with a number in the tween', () => {
           var from = { color: 'rgb(0,128,255)', x: 0 }
               ,to =  { color: 'rgb(128,255,0)', x: 10 };
 
@@ -483,7 +483,7 @@ describe('shifty', function () {
             'The final interpolated value is the same as the target color');
         });
 
-        it('can tween hex color values', function () {
+        it('can tween hex color values', () => {
           var from = { color: '#ff00ff' }
               ,to =  { color: '#00ff00' };
 
@@ -499,7 +499,7 @@ describe('shifty', function () {
         });
 
 
-        it('can tween multiple rgb color tokens', function () {
+        it('can tween multiple rgb color tokens', () => {
           var from = { color: 'rgb(0,128,255) rgb(255,0,255)' }
               ,to =  { color: 'rgb(128,255,0) rgb(0,255,0)' };
 
@@ -514,7 +514,7 @@ describe('shifty', function () {
             'The final interpolated value is the same as the target color');
         });
 
-        it('each token chunk can have it\'s own easing curve', function () {
+        it('each token chunk can have it\'s own easing curve', () => {
           var from = { color: 'rgb(0,0,0)' }
               ,to =  { color: 'rgb(255,255,255)' }
               ,easing = 'linear easeInQuad easeInCubic';
@@ -533,7 +533,7 @@ describe('shifty', function () {
             'The computed tween value respects the easing strings supplied and their cardinality');
         });
 
-        it('missing token eases inherit from the last easing listed', function () {
+        it('missing token eases inherit from the last easing listed', () => {
           var from = { color: 'rgb(0,0,0)' }
               ,to =  { color: 'rgb(255,255,255)' }
               ,easing = 'linear easeInQuad';
@@ -552,7 +552,7 @@ describe('shifty', function () {
             'The computed tween value inherits the last tween listed if there is a cardinality mismatch');
         });
 
-        it('can tween a negative value token to a positive value', function () {
+        it('can tween a negative value token to a positive value', () => {
           var from = { transform: 'translateX(-50)' }
               ,to =  { transform: 'translateX(50)' }
               ,easing = 'linear';
@@ -569,7 +569,7 @@ describe('shifty', function () {
         });
 
         it('can interpolate two number strings that have no non-number token structure',
-          function () {
+          () => {
           var from = { x: '2' };
           var to = { x: '3' };
           var interpolated = interpolate(from, to, 0.5);
@@ -578,7 +578,7 @@ describe('shifty', function () {
             'Token-less strings were successfully interpolated');
         });
 
-        it('can tween css value pairs', function () {
+        it('can tween css value pairs', () => {
           var from = { x: '0px 0px' };
           var to = { x: '100px 100px' };
 
@@ -588,7 +588,7 @@ describe('shifty', function () {
       });
 
       describe('bezier support', () => {
-        it('can create a linear bezier easing curve', function () {
+        it('can create a linear bezier easing curve', () => {
           setBezierFunction('bezier-linear', 0.250, 0.250, 0.750, 0.750);
 
           assert.equal(
@@ -605,7 +605,7 @@ describe('shifty', function () {
             'linear and dynamic bezier-linear are reasonably equivalent at 0.75');
         });
 
-        it('can create a "stretched" linear bezier easing curve', function () {
+        it('can create a "stretched" linear bezier easing curve', () => {
           setBezierFunction('bezier-stretched-linear', 0, 0, 1, 1);
 
           assert.equal(
@@ -622,7 +622,7 @@ describe('shifty', function () {
             'linear and dynamic bezier-stretched-linear are reasonably equivalent at 0.75');
         });
 
-        it('can remove a bezier easing curve', function () {
+        it('can remove a bezier easing curve', () => {
           setBezierFunction('bezier-linear', 0, 0, 1, 1);
           unsetBezierFunction('bezier-linear');
           assert(!Tweenable.prototype['bezier-linear'],
@@ -630,7 +630,7 @@ describe('shifty', function () {
         });
 
         it('bezier handle positions are stored on a custom easing function',
-          function () {
+          () => {
 
           var easingFunction =
             setBezierFunction('decoration-test', 0.2, 0.4, 0.6, 0.8);
