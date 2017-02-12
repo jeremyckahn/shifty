@@ -348,5 +348,43 @@ describe('shifty', function () {
         });
       });
     });
+
+    describe('interpolate', () => {
+      it('computes the midpoint of two numbers', function () {
+        var interpolated = interpolate({ x: 0 }, { x: 10 }, 0.5);
+
+        assert.equal(5, interpolated.x, 'Midpoint was computed');
+      });
+
+      it('computes the midpoint of two token strings', function () {
+        var interpolated = interpolate({ color: '#000' }, { color: '#fff' }, 0.5);
+
+        assert.equal('rgb(127,127,127)', interpolated.color,
+          'Midpoint color was computed');
+      });
+
+      it('accounts for optional delay', function () {
+        var interpolated = interpolate(
+          { x: 0 }, { x: 10 }, 0.5, 'linear', 0.5);
+        assert.equal(interpolated.x, 0, 'Beginning of delayed tween was computed');
+
+        interpolated = interpolate(
+          { x: 0 }, { x: 10 }, 1.0, 'linear', 0.5);
+        assert.equal(interpolated.x, 5, 'Midpoint delayed tween was computed');
+
+        interpolated = interpolate(
+          { x: 0 }, { x: 10 }, 1.5, 'linear', 0.5);
+        assert.equal(interpolated.x, 10, 'End of delayed tween was computed');
+      });
+
+      it('supports per-interpolation custom easing curves', function () {
+        var easingFn = pos => pos * 2;
+
+        var interpolated = interpolate(
+          { x: 0 }, { x: 10 }, 0.5, easingFn);
+        assert.equal(interpolated.x, 10,
+          'Accepts and applies non-Tweenable#formula easing function');
+      });
+    });
   });
 });
