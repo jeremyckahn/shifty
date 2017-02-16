@@ -8,6 +8,13 @@ import {
   unsetBezierFunction
 } from '../src/main';
 
+import * as shifty from '../src/main';
+
+// Handy for testing in the browser console
+if (typeof window !== 'undefined') {
+  window.shifty = shifty;
+}
+
 const now = Tweenable.now;
 
 describe('shifty', () => {
