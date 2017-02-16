@@ -134,7 +134,7 @@
 // documentation and renders it.  It is never used, and is optimized away at
 // build time.
 
-import { Tweenable } from './shifty.core';
+import { Tweenable, each } from './shifty.core';
 
 /**
  * @typedef {{
@@ -219,7 +219,7 @@ function getFormatStringFrom (formattedString) {
  * @private
  */
 function sanitizeObjectForHexProps (stateObject) {
-  Tweenable.each(stateObject, function (prop) {
+  each(stateObject, function (prop) {
     var currentProp = stateObject[prop];
 
     if (typeof currentProp === 'string' && currentProp.match(R_HEX)) {
@@ -360,7 +360,7 @@ function sanitizeRGBChunk (rgbChunk) {
 function getFormatManifests (stateObject) {
   var manifestAccumulator = {};
 
-  Tweenable.each(stateObject, function (prop) {
+  each(stateObject, function (prop) {
     var currentProp = stateObject[prop];
 
     if (typeof currentProp === 'string') {
@@ -382,7 +382,7 @@ function getFormatManifests (stateObject) {
  * @private
  */
 function expandFormattedProperties (stateObject, formatManifests) {
-  Tweenable.each(formatManifests, function (prop) {
+  each(formatManifests, function (prop) {
     var currentProp = stateObject[prop];
     var rawValues = getValuesFrom(currentProp);
     var rawValuesLength = rawValues.length;
@@ -401,7 +401,7 @@ function expandFormattedProperties (stateObject, formatManifests) {
  * @private
  */
 function collapseFormattedProperties (stateObject, formatManifests) {
-  Tweenable.each(formatManifests, function (prop) {
+  each(formatManifests, function (prop) {
     var currentProp = stateObject[prop];
     var formatChunks = extractPropertyChunks(
       stateObject, formatManifests[prop].chunkNames);
@@ -490,7 +490,7 @@ function getValuesFrom (formattedString) {
  * @private
  */
 function expandEasingObject (easingObject, tokenData) {
-  Tweenable.each(tokenData, function (prop) {
+  each(tokenData, function (prop) {
     var currentProp = tokenData[prop];
     var chunkNames = currentProp.chunkNames;
     var chunkLength = chunkNames.length;
@@ -522,7 +522,7 @@ function expandEasingObject (easingObject, tokenData) {
  * @private
  */
 function collapseEasingObject (easingObject, tokenData) {
-  Tweenable.each(tokenData, function (prop) {
+  each(tokenData, function (prop) {
     var currentProp = tokenData[prop];
     var chunkNames = currentProp.chunkNames;
     var chunkLength = chunkNames.length;

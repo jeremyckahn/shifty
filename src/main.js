@@ -1,7 +1,6 @@
 import {
   Tweenable,
-  now,
-  shallowCopy
+  now
 } from './shifty.core';
 
 import { interpolate } from './shifty.interpolate';

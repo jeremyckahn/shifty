@@ -31,51 +31,15 @@ const noop = () => {};
  * @param {Function(string)} fn
  * @private
  */
-export function each (obj, fn) {
-  var key;
-  for (key in obj) {
-    if (Object.hasOwnProperty.call(obj, key)) {
-      fn(key);
-    }
-  }
-}
-
-/**
- * Perform a shallow copy of Object properties.
- * @param {Object} targetObject The object to copy into
- * @param {Object} srcObject The object to copy from
- * @return {Object} A reference to the augmented `targetObj` Object
- */
-export function shallowCopy (targetObj, srcObj) {
-  each(srcObj, function (prop) {
-    targetObj[prop] = srcObj[prop];
-  });
-
-  return targetObj;
-}
+export const each = (obj, fn) => {
+  Object.keys(obj).forEach(fn);
+};
 
 /**
  * @param {Object} obj
  * @return {Object}
  */
-export function clone (obj) {
-  return shallowCopy({}, obj);
-}
-
-/**
- * Copies each property from src onto target, but only if the property to
- * copy to target is undefined.
- * @param {Object} target Missing properties in this Object are filled in
- * @param {Object} src
- * @private
- */
-function defaults (target, src) {
-  each(src, function (prop) {
-    if (typeof target[prop] === 'undefined') {
-      target[prop] = src[prop];
-    }
-  });
-}
+export const clone = obj => Object.assign({}, obj);
 
 /**
  * Tweens a single property.
@@ -87,9 +51,8 @@ function defaults (target, src) {
  * @return {number} The tweened value.
  * @private
  */
-function tweenProp (start, end, easingFunc, position) {
-  return start + (end - start) * easingFunc(position);
-}
+const tweenProp = (start, end, easingFunc, position) =>
+  start + (end - start) * easingFunc(position);
 
 /**
  * Calculates the interpolated tween values of an Object for a given
@@ -106,7 +69,7 @@ function tweenProp (start, end, easingFunc, position) {
  * targetState.
  * @private
  */
-export function tweenProps (
+export const tweenProps = (
   forPosition,
   currentState,
   originalState,
@@ -114,31 +77,27 @@ export function tweenProps (
   duration,
   timestamp,
   easing
-) {
-  var normalizedPosition =
-      forPosition < timestamp ? 0 : (forPosition - timestamp) / duration;
+) => {
+  const normalizedPosition = forPosition < timestamp ?
+    0 :
+    (forPosition - timestamp) / duration;
 
-  var prop;
-  var easingObjectProp;
-  var easingFn;
-  for (prop in currentState) {
-    if (currentState.hasOwnProperty(prop)) {
-      easingObjectProp = easing[prop];
-      easingFn = typeof easingObjectProp === 'function'
-        ? easingObjectProp
-        : formula[easingObjectProp];
+  each(currentState, key => {
+    let easingObjectProp = easing[key];
+    let easingFn = typeof easingObjectProp === 'function' ?
+      easingObjectProp :
+      formula[easingObjectProp];
 
-      currentState[prop] = tweenProp(
-        originalState[prop],
-        targetState[prop],
-        easingFn,
-        normalizedPosition
-      );
-    }
-  }
+    currentState[key] = tweenProp(
+      originalState[key],
+      targetState[key],
+      easingFn,
+      normalizedPosition
+    );
+  });
 
   return currentState;
-}
+};
 
 /**
  * Applies a filter to Tweenable instance.
@@ -147,16 +106,18 @@ export function tweenProps (
  * @param {String} filterName The name of the filter to apply.
  * @private
  */
-function applyFilter (tweenable, filterName) {
-  var filters = Tweenable.prototype.filter;
-  var args = tweenable._filterArgs;
+const applyFilter = (tweenable, filterName) => {
+  let filters = Tweenable.prototype.filter;
+  let args = tweenable._filterArgs;
 
   each(filters, function (name) {
-    if (typeof filters[name][filterName] !== 'undefined') {
-      filters[name][filterName].apply(tweenable, args);
+    let filter = filters[name][filterName];
+
+    if (typeof filter !== 'undefined') {
+      filter.apply(tweenable, args);
     }
   });
-}
+};
 
 var timeoutHandler_endTime;
 var timeoutHandler_currentTime;
@@ -369,7 +330,7 @@ Tweenable.prototype.setConfig = function (config) {
   var targetState = this._targetState;
 
   // Ensure that there is always something to tween to.
-  defaults(targetState, currentState);
+  Object.assign({}, currentState, targetState);
 
   this._easing = composeEasingObject(
     currentState, config.easing || DEFAULT_EASING);
@@ -572,12 +533,9 @@ Tweenable.prototype.formula = clone(easingFunctions);
 
 formula = Tweenable.prototype.formula;
 
-shallowCopy(Tweenable, {
-  'each': each
-  ,'tweenProps': tweenProps
+Object.assign(Tweenable, {
+  'tweenProps': tweenProps
   ,'tweenProp': tweenProp
   ,'applyFilter': applyFilter
-  ,'shallowCopy': shallowCopy
-  ,'defaults': defaults
   ,'composeEasingObject': composeEasingObject
 });
