@@ -119,10 +119,6 @@ const applyFilter = (tweenable, filterName) => {
   });
 };
 
-var timeoutHandler_endTime;
-var timeoutHandler_currentTime;
-var timeoutHandler_isEnded;
-var timeoutHandler_offset;
 /**
  * Handles the update logic for one step of a tween.
  * @param {Tweenable} tweenable
@@ -139,47 +135,60 @@ var timeoutHandler_offset;
  * Tweenable#seek.
  * @private
  */
-function _timeoutHandler (tweenable, timestamp, delay, duration, currentState,
-  originalState, targetState, easing, step, schedule,
-  opt_currentTimeOverride) {
+const _timeoutHandler = (
+  tweenable,
+  timestamp,
+  delay,
+  duration,
+  currentState,
+  originalState,
+  targetState,
+  easing,
+  step,
+  schedule,
+  opt_currentTimeOverride
+) => {
 
-  timeoutHandler_endTime = timestamp + delay + duration;
-
-  timeoutHandler_currentTime =
-  Math.min(opt_currentTimeOverride || Tweenable.now(), timeoutHandler_endTime);
-
-  timeoutHandler_isEnded =
-    timeoutHandler_currentTime >= timeoutHandler_endTime;
-
-  timeoutHandler_offset = duration - (
-    timeoutHandler_endTime - timeoutHandler_currentTime);
+  let endTime = timestamp + delay + duration;
+  let currentTime =
+    Math.min(opt_currentTimeOverride || Tweenable.now(), endTime);
+  let isEnded = currentTime >= endTime;
+  let offset = duration - (endTime - currentTime);
 
   if (tweenable.isPlaying()) {
-    if (timeoutHandler_isEnded) {
-      step(targetState, tweenable._attachment, timeoutHandler_offset);
+    if (isEnded) {
+      step(targetState, tweenable._attachment, offset);
       tweenable.stop(true);
     } else {
-      tweenable._scheduleId =
-        schedule(tweenable._timeoutHandler, UPDATE_TIME);
-
+      tweenable._scheduleId = schedule(tweenable._timeoutHandler, UPDATE_TIME);
       applyFilter(tweenable, 'beforeTween');
 
       // If the animation has not yet reached the start point (e.g., there was
       // delay that has not yet completed), just interpolate the starting
       // position of the tween.
-      if (timeoutHandler_currentTime < (timestamp + delay)) {
-        tweenProps(1, currentState, originalState, targetState, 1, 1, easing);
+      if (currentTime < (timestamp + delay)) {
+        currentTime = 1;
+        duration = 1;
+        timestamp = 1;
       } else {
-        tweenProps(timeoutHandler_currentTime, currentState, originalState,
-          targetState, duration, timestamp + delay, easing);
+        timestamp += delay;
       }
 
-      applyFilter(tweenable, 'afterTween');
+      tweenProps(
+        currentTime,
+        currentState,
+        originalState,
+        targetState,
+        duration,
+        timestamp,
+        easing
+      );
 
-      step(currentState, tweenable._attachment, timeoutHandler_offset);
+      applyFilter(tweenable, 'afterTween');
+      step(currentState, tweenable._attachment, offset);
     }
   }
-}
+};
 
 
 /**
@@ -191,24 +200,21 @@ function _timeoutHandler (tweenable, timestamp, delay, duration, currentState,
  * @return {Object.<string|Function>}
  * @private
  */
-function composeEasingObject (fromTweenParams, easing) {
-  var composedEasing = {};
-  var typeofEasing = typeof easing;
+const composeEasingObject = (fromTweenParams, easing) => {
+  let composedEasing = {};
+  let typeofEasing = typeof easing;
 
   if (typeofEasing === 'string' || typeofEasing === 'function') {
-    each(fromTweenParams, function (prop) {
-      composedEasing[prop] = easing;
-    });
+    each(fromTweenParams, prop => composedEasing[prop] = easing);
   } else {
-    each(fromTweenParams, function (prop) {
-      if (!composedEasing[prop]) {
-        composedEasing[prop] = easing[prop] || DEFAULT_EASING;
-      }
-    });
+    each(fromTweenParams, prop =>
+      composedEasing[prop] =
+        composedEasing[prop] || easing[prop] || DEFAULT_EASING
+    );
   }
 
   return composedEasing;
-}
+};
 
 /**
  * Tweenable constructor.
@@ -534,8 +540,8 @@ Tweenable.prototype.formula = clone(easingFunctions);
 formula = Tweenable.prototype.formula;
 
 Object.assign(Tweenable, {
-  'tweenProps': tweenProps
-  ,'tweenProp': tweenProp
-  ,'applyFilter': applyFilter
-  ,'composeEasingObject': composeEasingObject
+  tweenProps,
+  tweenProp,
+  applyFilter,
+  composeEasingObject
 });
