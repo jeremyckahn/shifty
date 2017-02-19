@@ -200,7 +200,7 @@ const _timeoutHandler = (
  * @return {Object.<string|Function>}
  * @private
  */
-const composeEasingObject = (fromTweenParams, easing) => {
+const composeEasingObject = (fromTweenParams, easing = DEFAULT_EASING) => {
   let composedEasing = {};
   let typeofEasing = typeof easing;
 
@@ -296,8 +296,7 @@ Tweenable.prototype.tween = function (opt_config) {
  *   `step`/`start`/`finish` methods.
  * @chainable
  */
-Tweenable.prototype.setConfig = function (config) {
-  config = config || {};
+Tweenable.prototype.setConfig = function (config = {}) {
   this._configured = true;
 
   // Attach something to this Tweenable instance (e.g.: a DOM element, an
@@ -305,46 +304,47 @@ Tweenable.prototype.setConfig = function (config) {
   this._attachment = config.attachment;
 
   // Init the internal state
-  this._pausedAtTime = null;
-  this._scheduleId = null;
-  this._delay = config.delay || 0;
-  this._start = config.start || noop;
-  this._step = config.step || noop;
-  this._finish = config.finish || noop;
-  this._duration = config.duration || DEFAULT_DURATION;
-  this._currentState = clone(config.from || this.get());
-  this._originalState = this.get();
-  this._targetState = clone(config.to || this.get());
+  Object.assign(this, {
+    _pausedAtTime: null,
+    _scheduleId: null,
+    _delay: config.delay || 0,
+    _start: config.start || noop,
+    _step: config.step || noop,
+    _finish: config.finish || noop,
+    _duration: config.duration || DEFAULT_DURATION,
+    _currentState: clone(config.from || this.get()),
+  });
 
-  var self = this;
-  this._timeoutHandler = function () {
-    Tweenable._timeoutHandler(self,
-      self._timestamp,
-      self._delay,
-      self._duration,
-      self._currentState,
-      self._originalState,
-      self._targetState,
-      self._easing,
-      self._step,
-      self._scheduleFunction
+  // Separate Object.assign here; it depends on _currentState being set above
+  Object.assign(this, {
+    _originalState: this.get(),
+    _targetState: clone(config.to || this.get())
+  });
+
+  this._timeoutHandler = () => {
+    Tweenable._timeoutHandler(
+      this,
+      this._timestamp,
+      this._delay,
+      this._duration,
+      this._currentState,
+      this._originalState,
+      this._targetState,
+      this._easing,
+      this._step,
+      this._scheduleFunction
     );
   };
 
-  // Aliases used below
-  var currentState = this._currentState;
-  var targetState = this._targetState;
-
+  let currentState = this._currentState;
   // Ensure that there is always something to tween to.
-  Object.assign({}, currentState, targetState);
+  this._targetState = Object.assign({}, currentState, this._targetState);
 
-  this._easing = composeEasingObject(
-    currentState, config.easing || DEFAULT_EASING);
-
+  this._easing = composeEasingObject(currentState, config.easing);
   this._filterArgs =
-    [currentState, this._originalState, targetState, this._easing];
-
+    [currentState, this._originalState, this._targetState, this._easing];
   applyFilter(this, 'tweenCreated');
+
   return this;
 };
 
@@ -407,7 +407,7 @@ Tweenable.prototype.resume = function () {
  */
 Tweenable.prototype.seek = function (millisecond) {
   millisecond = Math.max(millisecond, 0);
-  var currentTime = Tweenable.now();
+  const currentTime = Tweenable.now();
 
   if ((this._timestamp + millisecond) === 0) {
     return this;
@@ -421,7 +421,8 @@ Tweenable.prototype.seek = function (millisecond) {
 
     // If the animation is not running, call _timeoutHandler to make sure that
     // any step handlers are run.
-    Tweenable._timeoutHandler(this,
+    Tweenable._timeoutHandler(
+      this,
       this._timestamp,
       this._delay,
       this._duration,
@@ -454,12 +455,14 @@ Tweenable.prototype.stop = function (gotoEnd) {
   this._isPaused = false;
   this._timeoutHandler = noop;
 
-  (root.cancelAnimationFrame            ||
-  root.webkitCancelAnimationFrame     ||
-  root.oCancelAnimationFrame          ||
-  root.msCancelAnimationFrame         ||
-  root.mozCancelRequestAnimationFrame ||
-  root.clearTimeout)(this._scheduleId);
+  (
+    root.cancelAnimationFrame           ||
+    root.webkitCancelAnimationFrame     ||
+    root.oCancelAnimationFrame          ||
+    root.msCancelAnimationFrame         ||
+    root.mozCancelRequestAnimationFrame ||
+    root.clearTimeout
+  )(this._scheduleId);
 
   if (gotoEnd) {
     applyFilter(this, 'beforeTween');
@@ -510,12 +513,7 @@ Tweenable.prototype.setScheduleFunction = function (scheduleFunction) {
  * @method dispose
  */
 Tweenable.prototype.dispose = function () {
-  var prop;
-  for (prop in this) {
-    if (this.hasOwnProperty(prop)) {
-      delete this[prop];
-    }
-  }
+  each(this, prop => delete this[prop]);
 };
 
 /**
@@ -541,7 +539,6 @@ formula = Tweenable.prototype.formula;
 
 Object.assign(Tweenable, {
   tweenProps,
-  tweenProp,
   applyFilter,
   composeEasingObject
 });

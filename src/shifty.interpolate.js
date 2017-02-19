@@ -53,8 +53,7 @@ export function interpolate (
 
   var current = clone(from);
   var delay = opt_delay || 0;
-  var easingObject = Tweenable.composeEasingObject(
-    from, easing || 'linear');
+  var easingObject = Tweenable.composeEasingObject(from, easing);
 
   mockTweenable.set({});
 
