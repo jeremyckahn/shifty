@@ -104,7 +104,7 @@ export const tweenProps = (
  * @private
  */
 const applyFilter = (tweenable, filterName) => {
-  let filters = Tweenable.prototype.filter;
+  let filters = Tweenable.filters;
   let args = tweenable._filterArgs;
 
   each(filters, function (name) {
@@ -519,7 +519,7 @@ Tweenable.now = (Date.now || (_ => +new Date()));
  * points in a Tweenable's life cycle.  See the README for more info on this.
  * @private
  */
-Tweenable.prototype.filter = { token };
+Tweenable.filters = { token };
 
 /**
  * This object contains all of the tweens available to Shifty.  It is
