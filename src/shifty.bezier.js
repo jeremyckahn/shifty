@@ -155,7 +155,7 @@ export function setBezierFunction (name, x1, y1, x2, y2) {
   cubicBezierTransition.x2 = x2;
   cubicBezierTransition.y2 = y2;
 
-  return Tweenable.prototype.formula[name] = cubicBezierTransition;
+  return Tweenable.formula[name] = cubicBezierTransition;
 }
 
 
@@ -169,5 +169,5 @@ export function setBezierFunction (name, x1, y1, x2, y2) {
  * @return {function}
  */
 export function unsetBezierFunction (name) {
-  delete Tweenable.prototype.formula[name];
+  delete Tweenable.formula[name];
 }

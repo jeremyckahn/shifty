@@ -83,7 +83,7 @@ export const tweenProps = (
     let easingObjectProp = easing[key];
     let easingFn = typeof easingObjectProp === 'function' ?
       easingObjectProp :
-      formula[easingObjectProp];
+      Tweenable.formula[easingObjectProp];
 
     currentState[key] = tweenProp(
       originalState[key],
@@ -521,7 +521,6 @@ Tweenable.now = (Date.now || (_ => +new Date()));
  */
 Tweenable.prototype.filter = { token };
 
-// FIXME: Find a more reasonable way to handle easing curves in v2
 /**
  * This object contains all of the tweens available to Shifty.  It is
  * extensible - simply attach properties to the `Tweenable.prototype.formula`
@@ -531,9 +530,7 @@ Tweenable.prototype.filter = { token };
  * @property formula
  * @type {Object(function)}
  */
-Tweenable.prototype.formula = clone(easingFunctions);
-
-const formula = Tweenable.prototype.formula;
+Tweenable.formula = clone(easingFunctions);
 
 Object.assign(Tweenable, {
   tweenProps,
