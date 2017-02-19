@@ -40,7 +40,7 @@ mockTweenable._filterArgs = [];
  * represents `0` and `to` represents `1`.
  * @param {Object.<string|Function>|string|Function} easing The easing
  * curve(s) to calculate the midpoint against.  You can reference any easing
- * function attached to `Tweenable.prototype.formula`, or provide the easing
+ * function attached to `Tweenable.formulas`, or provide the easing
  * function(s) directly.  If omitted, this defaults to "linear".
  * @param {number=} opt_delay Optional delay to pad the beginning of the
  * interpolated tween with.  This increases the range of `position` from (`0`

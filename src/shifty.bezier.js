@@ -131,21 +131,21 @@ function getCubicBezierTransition (x1, y1, x2, y2) {
 
 /**
  * Create a Bezier easing function and attach it to `{{#crossLink
- * "Tweenable/formula:property"}}Tweenable#formula{{/crossLink}}`.  This
+ * "Tweenable/formulas:property"}}Tweenable.formulas{{/crossLink}}`.  This
  * function gives you total control over the easing curve.  Matthew Lein's
  * [Ceaser](http://matthewlein.com/ceaser/) is a useful tool for visualizing
  * the curves you can make with this function.
  * @method setBezierFunction
  * @param {string} name The name of the easing curve.  Overwrites the old
  * easing function on `{{#crossLink
- * "Tweenable/formula:property"}}Tweenable#formula{{/crossLink}}` if it
+ * "Tweenable/formulas:property"}}Tweenable#formulas{{/crossLink}}` if it
  * exists.
  * @param {number} x1
  * @param {number} y1
  * @param {number} x2
  * @param {number} y2
  * @return {function} The easing function that was attached to
- * Tweenable.prototype.formula.
+ * Tweenable.formulas.
  */
 export function setBezierFunction (name, x1, y1, x2, y2) {
   var cubicBezierTransition = getCubicBezierTransition(x1, y1, x2, y2);
@@ -155,13 +155,13 @@ export function setBezierFunction (name, x1, y1, x2, y2) {
   cubicBezierTransition.x2 = x2;
   cubicBezierTransition.y2 = y2;
 
-  return Tweenable.formula[name] = cubicBezierTransition;
+  return Tweenable.formulas[name] = cubicBezierTransition;
 }
 
 
 /**
  * `delete` an easing function from `{{#crossLink
- * "Tweenable/formula:property"}}Tweenable#formula{{/crossLink}}`.  Be
+ * "Tweenable/formulas:property"}}Tweenable.formulas{{/crossLink}}`.  Be
  * careful with this method, as it `delete`s whatever easing formula matches
  * `name` (which means you can delete standard Shifty easing functions).
  * @method unsetBezierFunction
@@ -169,5 +169,5 @@ export function setBezierFunction (name, x1, y1, x2, y2) {
  * @return {function}
  */
 export function unsetBezierFunction (name) {
-  delete Tweenable.formula[name];
+  delete Tweenable.formulas[name];
 }

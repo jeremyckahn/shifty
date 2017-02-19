@@ -83,7 +83,7 @@ export const tweenProps = (
     let easingObjectProp = easing[key];
     let easingFn = typeof easingObjectProp === 'function' ?
       easingObjectProp :
-      Tweenable.formula[easingObjectProp];
+      Tweenable.formulas[easingObjectProp];
 
     currentState[key] = tweenProp(
       originalState[key],
@@ -523,14 +523,14 @@ Tweenable.filters = { token };
 
 /**
  * This object contains all of the tweens available to Shifty.  It is
- * extensible - simply attach properties to the `Tweenable.prototype.formula`
+ * extensible - simply attach properties to the `Tweenable.formulas`
  * Object following the same format as `linear`.
  *
  * `pos` should be a normalized `number` (between 0 and 1).
- * @property formula
+ * @property formulas
  * @type {Object(function)}
  */
-Tweenable.formula = clone(easingFunctions);
+Tweenable.formulas = clone(easingFunctions);
 
 Object.assign(Tweenable, {
   tweenProps,

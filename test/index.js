@@ -454,7 +454,7 @@ describe('shifty', () => {
         const interpolated = interpolate(
           { x: 0 }, { x: 10 }, 0.5, easingFn);
         assert.equal(interpolated.x, 10,
-          'Accepts and applies non-Tweenable#formula easing function');
+          'Accepts and applies non-Tweenable.formula easing function');
       });
 
       describe('token support', () => {

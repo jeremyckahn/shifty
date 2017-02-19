@@ -121,7 +121,7 @@ tweenable.tween({
 
 Shifty supports a number of easing formulas, which you can see in
 [`shifty.formulas.js`](src/shifty.formulas.js).  You can add new easing
-formulas by attaching methods to `Tweenable.prototype.formula`.
+formulas by attaching methods to `Tweenable.formulas`.
 
 ## Advanced usage
 
@@ -175,7 +175,7 @@ for `easing`.
 
 ## Per-tween custom easing functions
 
-You are not limited to attaching functions to `Tweenable.prototype.formula`.
+You are not limited to attaching functions to `Tweenable.formulas`.
 You can also supply a custom easing curve directly to a `tween()` call:
 
 ````javascript
