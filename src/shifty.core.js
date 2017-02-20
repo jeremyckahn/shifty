@@ -97,26 +97,6 @@ export const tweenProps = (
 };
 
 /**
- * Applies a filter to Tweenable instance.
- * @param {Tweenable} tweenable The `Tweenable` instance to call the filter
- * upon.
- * @param {String} filterName The name of the filter to apply.
- * @private
- */
-const applyFilter = (tweenable, filterName) => {
-  let filters = Tweenable.filters;
-  let args = tweenable._filterArgs;
-
-  each(filters, function (name) {
-    let filter = filters[name][filterName];
-
-    if (typeof filter !== 'undefined') {
-      filter.apply(tweenable, args);
-    }
-  });
-};
-
-/**
  * Handles the update logic for one step of a tween.
  * @param {Tweenable} tweenable
  * @param {number} timestamp
@@ -158,7 +138,7 @@ const _timeoutHandler = (
       tweenable.stop(true);
     } else {
       tweenable._scheduleId = schedule(tweenable._timeoutHandler, UPDATE_TIME);
-      applyFilter(tweenable, 'beforeTween');
+      tweenable._applyFilter('beforeTween');
 
       // If the animation has not yet reached the start point (e.g., there was
       // delay that has not yet completed), just interpolate the starting
@@ -181,7 +161,7 @@ const _timeoutHandler = (
         easing
       );
 
-      applyFilter(tweenable, 'afterTween');
+      tweenable._applyFilter('afterTween');
       step(currentState, tweenable._attachment, offset);
     }
   }
@@ -236,6 +216,26 @@ export class Tweenable {
     if (typeof opt_config !== 'undefined') {
       this.setConfig(opt_config);
     }
+  }
+
+  /**
+   * Applies a filter to Tweenable instance.
+   * @param {Tweenable} tweenable The `Tweenable` instance to call the filter
+   * upon.
+   * @param {String} filterName The name of the filter to apply.
+   * @private
+   */
+  _applyFilter (filterName) {
+    let filters = Tweenable.filters;
+    let args = this._filterArgs;
+
+    each(filters, name => {
+      let filter = filters[name][filterName];
+
+      if (typeof filter !== 'undefined') {
+        filter.apply(this, args);
+      }
+    });
   }
 
   /**
@@ -337,7 +337,7 @@ export class Tweenable {
     this._easing = composeEasingObject(currentState, config.easing);
     this._filterArgs =
       [currentState, this._originalState, this._targetState, this._easing];
-    applyFilter(this, 'tweenCreated');
+    this._applyFilter('tweenCreated');
 
     return this;
   }
@@ -459,7 +459,7 @@ export class Tweenable {
     )(this._scheduleId);
 
     if (gotoEnd) {
-      applyFilter(this, 'beforeTween');
+      this._applyFilter('beforeTween');
       tweenProps(
         1,
         this._currentState,
@@ -469,8 +469,8 @@ export class Tweenable {
         0,
         this._easing
       );
-      applyFilter(this, 'afterTween');
-      applyFilter(this, 'afterTweenEnd');
+      this._applyFilter('afterTween');
+      this._applyFilter('afterTweenEnd');
       this._finish.call(this, this._currentState, this._attachment);
     }
 
@@ -517,7 +517,6 @@ Tweenable.now = (Date.now || (_ => +new Date()));
 /**
  * Filters are used for transforming the properties of a tween at various
  * points in a Tweenable's life cycle.  See the README for more info on this.
- * @private
  */
 Tweenable.filters = { token };
 
@@ -534,6 +533,5 @@ Tweenable.formulas = clone(easingFunctions);
 
 Object.assign(Tweenable, {
   tweenProps,
-  applyFilter,
   composeEasingObject
 });

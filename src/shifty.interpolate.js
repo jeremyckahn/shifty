@@ -66,14 +66,14 @@ export function interpolate (
   filterArgs[3] = easingObject;
 
   // Any defined value transformation must be applied
-  Tweenable.applyFilter(mockTweenable, 'tweenCreated');
-  Tweenable.applyFilter(mockTweenable, 'beforeTween');
+  mockTweenable._applyFilter('tweenCreated');
+  mockTweenable._applyFilter('beforeTween');
 
   var interpolatedValues = getInterpolatedValues(
     from, current, targetState, position, easingObject, delay);
 
   // Transform values back into their original format
-  Tweenable.applyFilter(mockTweenable, 'afterTween');
+  mockTweenable._applyFilter('afterTween');
 
   return interpolatedValues;
 }
