@@ -96,77 +96,6 @@ export const tweenProps = (
   return currentState;
 };
 
-/**
- * Handles the update logic for one step of a tween.
- * @param {Tweenable} tweenable
- * @param {number} timestamp
- * @param {number} delay
- * @param {number} duration
- * @param {Object} currentState
- * @param {Object} originalState
- * @param {Object} targetState
- * @param {Object} easing
- * @param {Function(Object, *, number)} step
- * @param {Function(Function,number)}} schedule
- * @param {number=} opt_currentTimeOverride Needed for accurate timestamp in
- * Tweenable#seek.
- * @private
- */
-const _timeoutHandler = (
-  tweenable,
-  timestamp,
-  delay,
-  duration,
-  currentState,
-  originalState,
-  targetState,
-  easing,
-  step,
-  schedule,
-  opt_currentTimeOverride
-) => {
-
-  let endTime = timestamp + delay + duration;
-  let currentTime =
-    Math.min(opt_currentTimeOverride || Tweenable.now(), endTime);
-  let isEnded = currentTime >= endTime;
-  let offset = duration - (endTime - currentTime);
-
-  if (tweenable.isPlaying()) {
-    if (isEnded) {
-      step(targetState, tweenable._attachment, offset);
-      tweenable.stop(true);
-    } else {
-      tweenable._scheduleId = schedule(tweenable._timeoutHandler, UPDATE_TIME);
-      tweenable._applyFilter('beforeTween');
-
-      // If the animation has not yet reached the start point (e.g., there was
-      // delay that has not yet completed), just interpolate the starting
-      // position of the tween.
-      if (currentTime < (timestamp + delay)) {
-        currentTime = 1;
-        duration = 1;
-        timestamp = 1;
-      } else {
-        timestamp += delay;
-      }
-
-      tweenProps(
-        currentTime,
-        currentState,
-        originalState,
-        targetState,
-        duration,
-        timestamp,
-        easing
-      );
-
-      tweenable._applyFilter('afterTween');
-      step(currentState, tweenable._attachment, offset);
-    }
-  }
-};
-
 
 /**
  * Creates a usable easing Object from a string, a function or another easing
@@ -236,6 +165,69 @@ export class Tweenable {
         filter.apply(this, args);
       }
     });
+  }
+
+  /**
+   * Handles the update logic for one step of a tween.
+   * @param {number=} opt_currentTimeOverride Needed for accurate timestamp in
+   * Tweenable#seek.
+   * @private
+   */
+  _timeoutHandler (opt_currentTimeOverride) {
+    const delay = this._delay;
+    const currentState = this._currentState;
+    let timestamp = this._timestamp;
+    let duration = this._duration;
+    let targetState = this._targetState;
+    let step = this._step;
+
+    const endTime = timestamp + delay + duration;
+    let currentTime =
+      Math.min(opt_currentTimeOverride || Tweenable.now(), endTime);
+    const isEnded = currentTime >= endTime;
+    const offset = duration - (endTime - currentTime);
+
+    if (this.isPlaying()) {
+      if (isEnded) {
+        step(targetState, this._attachment, offset);
+        this.stop(true);
+      } else {
+        // This function needs to be .call-ed because it is a native method in
+        // some environments:
+        // http://stackoverflow.com/a/9678166
+        this._scheduleId = this._scheduleFunction.call(
+          root,
+          () => this._timeoutHandler(...arguments),
+          UPDATE_TIME
+        );
+
+        this._applyFilter('beforeTween');
+
+        // If the animation has not yet reached the start point (e.g., there was
+        // delay that has not yet completed), just interpolate the starting
+        // position of the tween.
+        if (currentTime < (timestamp + delay)) {
+          currentTime = 1;
+          duration = 1;
+          timestamp = 1;
+        } else {
+          timestamp += delay;
+        }
+
+        tweenProps(
+          currentTime,
+          currentState,
+          this._originalState,
+          targetState,
+          duration,
+          timestamp,
+          this._easing
+        );
+
+        this._applyFilter('afterTween');
+        step(currentState, this._attachment, offset);
+      }
+    }
   }
 
   /**
@@ -314,21 +306,6 @@ export class Tweenable {
       _originalState: this.get(),
       _targetState: clone(config.to || this.get())
     });
-
-    this._timeoutHandler = () => {
-      Tweenable._timeoutHandler(
-        this,
-        this._timestamp,
-        this._delay,
-        this._duration,
-        this._currentState,
-        this._originalState,
-        this._targetState,
-        this._easing,
-        this._step,
-        this._scheduleFunction
-      );
-    };
 
     let currentState = this._currentState;
     // Ensure that there is always something to tween to.
@@ -415,19 +392,7 @@ export class Tweenable {
 
       // If the animation is not running, call _timeoutHandler to make sure that
       // any step handlers are run.
-      Tweenable._timeoutHandler(
-        this,
-        this._timestamp,
-        this._delay,
-        this._duration,
-        this._currentState,
-        this._originalState,
-        this._targetState,
-        this._easing,
-        this._step,
-        this._scheduleFunction,
-        currentTime
-      );
+      this._timeoutHandler(currentTime);
 
       this.pause();
     }
@@ -447,7 +412,6 @@ export class Tweenable {
   stop (gotoEnd) {
     this._isTweening = false;
     this._isPaused = false;
-    this._timeoutHandler = noop;
 
     (
       root.cancelAnimationFrame           ||
@@ -511,7 +475,6 @@ export class Tweenable {
   }
 }
 
-Tweenable._timeoutHandler = _timeoutHandler;
 Tweenable.now = (Date.now || (_ => +new Date()));
 
 /**

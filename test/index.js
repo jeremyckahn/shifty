@@ -21,17 +21,7 @@ describe('shifty', () => {
   let tweenable, state;
 
   function forceInternalUpdate () {
-    Tweenable._timeoutHandler(tweenable,
-      tweenable._timestamp,
-      tweenable._delay,
-      tweenable._duration,
-      tweenable._currentState,
-      tweenable._originalState,
-      tweenable._targetState,
-      tweenable._easing,
-      tweenable._step,
-      _ => _ // schedule
-    );
+    tweenable._timeoutHandler();
   }
 
   describe('Tweenable', () => {
