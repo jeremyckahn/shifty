@@ -344,6 +344,24 @@ describe('shifty', () => {
             'The second given parameter to the custom schedule function was a number');
         });
       });
+
+      describe('lifecycle hooks', () => {
+        it('supports finish hook', () => {
+          let finished = false;
+          Tweenable.now = _ => 0;
+
+          tweenable.tween({
+            from: { x: 0 },
+            to: { x: 10  },
+            duration: 500,
+            finish: () => finished = true
+          });
+
+          Tweenable.now = _ => 500;
+          forceInternalUpdate();
+          assert(finished);
+        });
+      });
     });
 
     describe('delay support', () => {
