@@ -20,10 +20,6 @@ const now = Tweenable.now;
 describe('shifty', () => {
   let tweenable, state;
 
-  function forceInternalUpdate () {
-    tweenable._timeoutHandler();
-  }
-
   describe('Tweenable', () => {
     beforeEach(() => {
       tweenable = new Tweenable();
@@ -48,7 +44,7 @@ describe('shifty', () => {
       });
 
       Tweenable.now = _ => 500;
-      forceInternalUpdate();
+      tweenable._timeoutHandler();
       assert.equal(state.x, 7.5,
         'data provided to the constuctor was used as "from" state');
     });
@@ -64,15 +60,15 @@ describe('shifty', () => {
 
         assert.equal(tweenable.get().x, 0, 'The tween starts at 0');
         Tweenable.now = _ => 500;
-        forceInternalUpdate();
+        tweenable._timeoutHandler();
         assert.equal(tweenable.get().x, 50,
           'The middle of the tween equates to .5 of the target value');
         Tweenable.now = _ => 1000;
-        forceInternalUpdate();
+        tweenable._timeoutHandler();
         assert.equal(tweenable.get().x, 100,
           'The end of the tween equates to 1.0 of the target value');
         Tweenable.now = _ => 100000;
-        forceInternalUpdate();
+        tweenable._timeoutHandler();
         assert.equal(tweenable.get().x, 100,
           'Anything after end of the tween equates to 1.0 of the target value');
       });
@@ -90,7 +86,7 @@ describe('shifty', () => {
         });
 
         Tweenable.now = _ => 500;
-        forceInternalUpdate();
+        tweenable._timeoutHandler();
         assert.equal(capturedOffset, 500,
           'The offset was passed along to the step handler');
       });
@@ -111,12 +107,12 @@ describe('shifty', () => {
             'The easing curve is used at the beginning of the tween');
 
           Tweenable.now = _ => 500;
-          forceInternalUpdate();
+          tweenable._timeoutHandler();
           assert.equal(tweenable.get().x, 10,
             'The easing curve is used at the middle of the tween');
 
           Tweenable.now = _ => 1000;
-          forceInternalUpdate();
+          tweenable._timeoutHandler();
           assert.equal(tweenable.get().x, 20,
             'The easing curve is used at the end of the tween');
         });
@@ -135,12 +131,12 @@ describe('shifty', () => {
             'The easing curve is used at the beginning of the tween');
 
           Tweenable.now = _ => 500;
-          forceInternalUpdate();
+          tweenable._timeoutHandler();
           assert.equal(tweenable.get().x, 10,
             'The easing curve is used at the middle of the tween');
 
           Tweenable.now = _ => 1000;
-          forceInternalUpdate();
+          tweenable._timeoutHandler();
           assert.equal(tweenable.get().x, 20,
             'The easing curve is used at the end of the tween');
         });
@@ -159,12 +155,12 @@ describe('shifty', () => {
               'The easing curve is used at the beginning of the tween');
 
           Tweenable.now = _ => 500;
-          forceInternalUpdate();
+          tweenable._timeoutHandler();
           assert.equal(tweenable.get().x, 'rgb(127,127,127)',
               'The easing curve is used at the middle of the tween');
 
           Tweenable.now = _ => 1000;
-          forceInternalUpdate();
+          tweenable._timeoutHandler();
           assert.equal(tweenable.get().x, 'rgb(255,255,255)',
               'The easing curve is used at the end of the tween');
         });
@@ -180,19 +176,19 @@ describe('shifty', () => {
           });
 
           Tweenable.now = _ => 500;
-          forceInternalUpdate();
+          tweenable._timeoutHandler();
           assert.equal(tweenable.get().x, 50,
               'Pre-pause: The middle of the tween equates to .5 of the target value');
           tweenable.pause();
 
           Tweenable.now = _ => 2000;
           tweenable.resume();
-          forceInternalUpdate();
+          tweenable._timeoutHandler();
           assert.equal(tweenable.get().x, 50,
               'The tween has not changed in the time that it has been paused');
 
           Tweenable.now = _ => 2500;
-          forceInternalUpdate();
+          tweenable._timeoutHandler();
           assert.equal(tweenable.get().x, 100,
               'The tween ends at the modified end time');
         });
@@ -292,7 +288,7 @@ describe('shifty', () => {
           });
 
           Tweenable.now = _ => 500;
-          forceInternalUpdate();
+          tweenable._timeoutHandler();
           tweenable.stop();
           assert.equal(tweenable.get().x, 50,
             'The tweened value did not go to the end, it was left at its last updated position');
@@ -310,7 +306,7 @@ describe('shifty', () => {
           });
 
           Tweenable.now = _ => 500;
-          forceInternalUpdate();
+          tweenable._timeoutHandler();
           tweenable.stop(true);
           assert.equal(tweenable.get().x, 100,
             'The tweened value jumps to the end');
@@ -333,7 +329,7 @@ describe('shifty', () => {
           });
 
           Tweenable.now = _ => 500;
-          forceInternalUpdate(tweenable);
+          tweenable._timeoutHandler();
           tweenable.stop(true);
 
           assert(mockScheduleFunctionCalls.length,
@@ -358,7 +354,7 @@ describe('shifty', () => {
           });
 
           Tweenable.now = _ => 500;
-          forceInternalUpdate();
+          tweenable._timeoutHandler();
           assert(finished);
         });
       });
@@ -378,22 +374,22 @@ describe('shifty', () => {
           'The tween starts at the initial value');
 
         Tweenable.now = _ => 250;
-        forceInternalUpdate(tweenable);
+        tweenable._timeoutHandler();
         assert.equal(tweenable.get().x, 0,
           'The tween is interpolated for position 0 until the delay has been met');
 
         Tweenable.now = _ => 1000;
-        forceInternalUpdate(tweenable);
+        tweenable._timeoutHandler();
         assert.equal(tweenable.get().x, 5,
           'The delay offset is accounted for during the tween');
 
         Tweenable.now = _ => 1500;
-        forceInternalUpdate(tweenable);
+        tweenable._timeoutHandler();
         assert.equal(tweenable.get().x, 10,
           'The tween ends at position 1 with the delay');
 
         Tweenable.now = _ => 99999;
-        forceInternalUpdate(tweenable);
+        tweenable._timeoutHandler();
         assert.equal(tweenable.get().x, 10,
           'The tween ends does not go past position 1 after completing');
       });
@@ -410,19 +406,19 @@ describe('shifty', () => {
         });
 
         Tweenable.now = _ => 500 + delay;
-        forceInternalUpdate(tweenable);
+        tweenable._timeoutHandler();
         assert.equal(tweenable.get().x, 50,
           'Pre-pause: The middle of the tween equates to .5 of the target value');
 
         tweenable.pause();
         Tweenable.now = _ => 2000 + delay;
         tweenable.resume();
-        forceInternalUpdate(tweenable);
+        tweenable._timeoutHandler();
         assert.equal(tweenable.get().x, 50,
           'The tween has not changed in the time that it has been paused');
 
         Tweenable.now = _ => 2500 + delay;
-        forceInternalUpdate(tweenable);
+        tweenable._timeoutHandler();
         assert.equal(tweenable.get().x, 100,
           'The tween ends at the modified end time');
       });
