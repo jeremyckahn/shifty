@@ -1,4 +1,4 @@
-/* global describe:true, it:true, beforeEach:true, afterEach:true */
+/* global describe:true, it:true, before:true, beforeEach:true, afterEach:true */
 import assert from 'assert';
 
 import {
@@ -356,6 +356,32 @@ describe('shifty', () => {
           Tweenable.now = _ => 500;
           tweenable._timeoutHandler();
           assert(finished);
+        });
+      });
+
+      describe('promise support', () => {
+        let endState;
+
+        before(() => {
+          Tweenable.now = _ => 0;
+          tweenable = new Tweenable();
+
+          let tween = tweenable
+            .tween({
+              from: { x: 0 },
+              to: { x: 10  },
+              duration: 500,
+            })
+            .then((currentState) => endState = currentState);
+
+          Tweenable.now = _ => 500;
+          tweenable._timeoutHandler();
+
+          return tween;
+        });
+
+        it('resolves with final state', () => {
+          assert.deepEqual(endState, { x: 10 });
         });
       });
     });

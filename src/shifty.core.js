@@ -235,7 +235,7 @@ export class Tweenable {
    * @method tween
    * @param {Object=} opt_config Configuration object to be passed to
    * `{{#crossLink "Tweenable/setConfig:method"}}{{/crossLink}}`.
-   * @chainable
+   * @return Promise
    */
   tween (opt_config) {
     if (this._isTweening) {
@@ -316,6 +316,10 @@ export class Tweenable {
       [currentState, this._originalState, this._targetState, this._easing];
     this._applyFilter('tweenCreated');
 
+    this._promise = new Promise(
+      resolve => resolve(this._currentState, this._attachment)
+    );
+
     return this;
   }
 
@@ -353,7 +357,7 @@ export class Tweenable {
   /**
    * Resume a paused tween.
    * @method resume
-   * @chainable
+   * @return Promise
    */
   resume () {
     if (this._isPaused) {
@@ -364,7 +368,7 @@ export class Tweenable {
     this._isTweening = true;
     this._timeoutHandler();
 
-    return this;
+    return this._promise;
   }
 
   /**
@@ -436,6 +440,7 @@ export class Tweenable {
       this._applyFilter('afterTween');
       this._applyFilter('afterTweenEnd');
       this._finish.call(this, this._currentState, this._attachment);
+      Promise.resolve(this._promise);
     }
 
     return this;
