@@ -342,24 +342,11 @@ describe('shifty', () => {
       });
 
       describe('lifecycle hooks', () => {
-        it('supports finish hook', () => {
-          let finished = false;
-          Tweenable.now = _ => 0;
-
-          tweenable.tween({
-            from: { x: 0 },
-            to: { x: 10  },
-            duration: 500,
-            finish: () => finished = true
-          });
-
-          Tweenable.now = _ => 500;
-          tweenable._timeoutHandler();
-          assert(finished);
-        });
+        // TODO: Add tests for start and step hooks
       });
 
       describe('promise support', () => {
+        // TODO: Add support for Promise rejection
         let endState;
 
         before(() => {

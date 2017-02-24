@@ -272,14 +272,11 @@ export class Tweenable {
    *   "Tweenable/get:method"}}get(){{/crossLink}}` as the first parameter,
    *   `attachment` as the second parameter, and the time elapsed since the
    *   start of the tween as the third. This function is not called on the
-   *   final step of the animation, but `finish` is.
-   * - __finish__ (_Function(Object, *)_): Function to execute upon tween
-   *   completion.  Receives the state of the tween as the first parameter and
-   *   `attachment` as the second parameter.
+   *   final step of the animation.
    * - __easing__ (_Object.<string|Function>|string|Function=_): Easing curve
    *   name(s) or function(s) to use for the tween.
    * - __attachment__ (_*_): Cached value that is passed to the
-   *   `step`/`start`/`finish` methods.
+   *   `step`/`start` functions.
    * @chainable
    */
   setConfig (config = {}) {
@@ -296,7 +293,6 @@ export class Tweenable {
       _delay: config.delay || 0,
       _start: config.start || noop,
       _step: config.step || noop,
-      _finish: config.finish || noop,
       _duration: config.duration || DEFAULT_DURATION,
       _currentState: clone(config.from || this.get()),
     });
@@ -407,9 +403,9 @@ export class Tweenable {
   /**
    * Stops and cancels a tween.
    * @param {boolean=} gotoEnd If `false` or omitted, the tween just stops at
-   * its current state, and the `finish` handler is not invoked.  If `true`,
-   * the tweened object's values are instantly set to the target values, and
-   * `finish` is invoked.
+   * its current state, and the tween promise is not resolved.  If `true`, the
+   * tweened object's values are instantly set to the target values, and the
+   * promise is resolved.
    * @method stop
    * @chainable
    */
@@ -439,7 +435,6 @@ export class Tweenable {
       );
       this._applyFilter('afterTween');
       this._applyFilter('afterTweenEnd');
-      this._finish.call(this, this._currentState, this._attachment);
       Promise.resolve(this._promise);
     }
 
