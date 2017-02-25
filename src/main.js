@@ -1,5 +1,6 @@
 import {
   Tweenable,
+  tween,
   now
 } from './shifty.core';
 
@@ -8,6 +9,7 @@ import { setBezierFunction, unsetBezierFunction } from './shifty.bezier';
 
 export {
   Tweenable,
+  tween,
   now,
   interpolate,
   setBezierFunction,

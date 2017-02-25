@@ -507,3 +507,14 @@ Object.assign(Tweenable, {
   tweenProps,
   composeEasingObject
 });
+
+/**
+ * @param {Object=} config
+ */
+export function tween (config = {}) {
+  const tweenable = new Tweenable();
+  const promise = tweenable.tween(config);
+  promise.tweenable = tweenable;
+
+  return promise;
+}
