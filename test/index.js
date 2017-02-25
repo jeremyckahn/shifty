@@ -36,9 +36,9 @@ describe('shifty', () => {
 
       Tweenable.now = _ => 0;
       tweenable.tween({
-        to: { x: 10 }
-        ,duration: 1000
-        ,step: function (_state) {
+        to: { x: 10 },
+        duration: 1000,
+        step: function (_state) {
           state = _state;
         }
       });
@@ -53,9 +53,9 @@ describe('shifty', () => {
       it('midpoints of a tween are correctly computed', () => {
         Tweenable.now = _ => 0;
         tweenable.tween({
-          from: { x: 0 }
-          ,to: { x: 100 }
-          ,duration: 1000
+          from: { x: 0 },
+          to: { x: 100 },
+          duration: 1000
         });
 
         assert.equal(tweenable.get().x, 0, 'The tween starts at 0');
@@ -77,10 +77,10 @@ describe('shifty', () => {
         Tweenable.now = _ => 0;
         let capturedOffset;
         tweenable.tween({
-          from: { x: 0 }
-          ,to: { x: 100 }
-          ,duration: 1000
-          ,step: function (state, attachment, offset) {
+          from: { x: 0 },
+          to: { x: 100 },
+          duration: 1000,
+          step: function (state, attachment, offset) {
             capturedOffset = offset;
           }
         });
@@ -97,10 +97,10 @@ describe('shifty', () => {
         it('can be given an easing function directly', () => {
           Tweenable.now = _ => 0;
           tweenable.tween({
-            from: { x: 0 }
-            ,to: { x: 10 }
-            ,duration: 1000
-            ,easing: easingFn
+            from: { x: 0 },
+            to: { x: 10 },
+            duration: 1000,
+            easing: easingFn
           });
 
           assert.equal(tweenable.get().x, 0,
@@ -121,10 +121,10 @@ describe('shifty', () => {
             () => {
           Tweenable.now = _ => 0;
           tweenable.tween({
-            from: { x: 0 }
-            ,to: { x: 10 }
-            ,duration: 1000
-            ,easing: { x: easingFn }
+            from: { x: 0 },
+            to: { x: 10 },
+            duration: 1000,
+            easing: { x: easingFn }
           });
 
           assert.equal(tweenable.get().x, 0,
@@ -145,10 +145,10 @@ describe('shifty', () => {
           Tweenable.now = _ => 0;
           easingFn = pos => pos;
           tweenable.tween({
-            from: { x: 'rgb(0,0,0)' }
-            ,to: { x: 'rgb(255,255,255)' }
-            ,duration: 1000
-            ,easing: { x: easingFn }
+            from: { x: 'rgb(0,0,0)' },
+            to: { x: 'rgb(255,255,255)' },
+            duration: 1000,
+            easing: { x: easingFn }
           });
 
           assert.equal(tweenable.get().x, 'rgb(0,0,0)',
@@ -445,10 +445,10 @@ describe('shifty', () => {
       it('tween does not start until delay is met', () => {
         Tweenable.now = _ => 0;
         tweenable.tween({
-          from: { x: 0 }
-          ,to: { x: 10 }
-          ,delay: 500
-          ,duration: 1000
+          from: { x: 0 },
+          to: { x: 10 },
+          delay: 500,
+          duration: 1000
         });
 
         assert.equal(tweenable.get().x, 0,
@@ -544,8 +544,8 @@ describe('shifty', () => {
 
       describe('token support', () => {
         it('can tween an rgb color', () => {
-          const from = { color: 'rgb(0,128,255)' }
-              ,to = { color: 'rgb(128,255,0)' };
+          const from = { color: 'rgb(0,128,255)' },
+              to = { color: 'rgb(128,255,0)' };
 
           let interpolated = interpolate(from, to, 0);
           assert.equal(interpolated.color, from.color,
@@ -559,8 +559,8 @@ describe('shifty', () => {
         });
 
         it('can tween an rgb color with a number in the tween', () => {
-          const from = { color: 'rgb(0,128,255)', x: 0 }
-              ,to =  { color: 'rgb(128,255,0)', x: 10 };
+          const from = { color: 'rgb(0,128,255)', x: 0 },
+              to =  { color: 'rgb(128,255,0)', x: 10 };
 
           let interpolated = interpolate(from, to, 0);
           assert.equal(interpolated.color, from.color,
@@ -576,8 +576,8 @@ describe('shifty', () => {
         });
 
         it('can tween hex color values', () => {
-          const from = { color: '#ff00ff' }
-              ,to =  { color: '#00ff00' };
+          const from = { color: '#ff00ff' },
+              to =  { color: '#00ff00' };
 
           let interpolated = interpolate(from, to, 0);
           assert.equal(interpolated.color, 'rgb(255,0,255)',
@@ -592,8 +592,8 @@ describe('shifty', () => {
 
 
         it('can tween multiple rgb color tokens', () => {
-          const from = { color: 'rgb(0,128,255) rgb(255,0,255)' }
-              ,to =  { color: 'rgb(128,255,0) rgb(0,255,0)' };
+          const from = { color: 'rgb(0,128,255) rgb(255,0,255)' },
+              to =  { color: 'rgb(128,255,0) rgb(0,255,0)' };
 
           let interpolated = interpolate(from, to, 0);
           assert.equal(interpolated.color, from.color,
@@ -607,9 +607,9 @@ describe('shifty', () => {
         });
 
         it('each token chunk can have it\'s own easing curve', () => {
-          const from = { color: 'rgb(0,0,0)' }
-              ,to =  { color: 'rgb(255,255,255)' }
-              ,easing = 'linear easeInQuad easeInCubic';
+          const from = { color: 'rgb(0,0,0)' },
+              to =  { color: 'rgb(255,255,255)' },
+              easing = 'linear easeInQuad easeInCubic';
 
           const interpolated = interpolate(from, to, 0.5, easing);
           const interpolatedR = parseInt(interpolate(
@@ -626,9 +626,9 @@ describe('shifty', () => {
         });
 
         it('missing token eases inherit from the last easing listed', () => {
-          const from = { color: 'rgb(0,0,0)' }
-              ,to =  { color: 'rgb(255,255,255)' }
-              ,easing = 'linear easeInQuad';
+          const from = { color: 'rgb(0,0,0)' },
+              to =  { color: 'rgb(255,255,255)' },
+              easing = 'linear easeInQuad';
 
           const interpolated = interpolate(from, to, 0.5, easing);
           const interpolatedR = parseInt(interpolate(
@@ -645,9 +645,9 @@ describe('shifty', () => {
         });
 
         it('can tween a negative value token to a positive value', () => {
-          const from = { transform: 'translateX(-50)' }
-              ,to =  { transform: 'translateX(50)' }
-              ,easing = 'linear';
+          const from = { transform: 'translateX(-50)' },
+              to =  { transform: 'translateX(50)' },
+              easing = 'linear';
 
           let interpolated = interpolate(from, to, 0);
           assert.equal(interpolated.transform, 'translateX(-50)',

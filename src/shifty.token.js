@@ -367,8 +367,8 @@ function getFormatManifests (stateObject) {
       var rawValues = getValuesFrom(currentProp);
 
       manifestAccumulator[prop] = {
-        'formatString': getFormatStringFrom(currentProp)
-        ,'chunkNames': getFormatChunksFrom(rawValues, prop)
+        'formatString': getFormatStringFrom(currentProp),
+        'chunkNames': getFormatChunksFrom(rawValues, prop)
       };
     }
   });
