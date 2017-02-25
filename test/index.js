@@ -346,27 +346,57 @@ describe('shifty', () => {
       });
 
       describe('promise support', () => {
-        // TODO: Add support for Promise rejection
-        let endState;
+        describe('resolution', () => {
+          let testState;
 
-        before(() => {
-          Tweenable.now = _ => 0;
-          tweenable = new Tweenable();
+          before(() => {
+            Tweenable.now = _ => 0;
+            tweenable = new Tweenable();
 
-          let tween = tweenable
-            .tween({
-              from: { x: 0 },
-              to: { x: 10  },
-              duration: 500,
-            })
-            .then((currentState) => endState = currentState);
+            let tween = tweenable
+              .tween({
+                from: { x: 0 },
+                to: { x: 10  },
+                duration: 500,
+              })
+              .then(currentState => testState = currentState);
 
-          Tweenable.now = _ => 500;
-          tweenable._timeoutHandler();
+            Tweenable.now = _ => 500;
+            tweenable._timeoutHandler();
+
+            return tween;
+          });
+
+          it('resolves with final state', () => {
+            assert.deepEqual(testState, { x: 10 });
+          });
         });
 
-        it('resolves with final state', () => {
-          assert.deepEqual(endState, { x: 10 });
+        describe('rejection', () => {
+          let testState;
+
+          before(() => {
+            Tweenable.now = _ => 0;
+            tweenable = new Tweenable();
+
+            let tween = tweenable
+              .tween({
+                from: { x: 0 },
+                to: { x: 10  },
+                duration: 500,
+              })
+              .catch(currentState => testState = currentState);
+
+            Tweenable.now = _ => 250;
+            tweenable._timeoutHandler();
+            tweenable.stop();
+
+            return tween;
+          });
+
+          it('resolves with final state', () => {
+            assert.deepEqual(testState, { x: 5 });
+          });
         });
       });
     });

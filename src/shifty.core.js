@@ -313,8 +313,15 @@ export class Tweenable {
     this._applyFilter('tweenCreated');
 
     this._promise = new Promise(
-      resolve => resolve(this._currentState, this._attachment)
+      (resolve, reject) => {
+        this._resolve = resolve;
+        this._reject = reject;
+      }
     );
+
+    // Needed to silence (harmless) logged errors when a .catch handler is not
+    // added by downsteam code
+    this._promise.catch(noop);
 
     return this;
   }
@@ -435,7 +442,9 @@ export class Tweenable {
       );
       this._applyFilter('afterTween');
       this._applyFilter('afterTweenEnd');
-      Promise.resolve(this._promise);
+      this._resolve(this._currentState, this._attachment);
+    } else {
+      this._reject(this._currentState, this._attachment);
     }
 
     return this;
