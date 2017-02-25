@@ -363,8 +363,6 @@ describe('shifty', () => {
 
           Tweenable.now = _ => 500;
           tweenable._timeoutHandler();
-
-          return tween;
         });
 
         it('resolves with final state', () => {
