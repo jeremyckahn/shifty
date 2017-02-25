@@ -342,7 +342,47 @@ describe('shifty', () => {
       });
 
       describe('lifecycle hooks', () => {
-        // TODO: Add tests for start and step hooks
+        let testState;
+
+        describe('step', () => {
+          it('receives the current state', () => {
+            Tweenable.now = _ => 0;
+            tweenable = new Tweenable();
+
+            tweenable
+              .tween({
+                from: { x: 0 },
+                to: { x: 10  },
+                duration: 500,
+                step: currentState => testState = currentState
+              });
+
+            Tweenable.now = _ => 250;
+            tweenable._timeoutHandler();
+
+            assert.deepEqual(testState, { x: 5 });
+          });
+        });
+
+        describe('start', () => {
+          it('receives the current state', () => {
+            Tweenable.now = _ => 0;
+            tweenable = new Tweenable();
+
+            tweenable
+              .tween({
+                from: { x: 0 },
+                to: { x: 10  },
+                duration: 500,
+                start: currentState => testState = currentState
+              });
+
+            Tweenable.now = _ => 500;
+            tweenable._timeoutHandler();
+
+            assert.deepEqual(testState, { x: 0 });
+          });
+        });
       });
 
       describe('promise support', () => {
@@ -394,7 +434,7 @@ describe('shifty', () => {
             return tween;
           });
 
-          it('resolves with final state', () => {
+          it('rejects with most recent state', () => {
             assert.deepEqual(testState, { x: 5 });
           });
         });
