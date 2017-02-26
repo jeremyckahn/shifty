@@ -3,6 +3,7 @@ import assert from 'assert';
 
 import {
   Tweenable,
+  tween,
   interpolate,
   setBezierFunction,
   unsetBezierFunction
@@ -735,6 +736,37 @@ describe('shifty', () => {
           assert.equal(easingFunction.y2, 0.8, 'Easing function was decorated with y2');
         });
       });
+    });
+  });
+
+  describe('tween', () => {
+    it('exists', () => {
+      assert(tween);
+    });
+
+    it('midpoints of a tween are correctly computed', () => {
+      Tweenable.now = _ => 0;
+      const promise = tween({
+        from: { x: 0 },
+        to: { x: 100 },
+        duration: 1000
+      });
+
+      tweenable = promise.tweenable;
+
+      assert.equal(tweenable.get().x, 0, 'The tween starts at 0');
+      Tweenable.now = _ => 500;
+      tweenable._timeoutHandler();
+      assert.equal(tweenable.get().x, 50,
+        'The middle of the tween equates to .5 of the target value');
+      Tweenable.now = _ => 1000;
+      tweenable._timeoutHandler();
+      assert.equal(tweenable.get().x, 100,
+        'The end of the tween equates to 1.0 of the target value');
+      Tweenable.now = _ => 100000;
+      tweenable._timeoutHandler();
+      assert.equal(tweenable.get().x, 100,
+        'Anything after end of the tween equates to 1.0 of the target value');
     });
   });
 });
