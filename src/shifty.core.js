@@ -39,6 +39,17 @@ export const each = (obj, fn) => {
 export const clone = obj => Object.assign({}, obj);
 
 /**
+ * This object contains all of the tweens available to Shifty.  It is
+ * extensible - simply attach properties to the `Tweenable.formulas`
+ * Object following the same format as `linear`.
+ *
+ * `pos` should be a normalized `number` (between 0 and 1).
+ * @property formulas
+ * @type {Object(function)}
+ */
+const formulas = clone(easingFunctions);
+
+/**
  * Tweens a single property.
  * @param {number} start The value that the tween started from.
  * @param {number} end The value that the tween should end at.
@@ -80,10 +91,10 @@ export const tweenProps = (
     (forPosition - timestamp) / duration;
 
   each(currentState, key => {
-    let easingObjectProp = easing[key];
-    let easingFn = typeof easingObjectProp === 'function' ?
+    const easingObjectProp = easing[key];
+    const easingFn = typeof easingObjectProp === 'function' ?
       easingObjectProp :
-      Tweenable.formulas[easingObjectProp];
+      formulas[easingObjectProp];
 
     currentState[key] = tweenProp(
       originalState[key],
@@ -107,7 +118,7 @@ export const tweenProps = (
  * @private
  */
 const composeEasingObject = (fromTweenParams, easing = DEFAULT_EASING) => {
-  let composedEasing = {};
+  const composedEasing = {};
   let typeofEasing = typeof easing;
 
   if (typeofEasing === 'string' || typeofEasing === 'function') {
@@ -125,25 +136,25 @@ const composeEasingObject = (fromTweenParams, easing = DEFAULT_EASING) => {
 export class Tweenable {
   /**
    * @class Tweenable
-   * @param {Object=} opt_initialState The values that the initial tween should
+   * @param {Object=} initialState The values that the initial tween should
    * start at if a `from` object is not provided to `{{#crossLink
    * "Tweenable/tween:method"}}{{/crossLink}}` or `{{#crossLink
    * "Tweenable/setConfig:method"}}{{/crossLink}}`.
-   * @param {Object=} opt_config Configuration object to be passed to
+   * @param {Object=} config Configuration object to be passed to
    * `{{#crossLink "Tweenable/setConfig:method"}}{{/crossLink}}`.
    * @module Tweenable
    * @constructor
    */
-  constructor (opt_initialState, opt_config) {
-    this._currentState = opt_initialState || {};
+  constructor (initialState = {}, config = undefined) {
+    this._currentState = initialState;
     this._configured = false;
     this._scheduleFunction = DEFAULT_SCHEDULE_FUNCTION;
 
     // To prevent unnecessary calls to setConfig do not set default
     // configuration here.  Only set default configuration immediately before
     // tweening if none has been set.
-    if (typeof opt_config !== 'undefined') {
-      this.setConfig(opt_config);
+    if (config !== undefined) {
+      this.setConfig(config);
     }
   }
 
@@ -169,11 +180,11 @@ export class Tweenable {
 
   /**
    * Handles the update logic for one step of a tween.
-   * @param {number=} opt_currentTimeOverride Needed for accurate timestamp in
+   * @param {number=} currentTimeOverride Needed for accurate timestamp in
    * Tweenable#seek.
    * @private
    */
-  _timeoutHandler (opt_currentTimeOverride) {
+  _timeoutHandler (currentTimeOverride) {
     const delay = this._delay;
     const currentState = this._currentState;
     let timestamp = this._timestamp;
@@ -183,12 +194,12 @@ export class Tweenable {
 
     const endTime = timestamp + delay + duration;
     let currentTime =
-      Math.min(opt_currentTimeOverride || Tweenable.now(), endTime);
-    const isEnded = currentTime >= endTime;
+      Math.min(currentTimeOverride || Tweenable.now(), endTime);
+    const hasEnded = currentTime >= endTime;
     const offset = duration - (endTime - currentTime);
 
     if (this.isPlaying()) {
-      if (isEnded) {
+      if (hasEnded) {
         step(targetState, this._attachment, offset);
         this.stop(true);
       } else {
@@ -233,19 +244,19 @@ export class Tweenable {
   /**
    * Configure and start a tween.
    * @method tween
-   * @param {Object=} opt_config Configuration object to be passed to
+   * @param {Object=} config Configuration object to be passed to
    * `{{#crossLink "Tweenable/setConfig:method"}}{{/crossLink}}`.
    * @return Promise
    */
-  tween (opt_config) {
+  tween (config = undefined) {
     if (this._isTweening) {
       return this;
     }
 
     // Only set default config if no configuration has been set previously and
     // none is provided now.
-    if (opt_config !== undefined || !this._configured) {
-      this.setConfig(opt_config);
+    if (config !== undefined || !this._configured) {
+      this.setConfig(config);
     }
 
     this._timestamp = Tweenable.now();
@@ -484,28 +495,12 @@ export class Tweenable {
   }
 }
 
-Tweenable.now = (Date.now || (_ => +new Date()));
-
-/**
- * Filters are used for transforming the properties of a tween at various
- * points in a Tweenable's life cycle.  See the README for more info on this.
- */
-Tweenable.filters = { token };
-
-/**
- * This object contains all of the tweens available to Shifty.  It is
- * extensible - simply attach properties to the `Tweenable.formulas`
- * Object following the same format as `linear`.
- *
- * `pos` should be a normalized `number` (between 0 and 1).
- * @property formulas
- * @type {Object(function)}
- */
-Tweenable.formulas = clone(easingFunctions);
-
 Object.assign(Tweenable, {
   tweenProps,
-  composeEasingObject
+  composeEasingObject,
+  formulas,
+  filters: { token },
+  now: (Date.now || (_ => +new Date()))
 });
 
 /**
