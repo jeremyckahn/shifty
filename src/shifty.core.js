@@ -117,7 +117,7 @@ export const tweenProps = (
  * @return {Object.<string|Function>}
  * @private
  */
-const composeEasingObject = (fromTweenParams, easing = DEFAULT_EASING) => {
+export const composeEasingObject = (fromTweenParams, easing = DEFAULT_EASING) => {
   const composedEasing = {};
   let typeofEasing = typeof easing;
 
@@ -496,8 +496,6 @@ export class Tweenable {
 }
 
 Object.assign(Tweenable, {
-  tweenProps,
-  composeEasingObject,
   formulas,
   filters: { token },
   now: (Date.now || (_ => +new Date()))

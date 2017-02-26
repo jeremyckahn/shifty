@@ -1,15 +1,14 @@
-import { Tweenable, clone } from './shifty.core';
+import { Tweenable, clone, composeEasingObject, tweenProps } from './shifty.core';
 
-function getInterpolatedValues (
-  from, current, targetState, position, easing, delay) {
-  return Tweenable.tweenProps(
+const getInterpolatedValues =
+  (from, current, targetState, position, easing, delay) =>
+  tweenProps(
     position, current, from, targetState, 1, delay, easing);
-}
 
 // Fake a Tweenable and patch some internals.  This approach allows us to
 // skip uneccessary processing and object recreation, cutting down on garbage
 // collection pauses.
-var mockTweenable = new Tweenable();
+const mockTweenable = new Tweenable();
 mockTweenable._filterArgs = [];
 
 /**
@@ -18,7 +17,7 @@ mockTweenable._filterArgs = [];
  * "Tweenable/tween:method"}}{{/crossLink}}` does many times over the course
  * of a full tween.
  *
- *     var interpolatedValues = Tweenable.interpolate({
+ *     const interpolatedValues = Tweenable.interpolate({
  *       width: '100px',
  *       opacity: 0,
  *       color: '#fff'
@@ -42,38 +41,30 @@ mockTweenable._filterArgs = [];
  * curve(s) to calculate the midpoint against.  You can reference any easing
  * function attached to `Tweenable.formulas`, or provide the easing
  * function(s) directly.  If omitted, this defaults to "linear".
- * @param {number=} opt_delay Optional delay to pad the beginning of the
+ * @param {number=} delay Optional delay to pad the beginning of the
  * interpolated tween with.  This increases the range of `position` from (`0`
- * through `1`) to (`0` through `1 + opt_delay`).  So, a delay of `0.5` would
+ * through `1`) to (`0` through `1 + delay`).  So, a delay of `0.5` would
  * increase all valid values of `position` to numbers between `0` and `1.5`.
  * @return {Object}
  */
-export function interpolate (
-  from, targetState, position, easing, opt_delay) {
+export const interpolate =
+  (from, targetState, position, easing, delay = 0) => {
 
-  var current = clone(from);
-  var delay = opt_delay || 0;
-  var easingObject = Tweenable.composeEasingObject(from, easing);
+  const current = clone(from);
+  const easingObject = composeEasingObject(from, easing);
 
   mockTweenable.set({});
-
-  // Alias and reuse the _filterArgs array instead of recreating it.
-  var filterArgs = mockTweenable._filterArgs;
-  filterArgs.length = 0;
-  filterArgs[0] = current;
-  filterArgs[1] = from;
-  filterArgs[2] = targetState;
-  filterArgs[3] = easingObject;
+  mockTweenable._filterArgs = [current, from, targetState, easingObject];
 
   // Any defined value transformation must be applied
   mockTweenable._applyFilter('tweenCreated');
   mockTweenable._applyFilter('beforeTween');
 
-  var interpolatedValues = getInterpolatedValues(
+  const interpolatedValues = getInterpolatedValues(
     from, current, targetState, position, easingObject, delay);
 
   // Transform values back into their original format
   mockTweenable._applyFilter('afterTween');
 
   return interpolatedValues;
-}
+};
