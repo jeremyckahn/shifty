@@ -37,74 +37,82 @@ import { Tweenable } from './shifty.core';
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 // port of webkit cubic bezier handling by http://www.netzgesta.de/dev/
-function cubicBezierAtTime(t,p1x,p1y,p2x,p2y,duration) {
-  var ax = 0,bx = 0,cx = 0,ay = 0,by = 0,cy = 0;
-  function sampleCurveX(t) {
-    return ((ax * t + bx) * t + cx) * t;
-  }
-  function sampleCurveY(t) {
-    return ((ay * t + by) * t + cy) * t;
-  }
-  function sampleCurveDerivativeX(t) {
-    return (3.0 * ax * t + 2.0 * bx) * t + cx;
-  }
-  function solveEpsilon(duration) {
-    return 1.0 / (200.0 * duration);
-  }
-  function solve(x,epsilon) {
-    return sampleCurveY(solveCurveX(x, epsilon));
-  }
-  function fabs(n) {
-    if (n >= 0) {
-      return n;
-    } else {
-      return 0 - n;
-    }
-  }
-  function solveCurveX(x, epsilon) {
-    var t0,t1,t2,x2,d2,i;
+function cubicBezierAtTime(t, p1x, p1y, p2x, p2y, duration) {
+  let ax = 0, bx = 0, cx = 0, ay = 0, by = 0, cy = 0;
+
+  const sampleCurveX = t => ((ax * t + bx) * t + cx) * t;
+
+  const sampleCurveY = t => ((ay * t + by) * t + cy) * t;
+
+  const sampleCurveDerivativeX = t => (3 * ax * t + 2 * bx) * t + cx;
+
+  const solveEpsilon = duration => 1 / (200 * duration);
+
+  const fabs = n => n >= 0 ? n : 0 - n;
+
+  const solveCurveX = (x, epsilon) => {
+    let t0, t1, t2, x2, d2, i;
+
     for (t2 = x, i = 0; i < 8; i++) {
       x2 = sampleCurveX(t2) - x;
+
       if (fabs(x2) < epsilon) {
         return t2;
       }
+
       d2 = sampleCurveDerivativeX(t2);
+
       if (fabs(d2) < 1e-6) {
         break;
       }
+
       t2 = t2 - x2 / d2;
     }
-    t0 = 0.0;
-    t1 = 1.0;
+
+    t0 = 0;
+    t1 = 1;
     t2 = x;
+
     if (t2 < t0) {
       return t0;
     }
+
     if (t2 > t1) {
       return t1;
     }
+
     while (t0 < t1) {
       x2 = sampleCurveX(t2);
+
       if (fabs(x2 - x) < epsilon) {
         return t2;
       }
+
       if (x > x2) {
         t0 = t2;
-      }else {
+      } else {
         t1 = t2;
       }
+
       t2 = (t1 - t0) * 0.5 + t0;
     }
+
     return t2; // Failure.
-  }
-  cx = 3.0 * p1x;
-  bx = 3.0 * (p2x - p1x) - cx;
-  ax = 1.0 - cx - bx;
-  cy = 3.0 * p1y;
-  by = 3.0 * (p2y - p1y) - cy;
-  ay = 1.0 - cy - by;
+  };
+
+  const solve = (x, epsilon) => sampleCurveY(solveCurveX(x, epsilon));
+
+  cx = 3 * p1x;
+  bx = 3 * (p2x - p1x) - cx;
+  ax = 1 - cx - bx;
+  cy = 3 * p1y;
+  by = 3 * (p2y - p1y) - cy;
+  ay = 1 - cy - by;
+
   return solve(t, solveEpsilon(duration));
 }
+// End ported code
+
 /**
  *  getCubicBezierTransition(x1, y1, x2, y2) -> Function
  *
@@ -122,12 +130,10 @@ function cubicBezierAtTime(t,p1x,p1y,p2x,p2y,duration) {
  *  @return {function}
  *  @private
  */
-function getCubicBezierTransition (x1, y1, x2, y2) {
-  return function (pos) {
-    return cubicBezierAtTime(pos,x1,y1,x2,y2,1);
-  };
-}
-// End ported code
+const getCubicBezierTransition = (x1, y1, x2, y2) =>
+  pos =>
+    cubicBezierAtTime(pos, x1, y1, x2, y2, 1);
+
 
 /**
  * Create a Bezier easing function and attach it to `{{#crossLink
@@ -147,17 +153,15 @@ function getCubicBezierTransition (x1, y1, x2, y2) {
  * @return {function} The easing function that was attached to
  * Tweenable.formulas.
  */
-export function setBezierFunction (name, x1, y1, x2, y2) {
-  var cubicBezierTransition = getCubicBezierTransition(x1, y1, x2, y2);
-  cubicBezierTransition.displayName = name;
-  cubicBezierTransition.x1 = x1;
-  cubicBezierTransition.y1 = y1;
-  cubicBezierTransition.x2 = x2;
-  cubicBezierTransition.y2 = y2;
-
-  return Tweenable.formulas[name] = cubicBezierTransition;
-}
-
+export const setBezierFunction = (name, x1, y1, x2, y2) =>
+  Tweenable.formulas[name] =
+    Object.assign(getCubicBezierTransition(x1, y1, x2, y2), {
+      displayName: name,
+      x1,
+      y1,
+      x2,
+      y2
+    });
 
 /**
  * `delete` an easing function from `{{#crossLink
@@ -168,6 +172,4 @@ export function setBezierFunction (name, x1, y1, x2, y2) {
  * @param {string} name The name of the easing function to delete.
  * @return {function}
  */
-export function unsetBezierFunction (name) {
-  delete Tweenable.formulas[name];
-}
+export const unsetBezierFunction = name => delete Tweenable.formulas[name];
