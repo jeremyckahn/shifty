@@ -1,10 +1,5 @@
 import { Tweenable, clone, composeEasingObject, tweenProps } from './shifty.core';
 
-const getInterpolatedValues =
-  (from, current, targetState, position, easing, delay) =>
-  tweenProps(
-    position, current, from, targetState, 1, delay, easing);
-
 // Fake a Tweenable and patch some internals.  This approach allows us to
 // skip uneccessary processing and object recreation, cutting down on garbage
 // collection pauses.
@@ -60,10 +55,10 @@ export const interpolate =
   mockTweenable._applyFilter('tweenCreated');
   mockTweenable._applyFilter('beforeTween');
 
-  const interpolatedValues = getInterpolatedValues(
-    from, current, targetState, position, easingObject, delay);
+  const interpolatedValues =
+    tweenProps(position, current, from, targetState, 1, delay, easingObject);
 
-  // Transform values back into their original format
+  // Transform data in interpolatedValues back into its original format
   mockTweenable._applyFilter('afterTween');
 
   return interpolatedValues;
