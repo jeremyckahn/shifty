@@ -136,27 +136,16 @@
 
 import { Tweenable, each } from './shifty.core';
 
-/**
- * @typedef {{
- *   formatString: string
- *   chunkNames: Array.<string>
- * }}
- * @private
- */
-var formatManifest;
-
-// CONSTANTS
-
-var R_NUMBER_COMPONENT = /(\d|\-|\.)/;
-var R_FORMAT_CHUNKS = /([^\-0-9\.]+)/g;
-var R_UNFORMATTED_VALUES = /[0-9.\-]+/g;
-var R_RGB = new RegExp(
+const R_NUMBER_COMPONENT = /(\d|\-|\.)/;
+const R_FORMAT_CHUNKS = /([^\-0-9\.]+)/g;
+const R_UNFORMATTED_VALUES = /[0-9.\-]+/g;
+const R_RGB = new RegExp(
   'rgb\\(' + R_UNFORMATTED_VALUES.source +
   (/,\s*/.source) + R_UNFORMATTED_VALUES.source +
   (/,\s*/.source) + R_UNFORMATTED_VALUES.source + '\\)', 'g');
-var R_RGB_PREFIX = /^.*\(/;
-var R_HEX = /#([0-9]|[a-f]){3,6}/gi;
-var VALUE_PLACEHOLDER = 'VAL';
+const R_RGB_PREFIX = /^.*\(/;
+const R_HEX = /#([0-9]|[a-f]){3,6}/gi;
+const VALUE_PLACEHOLDER = 'VAL';
 
 // HELPERS
 
@@ -167,18 +156,8 @@ var VALUE_PLACEHOLDER = 'VAL';
  * @return {Array.<string>}
  * @private
  */
-function getFormatChunksFrom (rawValues, prefix) {
-  var accumulator = [];
-
-  var rawValuesLength = rawValues.length;
-  var i;
-
-  for (i = 0; i < rawValuesLength; i++) {
-    accumulator.push('_' + prefix + '_' + i);
-  }
-
-  return accumulator;
-}
+const getFormatChunksFrom = (rawValues, prefix) =>
+  rawValues.map((val, i) => `_${prefix}_${i}`);
 
 /**
  * @param {string} formattedString
@@ -186,8 +165,8 @@ function getFormatChunksFrom (rawValues, prefix) {
  * @return {string}
  * @private
  */
-function getFormatStringFrom (formattedString) {
-  var chunks = formattedString.match(R_FORMAT_CHUNKS);
+const getFormatStringFrom = formattedString => {
+  let chunks = formattedString.match(R_FORMAT_CHUNKS);
 
   if (!chunks) {
     // chunks will be null if there were no tokens to parse in
@@ -199,84 +178,17 @@ function getFormatStringFrom (formattedString) {
     // followed by a token...
     // NOTE: This may be an unwise assumption.
   } else if (chunks.length === 1 ||
-    // ...or if the string starts with a number component (".", "-", or a
-    // digit)...
-  formattedString.charAt(0).match(R_NUMBER_COMPONENT)) {
+      // ...or if the string starts with a number component (".", "-", or a
+      // digit)...
+      formattedString.charAt(0).match(R_NUMBER_COMPONENT)) {
+
     // ...prepend an empty string here to make sure that the formatted number
     // is properly replaced by VALUE_PLACEHOLDER
     chunks.unshift('');
   }
 
   return chunks.join(VALUE_PLACEHOLDER);
-}
-
-/**
- * Convert all hex color values within a string to an rgb string.
- *
- * @param {Object} stateObject
- *
- * @return {Object} The modified obj
- * @private
- */
-function sanitizeObjectForHexProps (stateObject) {
-  each(stateObject, function (prop) {
-    var currentProp = stateObject[prop];
-
-    if (typeof currentProp === 'string' && currentProp.match(R_HEX)) {
-      stateObject[prop] = sanitizeHexChunksToRGB(currentProp);
-    }
-  });
-}
-
-/**
- * @param {string} str
- *
- * @return {string}
- * @private
- */
-function  sanitizeHexChunksToRGB (str) {
-  return filterStringChunks(R_HEX, str, convertHexToRGB);
-}
-
-/**
- * @param {string} hexString
- *
- * @return {string}
- * @private
- */
-function convertHexToRGB (hexString) {
-  var rgbArr = hexToRGBArray(hexString);
-  return 'rgb(' + rgbArr[0] + ',' + rgbArr[1] + ',' + rgbArr[2] + ')';
-}
-
-var hexToRGBArray_returnArray = [];
-/**
- * Convert a hexadecimal string to an array with three items, one each for
- * the red, blue, and green decimal values.
- *
- * @param {string} hex A hexadecimal string.
- *
- * @returns {Array.<number>} The converted Array of RGB values if `hex` is a
- * valid string, or an Array of three 0's.
- * @private
- */
-function hexToRGBArray (hex) {
-
-  hex = hex.replace(/#/, '');
-
-  // If the string is a shorthand three digit hex notation, normalize it to
-  // the standard six digit notation
-  if (hex.length === 3) {
-    hex = hex.split('');
-    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-  }
-
-  hexToRGBArray_returnArray[0] = hexToDec(hex.substr(0, 2));
-  hexToRGBArray_returnArray[1] = hexToDec(hex.substr(2, 2));
-  hexToRGBArray_returnArray[2] = hexToDec(hex.substr(4, 2));
-
-  return hexToRGBArray_returnArray;
-}
+};
 
 /**
  * Convert a base-16 number to base-10.
@@ -291,6 +203,43 @@ function hexToDec (hex) {
 }
 
 /**
+ * Convert a hexadecimal string to an array with three items, one each for
+ * the red, blue, and green decimal values.
+ *
+ * @param {string} hex A hexadecimal string.
+ *
+ * @returns {Array.<number>} The converted Array of RGB values if `hex` is a
+ * valid string, or an Array of three 0's.
+ * @private
+ */
+const hexToRGBArray = hex => {
+  hex = hex.replace(/#/, '');
+
+  // If the string is a shorthand three digit hex notation, normalize it to
+  // the standard six digit notation
+  if (hex.length === 3) {
+    hex = hex.split('');
+    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+  }
+
+  return [
+    hexToDec(hex.substr(0, 2)),
+    hexToDec(hex.substr(2, 2)),
+    hexToDec(hex.substr(4, 2))
+  ];
+};
+
+/**
+ * @param {string} hexString
+ *
+ * @return {string}
+ * @private
+ */
+const convertHexToRGB = hexString =>
+  `rgb(${hexToRGBArray(hexString).join(',')})`;
+
+/**
+ * TODO: Can this be rewritten to leverage String#replace more efficiently?
  * Runs a filter operation on all chunks of a string that match a RegExp
  *
  * @param {RegExp} pattern
@@ -300,23 +249,46 @@ function hexToDec (hex) {
  * @return {string}
  * @private
  */
-function filterStringChunks (pattern, unfilteredString, filter) {
-  var pattenMatches = unfilteredString.match(pattern);
-  var filteredString = unfilteredString.replace(pattern, VALUE_PLACEHOLDER);
+const filterStringChunks = (pattern, unfilteredString, filter) => {
+  const patternMatches = unfilteredString.match(pattern);
+  let filteredString = unfilteredString.replace(pattern, VALUE_PLACEHOLDER);
 
-  if (pattenMatches) {
-    var pattenMatchesLength = pattenMatches.length;
-    var currentChunk;
-
-    for (var i = 0; i < pattenMatchesLength; i++) {
-      currentChunk = pattenMatches.shift();
+  if (patternMatches) {
+    patternMatches.slice(0).forEach(() =>
       filteredString = filteredString.replace(
-        VALUE_PLACEHOLDER, filter(currentChunk));
-    }
+        VALUE_PLACEHOLDER, filter(patternMatches.shift()))
+    );
   }
 
   return filteredString;
-}
+};
+
+/**
+ * @param {string} str
+ *
+ * @return {string}
+ * @private
+ */
+const sanitizeHexChunksToRGB = str =>
+  filterStringChunks(R_HEX, str, convertHexToRGB);
+
+/**
+ * Convert all hex color values within a string to an rgb string.
+ *
+ * @param {Object} stateObject
+ *
+ * @return {Object} The modified obj
+ * @private
+ */
+const sanitizeObjectForHexProps = stateObject => {
+  each(stateObject, prop => {
+    const currentProp = stateObject[prop];
+
+    if (typeof currentProp === 'string' && currentProp.match(R_HEX)) {
+      stateObject[prop] = sanitizeHexChunksToRGB(currentProp);
+    }
+  });
+};
 
 /**
  * Check for floating point values within rgb strings and rounds them.
