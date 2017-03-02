@@ -254,9 +254,8 @@ const filterStringChunks = (pattern, unfilteredString, filter) => {
   let filteredString = unfilteredString.replace(pattern, VALUE_PLACEHOLDER);
 
   if (patternMatches) {
-    patternMatches.slice(0).forEach(() =>
-      filteredString = filteredString.replace(
-        VALUE_PLACEHOLDER, filter(patternMatches.shift()))
+    patternMatches.forEach(match =>
+      filteredString = filteredString.replace(VALUE_PLACEHOLDER, filter(match))
     );
   }
 
