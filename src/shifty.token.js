@@ -290,36 +290,28 @@ const sanitizeObjectForHexProps = stateObject => {
 };
 
 /**
- * Check for floating point values within rgb strings and rounds them.
+ * @param {string} rgbChunk
+ *
+ * @return {string}
+ * @private
+ */
+const sanitizeRGBChunk = rgbChunk => {
+  const numbers = rgbChunk.match(R_UNFORMATTED_VALUES).map(Math.floor);
+  const prefix = rgbChunk.match(R_RGB_PREFIX)[0];
+
+  return `${prefix}${numbers.join(',')})`;
+};
+
+/**
+ * Check for floating point values within rgb strings and round them.
  *
  * @param {string} formattedString
  *
  * @return {string}
  * @private
  */
-function sanitizeRGBChunks (formattedString) {
-  return filterStringChunks(R_RGB, formattedString, sanitizeRGBChunk);
-}
-
-/**
- * @param {string} rgbChunk
- *
- * @return {string}
- * @private
- */
-function sanitizeRGBChunk (rgbChunk) {
-  var numbers = rgbChunk.match(R_UNFORMATTED_VALUES);
-  var numbersLength = numbers.length;
-  var sanitizedString = rgbChunk.match(R_RGB_PREFIX)[0];
-
-  for (var i = 0; i < numbersLength; i++) {
-    sanitizedString += parseInt(numbers[i], 10) + ',';
-  }
-
-  sanitizedString = sanitizedString.slice(0, -1) + ')';
-
-  return sanitizedString;
-}
+const sanitizeRGBChunks = formattedString =>
+  filterStringChunks(R_RGB, formattedString, sanitizeRGBChunk);
 
 /**
  * @param {Object} stateObject
@@ -328,43 +320,40 @@ function sanitizeRGBChunk (rgbChunk) {
  * the string properties of stateObject
  * @private
  */
-function getFormatManifests (stateObject) {
-  var manifestAccumulator = {};
+const getFormatManifests = stateObject => {
+  const manifest = {};
 
-  each(stateObject, function (prop) {
-    var currentProp = stateObject[prop];
+  each(stateObject, propertyName => {
+    let property = stateObject[propertyName];
 
-    if (typeof currentProp === 'string') {
-      var rawValues = getValuesFrom(currentProp);
-
-      manifestAccumulator[prop] = {
-        'formatString': getFormatStringFrom(currentProp),
-        'chunkNames': getFormatChunksFrom(rawValues, prop)
+    if (typeof property === 'string') {
+      manifest[propertyName] = {
+        formatString: getFormatStringFrom(property),
+        chunkNames: getFormatChunksFrom(
+          getValuesFrom(property),
+          propertyName
+        )
       };
     }
   });
 
-  return manifestAccumulator;
-}
+  return manifest;
+};
 
 /**
  * @param {Object} stateObject
  * @param {Object} formatManifests
  * @private
  */
-function expandFormattedProperties (stateObject, formatManifests) {
-  each(formatManifests, function (prop) {
-    var currentProp = stateObject[prop];
-    var rawValues = getValuesFrom(currentProp);
-    var rawValuesLength = rawValues.length;
+const expandFormattedProperties = (stateObject, formatManifests) => {
+  each(formatManifests, propertyName => {
+    getValuesFrom(stateObject[propertyName]).forEach((number, i) =>
+      stateObject[formatManifests[propertyName].chunkNames[i]] = +number
+    );
 
-    for (var i = 0; i < rawValuesLength; i++) {
-      stateObject[formatManifests[prop].chunkNames[i]] = +rawValues[i];
-    }
-
-    delete stateObject[prop];
+    delete stateObject[propertyName];
   });
-}
+};
 
 /**
  * @param {Object} stateObject
