@@ -314,6 +314,18 @@ const sanitizeRGBChunks = formattedString =>
   filterStringChunks(R_RGB, formattedString, sanitizeRGBChunk);
 
 /**
+ * Note: It's the duty of the caller to convert the Array elements of the
+ * return value into numbers.  This is a performance optimization.
+ *
+ * @param {string} formattedString
+ *
+ * @return {Array.<string>|null}
+ * @private
+ */
+const getValuesFrom = formattedString =>
+  formattedString.match(R_UNFORMATTED_VALUES);
+
+/**
  * @param {Object} stateObject
  *
  * @return {Object} An Object of formatManifests that correspond to
@@ -357,43 +369,22 @@ const expandFormattedProperties = (stateObject, formatManifests) => {
 
 /**
  * @param {Object} stateObject
- * @param {Object} formatManifests
- * @private
- */
-function collapseFormattedProperties (stateObject, formatManifests) {
-  each(formatManifests, function (prop) {
-    var currentProp = stateObject[prop];
-    var formatChunks = extractPropertyChunks(
-      stateObject, formatManifests[prop].chunkNames);
-    var valuesList = getValuesList(
-      formatChunks, formatManifests[prop].chunkNames);
-    currentProp = getFormattedValues(
-      formatManifests[prop].formatString, valuesList);
-    stateObject[prop] = sanitizeRGBChunks(currentProp);
-  });
-}
-
-/**
- * @param {Object} stateObject
  * @param {Array.<string>} chunkNames
  *
  * @return {Object} The extracted value chunks.
  * @private
  */
-function extractPropertyChunks (stateObject, chunkNames) {
-  var extractedValues = {};
-  var currentChunkName, chunkNamesLength = chunkNames.length;
+const extractPropertyChunks = (stateObject, chunkNames) => {
+  const extractedValues = {};
 
-  for (var i = 0; i < chunkNamesLength; i++) {
-    currentChunkName = chunkNames[i];
-    extractedValues[currentChunkName] = stateObject[currentChunkName];
-    delete stateObject[currentChunkName];
-  }
+  chunkNames.forEach(chunkName => {
+    extractedValues[chunkName] = stateObject[chunkName];
+    delete stateObject[chunkName];
+  });
 
   return extractedValues;
-}
+};
 
-var getValuesList_accumulator = [];
 /**
  * @param {Object} stateObject
  * @param {Array.<string>} chunkNames
@@ -401,16 +392,8 @@ var getValuesList_accumulator = [];
  * @return {Array.<number>}
  * @private
  */
-function getValuesList (stateObject, chunkNames) {
-  getValuesList_accumulator.length = 0;
-  var chunkNamesLength = chunkNames.length;
-
-  for (var i = 0; i < chunkNamesLength; i++) {
-    getValuesList_accumulator.push(stateObject[chunkNames[i]]);
-  }
-
-  return getValuesList_accumulator;
-}
+const getValuesList = (stateObject, chunkNames) =>
+  chunkNames.map(chunkName => stateObject[chunkName]);
 
 /**
  * @param {string} formatString
@@ -419,30 +402,39 @@ function getValuesList (stateObject, chunkNames) {
  * @return {string}
  * @private
  */
-function getFormattedValues (formatString, rawValues) {
-  var formattedValueString = formatString;
-  var rawValuesLength = rawValues.length;
+const getFormattedValues = (formatString, rawValues) => {
+  rawValues.forEach(rawValue =>
+    formatString = formatString.replace(
+      VALUE_PLACEHOLDER, +rawValue.toFixed(4)
+    )
+  );
 
-  for (var i = 0; i < rawValuesLength; i++) {
-    formattedValueString = formattedValueString.replace(
-      VALUE_PLACEHOLDER, +rawValues[i].toFixed(4));
-  }
-
-  return formattedValueString;
-}
+  return formatString;
+};
 
 /**
- * Note: It's the duty of the caller to convert the Array elements of the
- * return value into numbers.  This is a performance optimization.
- *
- * @param {string} formattedString
- *
- * @return {Array.<string>|null}
+ * @param {Object} stateObject
+ * @param {Object} formatManifests
  * @private
  */
-function getValuesFrom (formattedString) {
-  return formattedString.match(R_UNFORMATTED_VALUES);
-}
+const collapseFormattedProperties = (stateObject, formatManifests) => {
+  each(formatManifests, prop => {
+    const { chunkNames, formatString } = formatManifests[prop];
+
+    const currentProp = getFormattedValues(
+      formatString,
+      getValuesList(
+        extractPropertyChunks(
+          stateObject,
+          chunkNames
+        ),
+        chunkNames
+      )
+    );
+
+    stateObject[prop] = sanitizeRGBChunks(currentProp);
+  });
+};
 
 /**
  * @param {Object} easingObject
