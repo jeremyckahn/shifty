@@ -441,79 +441,72 @@ const collapseFormattedProperties = (stateObject, formatManifests) => {
  * @param {Object} tokenData
  * @private
  */
-function expandEasingObject (easingObject, tokenData) {
-  each(tokenData, function (prop) {
-    var currentProp = tokenData[prop];
-    var chunkNames = currentProp.chunkNames;
-    var chunkLength = chunkNames.length;
-
-    var easing = easingObject[prop];
-    var i;
+const expandEasingObject = (easingObject, tokenData) => {
+  each(tokenData, prop => {
+    const { chunkNames } = tokenData[prop];
+    const easing = easingObject[prop];
 
     if (typeof easing === 'string') {
-      var easingChunks = easing.split(' ');
-      var lastEasingChunk = easingChunks[easingChunks.length - 1];
+      const easingNames = easing.split(' ');
+      const defaultEasing = easingNames[easingNames.length - 1];
 
-      for (i = 0; i < chunkLength; i++) {
-        easingObject[chunkNames[i]] = easingChunks[i] || lastEasingChunk;
-      }
-
-    } else {
-      for (i = 0; i < chunkLength; i++) {
-        easingObject[chunkNames[i]] = easing;
-      }
+      chunkNames.forEach((chunkName, i) =>
+        easingObject[chunkName] = easingNames[i] || defaultEasing
+      );
+    } else { // easing is a function
+      chunkNames.forEach(chunkName =>
+        easingObject[chunkName] = easing
+      );
     }
 
     delete easingObject[prop];
   });
-}
+};
 
 /**
  * @param {Object} easingObject
  * @param {Object} tokenData
  * @private
  */
-function collapseEasingObject (easingObject, tokenData) {
-  each(tokenData, function (prop) {
-    var currentProp = tokenData[prop];
-    var chunkNames = currentProp.chunkNames;
-    var chunkLength = chunkNames.length;
+const collapseEasingObject = (easingObject, tokenData) => {
+  each(tokenData, prop => {
+    const { chunkNames } = tokenData[prop];
+    const { length } = chunkNames;
+    const firstEasing = easingObject[chunkNames[0]];
 
-    var firstEasing = easingObject[chunkNames[0]];
-    var typeofEasings = typeof firstEasing;
+    if (typeof firstEasing === 'string') {
+      easingObject[prop] = chunkNames.map(chunkName => {
+        const easingName = easingObject[chunkName];
+        delete easingObject[chunkName];
 
-    if (typeofEasings === 'string') {
-      var composedEasingString = '';
-
-      for (var i = 0; i < chunkLength; i++) {
-        composedEasingString += ' ' + easingObject[chunkNames[i]];
-        delete easingObject[chunkNames[i]];
-      }
-
-      easingObject[prop] = composedEasingString.substr(1);
-    } else {
+        return easingName;
+      }).join(' ');
+    } else { // firstEasing is a function
       easingObject[prop] = firstEasing;
     }
   });
-}
+};
 
-export function tweenCreated (currentState, fromState, toState, easingObject) {
-  sanitizeObjectForHexProps(currentState);
-  sanitizeObjectForHexProps(fromState);
-  sanitizeObjectForHexProps(toState);
+export function tweenCreated (currentState, fromState, toState) {
+  [currentState, fromState, toState].forEach(sanitizeObjectForHexProps);
+
   this._tokenData = getFormatManifests(currentState);
 }
 
 export function beforeTween (currentState, fromState, toState, easingObject) {
-  expandEasingObject(easingObject, this._tokenData);
-  expandFormattedProperties(currentState, this._tokenData);
-  expandFormattedProperties(fromState, this._tokenData);
-  expandFormattedProperties(toState, this._tokenData);
+  const { _tokenData } = this;
+  expandEasingObject(easingObject, _tokenData);
+
+  [currentState, fromState, toState].forEach(state =>
+    expandFormattedProperties(state, _tokenData)
+  );
 }
 
 export function afterTween (currentState, fromState, toState, easingObject) {
-  collapseFormattedProperties(currentState, this._tokenData);
-  collapseFormattedProperties(fromState, this._tokenData);
-  collapseFormattedProperties(toState, this._tokenData);
-  collapseEasingObject(easingObject, this._tokenData);
+  const { _tokenData } = this;
+  [currentState, fromState, toState].forEach(state =>
+    collapseFormattedProperties(state, _tokenData)
+  );
+
+  collapseEasingObject(easingObject, _tokenData);
 }
