@@ -328,18 +328,18 @@ const getValuesFrom = formattedString =>
 /**
  * @param {Object} stateObject
  *
- * @return {Object} An Object of formatManifests that correspond to
+ * @return {Object} An Object of formatSignatures that correspond to
  * the string properties of stateObject
  * @private
  */
-const getFormatManifests = stateObject => {
-  const manifest = {};
+const getFormatSignatures = stateObject => {
+  const signatures = {};
 
   each(stateObject, propertyName => {
     let property = stateObject[propertyName];
 
     if (typeof property === 'string') {
-      manifest[propertyName] = {
+      signatures[propertyName] = {
         formatString: getFormatStringFrom(property),
         chunkNames: getFormatChunksFrom(
           getValuesFrom(property),
@@ -349,18 +349,18 @@ const getFormatManifests = stateObject => {
     }
   });
 
-  return manifest;
+  return signatures;
 };
 
 /**
  * @param {Object} stateObject
- * @param {Object} formatManifests
+ * @param {Object} formatSignatures
  * @private
  */
-const expandFormattedProperties = (stateObject, formatManifests) => {
-  each(formatManifests, propertyName => {
+const expandFormattedProperties = (stateObject, formatSignatures) => {
+  each(formatSignatures, propertyName => {
     getValuesFrom(stateObject[propertyName]).forEach((number, i) =>
-      stateObject[formatManifests[propertyName].chunkNames[i]] = +number
+      stateObject[formatSignatures[propertyName].chunkNames[i]] = +number
     );
 
     delete stateObject[propertyName];
@@ -414,12 +414,12 @@ const getFormattedValues = (formatString, rawValues) => {
 
 /**
  * @param {Object} stateObject
- * @param {Object} formatManifests
+ * @param {Object} formatSignatures
  * @private
  */
-const collapseFormattedProperties = (stateObject, formatManifests) => {
-  each(formatManifests, prop => {
-    const { chunkNames, formatString } = formatManifests[prop];
+const collapseFormattedProperties = (stateObject, formatSignatures) => {
+  each(formatSignatures, prop => {
+    const { chunkNames, formatString } = formatSignatures[prop];
 
     const currentProp = getFormattedValues(
       formatString,
@@ -490,7 +490,7 @@ const collapseEasingObject = (easingObject, tokenData) => {
 export function tweenCreated (currentState, fromState, toState) {
   [currentState, fromState, toState].forEach(sanitizeObjectForHexProps);
 
-  this._tokenData = getFormatManifests(currentState);
+  this._tokenData = getFormatSignatures(currentState);
 }
 
 export function beforeTween (currentState, fromState, toState, easingObject) {
