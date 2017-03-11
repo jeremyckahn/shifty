@@ -35,6 +35,7 @@ export const each = (obj, fn) => {
 /**
  * @param {Object} obj
  * @return {Object}
+ * @private
  */
 export const clone = obj => Object.assign({}, obj);
 
@@ -44,8 +45,8 @@ export const clone = obj => Object.assign({}, obj);
  * Object following the same format as `linear`.
  *
  * `pos` should be a normalized `number` (between 0 and 1).
- * @property formulas
  * @type {Object(function)}
+ * @private
  */
 const formulas = clone(easingFunctions);
 
@@ -135,15 +136,10 @@ export const composeEasingObject = (fromTweenParams, easing = DEFAULT_EASING) =>
 
 export class Tweenable {
   /**
-   * @class Tweenable
    * @param {Object=} initialState The values that the initial tween should
-   * start at if a `from` object is not provided to `{{#crossLink
-   * "Tweenable/tween:method"}}{{/crossLink}}` or `{{#crossLink
-   * "Tweenable/setConfig:method"}}{{/crossLink}}`.
+   * start at if a `from` object is not provided to `tween` or `setConfig`.
    * @param {Object=} config Configuration object to be passed to
-   * `{{#crossLink "Tweenable/setConfig:method"}}{{/crossLink}}`.
-   * @module Tweenable
-   * @constructor
+   * [`setConfig`]{@link Tweenable#setConfig}.
    */
   constructor (initialState = {}, config = undefined) {
     this._currentState = initialState;
@@ -243,9 +239,9 @@ export class Tweenable {
 
   /**
    * Configure and start a tween.
-   * @method tween
+   * @method Tweenable#tween
    * @param {Object=} config Configuration object to be passed to
-   * `{{#crossLink "Tweenable/setConfig:method"}}{{/crossLink}}`.
+   * [`setConfig`]{@link Tweenable#setConfig}.
    * @return Promise
    */
   tween (config = undefined) {
@@ -267,28 +263,27 @@ export class Tweenable {
   /**
    * Configure a tween that will start at some point in the future.
    *
-   * @method setConfig
-   * @param {Object} config The following values are valid:
-   * - __from__ (_Object=_): Starting position.  If omitted, `{{#crossLink
-   *   "Tweenable/get:method"}}get(){{/crossLink}}` is used.
-   * - __to__ (_Object=_): Ending position.
-   * - __duration__ (_number=_): How many milliseconds to animate for.
-   * - __delay__ (_delay=_): How many milliseconds to wait before starting the
-   *   tween.
-   * - __start__ (_Function(Object, *)_): Function to execute when the tween
-   *   begins.  Receives the state of the tween as the first parameter and
-   *   `attachment` as the second parameter.
-   * - __step__ (_Function(Object, *, number)_): Function to execute on every
-   *   tick.  Receives `{{#crossLink
-   *   "Tweenable/get:method"}}get(){{/crossLink}}` as the first parameter,
-   *   `attachment` as the second parameter, and the time elapsed since the
-   *   start of the tween as the third. This function is not called on the
-   *   final step of the animation.
-   * - __easing__ (_Object.<string|Function>|string|Function=_): Easing curve
-   *   name(s) or function(s) to use for the tween.
-   * - __attachment__ (_*_): Cached value that is passed to the
-   *   `step`/`start` functions.
-   * @chainable
+   * @method Tweenable#setConfig
+   * @param {Object} config See below
+   * @property {Object=} config.from Starting position.  If omitted, `get` is
+   * used.
+   * @property {Object=} config.to Ending position.
+   * @property {number=} config.duration How many milliseconds to animate for.
+   * @property {number=} config.delay  How many milliseconds to wait before
+   * starting
+   * the tween.
+   * @property {Function(Object, *)=} config.start Function to execute when the
+   * tween begins.  Receives the state of the tween as the first parameter and
+   * `attachment` as the second parameter.
+   * @property {Function(Object, *, number)=} config.step Function to execute
+   * on every tick.  Receives `get` as the first parameter, `attachment` as the
+   * second parameter, and the time elapsed since the start of the tween as the
+   * third.  This function is not called on the final step of the animation.
+   * @property {Object.<string|Function|string|Function>=} config.easing Easing
+   * curve name(s) or function(s) to use for the tween.
+   * @property {*=} config.attachment Cached value that is passed to the
+   * `step`/`start` functions.
+   * @return Tweenable
    */
   setConfig (config = {}) {
     this._configured = true;
@@ -338,7 +333,7 @@ export class Tweenable {
   }
 
   /**
-   * @method get
+   * @method Tweenable#get
    * @return {Object} The current state.
    */
   get () {
@@ -346,8 +341,9 @@ export class Tweenable {
   }
 
   /**
-   * @method set
-   * @param {Object} state The current state.
+   * @method Tweenable#set
+   * @param {Object} state The state to set.
+   * @description Set the current state.
    */
   set (state) {
     this._currentState = state;
@@ -355,11 +351,10 @@ export class Tweenable {
 
   /**
    * Pause a tween.  Paused tweens can be resumed from the point at which they
-   * were paused.  This is different from `{{#crossLink
-   * "Tweenable/stop:method"}}{{/crossLink}}`, as that method
-   * causes a tween to start over when it is resumed.
-   * @method pause
-   * @chainable
+   * were paused.  This is different from `stop`, as that method causes a tween
+   * to start over when it is resumed.
+   * @method Tweenable#pause
+   * @return Tweenable
    */
   pause () {
     this._pausedAtTime = Tweenable.now();
@@ -370,7 +365,7 @@ export class Tweenable {
 
   /**
    * Resume a paused tween.
-   * @method resume
+   * @method Tweenable#resume
    * @return Promise
    */
   resume () {
@@ -389,10 +384,10 @@ export class Tweenable {
    * Move the state of the animation to a specific point in the tween's
    * timeline.  If the animation is not running, this will cause the `step`
    * handlers to be called.
-   * @method seek
+   * @method Tweenable#seek
    * @param {millisecond} millisecond The millisecond of the animation to seek
    * to.  This must not be less than `0`.
-   * @chainable
+   * @return Tweenable
    */
   seek (millisecond) {
     millisecond = Math.max(millisecond, 0);
@@ -424,8 +419,8 @@ export class Tweenable {
    * its current state, and the tween promise is not resolved.  If `true`, the
    * tweened object's values are instantly set to the target values, and the
    * promise is resolved.
-   * @method stop
-   * @chainable
+   * @method Tweenable#stop
+   * @return Tweenable
    */
   stop (gotoEnd) {
     this._isTweening = false;
@@ -462,7 +457,7 @@ export class Tweenable {
   }
 
   /**
-   * @method isPlaying
+   * @method Tweenable#isPlaying
    * @return {boolean} Whether or not a tween is running.
    */
   isPlaying () {
@@ -477,7 +472,7 @@ export class Tweenable {
    * is used if available, otherwise
    * [`setTimeout`](https://developer.mozilla.org/en-US/docs/Web/API/Window.setTimeout)
    * is used.
-   * @method setScheduleFunction
+   * @method Tweenable#setScheduleFunction
    * @param {Function(Function,number)} scheduleFunction The function to be
    * used to schedule the next frame to be rendered.
    */
@@ -488,7 +483,7 @@ export class Tweenable {
   /**
    * `delete` all "own" properties.  Call this when the `Tweenable` instance
    * is no longer needed to free memory.
-   * @method dispose
+   * @method Tweenable#dispose
    */
   dispose () {
     each(this, prop => delete this[prop]);
@@ -496,6 +491,13 @@ export class Tweenable {
 }
 
 Object.assign(Tweenable, {
+  /**
+   * @memberof Tweenable
+   * @type Object.<Function(number)>
+   * @static
+   * @description A static Object of easing functions that can by used by
+   * Shifty.
+   */
   formulas,
   filters: { token },
   now: (Date.now || (_ => +new Date()))
@@ -503,6 +505,17 @@ Object.assign(Tweenable, {
 
 /**
  * @param {Object=} config
+ * @description Standalone convenience method that functions identically to
+ * [`Tweenable#tween`]{@link Tweenable#tween}.  You can use this to create
+ * tweens without needing to set up a [`Tweenable`]{@link Tweenable} instance.
+ *
+ *     import { tween } from 'shifty';
+ *
+ *     tween({ from: { x: 0 }, to: { x: 10 } }).then(
+ *       () => console.log('All done!')
+ *     );
+ *
+ * @returns {Promise}
  */
 export function tween (config = {}) {
   const tweenable = new Tweenable();

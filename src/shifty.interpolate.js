@@ -8,19 +8,22 @@ mockTweenable._filterArgs = [];
 
 /**
  * Compute the midpoint of two Objects.  This method effectively calculates a
- * specific frame of animation that `{{#crossLink
- * "Tweenable/tween:method"}}{{/crossLink}}` does many times over the course
+ * specific frame of animation that [`tween`]{@link Tweenable#tween} does many times over the course
  * of a full tween.
  *
- *     const interpolatedValues = Tweenable.interpolate({
- *       width: '100px',
- *       opacity: 0,
- *       color: '#fff'
- *     }, {
- *       width: '200px',
- *       opacity: 1,
- *       color: '#000'
- *     }, 0.5);
+ *     import { interpolate } from 'shifty';
+ *
+ *     const interpolatedValues = interpolate({
+ *         width: '100px',
+ *         opacity: 0,
+ *         color: '#fff'
+ *       }, {
+ *         width: '200px',
+ *         opacity: 1,
+ *         color: '#000'
+ *       },
+ *       0.5
+ *     );
  *
  *     console.log(interpolatedValues);
  *     // {opacity: 0.5, width: "150px", color: "rgb(127,127,127)"}

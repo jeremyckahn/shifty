@@ -37,6 +37,10 @@ import { Tweenable } from './shifty.core';
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 // port of webkit cubic bezier handling by http://www.netzgesta.de/dev/
+
+/**
+ * @private
+ */
 function cubicBezierAtTime(t, p1x, p1y, p2x, p2y, duration) {
   let ax = 0, bx = 0, cx = 0, ay = 0, by = 0, cy = 0;
 
@@ -136,22 +140,21 @@ const getCubicBezierTransition = (x1, y1, x2, y2) =>
 
 
 /**
- * Create a Bezier easing function and attach it to `{{#crossLink
- * "Tweenable/formulas:property"}}Tweenable.formulas{{/crossLink}}`.  This
- * function gives you total control over the easing curve.  Matthew Lein's
+ * Create a Bezier easing function and attach it to
+ * [`Tweenable.formulas`]{@link Tweenable.formulas}.  This function gives you
+ * total control over the easing curve.  Matthew Lein's
  * [Ceaser](http://matthewlein.com/ceaser/) is a useful tool for visualizing
  * the curves you can make with this function.
  * @method setBezierFunction
  * @param {string} name The name of the easing curve.  Overwrites the old
- * easing function on `{{#crossLink
- * "Tweenable/formulas:property"}}Tweenable#formulas{{/crossLink}}` if it
+ * easing function on [`Tweenable.formulas`]{@link Tweenable.formulas} if it
  * exists.
  * @param {number} x1
  * @param {number} y1
  * @param {number} x2
  * @param {number} y2
- * @return {function} The easing function that was attached to
- * Tweenable.formulas.
+ * @return {Function} The easing function that was attached to
+ * [`Tweenable.formulas`]{@link Tweenable.formulas}.
  */
 export const setBezierFunction = (name, x1, y1, x2, y2) =>
   Tweenable.formulas[name] =
@@ -164,10 +167,10 @@ export const setBezierFunction = (name, x1, y1, x2, y2) =>
     });
 
 /**
- * `delete` an easing function from `{{#crossLink
- * "Tweenable/formulas:property"}}Tweenable.formulas{{/crossLink}}`.  Be
- * careful with this method, as it `delete`s whatever easing formula matches
- * `name` (which means you can delete standard Shifty easing functions).
+ * `delete` an easing function from [`Tweenable.formulas`]{@link
+ * Tweenable.formulas}.  Be careful with this method, as it `delete`s whatever
+ * easing formula matches `name` (which means you can delete standard Shifty
+ * easing functions).
  * @method unsetBezierFunction
  * @param {string} name The name of the easing function to delete.
  * @return {function}

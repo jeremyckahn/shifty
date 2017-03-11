@@ -21,6 +21,7 @@
     "grunt-contrib-uglify": "^0.9.2",
     "grunt-contrib-yuidoc": "^0.5.2",
     "grunt-dox": "~0.5.0",
+    "jsdoc": "^3.4.3",
     "mocha": "^3.2.0",
     "nodemon": "^1.11.0",
     "webpack": "^1.14.0",
@@ -30,7 +31,8 @@
     "build": "webpack",
     "start": "webpack-dev-server --config webpack.test.config.js",
     "test": "mocha ./node_modules/babel-core/register.js test/index.js",
-    "test:watch": "nodemon --exec \"npm test\" --watch src --watch test"
+    "test:watch": "nodemon --exec \"npm test\" --watch src --watch test",
+    "doc": "jsdoc -c .jsdoc src/*.js"
   },
   "contributors": [
     {
