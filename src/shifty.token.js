@@ -139,10 +139,15 @@ import { Tweenable, each } from './shifty.core';
 const R_NUMBER_COMPONENT = /(\d|\-|\.)/;
 const R_FORMAT_CHUNKS = /([^\-0-9\.]+)/g;
 const R_UNFORMATTED_VALUES = /[0-9.\-]+/g;
-const R_RGB = new RegExp(
-  'rgb\\(' + R_UNFORMATTED_VALUES.source +
-  (/,\s*/.source) + R_UNFORMATTED_VALUES.source +
-  (/,\s*/.source) + R_UNFORMATTED_VALUES.source + '\\)', 'g');
+const R_RGB = (() => {
+  const number = R_UNFORMATTED_VALUES.source;
+  const comma = /,\s*/.source;
+
+  return new RegExp(
+  `rgb\\(${number}${comma}${number}${comma}${number}\\)`,
+  'g'
+  );
+})();
 const R_RGB_PREFIX = /^.*\(/;
 const R_HEX = /#([0-9]|[a-f]){3,6}/gi;
 const VALUE_PLACEHOLDER = 'VAL';
