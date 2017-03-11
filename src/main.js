@@ -10,7 +10,6 @@ import { setBezierFunction, unsetBezierFunction } from './shifty.bezier';
 export {
   Tweenable,
   tween,
-  now,
   interpolate,
   setBezierFunction,
   unsetBezierFunction
