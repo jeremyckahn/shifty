@@ -1,6 +1,7 @@
 {
   "plugins": ["plugins/markdown"],
   "opts": {
-    "destination": "dist/doc"
+    "destination": "dist/doc",
+    "readme": "index.md"
   }
 }
