@@ -39,20 +39,13 @@ are:
 
 ## Installation
 
-Shifty is available through NPM and Bower:
-
 ````
 npm install --save shifty
 ````
 
-````
-bower install --save shifty
-````
-
 ## Browser compatibility
 
-Shifty officially supports Internet Explorer 8 and up, as well as all Evergreen
-browsers.
+Shifty officially supports Evergreen browsers.
 
 ## Using Shifty
 
@@ -268,9 +261,7 @@ step.
 
 ## Building Shifty
 
-Shifty uses [nodejs](http://nodejs.org) and [Grunt](http://gruntjs.com/) for
-the build system. It also requires a handful of Node modules for the build
-process.  Install the dependencies via npm like so:
+First, install the dependencies via npm like so:
 
 ````
 $: npm install
@@ -279,48 +270,29 @@ $: npm install
 Once those are installed, do this at the command line to build the project:
 
 ````
-$: grunt build
-````
-
-The the default `build` task creates a binary that includes all extensions.
-You can also create minimal binaries that only include the bare essentials for
-Shifty to run:
-
-````
-$: grunt build-minimal
-````
-
-Note that a minimal build includes no tweening formulas.  You can customize and
-add build targets in the `grunt.js` file.  You can also lint the code and run
-the unit tests with the default Grunt task:
-
-````
-$: grunt
+$: npm run build
 ````
 
 To generate the documentation:
 
 ````
-$: grunt yuidoc
+$: npm run doc
 ````
 
-## AMD and NodeJS
+## Loading Shifty
 
-If an AMD loader (eg. [RequireJS](http://requirejs.org/),
-[Curl.js](https://github.com/unscriptable/curl)) is present on the page, Shifty
-won't generate any globals, so to use it you must list `"shifty"` as
-a dependency.
+Shifty exposes a UMD module, so you can load it however you like:
 
 ````javascript
-define(['shifty'], function(Tweenable){
-  var tweenable = new Tweenable();
+import { Tweenable } from 'shifty';
+````
+
+Or:
+
+````javascript
+define(['shifty'], function(shifty){
+  var tweenable = new shifty.Tweenable();
 });
-````
-
-Shifty can also be used in NodeJS:
-
-````javascript
-var Tweenable = require('shifty');
 ````
 
 ## Contributors

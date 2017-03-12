@@ -1,12 +1,4 @@
 {
-  "globals": {
-    "SHIFTY_DEBUG_NOW": true,
-    "root": true,
-    "Tweenable": true,
-    "module": true,
-    "define": true
-  },
-
   "asi": false,
   "boss": true,
   "browser": true,
