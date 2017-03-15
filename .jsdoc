@@ -3,5 +3,10 @@
   "opts": {
     "destination": "dist/doc",
     "readme": "index.md"
+  },
+  "templates": {
+    "default": {
+      "useLongnameInNav": true
+    }
   }
 }

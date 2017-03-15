@@ -1,25 +1,24 @@
 /**
- * This module adds string interpolation support to Shifty.
+ * This module adds string interpolation support to Shifty.  It "just works;"
+ * it does not expose a public API.
  *
  * The Token extension allows Shifty to tween numbers inside of strings.  Among
  * other things, this allows you to animate CSS properties.  For example, you
  * can do this:
  *
- *     var tweenable = new Tweenable();
- *     tweenable.tween({
+ *     import { tween } from 'shifty';
+ *
+ *     tween({
  *       from: { transform: 'translateX(45px)' },
  *       to: { transform: 'translateX(90xp)' }
  *     });
  *
  * `translateX(45)` will be tweened to `translateX(90)`.  To demonstrate:
  *
- *     var tweenable = new Tweenable();
- *     tweenable.tween({
+ *     tween({
  *       from: { transform: 'translateX(45px)' },
  *       to: { transform: 'translateX(90px)' },
- *       step: function (state) {
- *         console.log(state.transform);
- *       }
+ *       step: state => console.log(state.transform)
  *     });
  *
  * The above snippet will log something like this in the console:
@@ -32,13 +31,10 @@
  *
  * Another use for this is animating colors:
  *
- *     var tweenable = new Tweenable();
- *     tweenable.tween({
+ *     tween({
  *       from: { color: 'rgb(0,255,0)' },
  *       to: { color: 'rgb(255,0,255)' },
- *       step: function (state) {
- *         console.log(state.color);
- *       }
+ *       step: state => console.log(state.color)
  *     });
  *
  * The above snippet will log something like this:
@@ -54,13 +50,10 @@
  * converted into the equivalent RGB output values.  This is done to optimize
  * for performance.
  *
- *     var tweenable = new Tweenable();
- *     tweenable.tween({
+ *     tween({
  *       from: { color: '#0f0' },
  *       to: { color: '#f0f' },
- *       step: function (state) {
- *         console.log(state.color);
- *       }
+ *       step: state => console.log(state.color)
  *     });
  *
  * This snippet will generate the same output as the one before it because
@@ -78,14 +71,11 @@
  * some CSS properties have multiple values in them, and you might need to
  * tween each value along its own easing curve.  A basic example:
  *
- *     var tweenable = new Tweenable();
- *     tweenable.tween({
+ *     tween({
  *       from: { transform: 'translateX(0px) translateY(0px)' },
  *       to: { transform:   'translateX(100px) translateY(100px)' },
  *       easing: { transform: 'easeInQuad' },
- *       step: function (state) {
- *         console.log(state.transform);
- *       }
+ *       step: state => console.log(state.transform)
  *     });
  *
  * The above snippet will create values like this:
@@ -101,14 +91,11 @@
  * points and both use the same easing curve.  We can also tween `translateX`
  * and `translateY` along independent curves:
  *
- *     var tweenable = new Tweenable();
- *     tweenable.tween({
+ *     tween({
  *       from: { transform: 'translateX(0px) translateY(0px)' },
  *       to: { transform:   'translateX(100px) translateY(100px)' },
  *       easing: { transform: 'easeInQuad bounce' },
- *       step: function (state) {
- *         console.log(state.transform);
- *       }
+ *       step: state => console.log(state.transform)
  *     });
  *
  * The above snippet will create values like this:
@@ -127,7 +114,7 @@
  * The order of the space-separated easing curves correspond the token values
  * they apply to.  If there are more token values than easing curves listed,
  * the last easing curve listed is used.
- * @submodule Tweenable.token
+ * @module token
  */
 
 // token function is defined above only so that dox-foundation sees it as

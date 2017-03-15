@@ -145,7 +145,7 @@ const getCubicBezierTransition = (x1, y1, x2, y2) =>
  * total control over the easing curve.  Matthew Lein's
  * [Ceaser](http://matthewlein.com/ceaser/) is a useful tool for visualizing
  * the curves you can make with this function.
- * @method setBezierFunction
+ * @method shifty.setBezierFunction
  * @param {string} name The name of the easing curve.  Overwrites the old
  * easing function on [`Tweenable.formulas`]{@link Tweenable.formulas} if it
  * exists.
@@ -171,8 +171,8 @@ export const setBezierFunction = (name, x1, y1, x2, y2) =>
  * Tweenable.formulas}.  Be careful with this method, as it `delete`s whatever
  * easing formula matches `name` (which means you can delete standard Shifty
  * easing functions).
- * @method unsetBezierFunction
+ * @method shifty.unsetBezierFunction
  * @param {string} name The name of the easing function to delete.
- * @return {function}
+ * @return {Boolean} Whether or not the functions was `delete`d.
  */
 export const unsetBezierFunction = name => delete Tweenable.formulas[name];

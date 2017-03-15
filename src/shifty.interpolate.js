@@ -28,8 +28,7 @@ mockTweenable._filterArgs = [];
  *     console.log(interpolatedValues);
  *     // {opacity: 0.5, width: "150px", color: "rgb(127,127,127)"}
  *
- * @static
- * @method interpolate
+ * @method shifty.interpolate
  * @param {Object} from The starting values to tween from.
  * @param {Object} targetState The ending values to tween to.
  * @param {number} position The normalized position value (between `0.0` and
