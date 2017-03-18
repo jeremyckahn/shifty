@@ -1,6 +1,6 @@
 {
   "name": "shifty",
-  "version": "1.5.4",
+  "version": "2.0.0-alpha",
   "homepage": "http://jeremyckahn.github.io/shifty",
   "author": "Jeremy Kahn <jeremyckahn@gmail.com>",
   "repository": {
@@ -13,6 +13,7 @@
     "babel-core": "^6.22.1",
     "babel-loader": "^6.2.10",
     "babel-preset-es2015": "^6.22.0",
+    "gh-pages": "^0.12.0",
     "jsdoc": "^3.4.3",
     "jshint": "^2.9.4",
     "mocha": "^3.2.0",
@@ -26,7 +27,8 @@
     "test": "mocha ./node_modules/babel-core/register.js test/index.js",
     "test:watch": "nodemon --exec \"npm test\" --watch src --watch test",
     "doc": "jsdoc -c .jsdoc src/*.js",
-    "lint": "jshint src"
+    "lint": "jshint src",
+    "deploy": "npm run build && npm run doc && gh-pages -d dist -b gh-pages-v2"
   },
   "contributors": [
     {
