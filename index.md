@@ -13,36 +13,36 @@ Shifty is the heart of [Rekapi](http://rekapi.com/), a higher-level library for 
 
 To create a basic tween, you could have something like this:
 
-<p data-height="342" data-theme-id="0" data-slug-hash="ulLaI" data-default-tab="js" data-user="jeremyckahn" class='codepen'>See the Pen <a href='http://codepen.io/jeremyckahn/pen/ulLaI/'>Super simple Shifty sample</a> by Jeremy Kahn (<a href='http://codepen.io/jeremyckahn'>@jeremyckahn</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
-<script async src="//codepen.io/assets/embed/ei.js"></script>
+<p data-height="265" data-theme-id="0" data-slug-hash="dvzXLJ" data-default-tab="js" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Shifty 2 playground" class="codepen">See the Pen <a href="http://codepen.io/jeremyckahn/pen/dvzXLJ/">Shifty 2 playground</a> by Jeremy Kahn (<a href="http://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="http://codepen.io">CodePen</a>.</p>
+<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
 
-This snippet tweens and prints the <code>x</code> variable from 0 to 10 over one second, and then prints the final value.  You can animate as many properties in a single tween as you'd like.
+This snippet tweens and prints the `x` variable from 0 to 10 over one second, and then prints the final value.  You can animate as many properties in a single tween as you'd like.
 
 **Please fork, use and contribute to Shifty!  It is distributed under the MIT License, and experimentation is encouraged.  If you find a bug or have a question about Shifty, please submit it via the [Github issue tracker](https://github.com/jeremyckahn/shifty/issues).**
 
-## More examples
+## Examples
 
 ### Bouncing blocks
 
-<p data-height="560" data-theme-id="0" data-slug-hash="mnLvB" data-default-tab="result" data-user="jeremyckahn" class='codepen'>See the Pen <a href='http://codepen.io/jeremyckahn/pen/mnLvB/'>Shifty Attachment Demo</a> by Jeremy Kahn (<a href='http://codepen.io/jeremyckahn'>@jeremyckahn</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
-<script async src="//codepen.io/assets/embed/ei.js"></script>
+<p data-height="533" data-theme-id="0" data-slug-hash="OpzjRQ" data-default-tab="result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Shifty Attachment Demo" class="codepen">See the Pen <a href="http://codepen.io/jeremyckahn/pen/OpzjRQ/">Shifty Attachment Demo</a> by Jeremy Kahn (<a href="http://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="http://codepen.io">CodePen</a>.</p>
+<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
 
 ### A helix!
 
-<p data-height="700" data-theme-id="0" data-slug-hash="brzKu" data-default-tab="result" data-user="jeremyckahn" class='codepen'>See the Pen <a href='http://codepen.io/jeremyckahn/pen/brzKu/'>Shifty Helix Demo</a> by Jeremy Kahn (<a href='http://codepen.io/jeremyckahn'>@jeremyckahn</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
-<script async src="//codepen.io/assets/embed/ei.js"></script>
+<p data-height="725" data-theme-id="0" data-slug-hash="KWZvXY" data-default-tab="result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Shifty Helix Demo" class="codepen">See the Pen <a href="http://codepen.io/jeremyckahn/pen/KWZvXY/">Shifty Helix Demo</a> by Jeremy Kahn (<a href="http://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="http://codepen.io">CodePen</a>.</p>
+<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
 
 ### Tweening with a custom easing formula
 
-<p data-height="330" data-theme-id="0" data-slug-hash="qwldc" data-default-tab="js" data-user="jeremyckahn" class='codepen'>See the Pen <a href='http://codepen.io/jeremyckahn/pen/qwldc/'>Tweening with a custom easing formula</a> by Jeremy Kahn (<a href='http://codepen.io/jeremyckahn'>@jeremyckahn</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
-<script async src="//codepen.io/assets/embed/ei.js"></script>
+<p data-height="265" data-theme-id="0" data-slug-hash="xqpLQg" data-default-tab="js,result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Tweening with a custom easing formula" class="codepen">See the Pen <a href="http://codepen.io/jeremyckahn/pen/xqpLQg/">Tweening with a custom easing formula</a> by Jeremy Kahn (<a href="http://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="http://codepen.io">CodePen</a>.</p>
+<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
 
 ### Shifting a color
 
-<p data-height="330" data-theme-id="0" data-slug-hash="jJarp" data-default-tab="js" data-user="jeremyckahn" class='codepen'>See the Pen <a href='http://codepen.io/jeremyckahn/pen/jJarp/'>Shifting a color</a> by Jeremy Kahn (<a href='http://codepen.io/jeremyckahn'>@jeremyckahn</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
-<script async src="//codepen.io/assets/embed/ei.js"></script>
+<p data-height="315" data-theme-id="0" data-slug-hash="jJarp" data-default-tab="js,result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Shifting a color" class="codepen">See the Pen <a href="http://codepen.io/jeremyckahn/pen/jJarp/">Shifting a color</a> by Jeremy Kahn (<a href="http://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="http://codepen.io">CodePen</a>.</p>
+<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
 
 ### Tweening numbers within an arbitrary string
 
-<p data-height="315" data-theme-id="0" data-slug-hash="wHzhJ" data-default-tab="js" data-user="jeremyckahn" class='codepen'>See the Pen <a href='http://codepen.io/jeremyckahn/pen/wHzhJ/'>Tweening numbers within an arbitrary string</a> by Jeremy Kahn (<a href='http://codepen.io/jeremyckahn'>@jeremyckahn</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
-<script async src="//codepen.io/assets/embed/ei.js"></script>
+<p data-height="265" data-theme-id="0" data-slug-hash="YZYxge" data-default-tab="js,result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Tweening numbers within an arbitrary string" class="codepen">See the Pen <a href="http://codepen.io/jeremyckahn/pen/YZYxge/">Tweening numbers within an arbitrary string</a> by Jeremy Kahn (<a href="http://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="http://codepen.io">CodePen</a>.</p>
+<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
