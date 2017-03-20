@@ -1,4 +1,4 @@
-import { Tweenable, clone, composeEasingObject, tweenProps } from './shifty.core';
+import { Tweenable, clone, composeEasingObject, tweenProps } from './tweenable';
 
 // Fake a Tweenable and patch some internals.  This approach allows us to
 // skip uneccessary processing and object recreation, cutting down on garbage

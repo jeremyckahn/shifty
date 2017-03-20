@@ -1,5 +1,5 @@
-import * as easingFunctions from './shifty.easing-functions';
-import * as token from './shifty.token';
+import * as easingFunctions from './easing-functions';
+import * as token from './token';
 
 // CONSTANTS
 const DEFAULT_EASING = 'linear';

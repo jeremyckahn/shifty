@@ -1,10 +1,10 @@
 import {
   Tweenable,
   tween
-} from './shifty.core';
+} from './tweenable';
 
-import { interpolate } from './shifty.interpolate';
-import { setBezierFunction, unsetBezierFunction } from './shifty.bezier';
+import { interpolate } from './interpolate';
+import { setBezierFunction, unsetBezierFunction } from './bezier';
 
 /**
  * @namespace shifty

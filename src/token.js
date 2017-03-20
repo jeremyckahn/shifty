@@ -121,7 +121,7 @@
 // documentation and renders it.  It is never used, and is optimized away at
 // build time.
 
-import { Tweenable, each } from './shifty.core';
+import { Tweenable, each } from './tweenable';
 
 const R_NUMBER_COMPONENT = /(\d|\-|\.)/;
 const R_FORMAT_CHUNKS = /([^\-0-9\.]+)/g;
