@@ -502,6 +502,14 @@ Object.assign(Tweenable, {
    */
   formulas,
   filters: { token },
+
+  /**
+   * @memberof shifty.Tweenable
+   * @function
+   * @static
+   * @description Returns the current timestamp
+   * @returns {number}
+   */
   now: (Date.now || (_ => +new Date()))
 });
 
