@@ -5,6 +5,9 @@ import {
 
 import { interpolate } from './interpolate';
 import { setBezierFunction, unsetBezierFunction } from './bezier';
+import * as token from './token';
+
+Tweenable.filters.token = token;
 
 /**
  * @namespace shifty
