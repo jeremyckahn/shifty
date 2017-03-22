@@ -49,9 +49,6 @@ module.exports = {
         comments: false
       }
     }),
-    new Webpack.BannerPlugin(version),
-    //new Webpack.DefinePlugin({
-      //SHIFTY_DEBUG_NOW: true
-    //})
+    new Webpack.BannerPlugin(version)
   ]
 };
