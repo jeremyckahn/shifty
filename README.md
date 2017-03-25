@@ -47,7 +47,7 @@ tween({
 ## Easing formulas
 
 Shifty supports a number of easing formulas, which you can see in
-[`shifty.formulas.js`](src/shifty.formulas.js).  You can add new easing
+[`easing-functions.js`](src/easing-functions.js).  You can add new easing
 formulas by attaching methods to `Tweenable.formulas`.
 
 ## Using multiple easing formulas
@@ -157,7 +157,7 @@ documentation at http://localhost:9009/dist/doc/.
 Shifty exposes a UMD module, so you can load it however you like:
 
 ```javascript
-import { Tweenable } from 'shifty';
+import { tween } from 'shifty';
 ```
 
 Or:
