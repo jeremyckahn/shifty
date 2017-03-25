@@ -1,6 +1,6 @@
 {
   "name": "shifty",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "homepage": "http://jeremyckahn.github.io/shifty",
   "author": "Jeremy Kahn <jeremyckahn@gmail.com>",
   "repository": {
@@ -32,6 +32,10 @@
     "preversion": "npm run lint && npm test",
     "postversion": "git push && git push --tags && npm run deploy && npm publish"
   },
+  "files": [
+    "src",
+    "dist"
+  ],
   "contributors": [
     {
       "name": "Miller Medeiros",
