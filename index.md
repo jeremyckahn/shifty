@@ -1,4 +1,4 @@
-# **Shifty**
+# **[Shifty](https://github.com/jeremyckahn/shifty)**
 
 Shifty is a JavaScript tweening engine designed to fit all of your animation needs. Core features include:
 

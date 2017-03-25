@@ -30,7 +30,7 @@
     "lint": "jshint src",
     "deploy": "npm run build && npm run doc && gh-pages -d dist -b gh-pages-v2",
     "preversion": "npm run lint && npm test",
-    "postversion": "git push && git push --tags && npm run deploy"
+    "postversion": "git push && git push --tags && npm run deploy && npm publish"
   },
   "contributors": [
     {
