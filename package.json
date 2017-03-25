@@ -28,7 +28,7 @@
     "test:watch": "nodemon --exec \"npm test\" --watch src --watch test",
     "doc": "jsdoc -c .jsdoc src/*.js",
     "lint": "jshint src",
-    "deploy": "npm run build && npm run doc && gh-pages -d dist -b gh-pages-v2",
+    "deploy": "npm run build && npm run doc && gh-pages -d dist -b gh-pages",
     "preversion": "npm run lint && npm test",
     "postversion": "git push && git push --tags && npm run deploy && npm publish"
   },
