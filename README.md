@@ -124,45 +124,47 @@ First, install the dependencies via npm like so:
 npm install
 ```
 
-Once those are installed, do this at the command line to build the project:
+Once those are installed, you can generate `dist/shifty.js` with:
 
 ```
 npm run build
 ```
 
-To run the test in CLI:
+To run the tests in CLI:
 
 ```
 npm test
 ```
 
-To generate the documentation:
+To generate the documentation (`dist/doc`):
 
 ```
 npm run doc
 ```
 
-To start a development server to run tests and view the documentation in your
-browser:
+To start a development server:
 
 ```
 npm start
 ```
 
-You can run the tests at http://localhost:9009/webpack-dev-server/ and view the
-documentation at http://localhost:9009/dist/doc/.
+Once that's running, you can run the tests at
+http://localhost:9009/webpack-dev-server/ and view the documentation at
+http://localhost:9009/dist/doc/.
 
 ## Loading Shifty
 
 Shifty exposes a UMD module, so you can load it however you like:
 
 ```javascript
+// ES6
 import { tween } from 'shifty';
 ```
 
 Or:
 
 ```javascript
+// AMD
 define(['shifty'], function(shifty){
   shifty.tween({ from: { x: 0 }, to: { x: 10 } });
 });
@@ -171,6 +173,7 @@ define(['shifty'], function(shifty){
 Or even:
 
 ```javascript
+// CommonJS
 const shifty = require('shifty');
 
 shifty.tween({ from: { x: 0 }, to: { x: 10 } });
