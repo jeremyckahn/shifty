@@ -1,4 +1,5 @@
 import * as easingFunctions from './easing-functions';
+import assign from 'object-assign';
 
 // CONSTANTS
 const DEFAULT_EASING = 'linear';
@@ -36,7 +37,7 @@ export const each = (obj, fn) => {
  * @return {Object}
  * @private
  */
-export const clone = obj => Object.assign({}, obj);
+export const clone = obj => assign({}, obj);
 
 /**
  * This object contains all of the tweens available to Shifty.  It is
@@ -293,7 +294,7 @@ export class Tweenable {
     this._attachment = config.attachment;
 
     // Init the internal state
-    Object.assign(this, {
+    assign(this, {
       _pausedAtTime: null,
       _scheduleId: null,
       _delay: config.delay || 0,
@@ -304,14 +305,14 @@ export class Tweenable {
     });
 
     // Separate Object.assign here; it depends on _currentState being set above
-    Object.assign(this, {
+    assign(this, {
       _originalState: this.get(),
       _targetState: clone(config.to || this.get())
     });
 
     let currentState = this._currentState;
     // Ensure that there is always something to tween to.
-    this._targetState = Object.assign({}, currentState, this._targetState);
+    this._targetState = assign({}, currentState, this._targetState);
 
     this._easing = composeEasingObject(currentState, config.easing);
     this._filterArgs =
@@ -491,7 +492,7 @@ export class Tweenable {
   }
 }
 
-Object.assign(Tweenable, {
+assign(Tweenable, {
   /**
    * @memberof shifty.Tweenable
    * @type {Object.<Function(number)>}
