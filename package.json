@@ -61,5 +61,8 @@
       "email": "adrian.voica@nanokyte.com"
     }
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "object-assign": "^4.1.1"
+  }
 }

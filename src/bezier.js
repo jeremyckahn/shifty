@@ -1,4 +1,6 @@
 import { Tweenable } from './tweenable';
+import assign from 'object-assign';
+
 /**
  * The Bezier magic in this file is adapted/copied almost wholesale from
  * [Scripty2](https://github.com/madrobby/scripty2/blob/master/src/effects/transitions/cubic-bezier.js),
@@ -158,7 +160,7 @@ const getCubicBezierTransition = (x1, y1, x2, y2) =>
  */
 export const setBezierFunction = (name, x1, y1, x2, y2) =>
   Tweenable.formulas[name] =
-    Object.assign(getCubicBezierTransition(x1, y1, x2, y2), {
+    assign(getCubicBezierTransition(x1, y1, x2, y2), {
       displayName: name,
       x1,
       y1,
