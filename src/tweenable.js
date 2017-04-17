@@ -5,7 +5,8 @@ import assign from 'object-assign';
 const DEFAULT_EASING = 'linear';
 const DEFAULT_DURATION = 500;
 const UPDATE_TIME = 1000 / 60;
-const root = typeof window !== 'undefined' ? window : global;
+// jshint evil:true
+const root = new Function('return this')();
 
 // requestAnimationFrame() shim by Paul Irish (modified for Shifty)
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
