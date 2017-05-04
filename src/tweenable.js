@@ -285,6 +285,8 @@ export class Tweenable {
    * curve name(s) or function(s) to use for the tween.
    * @property {*=} config.attachment Cached value that is passed to the
    * `step`/`start` functions.
+   * @property {Function} config.promise Promise constructor for when you want
+   * to use Promise library or polyfill Promises in unsupported environments.
    * @return {Tweenable}
    */
   setConfig (config = {}) {
@@ -320,7 +322,8 @@ export class Tweenable {
       [currentState, this._originalState, this._targetState, this._easing];
     this._applyFilter('tweenCreated');
 
-    this._promise = new Promise(
+    const Promised = config.promise || Promise;
+    this._promise = new Promised(
       (resolve, reject) => {
         this._resolve = resolve;
         this._reject = reject;
