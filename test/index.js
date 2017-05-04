@@ -1,4 +1,5 @@
 /* global describe:true, it:true, before:true, beforeEach:true, afterEach:true */
+import Promised from 'bluebird';
 import assert from 'assert';
 
 import {
@@ -387,6 +388,18 @@ describe('shifty', () => {
       });
 
       describe('promise support', () => {
+        it('supports third party libraries', function () {
+          const promised = tweenable.tween({
+            promise: Promised,
+
+            from: { x: 0 },
+            to: { x: 10  },
+            duration: 500
+          });
+
+          assert.ok(promised instanceof Promised);
+        });
+
         describe('resolution', () => {
           let testState;
 

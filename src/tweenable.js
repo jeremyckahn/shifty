@@ -320,7 +320,8 @@ export class Tweenable {
       [currentState, this._originalState, this._targetState, this._easing];
     this._applyFilter('tweenCreated');
 
-    this._promise = new Promise(
+    const Promised = config.promise || Promise;
+    this._promise = new Promised(
       (resolve, reject) => {
         this._resolve = resolve;
         this._reject = reject;
