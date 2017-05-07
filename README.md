@@ -26,7 +26,7 @@ npm install --save shifty
 
 This section explains how to get started with Shifty.  For full documentation
 on each method, please see [the API
-documentation](http://jeremyckahn.github.io/shifty/dist/).
+documentation](http://jeremyckahn.github.io/shifty/doc/).
 
 ## Creating a tween
 
