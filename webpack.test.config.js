@@ -17,24 +17,18 @@ module.exports = {
     umdNamedDefine: true
   },
   devtool: 'source-map',
-  resolveLoader: {
-    // http://webpack.github.io/docs/troubleshooting.html#npm-linked-modules-doesn-t-find-their-dependencies
-    fallback: modulePaths
-  },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
-        exclude: 'node_modules',
-        loader: 'babel-loader'
+        use: 'babel-loader'
       }
     ]
   },
   resolve: {
-    modulesDirectories: modulePaths,
-
-    // http://webpack.github.io/docs/troubleshooting.html#npm-linked-modules-doesn-t-find-their-dependencies
-    fallback: modulePaths
+    modules: [
+      'node_modules'
+    ]
   },
   devServer: {
     port: 9009
