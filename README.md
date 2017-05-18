@@ -149,7 +149,7 @@ npm start
 ```
 
 Once that's running, you can run the tests at
-http://localhost:9009/webpack-dev-server/ and view the documentation at
+http://localhost:9009/ and view the documentation at
 http://localhost:9009/dist/doc/.
 
 ## Loading Shifty
