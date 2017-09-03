@@ -1,5 +1,6 @@
 import * as easingFunctions from './easing-functions';
 import assign from 'object-assign';
+import * as token from './token';
 
 // CONSTANTS
 const DEFAULT_EASING = 'linear';
@@ -504,7 +505,7 @@ assign(Tweenable, {
    * Shifty.
    */
   formulas,
-  filters: {},
+  filters: { token },
 
   /**
    * @memberof shifty.Tweenable
