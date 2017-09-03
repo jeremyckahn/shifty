@@ -137,11 +137,11 @@ export const composeEasingObject = (fromTweenParams, easing = DEFAULT_EASING) =>
 
 export class Tweenable {
   /**
-   * @constructs shifty.Tweenable
-   * @param {Object=} initialState The values that the initial tween should
+   * @param {Object} [initialState={}] The values that the initial tween should
    * start at if a `from` object is not provided to `tween` or `setConfig`.
-   * @param {Object=} config Configuration object to be passed to
-   * [`setConfig`]{@link shifty.Tweenable#setConfig}.
+   * @param {shifty.tweenConfig} [config] Configuration object to be passed to
+   * {@link shifty.Tweenable#setConfig}.
+   * @constructs shifty.Tweenable
    */
   constructor (initialState = {}, config = undefined) {
     this._currentState = initialState;
@@ -158,7 +158,7 @@ export class Tweenable {
 
   /**
    * Applies a filter to Tweenable instance.
-   * @param {Tweenable} tweenable The `Tweenable` instance to call the filter
+   * @param {shifty.Tweenable} tweenable The `Tweenable` instance to call the filter
    * upon.
    * @param {String} filterName The name of the filter to apply.
    * @private
@@ -178,7 +178,7 @@ export class Tweenable {
 
   /**
    * Handles the update logic for one step of a tween.
-   * @param {number=} currentTimeOverride Needed for accurate timestamp in
+   * @param {number} [currentTimeOverride] Needed for accurate timestamp in
    * shifty.Tweenable#seek.
    * @private
    */
@@ -242,8 +242,8 @@ export class Tweenable {
   /**
    * Configure and start a tween.
    * @method shifty.Tweenable#tween
-   * @param {Object=} config See `config` options for `{@link
-   * shifty.Tweenable#setConfig}`
+   * @param {shifty.tweenConfig} [config] Gets passed to {@link
+   * shifty.Tweenable#setConfig}
    * @return {Promise}
    */
   tween (config = undefined) {
@@ -264,29 +264,8 @@ export class Tweenable {
 
   /**
    * Configure a tween that will start at some point in the future.
-   *
    * @method shifty.Tweenable#setConfig
-   * @param {Object} config See below
-   * @property {Object=} config.from Starting position.  If omitted, `{@link
-   * shifty.Tweenable#get}` is used.
-   * @property {Object=} config.to Ending position.
-   * @property {number=} config.duration How many milliseconds to animate for.
-   * @property {number=} config.delay  How many milliseconds to wait before
-   * starting
-   * the tween.
-   * @property {Function(Object, *)=} config.start Function to execute when the
-   * tween begins.  Receives the state of the tween as the first parameter and
-   * `attachment` as the second parameter.
-   * @property {Function(Object, *, number)=} config.step Function to execute
-   * on every tick.  Receives `get` as the first parameter, `attachment` as the
-   * second parameter, and the time elapsed since the start of the tween as the
-   * third.  This function is not called on the final step of the animation.
-   * @property {Object.<string|Function|string|Function>=} config.easing Easing
-   * curve name(s) or function(s) to use for the tween.
-   * @property {*=} config.attachment Cached value that is passed to the
-   * `step`/`start` functions.
-   * @property {Function} config.promise Promise constructor for when you want
-   * to use Promise library or polyfill Promises in unsupported environments.
+   * @param {shifty.tweenConfig} [config={}]
    * @return {Tweenable}
    */
   setConfig (config = {}) {
