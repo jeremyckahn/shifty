@@ -138,7 +138,8 @@ export const composeEasingObject = (fromTweenParams, easing = DEFAULT_EASING) =>
 export class Tweenable {
   /**
    * @param {Object} [initialState={}] The values that the initial tween should
-   * start at if a `from` object is not provided to `tween` or `setConfig`.
+   * start at if a `from` value is not provided to {@link
+   * shifty.Tweenable#tween} or `{@link shifty.Tweenable#setConfig}.
    * @param {shifty.tweenConfig} [config] Configuration object to be passed to
    * {@link shifty.Tweenable#setConfig}.
    * @constructs shifty.Tweenable
@@ -160,7 +161,7 @@ export class Tweenable {
    * Applies a filter to Tweenable instance.
    * @param {shifty.Tweenable} tweenable The `Tweenable` instance to call the filter
    * upon.
-   * @param {String} filterName The name of the filter to apply.
+   * @param {string} filterName The name of the filter to apply.
    * @private
    */
   _applyFilter (filterName) {
@@ -266,7 +267,7 @@ export class Tweenable {
    * Configure a tween that will start at some point in the future.
    * @method shifty.Tweenable#setConfig
    * @param {shifty.tweenConfig} [config={}]
-   * @return {Tweenable}
+   * @return {shifty.Tweenable}
    */
   setConfig (config = {}) {
     this._configured = true;
@@ -325,9 +326,9 @@ export class Tweenable {
   }
 
   /**
+   * Set the current state.
    * @method shifty.Tweenable#set
    * @param {Object} state The state to set.
-   * @description Set the current state.
    */
   set (state) {
     this._currentState = state;
@@ -335,10 +336,10 @@ export class Tweenable {
 
   /**
    * Pause a tween.  Paused tweens can be resumed from the point at which they
-   * were paused.  This is different from `stop`, as that method causes a tween
-   * to start over when it is resumed.
+   * were paused.  This is different from {@link shifty.Tweenable#stop}, as
+   * that method causes a tween to start over when it is resumed.
    * @method shifty.Tweenable#pause
-   * @return {Tweenable}
+   * @return {shifty.Tweenable}
    */
   pause () {
     this._pausedAtTime = Tweenable.now();
@@ -366,12 +367,12 @@ export class Tweenable {
 
   /**
    * Move the state of the animation to a specific point in the tween's
-   * timeline.  If the animation is not running, this will cause the `step`
-   * handlers to be called.
+   * timeline.  If the animation is not running, this will cause {@link
+   * shifty.stepFunction} handlers to be called.
    * @method shifty.Tweenable#seek
    * @param {millisecond} millisecond The millisecond of the animation to seek
    * to.  This must not be less than `0`.
-   * @return {Tweenable}
+   * @return {shifty.Tweenable}
    */
   seek (millisecond) {
     millisecond = Math.max(millisecond, 0);
@@ -399,14 +400,14 @@ export class Tweenable {
 
   /**
    * Stops and cancels a tween.
-   * @param {boolean=} gotoEnd If `false` or omitted, the tween just stops at
-   * its current state, and the tween promise is not resolved.  If `true`, the
-   * tweened object's values are instantly set to the target values, and the
-   * promise is resolved.
+   * @param {boolean} [gotoEnd] If `false`, the tween just stops at its current
+   * state, and the tween promise is not resolved.  If `true`, the tweened
+   * object's values are instantly set to the target values, and the promise is
+   * resolved.
    * @method shifty.Tweenable#stop
-   * @return {Tweenable}
+   * @return {shifty.Tweenable}
    */
-  stop (gotoEnd) {
+  stop (gotoEnd = false) {
     this._isTweening = false;
     this._isPaused = false;
 
@@ -452,7 +453,7 @@ export class Tweenable {
   /**
    * Set a custom schedule function.
    *
-   * If a custom function is not set,
+   * By default,
    * [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window.requestAnimationFrame)
    * is used if available, otherwise
    * [`setTimeout`](https://developer.mozilla.org/en-US/docs/Web/API/Window.setTimeout)
@@ -466,8 +467,8 @@ export class Tweenable {
   }
 
   /**
-   * `delete` all "own" properties.  Call this when the `Tweenable` instance
-   * is no longer needed to free memory.
+   * `delete` all "own" properties.  Call this when the {@link
+   * shifty.Tweenable} instance is no longer needed to free memory.
    * @method shifty.Tweenable#dispose
    */
   dispose () {
@@ -487,6 +488,7 @@ assign(Tweenable, {
    * @static
    */
   formulas,
+
   filters: { token },
 
   /**
@@ -499,11 +501,10 @@ assign(Tweenable, {
 
 /**
  * @method shifty.tween
- * @param {Object=} config See `config` options for `{@link
- * shifty.Tweenable#setConfig}`
+ * @param {shifty.tweenConfig} [config={}]
  * @description Standalone convenience method that functions identically to
- * [`shifty.Tweenable#tween`]{@link shifty.Tweenable#tween}.  You can use this to create
- * tweens without needing to set up a `{@link shifty.Tweenable}` instance.
+ * {@link shifty.Tweenable#tween}.  You can use this to create tweens without
+ * needing to set up a {@link shifty.Tweenable} instance.
  *
  *     import { tween } from 'shifty';
  *
