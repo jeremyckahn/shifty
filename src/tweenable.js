@@ -477,21 +477,22 @@ export class Tweenable {
 
 assign(Tweenable, {
   /**
-   * @memberof shifty.Tweenable
-   * @type {Object.<Function(number)>}
+   * @member shifty.Tweenable.formulas
+   * @description A static Object of {@link shifty.easingFunction} that can by
+   * used by Shifty. The default values are defined in
+   * [`easing-functions.js`](easing-functions.js.html), but you can add your
+   * own {@link shifty.easingFunction}s by defining them as keys to this
+   * Object.
+   * @type {Object.<shifty.easingFunction>}
    * @static
-   * @description A static Object of easing functions that can by used by
-   * Shifty.
    */
   formulas,
   filters: { token },
 
   /**
-   * @memberof shifty.Tweenable
-   * @function
+   * @method shifty.Tweenable.now
    * @static
-   * @description Returns the current timestamp
-   * @returns {number}
+   * @returns {number} The current timestamp
    */
   now: (Date.now || (_ => +new Date()))
 });

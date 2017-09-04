@@ -1,10 +1,7 @@
-# **Shifty**
+# Shifty
 
+### `npm install --save shifty`
 ## [Download](../shifty.js) • [Source](https://github.com/jeremyckahn/shifty)
-
-```
-npm install --save shifty
-```
 
 Shifty is a JavaScript tweening engine designed to fit all of your animation needs. Core features include:
 

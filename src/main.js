@@ -44,7 +44,8 @@ export { setBezierFunction, unsetBezierFunction } from './bezier';
  * {Object.<string|shifty.easingFunction>|string|shifty.easingFunction}
  * [easing] Easing curve name(s) or {@link shifty.easingFunction}(s) to apply
  * to the properties of the tween.  If this is an Object, the keys should
- * correspond to `to`/`from`.
+ * correspond to `to`/`from`.  You can learn more about this in the {@tutorial
+ * easing-function-in-depth} tutorial.
  * @property {Object} [attachment] Cached value that is passed to {@link
  * shifty.startFunction}/{@link shifty.stepFunction}.
  * @property {Function} [promise] Promise constructor for when you want

@@ -12,6 +12,25 @@
  *  Open source under the BSD License.
  *  Easing Equations (c) 2003 Robert Penner, all rights reserved.
  */
+
+/**
+ * Shifty implements [Robert Penner's easing
+ * equations](http://robertpenner.com/easing/), as adapted from
+ * [Scripty2](https://github.com/madrobby/scripty2/blob/master/src/effects/transitions/penner.js)'s
+ * implementation.  These functions are used internally by Shifty, but they can
+ * also be accessed externally via {@link shifty.Tweenable.formulas}.
+ *
+ * <p data-height="934" data-theme-id="0" data-slug-hash="wqObdO"
+ * data-default-tab="js,result" data-user="jeremyckahn" data-embed-version="2"
+ * data-pen-title="Shifty - Easing formula names" class="codepen">See the Pen <a
+ * href="https://codepen.io/jeremyckahn/pen/wqObdO/">Shifty - Easing formula
+ * names</a> by Jeremy Kahn (<a
+ * href="https://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a
+ * href="https://codepen.io">CodePen</a>.</p>
+ * <script async
+ * src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
+ * @module shifty.easingFunctions
+ */
 export const linear = pos => pos;
 
 export const easeInQuad = pos => Math.pow(pos, 2);
