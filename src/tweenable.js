@@ -75,8 +75,8 @@ const tweenProp = (start, end, easingFunc, position) =>
  * is tweening to.
  * @param {number} duration: The length of the tween in milliseconds.
  * @param {number} timestamp: The UNIX epoch time at which the tween began.
- * @param {Object} easing: This Object's keys must correspond to the keys in
- * targetState.
+ * @param {Object.<string|function>} easing: This Object's keys must correspond
+ * to the keys in targetState.
  * @private
  */
 export const tweenProps = (

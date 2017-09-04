@@ -7,6 +7,12 @@ export { interpolate } from './interpolate';
 export { setBezierFunction, unsetBezierFunction } from './bezier';
 
 /**
+ * @callback {Function} shifty.easingFunction
+ * @param {number} position The normalized (0-1) position of the tween.
+ * @return {number} The curve-adjusted value.
+ */
+
+/**
  * @callback {Function} shifty.startFunction
  * @param {Object} state The current state of the tween.
  * @param {Object} [attachment] Cached data provided from a {@link
@@ -27,14 +33,18 @@ export { setBezierFunction, unsetBezierFunction } from './bezier';
  * @typedef {Object} shifty.tweenConfig
  * @property {Object} [from] Starting position.  If omitted, {@link
  * shifty.Tweenable#get} is used.
- * @property {Object} [to] Ending position.
+ * @property {Object} [to] Ending position.  The keys of this Object should
+ * match those of `to`.
  * @property {number} [duration] How many milliseconds to animate for.
  * @property {number} [delay] How many milliseconds to wait before starting the
  * tween.
  * @property {shifty.startFunction} [start] Executes when the tween begins.
  * @property {shifty.stepFunction} [step] Executes on every tick.
- * @property {Object.<string|Function>|string|Function} [easing] Easing curve
- * name(s) or function(s) to use for the tween.
+ * @property
+ * {Object.<string|shifty.easingFunction>|string|shifty.easingFunction}
+ * [easing] Easing curve name(s) or {@link shifty.easingFunction}(s) to apply
+ * to the properties of the tween.  If this is an Object, the keys should
+ * correspond to `to`/`from`.
  * @property {Object} [attachment] Cached value that is passed to {@link
  * shifty.startFunction}/{@link shifty.stepFunction}.
  * @property {Function} [promise] Promise constructor for when you want
