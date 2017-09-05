@@ -142,21 +142,19 @@ const getCubicBezierTransition = (x1, y1, x2, y2) =>
 
 
 /**
- * Create a Bezier easing function and attach it to
- * [`Tweenable.formulas`]{@link Tweenable.formulas}.  This function gives you
- * total control over the easing curve.  Matthew Lein's
- * [Ceaser](http://matthewlein.com/ceaser/) is a useful tool for visualizing
- * the curves you can make with this function.
+ * Create a Bezier easing function and attach it to {@link
+ * shifty.Tweenable.formulas}.  This function gives you total control over the
+ * easing curve.  Matthew Lein's [Ceaser](http://matthewlein.com/ceaser/) is a
+ * useful tool for visualizing the curves you can make with this function.
  * @method shifty.setBezierFunction
  * @param {string} name The name of the easing curve.  Overwrites the old
- * easing function on [`Tweenable.formulas`]{@link Tweenable.formulas} if it
- * exists.
+ * easing function on {@link shifty.Tweenable.formulas} if it exists.
  * @param {number} x1
  * @param {number} y1
  * @param {number} x2
  * @param {number} y2
- * @return {Function} The easing function that was attached to
- * [`Tweenable.formulas`]{@link Tweenable.formulas}.
+ * @return {shifty.easingFunction} The {@link shifty.easingFunction} that was
+ * attached to {@link shifty.Tweenable.formulas}.
  */
 export const setBezierFunction = (name, x1, y1, x2, y2) =>
   Tweenable.formulas[name] =
@@ -169,10 +167,9 @@ export const setBezierFunction = (name, x1, y1, x2, y2) =>
     });
 
 /**
- * `delete` an easing function from [`Tweenable.formulas`]{@link
- * Tweenable.formulas}.  Be careful with this method, as it `delete`s whatever
- * easing formula matches `name` (which means you can delete standard Shifty
- * easing functions).
+ * `delete` an easing function from {@link shifty.Tweenable.formulas}.  Be
+ * careful with this method, as it `delete`s whatever easing formula matches
+ * `name` (which means you can delete standard Shifty easing functions).
  * @method shifty.unsetBezierFunction
  * @param {string} name The name of the easing function to delete.
  * @return {Boolean} Whether or not the functions was `delete`d.
