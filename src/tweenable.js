@@ -40,15 +40,6 @@ export const each = (obj, fn) => {
  */
 export const clone = obj => assign({}, obj);
 
-/**
- * This object contains all of the tweens available to Shifty.  It is
- * extensible - simply attach properties to the `Tweenable.formulas`
- * Object following the same format as `linear`.
- *
- * `pos` should be a normalized `number` (between 0 and 1).
- * @type {Object(function)}
- * @private
- */
 const formulas = clone(easingFunctions);
 
 /**
@@ -477,16 +468,6 @@ export class Tweenable {
 }
 
 assign(Tweenable, {
-  /**
-   * @member shifty.Tweenable.formulas
-   * @description A static Object of {@link shifty.easingFunction} that can by
-   * used by Shifty. The default values are defined in
-   * [`easing-functions.js`](easing-functions.js.html), but you can add your
-   * own {@link shifty.easingFunction}s by defining them as keys to this
-   * Object.
-   * @type {Object.<shifty.easingFunction>}
-   * @static
-   */
   formulas,
 
   filters: { token },
