@@ -2,11 +2,13 @@
   "plugins": ["plugins/markdown"],
   "opts": {
     "destination": "dist/doc",
-    "readme": "index.md"
+    "readme": "index.md",
+    "tutorials": "tutorials",
+    "template": "node_modules/minami"
   },
   "templates": {
-    "default": {
-      "useLongnameInNav": true
-    }
+    "cleverLinks": true,
+    "useLongnameInNav": false,
+    "showInheritedInNav": true
   }
 }

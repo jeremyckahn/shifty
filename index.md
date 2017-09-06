@@ -1,10 +1,7 @@
-# **Shifty**
+# Shifty
 
+### `npm install --save shifty`
 ## [Download](../shifty.js) • [Source](https://github.com/jeremyckahn/shifty)
-
-```
-npm install --save shifty
-```
 
 Shifty is a JavaScript tweening engine designed to fit all of your animation needs. Core features include:
 
@@ -19,7 +16,7 @@ Shifty is the heart of [Rekapi](http://rekapi.com/), a higher-level library for 
 
 To create a basic tween, you could have something like this:
 
-<p data-height="265" data-theme-id="0" data-slug-hash="dvzXLJ" data-default-tab="js" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Shifty 2 playground" class="codepen">See the Pen <a href="http://codepen.io/jeremyckahn/pen/dvzXLJ/">Shifty 2 playground</a> by Jeremy Kahn (<a href="http://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="http://codepen.io">CodePen</a>.</p>
+<p data-height="265" data-theme-id="0" data-slug-hash="dvzXLJ" data-default-tab="js,result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Shifty 2 playground" class="codepen">See the Pen <a href="http://codepen.io/jeremyckahn/pen/dvzXLJ/">Shifty 2 playground</a> by Jeremy Kahn (<a href="http://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="http://codepen.io">CodePen</a>.</p>
 <script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
 
 This snippet tweens and prints the `x` variable from 0 to 10 over one second, and then prints the final value.  You can animate as many properties in a single tween as you'd like.
@@ -30,12 +27,12 @@ This snippet tweens and prints the `x` variable from 0 to 10 over one second, an
 
 ### Bouncing blocks
 
-<p data-height="533" data-theme-id="0" data-slug-hash="OpzjRQ" data-default-tab="result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Shifty Attachment Demo" class="codepen">See the Pen <a href="http://codepen.io/jeremyckahn/pen/OpzjRQ/">Shifty Attachment Demo</a> by Jeremy Kahn (<a href="http://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="http://codepen.io">CodePen</a>.</p>
+<p data-height="533" data-theme-id="0" data-slug-hash="OpzjRQ" data-default-tab="js,result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Shifty Attachment Demo" class="codepen">See the Pen <a href="http://codepen.io/jeremyckahn/pen/OpzjRQ/">Shifty Attachment Demo</a> by Jeremy Kahn (<a href="http://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="http://codepen.io">CodePen</a>.</p>
 <script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
 
 ### A helix!
 
-<p data-height="725" data-theme-id="0" data-slug-hash="KWZvXY" data-default-tab="result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Shifty Helix Demo" class="codepen">See the Pen <a href="http://codepen.io/jeremyckahn/pen/KWZvXY/">Shifty Helix Demo</a> by Jeremy Kahn (<a href="http://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="http://codepen.io">CodePen</a>.</p>
+<p data-height="725" data-theme-id="0" data-slug-hash="KWZvXY" data-default-tab="js,result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Shifty Helix Demo" class="codepen">See the Pen <a href="http://codepen.io/jeremyckahn/pen/KWZvXY/">Shifty Helix Demo</a> by Jeremy Kahn (<a href="http://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="http://codepen.io">CodePen</a>.</p>
 <script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
 
 ### Tweening with a custom easing formula
