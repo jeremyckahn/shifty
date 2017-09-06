@@ -130,7 +130,7 @@ export class Tweenable {
   /**
    * @param {Object} [initialState={}] The values that the initial tween should
    * start at if a `from` value is not provided to {@link
-   * shifty.Tweenable#tween} or `{@link shifty.Tweenable#setConfig}.
+   * shifty.Tweenable#tween} or {@link shifty.Tweenable#setConfig}.
    * @param {shifty.tweenConfig} [config] Configuration object to be passed to
    * {@link shifty.Tweenable#setConfig}.
    * @constructs shifty.Tweenable
