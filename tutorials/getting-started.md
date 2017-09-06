@@ -36,5 +36,5 @@ tweenable.setConfig({
 tweenable.tween().then(() => console.log('All done!'));
 ```
 
-<p data-height="300" data-theme-id="0" data-slug-hash="vJMjWK" data-default-tab="js" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Shifty - Playground" class="codepen">See the Pen <a href="https://codepen.io/jeremyckahn/pen/vJMjWK/">Shifty - Playground</a> by Jeremy Kahn (<a href="https://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+<p data-height="350" data-theme-id="0" data-slug-hash="vJMjWK" data-default-tab="js,result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Shifty - Playground" class="codepen">See the Pen <a href="https://codepen.io/jeremyckahn/pen/vJMjWK/">Shifty - Playground</a> by Jeremy Kahn (<a href="https://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="https://codepen.io">CodePen</a>.</p>
 <script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>

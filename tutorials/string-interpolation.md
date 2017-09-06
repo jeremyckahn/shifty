@@ -50,3 +50,6 @@ easing curves can make for some interesting motion in your animations!
 The order of the space-separated easing curves correspond the number values
 they apply to.  If there are more number values than easing curves listed, the
 last easing curve listed is used for the remaining numbers.
+
+<p data-height="438" data-theme-id="0" data-slug-hash="dzLwQX" data-default-tab="js,result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Shifty - Basic CSS animation" class="codepen">See the Pen <a href="https://codepen.io/jeremyckahn/pen/dzLwQX/">Shifty - Basic CSS animation</a> by Jeremy Kahn (<a href="https://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
