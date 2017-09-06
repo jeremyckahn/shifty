@@ -27,13 +27,14 @@ tween({
 });
 ```
 
-The `interpolate` function also supports both string and object parameter types
-for `easing`.
+{@link shifty.interpolate} also supports both string and object parameters for
+`easing`.
 
 ## Per-tween custom easing functions
 
-You are not limited to attaching functions to `Tweenable.formulas`.  You can
-also supply a custom easing function directly to `tween`:
+You are not limited to attaching functions to {@link
+shifty.Tweenable.formulas}.  You can also supply a custom easing function
+directly to {@link shifty.tween}:
 
 ```javascript
 tween({
