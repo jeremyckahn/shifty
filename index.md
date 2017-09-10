@@ -25,6 +25,11 @@ This snippet tweens and prints the `x` variable from 0 to 10 over one second, an
 
 ## Examples
 
+## Chained tweens
+
+<p data-height="388" data-theme-id="0" data-slug-hash="NvQXqP" data-default-tab="js,result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Primise-chained tweens" class="codepen">See the Pen <a href="https://codepen.io/jeremyckahn/pen/NvQXqP/">Primise-chained tweens</a> by Jeremy Kahn (<a href="https://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="https://codepen.io">CodePen</a>.</p>
+<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
+
 ### Bouncing blocks
 
 <p data-height="533" data-theme-id="0" data-slug-hash="OpzjRQ" data-default-tab="js,result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Shifty Attachment Demo" class="codepen">See the Pen <a href="http://codepen.io/jeremyckahn/pen/OpzjRQ/">Shifty Attachment Demo</a> by Jeremy Kahn (<a href="http://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="http://codepen.io">CodePen</a>.</p>
