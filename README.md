@@ -48,6 +48,12 @@ To generate the documentation (`dist/doc`):
 npm run doc
 ```
 
+To generate, live-update, and view the documentation in your browser:
+
+```
+npm run doc:live
+```
+
 To start a development server:
 
 ```
