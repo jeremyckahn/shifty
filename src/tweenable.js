@@ -173,22 +173,26 @@ export class Tweenable {
    * @private
    */
   _timeoutHandler (currentTimeOverride) {
-    const delay = this._delay;
-    const currentState = this._currentState;
-    let timestamp = this._timestamp;
-    let duration = this._duration;
-    let targetState = this._targetState;
-    let step = this._step;
+    const {
+      _currentState,
+      _delay
+    } = this;
+    let {
+      _duration,
+      _step,
+      _targetState,
+      _timestamp
+    } = this;
 
-    const endTime = timestamp + delay + duration;
+    const endTime = _timestamp + _delay + _duration;
     let currentTime =
       Math.min(currentTimeOverride || Tweenable.now(), endTime);
     const hasEnded = currentTime >= endTime;
-    const offset = duration - (endTime - currentTime);
+    const offset = _duration - (endTime - currentTime);
 
     if (this.isPlaying()) {
       if (hasEnded) {
-        step(targetState, this._attachment, offset);
+        _step(_targetState, this._attachment, offset);
         this.stop(true);
       } else {
         // This function needs to be .call-ed because it is a native method in
@@ -205,26 +209,26 @@ export class Tweenable {
         // If the animation has not yet reached the start point (e.g., there was
         // delay that has not yet completed), just interpolate the starting
         // position of the tween.
-        if (currentTime < (timestamp + delay)) {
+        if (currentTime < (_timestamp + _delay)) {
           currentTime = 1;
-          duration = 1;
-          timestamp = 1;
+          _duration = 1;
+          _timestamp = 1;
         } else {
-          timestamp += delay;
+          _timestamp += _delay;
         }
 
         tweenProps(
           currentTime,
-          currentState,
+          _currentState,
           this._originalState,
-          targetState,
-          duration,
-          timestamp,
+          _targetState,
+          _duration,
+          _timestamp,
           this._easing
         );
 
         this._applyFilter('afterTween');
-        step(currentState, this._attachment, offset);
+        _step(_currentState, this._attachment, offset);
       }
     }
   }
