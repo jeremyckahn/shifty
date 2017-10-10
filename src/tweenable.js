@@ -29,9 +29,7 @@ const noop = () => {};
  * @param {Function(string)} fn
  * @private
  */
-export const each = (obj, fn) => {
-  Object.keys(obj).forEach(fn);
-};
+export const each = (obj, fn) => Object.keys(obj).forEach(fn);
 
 /**
  * @param {Object} obj
@@ -236,7 +234,7 @@ export class Tweenable {
    * @method shifty.Tweenable#tween
    * @param {shifty.tweenConfig} [config] Gets passed to {@link
    * shifty.Tweenable#setConfig}
-   * @return {Promise}
+   * @return {external:Promise}
    */
   tween (config = undefined) {
     if (this._isTweening) {
@@ -342,7 +340,7 @@ export class Tweenable {
   /**
    * Resume a paused tween.
    * @method shifty.Tweenable#resume
-   * @return {Promise}
+   * @return {external:Promise}
    */
   resume () {
     if (this._isPaused) {
@@ -493,7 +491,7 @@ assign(Tweenable, {
  *       () => console.log('All done!')
  *     );
  *
- * @returns {Promise}
+ * @returns {external:Promise}
  */
 export function tween (config = {}) {
   const tweenable = new Tweenable();

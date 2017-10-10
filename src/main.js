@@ -7,6 +7,11 @@ export { interpolate } from './interpolate';
 export { setBezierFunction, unsetBezierFunction } from './bezier';
 
 /**
+ * @external Promise
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise}
+ */
+
+/**
  * @callback {Function} shifty.easingFunction
  * @param {number} position The normalized (0-1) position of the tween.
  * @return {number} The curve-adjusted value.
