@@ -241,18 +241,24 @@ export class Tweenable {
    * @return {external:Promise}
    */
   tween (config = undefined) {
-    if (this._isTweening) {
+    const {
+      _attachment,
+      _configured,
+      _isTweening
+    } = this;
+
+    if (_isTweening) {
       return this;
     }
 
     // Only set default config if no configuration has been set previously and
     // none is provided now.
-    if (config !== undefined || !this._configured) {
+    if (config !== undefined || !_configured) {
       this.setConfig(config);
     }
 
     this._timestamp = Tweenable.now();
-    this._start(this.get(), this._attachment);
+    this._start(this.get(), _attachment);
     return this.resume();
   }
 
