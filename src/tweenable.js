@@ -8,6 +8,15 @@ const DEFAULT_DURATION = 500;
 const UPDATE_TIME = 1000 / 60;
 const root = typeof window !== 'undefined' ? window : global;
 
+const cancelTimer = (
+  root.cancelAnimationFrame           ||
+  root.webkitCancelAnimationFrame     ||
+  root.oCancelAnimationFrame          ||
+  root.msCancelAnimationFrame         ||
+  root.mozCancelRequestAnimationFrame ||
+  root.clearTimeout
+);
+
 // requestAnimationFrame() shim by Paul Irish (modified for Shifty)
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 const DEFAULT_SCHEDULE_FUNCTION = (
@@ -29,9 +38,7 @@ const noop = () => {};
  * @param {Function(string)} fn
  * @private
  */
-export const each = (obj, fn) => {
-  Object.keys(obj).forEach(fn);
-};
+export const each = (obj, fn) => Object.keys(obj).forEach(fn);
 
 /**
  * @param {Object} obj
@@ -175,22 +182,26 @@ export class Tweenable {
    * @private
    */
   _timeoutHandler (currentTimeOverride) {
-    const delay = this._delay;
-    const currentState = this._currentState;
-    let timestamp = this._timestamp;
-    let duration = this._duration;
-    let targetState = this._targetState;
-    let step = this._step;
+    const {
+      _currentState,
+      _delay
+    } = this;
+    let {
+      _duration,
+      _step,
+      _targetState,
+      _timestamp
+    } = this;
 
-    const endTime = timestamp + delay + duration;
+    const endTime = _timestamp + _delay + _duration;
     let currentTime =
       Math.min(currentTimeOverride || Tweenable.now(), endTime);
     const hasEnded = currentTime >= endTime;
-    const offset = duration - (endTime - currentTime);
+    const offset = _duration - (endTime - currentTime);
 
     if (this.isPlaying()) {
       if (hasEnded) {
-        step(targetState, this._attachment, offset);
+        _step(_targetState, this._attachment, offset);
         this.stop(true);
       } else {
         // This function needs to be .call-ed because it is a native method in
@@ -207,26 +218,26 @@ export class Tweenable {
         // If the animation has not yet reached the start point (e.g., there was
         // delay that has not yet completed), just interpolate the starting
         // position of the tween.
-        if (currentTime < (timestamp + delay)) {
+        if (currentTime < (_timestamp + _delay)) {
           currentTime = 1;
-          duration = 1;
-          timestamp = 1;
+          _duration = 1;
+          _timestamp = 1;
         } else {
-          timestamp += delay;
+          _timestamp += _delay;
         }
 
         tweenProps(
           currentTime,
-          currentState,
+          _currentState,
           this._originalState,
-          targetState,
-          duration,
-          timestamp,
+          _targetState,
+          _duration,
+          _timestamp,
           this._easing
         );
 
         this._applyFilter('afterTween');
-        step(currentState, this._attachment, offset);
+        _step(_currentState, this._attachment, offset);
       }
     }
   }
@@ -236,21 +247,27 @@ export class Tweenable {
    * @method shifty.Tweenable#tween
    * @param {shifty.tweenConfig} [config] Gets passed to {@link
    * shifty.Tweenable#setConfig}
-   * @return {Promise}
+   * @return {external:Promise}
    */
   tween (config = undefined) {
-    if (this._isTweening) {
+    const {
+      _attachment,
+      _configured,
+      _isTweening
+    } = this;
+
+    if (_isTweening) {
       return this;
     }
 
     // Only set default config if no configuration has been set previously and
     // none is provided now.
-    if (config !== undefined || !this._configured) {
+    if (config !== undefined || !_configured) {
       this.setConfig(config);
     }
 
     this._timestamp = Tweenable.now();
-    this._start(this.get(), this._attachment);
+    this._start(this.get(), _attachment);
     return this.resume();
   }
 
@@ -342,7 +359,7 @@ export class Tweenable {
   /**
    * Resume a paused tween.
    * @method shifty.Tweenable#resume
-   * @return {Promise}
+   * @return {external:Promise}
    */
   resume () {
     if (this._isPaused) {
@@ -399,34 +416,35 @@ export class Tweenable {
    * @return {shifty.Tweenable}
    */
   stop (gotoEnd = false) {
+    const {
+      _attachment,
+      _currentState,
+      _easing,
+      _originalState,
+      _targetState
+    } = this;
+
     this._isTweening = false;
     this._isPaused = false;
 
-    (
-      root.cancelAnimationFrame           ||
-      root.webkitCancelAnimationFrame     ||
-      root.oCancelAnimationFrame          ||
-      root.msCancelAnimationFrame         ||
-      root.mozCancelRequestAnimationFrame ||
-      root.clearTimeout
-    )(this._scheduleId);
+    cancelTimer(this._scheduleId);
 
     if (gotoEnd) {
       this._applyFilter('beforeTween');
       tweenProps(
         1,
-        this._currentState,
-        this._originalState,
-        this._targetState,
+        _currentState,
+        _originalState,
+        _targetState,
         1,
         0,
-        this._easing
+        _easing
       );
       this._applyFilter('afterTween');
       this._applyFilter('afterTweenEnd');
-      this._resolve(this._currentState, this._attachment);
+      this._resolve(_currentState, _attachment);
     } else {
-      this._reject(this._currentState, this._attachment);
+      this._reject(_currentState, _attachment);
     }
 
     return this;
@@ -470,6 +488,12 @@ export class Tweenable {
 assign(Tweenable, {
   formulas,
 
+  /**
+   * The {@link shifty.filter}s available for use.  These filters are
+   * automatically applied at tween-time by Shifty.
+   * @member shifty.Tweenable.filters
+   * @type {Object.<shifty.filter>}
+   */
   filters: { token },
 
   /**
@@ -477,7 +501,7 @@ assign(Tweenable, {
    * @static
    * @returns {number} The current timestamp
    */
-  now: (Date.now || (_ => +new Date()))
+  now: Date.now || (_ => +new Date())
 });
 
 /**
@@ -493,7 +517,7 @@ assign(Tweenable, {
  *       () => console.log('All done!')
  *     );
  *
- * @returns {Promise}
+ * @returns {external:Promise}
  */
 export function tween (config = {}) {
   const tweenable = new Tweenable();

@@ -4,7 +4,7 @@
     "destination": "dist/doc",
     "readme": "index.md",
     "tutorials": "tutorials",
-    "template": "node_modules/minami"
+    "template": "node_modules/@jeremyckahn/minami"
   },
   "templates": {
     "cleverLinks": true,
