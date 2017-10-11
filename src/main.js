@@ -56,3 +56,50 @@ export { setBezierFunction, unsetBezierFunction } from './bezier';
  * @property {Function} [promise] Promise constructor for when you want
  * to use Promise library or polyfill Promises in unsupported environments.
  */
+
+/**
+ * Is called when a tween is created.  This should convert all of the
+ * properties of each of its arguments to `Numbers`.
+ * @callback {Function} shifty.tweenCreatedFilter
+ * @param {Object} currentState Gets directly mutated by this function.
+ * @param {Object} fromState Gets directly mutated by this function.
+ * @param {Object} toState Gets directly mutated by this function.
+ */
+
+/**
+ * Is called right before a tween starts.  This should convert all of the
+ * properties of each of `currentState`, `fromState`, and `toState` to
+ * `Numbers`.
+ * @callback {Function} shifty.beforeTweenFilter
+ * @param {Object} currentState Gets directly mutated by this function.
+ * @param {Object} fromState Gets directly mutated by this function.
+ * @param {Object} toState Gets directly mutated by this function.
+ * @param {Object.<string|shifty.easingFunction>} easingObject The `easing`
+ * that was passed to {@link shifty.Tweenable#setConfig}.
+ */
+
+/**
+ * Is called right after a tween ends.  This should convert all of the
+ * properties of each of `currentState`, `fromState`, and `toState` to
+ * `Numbers`.
+ * @callback {Function} shifty.afterTweenFilter
+ * @param {Object} currentState Gets directly mutated by this function.
+ * @param {Object} fromState Gets directly mutated by this function.
+ * @param {Object} toState Gets directly mutated by this function.
+ * @param {Object.<string|shifty.easingFunction>} easingObject The `easing`
+ * that was passed to {@link shifty.Tweenable#setConfig}.
+ */
+
+/**
+ * An Object that contains functions that called at key points in a tween's
+ * lifecycle.  Shifty can only process `Number`s internally, but filters can
+ * expand support for any type of data.  This is the mechanism that powers
+ * [string interpolation]{@tutorial string-interpolation}.
+ * @typedef {Object} shifty.filter
+ * @property {shifty.tweenCreatedFilter} tweenCreated Is called when a tween is
+ * created.
+ * @property {shifty.beforeTweenFilter} beforeTween Is called right before a
+ * tween starts.
+ * @property {shifty.afterTweenFilter} afterTween Is called right after a tween
+ * ends.
+ */

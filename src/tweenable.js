@@ -488,6 +488,12 @@ export class Tweenable {
 assign(Tweenable, {
   formulas,
 
+  /**
+   * The {@link shifty.filter}s available for use.  These filters are
+   * automatically applied at tween-time by Shifty.
+   * @member shifty.Tweenable.filters
+   * @type {Object.<shifty.filter>}
+   */
   filters: { token },
 
   /**
@@ -495,7 +501,7 @@ assign(Tweenable, {
    * @static
    * @returns {number} The current timestamp
    */
-  now: (Date.now || (_ => +new Date()))
+  now: Date.now || (_ => +new Date())
 });
 
 /**
