@@ -1,7 +1,7 @@
 {
   "name": "shifty",
-  "version": "2.2.0",
-  "homepage": "http://jeremyckahn.github.io/shifty",
+  "version": "2.3.0",
+  "homepage": "http://jeremyckahn.github.io/shifty/doc/",
   "author": "Jeremy Kahn <jeremyckahn@gmail.com>",
   "repository": {
     "type": "git",
