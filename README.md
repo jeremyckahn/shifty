@@ -60,9 +60,7 @@ To start a development server:
 npm start
 ```
 
-Once that's running, you can run the tests at
-http://localhost:9009/ and view the documentation at
-http://localhost:9009/dist/doc/.
+Once that's running, you can run the tests at http://localhost:9009/test/.
 
 ## Loading Shifty
 
