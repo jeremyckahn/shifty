@@ -8,6 +8,15 @@ const DEFAULT_DURATION = 500;
 const UPDATE_TIME = 1000 / 60;
 const root = typeof window !== 'undefined' ? window : global;
 
+const cancelTimer = (
+  root.cancelAnimationFrame           ||
+  root.webkitCancelAnimationFrame     ||
+  root.oCancelAnimationFrame          ||
+  root.msCancelAnimationFrame         ||
+  root.mozCancelRequestAnimationFrame ||
+  root.clearTimeout
+);
+
 // requestAnimationFrame() shim by Paul Irish (modified for Shifty)
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 const DEFAULT_SCHEDULE_FUNCTION = (
@@ -407,34 +416,35 @@ export class Tweenable {
    * @return {shifty.Tweenable}
    */
   stop (gotoEnd = false) {
+    const {
+      _attachment,
+      _currentState,
+      _easing,
+      _originalState,
+      _targetState
+    } = this;
+
     this._isTweening = false;
     this._isPaused = false;
 
-    (
-      root.cancelAnimationFrame           ||
-      root.webkitCancelAnimationFrame     ||
-      root.oCancelAnimationFrame          ||
-      root.msCancelAnimationFrame         ||
-      root.mozCancelRequestAnimationFrame ||
-      root.clearTimeout
-    )(this._scheduleId);
+    cancelTimer(this._scheduleId);
 
     if (gotoEnd) {
       this._applyFilter('beforeTween');
       tweenProps(
         1,
-        this._currentState,
-        this._originalState,
-        this._targetState,
+        _currentState,
+        _originalState,
+        _targetState,
         1,
         0,
-        this._easing
+        _easing
       );
       this._applyFilter('afterTween');
       this._applyFilter('afterTweenEnd');
-      this._resolve(this._currentState, this._attachment);
+      this._resolve(_currentState, _attachment);
     } else {
-      this._reject(this._currentState, this._attachment);
+      this._reject(_currentState, _attachment);
     }
 
     return this;
