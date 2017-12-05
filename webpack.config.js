@@ -35,7 +35,8 @@ module.exports = {
       },
       output: {
         comments: false
-      }
+      },
+      sourceMap: true
     }),
     new Webpack.BannerPlugin(version)
   ]
