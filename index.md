@@ -10,7 +10,9 @@ Shifty is a JavaScript tweening engine designed to fit all of your animation nee
   * **Extensibility**: Shifty's {@link shifty.Tweenable} object works well as the base in a prototype chain.
   * **Small download size**: The standard distribution is less than 5Kb when minified and gzipped.
 
-Shifty is a low-level animation solution.  This means that it does not perform any rendering, but it can be integrated into whatever rendering mechanism is most appropriate for your project.  Shifty is meant to be a simpler alternative to richer tools like the excellent [GreenSock animation platform](https://greensock.com/) while offering [comparable (and in many cases better) performance](https://codepen.io/jeremyckahn/pen/prMYXj).  This can be critical for some projects, particularly on mobile devices — [just ask Yelp](http://engineeringblog.yelp.com/2015/01/animating-the-mobile-web.html)!
+Shifty is a low-level animation solution.  This means that it does not perform any rendering, but it can be integrated into whatever rendering mechanism is most appropriate for your project.  Shifty is meant to be a simpler alternative to richer tools like the excellent [GreenSock animation platform](https://greensock.com/) while offering [comparable (and in some cases better) performance](https://codepen.io/jeremyckahn/pen/prMYXj).  This can be critical for some projects, particularly on mobile devices — [just ask Yelp](http://engineeringblog.yelp.com/2015/01/animating-the-mobile-web.html)!
+
+If you feel that your project requires richer animation APIs and a robust plugin ecosystem, Greensock is an excellent choice.  If you prefer less overhead and a more permissive license (MIT), Shifty might be the animation engine for you!
 
 Shifty is the heart of [Rekapi](http://rekapi.com/), a higher-level library for making keyframe animations. Shifty is also a low-level part of [Stylie](http://jeremyckahn.github.io/stylie/) and [Mantra](http://jeremyckahn.github.io/mantra/), a suite of graphical animation tools.
 
