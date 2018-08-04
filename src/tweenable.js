@@ -28,14 +28,7 @@ const DEFAULT_SCHEDULE_FUNCTION =
 
 const noop = () => {};
 
-/**
- * @param {Object} obj
- * @return {Object}
- * @private
- */
-export const clone = obj => assign({}, obj);
-
-const formulas = clone(easingFunctions);
+const formulas = { ...easingFunctions };
 
 /**
  * Tweens a single property.
@@ -270,13 +263,13 @@ export class Tweenable {
       _start: config.start || noop,
       _step: config.step || noop,
       _duration: config.duration || DEFAULT_DURATION,
-      _currentState: clone(config.from || this.get()),
+      _currentState: { ...(config.from || this.get()) },
     });
 
     // Separate Object.assign here; it depends on _currentState being set above
     assign(this, {
       _originalState: this.get(),
-      _targetState: clone(config.to || this.get()),
+      _targetState: { ...(config.to || this.get()) },
     });
 
     let currentState = this._currentState;
@@ -310,7 +303,7 @@ export class Tweenable {
    * @return {Object} The current state.
    */
   get() {
-    return clone(this._currentState);
+    return { ...this._currentState };
   }
 
   /**

@@ -1,4 +1,4 @@
-import { Tweenable, clone, composeEasingObject, tweenProps } from './tweenable';
+import { Tweenable, composeEasingObject, tweenProps } from './tweenable';
 
 // Fake a Tweenable and patch some internals.  This approach allows us to
 // skip uneccessary processing and object recreation, cutting down on garbage
@@ -46,7 +46,7 @@ mockTweenable._filterArgs = [];
  * @return {Object}
  */
 export const interpolate = (from, to, position, easing, delay = 0) => {
-  const current = clone(from);
+  const current = { ...from };
   const easingObject = composeEasingObject(from, easing);
 
   mockTweenable.set({});
