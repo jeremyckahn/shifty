@@ -1,5 +1,3 @@
-import { each } from './tweenable';
-
 const R_NUMBER_COMPONENT = /(\d|-|\.)/;
 const R_FORMAT_CHUNKS = /([^\-0-9.]+)/g;
 const R_UNFORMATTED_VALUES = /[0-9.-]+/g;
@@ -152,13 +150,13 @@ const sanitizeHexChunksToRGB = str =>
  * @private
  */
 const sanitizeObjectForHexProps = stateObject => {
-  each(stateObject, prop => {
+  for (const prop in stateObject) {
     const currentProp = stateObject[prop];
 
     if (typeof currentProp === 'string' && currentProp.match(R_HEX)) {
       stateObject[prop] = sanitizeHexChunksToRGB(currentProp);
     }
-  });
+  }
 };
 
 /**
@@ -207,8 +205,8 @@ const getValuesFrom = formattedString =>
 const getFormatSignatures = stateObject => {
   const signatures = {};
 
-  each(stateObject, propertyName => {
-    let property = stateObject[propertyName];
+  for (const propertyName in stateObject) {
+    const property = stateObject[propertyName];
 
     if (typeof property === 'string') {
       signatures[propertyName] = {
@@ -216,7 +214,7 @@ const getFormatSignatures = stateObject => {
         chunkNames: getFormatChunksFrom(getValuesFrom(property), propertyName),
       };
     }
-  });
+  }
 
   return signatures;
 };
@@ -227,14 +225,14 @@ const getFormatSignatures = stateObject => {
  * @private
  */
 const expandFormattedProperties = (stateObject, formatSignatures) => {
-  each(formatSignatures, propertyName => {
+  for (const propertyName in formatSignatures) {
     getValuesFrom(stateObject[propertyName]).forEach(
       (number, i) =>
         (stateObject[formatSignatures[propertyName].chunkNames[i]] = +number)
     );
 
     delete stateObject[propertyName];
-  });
+  }
 };
 
 /**
@@ -290,7 +288,7 @@ const getFormattedValues = (formatString, rawValues) => {
  * @private
  */
 const collapseFormattedProperties = (stateObject, formatSignatures) => {
-  each(formatSignatures, prop => {
+  for (const prop in formatSignatures) {
     const { chunkNames, formatString } = formatSignatures[prop];
 
     const currentProp = getFormattedValues(
@@ -299,7 +297,7 @@ const collapseFormattedProperties = (stateObject, formatSignatures) => {
     );
 
     stateObject[prop] = sanitizeRGBChunks(currentProp);
-  });
+  }
 };
 
 /**
@@ -308,7 +306,7 @@ const collapseFormattedProperties = (stateObject, formatSignatures) => {
  * @private
  */
 const expandEasingObject = (easingObject, tokenData) => {
-  each(tokenData, prop => {
+  for (const prop in tokenData) {
     const { chunkNames } = tokenData[prop];
     const easing = easingObject[prop];
 
@@ -326,7 +324,7 @@ const expandEasingObject = (easingObject, tokenData) => {
     }
 
     delete easingObject[prop];
-  });
+  }
 };
 
 /**
@@ -335,7 +333,7 @@ const expandEasingObject = (easingObject, tokenData) => {
  * @private
  */
 const collapseEasingObject = (easingObject, tokenData) => {
-  each(tokenData, prop => {
+  for (const prop in tokenData) {
     const { chunkNames } = tokenData[prop];
     const firstEasing = easingObject[chunkNames[0]];
 
@@ -352,7 +350,7 @@ const collapseEasingObject = (easingObject, tokenData) => {
       // firstEasing is a function
       easingObject[prop] = firstEasing;
     }
-  });
+  }
 };
 
 export function tweenCreated(currentState, fromState, toState) {

@@ -29,17 +29,6 @@ const DEFAULT_SCHEDULE_FUNCTION =
 const noop = () => {};
 
 /**
- * Handy shortcut for doing a for-in loop. This is not a "normal" each
- * function, it is optimized for Shifty.  The iterator function only receives
- * the property name, not the value.
- * @param {Object} obj
- * @param {Function} fn
- * @returns {void}
- * @private
- */
-export const each = (obj, fn) => Object.keys(obj).forEach(fn);
-
-/**
  * @param {Object} obj
  * @return {Object}
  * @private
@@ -89,7 +78,7 @@ export const tweenProps = (
   const normalizedPosition =
     forPosition < timestamp ? 0 : (forPosition - timestamp) / duration;
 
-  each(currentState, key => {
+  for (const key in currentState) {
     const easingObjectProp = easing[key];
     const easingFn =
       typeof easingObjectProp === 'function'
@@ -102,7 +91,7 @@ export const tweenProps = (
       easingFn,
       normalizedPosition
     );
-  });
+  }
 
   return currentState;
 };
@@ -124,14 +113,14 @@ export const composeEasingObject = (
   let typeofEasing = typeof easing;
 
   if (typeofEasing === 'string' || typeofEasing === 'function') {
-    each(fromTweenParams, prop => (composedEasing[prop] = easing));
+    for (const prop in fromTweenParams) {
+      composedEasing[prop] = easing;
+    }
   } else {
-    each(
-      fromTweenParams,
-      prop =>
-        (composedEasing[prop] =
-          composedEasing[prop] || easing[prop] || DEFAULT_EASING)
-    );
+    for (const prop in fromTweenParams) {
+      composedEasing[prop] =
+        composedEasing[prop] || easing[prop] || DEFAULT_EASING;
+    }
   }
 
   return composedEasing;
@@ -165,16 +154,16 @@ export class Tweenable {
    * @private
    */
   _applyFilter(filterName) {
-    let filters = Tweenable.filters;
-    let args = this._filterArgs;
+    const { filters } = Tweenable;
+    const { _filterArgs } = this;
 
-    each(filters, name => {
-      let filter = filters[name][filterName];
+    for (const name in filters) {
+      const filter = filters[name][filterName];
 
       if (typeof filter !== 'undefined') {
-        filter.apply(this, args);
+        filter.apply(this, _filterArgs);
       }
-    });
+    }
   }
 
   /**
@@ -470,7 +459,9 @@ export class Tweenable {
    * @method shifty.Tweenable#dispose
    */
   dispose() {
-    each(this, prop => delete this[prop]);
+    for (const prop in this) {
+      delete this[prop];
+    }
   }
 }
 
