@@ -247,29 +247,39 @@ export class Tweenable {
    * @param {shifty.tweenConfig} [config={}]
    * @return {shifty.Tweenable}
    */
-  setConfig(config = {}) {
+  setConfig({
+    attachment,
+    delay = 0,
+    duration = DEFAULT_DURATION,
+    easing,
+    from,
+    promise = Promise,
+    start = noop,
+    step = noop,
+    to,
+  }) {
     this._configured = true;
 
     // Attach something to this Tweenable instance (e.g.: a DOM element, an
     // object, a string, etc.);
-    this._attachment = config.attachment;
+    this._attachment = attachment;
 
     // Init the internal state
     this._pausedAtTime = null;
     this._scheduleId = null;
-    this._delay = config.delay || 0;
-    this._start = config.start || noop;
-    this._step = config.step || noop;
-    this._duration = config.duration || DEFAULT_DURATION;
-    this._currentState = { ...(config.from || this.get()) };
+    this._delay = delay;
+    this._start = start;
+    this._step = step;
+    this._duration = duration;
+    this._currentState = { ...(from || this.get()) };
     this._originalState = this.get();
-    this._targetState = { ...(config.to || this.get()) };
+    this._targetState = { ...(to || this.get()) };
 
     const { _currentState } = this;
     // Ensure that there is always something to tween to.
     this._targetState = { ..._currentState, ...this._targetState };
 
-    this._easing = composeEasingObject(_currentState, config.easing);
+    this._easing = composeEasingObject(_currentState, easing);
 
     this._filterArgs = [
       _currentState,
@@ -280,7 +290,7 @@ export class Tweenable {
 
     this._applyFilter('tweenCreated');
 
-    this._promise = new (config.promise || Promise)((resolve, reject) => {
+    this._promise = new promise((resolve, reject) => {
       this._resolve = resolve;
       this._reject = reject;
     });
