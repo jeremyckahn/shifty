@@ -8,9 +8,9 @@ import {
   interpolate,
   setBezierFunction,
   unsetBezierFunction,
-} from '../src/main';
+} from '../src';
 
-import * as shifty from '../src/main';
+import * as shifty from '../src';
 
 // Handy for testing in the browser console
 if (typeof window !== 'undefined') {
