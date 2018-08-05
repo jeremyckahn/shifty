@@ -1,4 +1,4 @@
-import { Tweenable, clone, composeEasingObject, tweenProps } from './tweenable';
+import { Tweenable, composeEasingObject, tweenProps } from './tweenable';
 
 // Fake a Tweenable and patch some internals.  This approach allows us to
 // skip uneccessary processing and object recreation, cutting down on garbage
@@ -11,7 +11,7 @@ mockTweenable._filterArgs = [];
  * specific frame of animation that {@link shifty.Tweenable#tween} does many times
  * over the course of a full tween.
  *
- *     import { interpolate } from 'shifty';
+ *     import { interpolate } from 'shifty';.
  *
  *     const interpolatedValues = interpolate({
  *         width: '100px',
@@ -45,10 +45,8 @@ mockTweenable._filterArgs = [];
  * increase all valid values of `position` to numbers between `0` and `1.5`.
  * @return {Object}
  */
-export const interpolate =
-  (from, to, position, easing, delay = 0) => {
-
-  const current = clone(from);
+export const interpolate = (from, to, position, easing, delay = 0) => {
+  const current = { ...from };
   const easingObject = composeEasingObject(from, easing);
 
   mockTweenable.set({});
@@ -58,8 +56,15 @@ export const interpolate =
   mockTweenable._applyFilter('tweenCreated');
   mockTweenable._applyFilter('beforeTween');
 
-  const interpolatedValues =
-    tweenProps(position, current, from, to, 1, delay, easingObject);
+  const interpolatedValues = tweenProps(
+    position,
+    current,
+    from,
+    to,
+    1,
+    delay,
+    easingObject
+  );
 
   // Transform data in interpolatedValues back into its original format
   mockTweenable._applyFilter('afterTween');

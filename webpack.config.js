@@ -1,43 +1,42 @@
+/* global __dirname */
 const path = require('path');
 const Webpack = require('webpack');
 
 const { version } = require('./package.json');
 
 module.exports = {
-  entry: './src/main.js',
+  entry: './src/index.js',
   output: {
     path: path.join(__dirname, 'dist'),
     publicPath: '/assets/',
     filename: 'shifty.js',
     library: 'shifty',
     libraryTarget: 'umd',
-    umdNamedDefine: true
+    umdNamedDefine: true,
   },
   devtool: 'source-map',
   module: {
     rules: [
       {
         test: /\.js$/,
-        use: 'babel-loader'
-      }
-    ]
+        use: 'babel-loader',
+      },
+    ],
   },
   resolve: {
-    modules: [
-      'node_modules'
-    ]
+    modules: ['node_modules'],
   },
   plugins: [
     new Webpack.optimize.UglifyJsPlugin({
       compress: {
         dead_code: true,
-        unused: true
+        unused: true,
       },
       output: {
-        comments: false
+        comments: false,
       },
-      sourceMap: true
+      sourceMap: true,
     }),
-    new Webpack.BannerPlugin(version)
-  ]
+    new Webpack.BannerPlugin(version),
+  ],
 };

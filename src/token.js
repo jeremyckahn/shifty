@@ -1,15 +1,13 @@
-import { Tweenable, each } from './tweenable';
-
-const R_NUMBER_COMPONENT = /(\d|\-|\.)/;
-const R_FORMAT_CHUNKS = /([^\-0-9\.]+)/g;
-const R_UNFORMATTED_VALUES = /[0-9.\-]+/g;
+const R_NUMBER_COMPONENT = /(\d|-|\.)/;
+const R_FORMAT_CHUNKS = /([^\-0-9.]+)/g;
+const R_UNFORMATTED_VALUES = /[0-9.-]+/g;
 const R_RGB = (() => {
   const number = R_UNFORMATTED_VALUES.source;
   const comma = /,\s*/.source;
 
   return new RegExp(
-  `rgb\\(${number}${comma}${number}${comma}${number}\\)`,
-  'g'
+    `rgb\\(${number}${comma}${number}${comma}${number}\\)`,
+    'g'
   );
 })();
 const R_RGB_PREFIX = /^.*\(/;
@@ -46,11 +44,12 @@ const getFormatStringFrom = formattedString => {
     // If there is only one chunk, assume that the string is a number
     // followed by a token...
     // NOTE: This may be an unwise assumption.
-  } else if (chunks.length === 1 ||
-      // ...or if the string starts with a number component (".", "-", or a
-      // digit)...
-      formattedString.charAt(0).match(R_NUMBER_COMPONENT)) {
-
+  } else if (
+    chunks.length === 1 ||
+    // ...or if the string starts with a number component (".", "-", or a
+    // digit)...
+    formattedString.charAt(0).match(R_NUMBER_COMPONENT)
+  ) {
     // ...prepend an empty string here to make sure that the formatted number
     // is properly replaced by VALUE_PLACEHOLDER
     chunks.unshift('');
@@ -62,12 +61,12 @@ const getFormatStringFrom = formattedString => {
 /**
  * Convert a base-16 number to base-10.
  *
- * @param {Number|String} hex The value to convert
+ * @param {number|string} hex The value to convert.
  *
- * @returns {Number} The base-10 equivalent of `hex`.
+ * @returns {number} The base-10 equivalent of `hex`.
  * @private
  */
-function hexToDec (hex) {
+function hexToDec(hex) {
   return parseInt(hex, 16);
 }
 
@@ -94,7 +93,7 @@ const hexToRGBArray = hex => {
   return [
     hexToDec(hex.substr(0, 2)),
     hexToDec(hex.substr(2, 2)),
-    hexToDec(hex.substr(4, 2))
+    hexToDec(hex.substr(4, 2)),
   ];
 };
 
@@ -109,7 +108,7 @@ const convertHexToRGB = hexString =>
 
 /**
  * TODO: Can this be rewritten to leverage String#replace more efficiently?
- * Runs a filter operation on all chunks of a string that match a RegExp
+ * Runs a filter operation on all chunks of a string that match a RegExp.
  *
  * @param {RegExp} pattern
  * @param {string} unfilteredString
@@ -123,8 +122,12 @@ const filterStringChunks = (pattern, unfilteredString, filter) => {
   let filteredString = unfilteredString.replace(pattern, VALUE_PLACEHOLDER);
 
   if (patternMatches) {
-    patternMatches.forEach(match =>
-      filteredString = filteredString.replace(VALUE_PLACEHOLDER, filter(match))
+    patternMatches.forEach(
+      match =>
+        (filteredString = filteredString.replace(
+          VALUE_PLACEHOLDER,
+          filter(match)
+        ))
     );
   }
 
@@ -144,18 +147,16 @@ const sanitizeHexChunksToRGB = str =>
  * Convert all hex color values within a string to an rgb string.
  *
  * @param {Object} stateObject
- *
- * @return {Object} The modified obj
  * @private
  */
 const sanitizeObjectForHexProps = stateObject => {
-  each(stateObject, prop => {
+  for (const prop in stateObject) {
     const currentProp = stateObject[prop];
 
     if (typeof currentProp === 'string' && currentProp.match(R_HEX)) {
       stateObject[prop] = sanitizeHexChunksToRGB(currentProp);
     }
-  });
+  }
 };
 
 /**
@@ -198,25 +199,22 @@ const getValuesFrom = formattedString =>
  * @param {Object} stateObject
  *
  * @return {Object} An Object of formatSignatures that correspond to
- * the string properties of stateObject
+ * the string properties of stateObject.
  * @private
  */
 const getFormatSignatures = stateObject => {
   const signatures = {};
 
-  each(stateObject, propertyName => {
-    let property = stateObject[propertyName];
+  for (const propertyName in stateObject) {
+    const property = stateObject[propertyName];
 
     if (typeof property === 'string') {
       signatures[propertyName] = {
         formatString: getFormatStringFrom(property),
-        chunkNames: getFormatChunksFrom(
-          getValuesFrom(property),
-          propertyName
-        )
+        chunkNames: getFormatChunksFrom(getValuesFrom(property), propertyName),
       };
     }
-  });
+  }
 
   return signatures;
 };
@@ -227,13 +225,14 @@ const getFormatSignatures = stateObject => {
  * @private
  */
 const expandFormattedProperties = (stateObject, formatSignatures) => {
-  each(formatSignatures, propertyName => {
-    getValuesFrom(stateObject[propertyName]).forEach((number, i) =>
-      stateObject[formatSignatures[propertyName].chunkNames[i]] = +number
+  for (const propertyName in formatSignatures) {
+    getValuesFrom(stateObject[propertyName]).forEach(
+      (number, i) =>
+        (stateObject[formatSignatures[propertyName].chunkNames[i]] = +number)
     );
 
     delete stateObject[propertyName];
-  });
+  }
 };
 
 /**
@@ -272,10 +271,12 @@ const getValuesList = (stateObject, chunkNames) =>
  * @private
  */
 const getFormattedValues = (formatString, rawValues) => {
-  rawValues.forEach(rawValue =>
-    formatString = formatString.replace(
-      VALUE_PLACEHOLDER, +rawValue.toFixed(4)
-    )
+  rawValues.forEach(
+    rawValue =>
+      (formatString = formatString.replace(
+        VALUE_PLACEHOLDER,
+        +rawValue.toFixed(4)
+      ))
   );
 
   return formatString;
@@ -287,22 +288,16 @@ const getFormattedValues = (formatString, rawValues) => {
  * @private
  */
 const collapseFormattedProperties = (stateObject, formatSignatures) => {
-  each(formatSignatures, prop => {
+  for (const prop in formatSignatures) {
     const { chunkNames, formatString } = formatSignatures[prop];
 
     const currentProp = getFormattedValues(
       formatString,
-      getValuesList(
-        extractPropertyChunks(
-          stateObject,
-          chunkNames
-        ),
-        chunkNames
-      )
+      getValuesList(extractPropertyChunks(stateObject, chunkNames), chunkNames)
     );
 
     stateObject[prop] = sanitizeRGBChunks(currentProp);
-  });
+  }
 };
 
 /**
@@ -311,7 +306,7 @@ const collapseFormattedProperties = (stateObject, formatSignatures) => {
  * @private
  */
 const expandEasingObject = (easingObject, tokenData) => {
-  each(tokenData, prop => {
+  for (const prop in tokenData) {
     const { chunkNames } = tokenData[prop];
     const easing = easingObject[prop];
 
@@ -319,17 +314,17 @@ const expandEasingObject = (easingObject, tokenData) => {
       const easingNames = easing.split(' ');
       const defaultEasing = easingNames[easingNames.length - 1];
 
-      chunkNames.forEach((chunkName, i) =>
-        easingObject[chunkName] = easingNames[i] || defaultEasing
+      chunkNames.forEach(
+        (chunkName, i) =>
+          (easingObject[chunkName] = easingNames[i] || defaultEasing)
       );
-    } else { // easing is a function
-      chunkNames.forEach(chunkName =>
-        easingObject[chunkName] = easing
-      );
+    } else {
+      // easing is a function
+      chunkNames.forEach(chunkName => (easingObject[chunkName] = easing));
     }
 
     delete easingObject[prop];
-  });
+  }
 };
 
 /**
@@ -338,31 +333,33 @@ const expandEasingObject = (easingObject, tokenData) => {
  * @private
  */
 const collapseEasingObject = (easingObject, tokenData) => {
-  each(tokenData, prop => {
+  for (const prop in tokenData) {
     const { chunkNames } = tokenData[prop];
-    const { length } = chunkNames;
     const firstEasing = easingObject[chunkNames[0]];
 
     if (typeof firstEasing === 'string') {
-      easingObject[prop] = chunkNames.map(chunkName => {
-        const easingName = easingObject[chunkName];
-        delete easingObject[chunkName];
+      easingObject[prop] = chunkNames
+        .map(chunkName => {
+          const easingName = easingObject[chunkName];
+          delete easingObject[chunkName];
 
-        return easingName;
-      }).join(' ');
-    } else { // firstEasing is a function
+          return easingName;
+        })
+        .join(' ');
+    } else {
+      // firstEasing is a function
       easingObject[prop] = firstEasing;
     }
-  });
+  }
 };
 
-export function tweenCreated (currentState, fromState, toState) {
+export function tweenCreated(currentState, fromState, toState) {
   [currentState, fromState, toState].forEach(sanitizeObjectForHexProps);
 
   this._tokenData = getFormatSignatures(currentState);
 }
 
-export function beforeTween (currentState, fromState, toState, easingObject) {
+export function beforeTween(currentState, fromState, toState, easingObject) {
   const { _tokenData } = this;
   expandEasingObject(easingObject, _tokenData);
 
@@ -371,7 +368,7 @@ export function beforeTween (currentState, fromState, toState, easingObject) {
   );
 }
 
-export function afterTween (currentState, fromState, toState, easingObject) {
+export function afterTween(currentState, fromState, toState, easingObject) {
   const { _tokenData } = this;
   [currentState, fromState, toState].forEach(state =>
     collapseFormattedProperties(state, _tokenData)

@@ -1,10 +1,5 @@
+/* global __dirname */
 const path = require('path');
-const Webpack = require('webpack');
-
-const modulePaths = [
-  'scripts',
-  path.join(__dirname, 'node_modules')
-];
 
 module.exports = {
   entry: './test/index.js',
@@ -14,23 +9,21 @@ module.exports = {
     filename: 'index.js',
     library: 'index',
     libraryTarget: 'umd',
-    umdNamedDefine: true
+    umdNamedDefine: true,
   },
   devtool: 'source-map',
   module: {
     rules: [
       {
         test: /\.js$/,
-        use: 'babel-loader'
-      }
-    ]
+        use: 'babel-loader',
+      },
+    ],
   },
   resolve: {
-    modules: [
-      'node_modules'
-    ]
+    modules: ['node_modules'],
   },
   devServer: {
-    port: 9009
-  }
+    port: 9009,
+  },
 };
