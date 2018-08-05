@@ -1,5 +1,4 @@
 import * as easingFunctions from './easing-functions';
-import assign from 'object-assign';
 import * as token from './token';
 
 // CONSTANTS
@@ -256,37 +255,32 @@ export class Tweenable {
     this._attachment = config.attachment;
 
     // Init the internal state
-    assign(this, {
-      _pausedAtTime: null,
-      _scheduleId: null,
-      _delay: config.delay || 0,
-      _start: config.start || noop,
-      _step: config.step || noop,
-      _duration: config.duration || DEFAULT_DURATION,
-      _currentState: { ...(config.from || this.get()) },
-    });
+    this._pausedAtTime = null;
+    this._scheduleId = null;
+    this._delay = config.delay || 0;
+    this._start = config.start || noop;
+    this._step = config.step || noop;
+    this._duration = config.duration || DEFAULT_DURATION;
+    this._currentState = { ...(config.from || this.get()) };
+    this._originalState = this.get();
+    this._targetState = { ...(config.to || this.get()) };
 
-    // Separate Object.assign here; it depends on _currentState being set above
-    assign(this, {
-      _originalState: this.get(),
-      _targetState: { ...(config.to || this.get()) },
-    });
-
-    let currentState = this._currentState;
+    const { _currentState } = this;
     // Ensure that there is always something to tween to.
-    this._targetState = assign({}, currentState, this._targetState);
+    this._targetState = { ..._currentState, ...this._targetState };
 
-    this._easing = composeEasingObject(currentState, config.easing);
+    this._easing = composeEasingObject(_currentState, config.easing);
+
     this._filterArgs = [
-      currentState,
+      _currentState,
       this._originalState,
       this._targetState,
       this._easing,
     ];
+
     this._applyFilter('tweenCreated');
 
-    const Promised = config.promise || Promise;
-    this._promise = new Promised((resolve, reject) => {
+    this._promise = new (config.promise || Promise)((resolve, reject) => {
       this._resolve = resolve;
       this._reject = reject;
     });
@@ -458,24 +452,22 @@ export class Tweenable {
   }
 }
 
-assign(Tweenable, {
-  formulas,
+Tweenable.formulas = formulas;
 
-  /**
-   * The {@link shifty.filter}s available for use.  These filters are
-   * automatically applied at tween-time by Shifty.
-   * @member shifty.Tweenable.filters
-   * @type {Object.<shifty.filter>}
-   */
-  filters: { token },
+/**
+ * The {@link shifty.filter}s available for use.  These filters are
+ * automatically applied at tween-time by Shifty.
+ * @member shifty.Tweenable.filters
+ * @type {Object.<shifty.filter>}
+ */
+Tweenable.filters = { token };
 
-  /**
-   * @method shifty.Tweenable.now
-   * @static
-   * @returns {number} The current timestamp.
-   */
-  now: Date.now || (() => +new Date()),
-});
+/**
+ * @method shifty.Tweenable.now
+ * @static
+ * @returns {number} The current timestamp.
+ */
+Tweenable.now = Date.now || (() => +new Date());
 
 /**
  * @method shifty.tween

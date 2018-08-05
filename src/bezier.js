@@ -1,5 +1,4 @@
 import { Tweenable } from './tweenable';
-import assign from 'object-assign';
 
 /**
  * The Bezier magic in this file is adapted/copied almost wholesale from
@@ -166,14 +165,14 @@ const getCubicBezierTransition = (x1, y1, x2, y2) => pos =>
  * @return {shifty.easingFunction} The {@link shifty.easingFunction} that was
  * attached to {@link shifty.Tweenable.formulas}.
  */
-export const setBezierFunction = (name, x1, y1, x2, y2) =>
-  (Tweenable.formulas[name] = assign(getCubicBezierTransition(x1, y1, x2, y2), {
-    displayName: name,
-    x1,
-    y1,
-    x2,
-    y2,
-  }));
+export const setBezierFunction = (name, x1, y1, x2, y2) => ({
+  ...(Tweenable.formulas[name] = getCubicBezierTransition(x1, y1, x2, y2)),
+  displayName: name,
+  x1,
+  y1,
+  x2,
+  y2,
+});
 
 /**
  * `delete` an easing function from {@link shifty.Tweenable.formulas}.  Be
