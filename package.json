@@ -34,7 +34,7 @@
   "scripts": {
     "build": "webpack",
     "start": "webpack-dev-server --config webpack.test.config.js",
-    "test": "mocha ./node_modules/babel-core/register.js test/index.js",
+    "test": "mocha test",
     "test:watch": "nodemon --exec \"npm test\" --watch src --watch test",
     "doc": "jsdoc -c .jsdoc src/*.js",
     "doc:view": "live-server dist/doc --port=9124",
