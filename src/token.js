@@ -353,6 +353,9 @@ const collapseEasingObject = (easingObject, tokenData) => {
   }
 };
 
+export const doesApply = fromState =>
+  Object.keys(fromState).some(key => typeof fromState[key] === 'string');
+
 export function tweenCreated(currentState, fromState, toState) {
   [currentState, fromState, toState].forEach(sanitizeObjectForHexProps);
 

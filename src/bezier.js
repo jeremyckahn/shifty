@@ -166,7 +166,7 @@ const getCubicBezierTransition = (x1, y1, x2, y2) => pos =>
  * attached to {@link shifty.Tweenable.formulas}.
  */
 export const setBezierFunction = (name, x1, y1, x2, y2) => {
-  let cubicBezierTransition = getCubicBezierTransition(x1, y1, x2, y2);
+  const cubicBezierTransition = getCubicBezierTransition(x1, y1, x2, y2);
 
   cubicBezierTransition.displayName = name;
   cubicBezierTransition.x1 = x1;
