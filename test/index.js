@@ -4,11 +4,13 @@ import assert from 'assert';
 
 import {
   Tweenable,
-  tween,
   interpolate,
   setBezierFunction,
+  tween,
   unsetBezierFunction,
 } from '../src';
+
+import { processTweens, scheduleUpdate } from '../src/tweenable';
 
 import * as shifty from '../src';
 
@@ -28,6 +30,10 @@ describe('shifty', () => {
     });
 
     afterEach(() => {
+      if (tweenable.isPlaying()) {
+        tweenable.stop();
+      }
+
       tweenable = undefined;
       state = undefined;
       Tweenable.now = now;
@@ -46,7 +52,7 @@ describe('shifty', () => {
       });
 
       Tweenable.now = () => 500;
-      tweenable._timeoutHandler();
+      processTweens();
       assert.equal(
         state.x,
         7.5,
@@ -65,21 +71,21 @@ describe('shifty', () => {
 
         assert.equal(tweenable.get().x, 0, 'The tween starts at 0');
         Tweenable.now = () => 500;
-        tweenable._timeoutHandler();
+        processTweens();
         assert.equal(
           tweenable.get().x,
           50,
           'The middle of the tween equates to .5 of the target value'
         );
         Tweenable.now = () => 1000;
-        tweenable._timeoutHandler();
+        processTweens();
         assert.equal(
           tweenable.get().x,
           100,
           'The end of the tween equates to 1.0 of the target value'
         );
         Tweenable.now = () => 100000;
-        tweenable._timeoutHandler();
+        processTweens();
         assert.equal(
           tweenable.get().x,
           100,
@@ -100,7 +106,7 @@ describe('shifty', () => {
         });
 
         Tweenable.now = () => 500;
-        tweenable._timeoutHandler();
+        processTweens();
         assert.equal(
           capturedOffset,
           500,
@@ -127,7 +133,7 @@ describe('shifty', () => {
           );
 
           Tweenable.now = () => 500;
-          tweenable._timeoutHandler();
+          processTweens();
           assert.equal(
             tweenable.get().x,
             10,
@@ -135,7 +141,7 @@ describe('shifty', () => {
           );
 
           Tweenable.now = () => 1000;
-          tweenable._timeoutHandler();
+          processTweens();
           assert.equal(
             tweenable.get().x,
             20,
@@ -159,7 +165,7 @@ describe('shifty', () => {
           );
 
           Tweenable.now = () => 500;
-          tweenable._timeoutHandler();
+          processTweens();
           assert.equal(
             tweenable.get().x,
             10,
@@ -167,7 +173,7 @@ describe('shifty', () => {
           );
 
           Tweenable.now = () => 1000;
-          tweenable._timeoutHandler();
+          processTweens();
           assert.equal(
             tweenable.get().x,
             20,
@@ -192,7 +198,7 @@ describe('shifty', () => {
           );
 
           Tweenable.now = () => 500;
-          tweenable._timeoutHandler();
+          processTweens();
           assert.equal(
             tweenable.get().x,
             'rgb(127,127,127)',
@@ -200,7 +206,7 @@ describe('shifty', () => {
           );
 
           Tweenable.now = () => 1000;
-          tweenable._timeoutHandler();
+          processTweens();
           assert.equal(
             tweenable.get().x,
             'rgb(255,255,255)',
@@ -219,7 +225,7 @@ describe('shifty', () => {
           });
 
           Tweenable.now = () => 500;
-          tweenable._timeoutHandler();
+          processTweens();
           assert.equal(
             tweenable.get().x,
             50,
@@ -229,7 +235,7 @@ describe('shifty', () => {
 
           Tweenable.now = () => 2000;
           tweenable.resume();
-          tweenable._timeoutHandler();
+          processTweens();
           assert.equal(
             tweenable.get().x,
             50,
@@ -237,7 +243,7 @@ describe('shifty', () => {
           );
 
           Tweenable.now = () => 2500;
-          tweenable._timeoutHandler();
+          processTweens();
           assert.equal(
             tweenable.get().x,
             100,
@@ -356,7 +362,7 @@ describe('shifty', () => {
           });
 
           Tweenable.now = () => 500;
-          tweenable._timeoutHandler();
+          processTweens();
           tweenable.stop();
           assert.equal(
             tweenable.get().x,
@@ -380,7 +386,7 @@ describe('shifty', () => {
           });
 
           Tweenable.now = () => 500;
-          tweenable._timeoutHandler();
+          processTweens();
           tweenable.stop(true);
           assert.equal(
             tweenable.get().x,
@@ -406,7 +412,7 @@ describe('shifty', () => {
           });
 
           Tweenable.now = () => 500;
-          tweenable._timeoutHandler();
+          scheduleUpdate();
           tweenable.stop(true);
 
           assert(
@@ -442,7 +448,7 @@ describe('shifty', () => {
             });
 
             Tweenable.now = () => 250;
-            tweenable._timeoutHandler();
+            processTweens();
 
             assert.deepEqual(testState, { x: 5 });
           });
@@ -461,7 +467,7 @@ describe('shifty', () => {
             });
 
             Tweenable.now = () => 500;
-            tweenable._timeoutHandler();
+            processTweens();
 
             assert.deepEqual(testState, { x: 0 });
           });
@@ -497,7 +503,7 @@ describe('shifty', () => {
               .then(currentState => (testState = currentState));
 
             Tweenable.now = () => 500;
-            tweenable._timeoutHandler();
+            processTweens();
 
             return tween;
           });
@@ -523,7 +529,7 @@ describe('shifty', () => {
               .catch(currentState => (testState = currentState));
 
             Tweenable.now = () => 250;
-            tweenable._timeoutHandler();
+            processTweens();
             tweenable.stop();
 
             return tween;
@@ -553,7 +559,7 @@ describe('shifty', () => {
         );
 
         Tweenable.now = () => 250;
-        tweenable._timeoutHandler();
+        processTweens();
         assert.equal(
           tweenable.get().x,
           0,
@@ -561,7 +567,7 @@ describe('shifty', () => {
         );
 
         Tweenable.now = () => 1000;
-        tweenable._timeoutHandler();
+        processTweens();
         assert.equal(
           tweenable.get().x,
           5,
@@ -569,7 +575,7 @@ describe('shifty', () => {
         );
 
         Tweenable.now = () => 1500;
-        tweenable._timeoutHandler();
+        processTweens();
         assert.equal(
           tweenable.get().x,
           10,
@@ -577,7 +583,7 @@ describe('shifty', () => {
         );
 
         Tweenable.now = () => 99999;
-        tweenable._timeoutHandler();
+        processTweens();
         assert.equal(
           tweenable.get().x,
           10,
@@ -597,7 +603,7 @@ describe('shifty', () => {
         });
 
         Tweenable.now = () => 500 + delay;
-        tweenable._timeoutHandler();
+        processTweens();
         assert.equal(
           tweenable.get().x,
           50,
@@ -607,7 +613,7 @@ describe('shifty', () => {
         tweenable.pause();
         Tweenable.now = () => 2000 + delay;
         tweenable.resume();
-        tweenable._timeoutHandler();
+        processTweens();
         assert.equal(
           tweenable.get().x,
           50,
@@ -615,7 +621,7 @@ describe('shifty', () => {
         );
 
         Tweenable.now = () => 2500 + delay;
-        tweenable._timeoutHandler();
+        processTweens();
         assert.equal(
           tweenable.get().x,
           100,
@@ -1015,21 +1021,21 @@ describe('shifty', () => {
 
       assert.equal(tweenable.get().x, 0, 'The tween starts at 0');
       Tweenable.now = () => 500;
-      tweenable._timeoutHandler();
+      processTweens();
       assert.equal(
         tweenable.get().x,
         50,
         'The middle of the tween equates to .5 of the target value'
       );
       Tweenable.now = () => 1000;
-      tweenable._timeoutHandler();
+      processTweens();
       assert.equal(
         tweenable.get().x,
         100,
         'The end of the tween equates to 1.0 of the target value'
       );
       Tweenable.now = () => 100000;
-      tweenable._timeoutHandler();
+      processTweens();
       assert.equal(
         tweenable.get().x,
         100,

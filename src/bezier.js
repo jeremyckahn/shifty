@@ -165,14 +165,17 @@ const getCubicBezierTransition = (x1, y1, x2, y2) => pos =>
  * @return {shifty.easingFunction} The {@link shifty.easingFunction} that was
  * attached to {@link shifty.Tweenable.formulas}.
  */
-export const setBezierFunction = (name, x1, y1, x2, y2) => ({
-  ...(Tweenable.formulas[name] = getCubicBezierTransition(x1, y1, x2, y2)),
-  displayName: name,
-  x1,
-  y1,
-  x2,
-  y2,
-});
+export const setBezierFunction = (name, x1, y1, x2, y2) => {
+  const cubicBezierTransition = getCubicBezierTransition(x1, y1, x2, y2);
+
+  cubicBezierTransition.displayName = name;
+  cubicBezierTransition.x1 = x1;
+  cubicBezierTransition.y1 = y1;
+  cubicBezierTransition.x2 = x2;
+  cubicBezierTransition.y2 = y2;
+
+  return (Tweenable.formulas[name] = cubicBezierTransition);
+};
 
 /**
  * `delete` an easing function from {@link shifty.Tweenable.formulas}.  Be

@@ -4,6 +4,7 @@ import { Tweenable, composeEasingObject, tweenProps } from './tweenable';
 // skip uneccessary processing and object recreation, cutting down on garbage
 // collection pauses.
 const mockTweenable = new Tweenable();
+const { filters } = Tweenable;
 mockTweenable._filterArgs = [];
 
 /**
@@ -48,6 +49,14 @@ mockTweenable._filterArgs = [];
 export const interpolate = (from, to, position, easing, delay = 0) => {
   const current = { ...from };
   const easingObject = composeEasingObject(from, easing);
+
+  mockTweenable._filters.length = 0;
+
+  for (const name in filters) {
+    if (filters[name].doesApply(from)) {
+      mockTweenable._filters.push(filters[name]);
+    }
+  }
 
   mockTweenable.set({});
   mockTweenable._filterArgs = [current, from, to, easingObject];

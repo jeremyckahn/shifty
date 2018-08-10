@@ -6,17 +6,16 @@ const DEFAULT_DURATION = 500;
 const UPDATE_TIME = 1000 / 60;
 const root = typeof window !== 'undefined' ? window : global;
 
-const cancelTimer =
-  root.cancelAnimationFrame ||
-  root.webkitCancelAnimationFrame ||
-  root.oCancelAnimationFrame ||
-  root.msCancelAnimationFrame ||
-  root.mozCancelRequestAnimationFrame ||
-  root.clearTimeout;
+const AFTER_TWEEN = 'afterTween';
+const AFTER_TWEEN_END = 'afterTweenEnd';
+const BEFORE_TWEEN = 'beforeTween';
+const TWEEN_CREATED = 'tweenCreated';
+const TYPE_FUNCTION = 'function';
+const TYPE_STRING = 'string';
 
 // requestAnimationFrame() shim by Paul Irish (modified for Shifty)
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-const DEFAULT_SCHEDULE_FUNCTION =
+let scheduleFunction =
   root.requestAnimationFrame ||
   root.webkitRequestAnimationFrame ||
   root.oRequestAnimationFrame ||
@@ -26,20 +25,10 @@ const DEFAULT_SCHEDULE_FUNCTION =
 
 const noop = () => {};
 
-const formulas = { ...easingFunctions };
+let listHead = null;
+let listTail = null;
 
-/**
- * Tweens a single property.
- * @param {number} start The value that the tween started from.
- * @param {number} end The value that the tween should end at.
- * @param {Function} easingFunc The easing curve to apply to the tween.
- * @param {number} position The normalized position (between 0.0 and 1.0) to
- * calculate the midpoint of 'start' and 'end' against.
- * @return {number} The tweened value.
- * @private
- */
-const tweenProp = (start, end, easingFunc, position) =>
-  start + (end - start) * easingFunc(position);
+const formulas = { ...easingFunctions };
 
 /**
  * Calculates the interpolated tween values of an Object for a given
@@ -71,20 +60,84 @@ export const tweenProps = (
 
   for (const key in currentState) {
     const easingObjectProp = easing[key];
-    const easingFn =
-      typeof easingObjectProp === 'function'
-        ? easingObjectProp
-        : formulas[easingObjectProp];
+    const easingFn = easingObjectProp.call
+      ? easingObjectProp
+      : formulas[easingObjectProp];
 
-    currentState[key] = tweenProp(
-      originalState[key],
-      targetState[key],
-      easingFn,
-      normalizedPosition
-    );
+    const start = originalState[key];
+
+    currentState[key] =
+      start + (targetState[key] - start) * easingFn(normalizedPosition);
   }
 
   return currentState;
+};
+
+const processTween = (tween, currentTime) => {
+  const { _attachment, _currentState, _delay, _easing, _originalState } = tween;
+  let { _duration, _step, _targetState, _timestamp } = tween;
+
+  const endTime = _timestamp + _delay + _duration;
+  let timeToCompute = currentTime > endTime ? endTime : currentTime;
+  const hasEnded = timeToCompute >= endTime;
+  const offset = _duration - (endTime - timeToCompute);
+
+  if (hasEnded) {
+    _step(_targetState, _attachment, offset);
+    tween.stop(true);
+  } else {
+    tween._applyFilter(BEFORE_TWEEN);
+
+    // If the animation has not yet reached the start point (e.g., there was
+    // delay that has not yet completed), just interpolate the starting
+    // position of the tween.
+    if (timeToCompute < _timestamp + _delay) {
+      timeToCompute = 1;
+      _duration = 1;
+      _timestamp = 1;
+    } else {
+      _timestamp += _delay;
+    }
+
+    tweenProps(
+      timeToCompute,
+      _currentState,
+      _originalState,
+      _targetState,
+      _duration,
+      _timestamp,
+      _easing
+    );
+
+    tween._applyFilter(AFTER_TWEEN);
+    _step(_currentState, _attachment, offset);
+  }
+};
+
+export const processTweens = () => {
+  const currentTime = Tweenable.now();
+  let tween = listHead;
+
+  while (tween) {
+    processTween(tween, currentTime);
+    tween = tween._next;
+  }
+};
+
+/**
+ * Handles the update logic for one step of a tween.
+ * @param {number} [currentTimeOverride] Needed for accurate timestamp in
+ * shifty.Tweenable#seek.
+ * @private
+ */
+export const scheduleUpdate = () => {
+  if (!listHead) {
+    return;
+  }
+
+  scheduleFunction.call(root, scheduleUpdate, UPDATE_TIME);
+
+  processTweens();
 };
 
 /**
@@ -103,18 +156,46 @@ export const composeEasingObject = (
   const composedEasing = {};
   let typeofEasing = typeof easing;
 
-  if (typeofEasing === 'string' || typeofEasing === 'function') {
+  if (typeofEasing === TYPE_STRING || typeofEasing === TYPE_FUNCTION) {
     for (const prop in fromTweenParams) {
       composedEasing[prop] = easing;
     }
   } else {
     for (const prop in fromTweenParams) {
-      composedEasing[prop] =
-        composedEasing[prop] || easing[prop] || DEFAULT_EASING;
+      composedEasing[prop] = easing[prop] || DEFAULT_EASING;
     }
   }
 
   return composedEasing;
+};
+
+const remove = tween => {
+  // Adapted from:
+  // https://github.com/trekhleb/javascript-algorithms/blob/7c9601df3e8ca4206d419ce50b88bd13ff39deb6/src/data-structures/doubly-linked-list/DoublyLinkedList.js#L73-L121
+  if (!listHead) {
+    return;
+  }
+
+  if (tween === listHead) {
+    listHead = tween._next;
+
+    if (listHead) {
+      listHead._previous = null;
+    }
+
+    if (tween === listTail) {
+      listTail = null;
+    }
+  } else if (tween === listTail) {
+    listTail = tween._previous;
+    listTail._next = null;
+  } else {
+    const previousTween = tween._previous;
+    const nextTween = tween._next;
+
+    previousTween._next = nextTween;
+    nextTween._previous = previousTween;
+  }
 };
 
 export class Tweenable {
@@ -129,12 +210,14 @@ export class Tweenable {
   constructor(initialState = {}, config = undefined) {
     this._currentState = initialState;
     this._configured = false;
-    this._scheduleFunction = DEFAULT_SCHEDULE_FUNCTION;
+    this._filters = [];
+    this._next = null;
+    this._previous = null;
 
     // To prevent unnecessary calls to setConfig do not set default
     // configuration here.  Only set default configuration immediately before
     // tweening if none has been set.
-    if (config !== undefined) {
+    if (config) {
       this.setConfig(config);
     }
   }
@@ -145,72 +228,13 @@ export class Tweenable {
    * @private
    */
   _applyFilter(filterName) {
-    const { filters } = Tweenable;
     const { _filterArgs } = this;
 
-    for (const name in filters) {
-      const filter = filters[name][filterName];
+    for (const filterType of this._filters) {
+      const filter = filterType[filterName];
 
-      if (typeof filter !== 'undefined') {
+      if (filter) {
         filter.apply(this, _filterArgs);
-      }
-    }
-  }
-
-  /**
-   * Handles the update logic for one step of a tween.
-   * @param {number} [currentTimeOverride] Needed for accurate timestamp in
-   * shifty.Tweenable#seek.
-   * @private
-   */
-  _timeoutHandler(currentTimeOverride) {
-    const { _currentState, _delay } = this;
-    let { _duration, _step, _targetState, _timestamp } = this;
-
-    const endTime = _timestamp + _delay + _duration;
-    let currentTime = Math.min(currentTimeOverride || Tweenable.now(), endTime);
-    const hasEnded = currentTime >= endTime;
-    const offset = _duration - (endTime - currentTime);
-
-    if (this.isPlaying()) {
-      if (hasEnded) {
-        _step(_targetState, this._attachment, offset);
-        this.stop(true);
-      } else {
-        // This function needs to be .call-ed because it is a native method in
-        // some environments:
-        // http://stackoverflow.com/a/9678166
-        this._scheduleId = this._scheduleFunction.call(
-          root,
-          () => this._timeoutHandler(...arguments),
-          UPDATE_TIME
-        );
-
-        this._applyFilter('beforeTween');
-
-        // If the animation has not yet reached the start point (e.g., there was
-        // delay that has not yet completed), just interpolate the starting
-        // position of the tween.
-        if (currentTime < _timestamp + _delay) {
-          currentTime = 1;
-          _duration = 1;
-          _timestamp = 1;
-        } else {
-          _timestamp += _delay;
-        }
-
-        tweenProps(
-          currentTime,
-          _currentState,
-          this._originalState,
-          _targetState,
-          _duration,
-          _timestamp,
-          this._easing
-        );
-
-        this._applyFilter('afterTween');
-        _step(_currentState, this._attachment, offset);
       }
     }
   }
@@ -280,6 +304,15 @@ export class Tweenable {
 
     this._easing = composeEasingObject(_currentState, easing);
 
+    const { filters } = Tweenable;
+    this._filters.length = 0;
+
+    for (const name in filters) {
+      if (filters[name].doesApply(_currentState)) {
+        this._filters.push(filters[name]);
+      }
+    }
+
     this._filterArgs = [
       _currentState,
       this._originalState,
@@ -287,7 +320,7 @@ export class Tweenable {
       this._easing,
     ];
 
-    this._applyFilter('tweenCreated');
+    this._applyFilter(TWEEN_CREATED);
 
     this._promise = new promise((resolve, reject) => {
       this._resolve = resolve;
@@ -328,6 +361,7 @@ export class Tweenable {
   pause() {
     this._pausedAtTime = Tweenable.now();
     this._isPaused = true;
+    remove(this);
 
     return this;
   }
@@ -338,13 +372,25 @@ export class Tweenable {
    * @return {external:Promise}
    */
   resume() {
+    const currentTime = Tweenable.now();
+
     if (this._isPaused) {
-      this._timestamp += Tweenable.now() - this._pausedAtTime;
+      this._timestamp += currentTime - this._pausedAtTime;
     }
 
     this._isPaused = false;
     this._isTweening = true;
-    this._timeoutHandler();
+
+    if (listHead === null) {
+      listHead = this;
+      listTail = this;
+      scheduleUpdate();
+    } else {
+      this._previous = listTail;
+      this._previous._next = this;
+
+      listTail = this;
+    }
 
     return this._promise;
   }
@@ -372,9 +418,9 @@ export class Tweenable {
       this._isTweening = true;
       this._isPaused = false;
 
-      // If the animation is not running, call _timeoutHandler to make sure that
+      // If the animation is not running, call scheduleUpdate to make sure that
       // any step handlers are run.
-      this._timeoutHandler(currentTime);
+      processTween(this, currentTime);
 
       this.pause();
     }
@@ -403,13 +449,13 @@ export class Tweenable {
     this._isTweening = false;
     this._isPaused = false;
 
-    cancelTimer(this._scheduleId);
+    remove(this);
 
     if (gotoEnd) {
-      this._applyFilter('beforeTween');
+      this._applyFilter(BEFORE_TWEEN);
       tweenProps(1, _currentState, _originalState, _targetState, 1, 0, _easing);
-      this._applyFilter('afterTween');
-      this._applyFilter('afterTweenEnd');
+      this._applyFilter(AFTER_TWEEN);
+      this._applyFilter(AFTER_TWEEN_END);
       this._resolve(_currentState, _attachment);
     } else {
       this._reject(_currentState, _attachment);
@@ -434,19 +480,12 @@ export class Tweenable {
    */
 
   /**
-   * Set a custom schedule function.
-   *
-   * By default,
-   * [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window.requestAnimationFrame)
-   * is used if available, otherwise
-   * [`setTimeout`](https://developer.mozilla.org/en-US/docs/Web/API/Window.setTimeout)
-   * is used.
    * @method shifty.Tweenable#setScheduleFunction
-   * @param {scheduleFunction} scheduleFunction The function to be
-   * used to schedule the next frame to be rendered.
+   * @param {scheduleFunction} scheduleFunction
+   * @deprecated Will be removed in favor of {@link shifty.Tweenable.setScheduleFunction} in 3.0.
    */
   setScheduleFunction(scheduleFunction) {
-    this._scheduleFunction = scheduleFunction;
+    Tweenable.setScheduleFunction(scheduleFunction);
   }
 
   /**
@@ -460,6 +499,21 @@ export class Tweenable {
     }
   }
 }
+
+/**
+ * Set a custom schedule function.
+ *
+ * By default,
+ * [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window.requestAnimationFrame)
+ * is used if available, otherwise
+ * [`setTimeout`](https://developer.mozilla.org/en-US/docs/Web/API/Window.setTimeout)
+ * is used.
+ * @method shifty.Tweenable.setScheduleFunction
+ * @param {scheduleFunction} fn The function to be
+ * used to schedule the next frame to be rendered.
+ * @return {scheduleFunction} The function that was set.
+ */
+Tweenable.setScheduleFunction = fn => (scheduleFunction = fn);
 
 Tweenable.formulas = formulas;
 
