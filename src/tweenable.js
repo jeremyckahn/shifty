@@ -228,13 +228,11 @@ export class Tweenable {
    * @private
    */
   _applyFilter(filterName) {
-    const { _filterArgs } = this;
-
     for (const filterType of this._filters) {
       const filter = filterType[filterName];
 
       if (filter) {
-        filter.apply(this, _filterArgs);
+        filter(this);
       }
     }
   }
@@ -312,13 +310,6 @@ export class Tweenable {
         this._filters.push(filters[name]);
       }
     }
-
-    this._filterArgs = [
-      _currentState,
-      this._originalState,
-      this._targetState,
-      this._easing,
-    ];
 
     this._applyFilter(TWEEN_CREATED);
 

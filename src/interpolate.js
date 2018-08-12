@@ -5,7 +5,6 @@ import { Tweenable, composeEasingObject, tweenProps } from './tweenable';
 // collection pauses.
 const mockTweenable = new Tweenable();
 const { filters } = Tweenable;
-mockTweenable._filterArgs = [];
 
 /**
  * Compute the midpoint of two Objects.  This method effectively calculates a
@@ -59,7 +58,10 @@ export const interpolate = (from, to, position, easing, delay = 0) => {
   }
 
   mockTweenable.set({});
-  mockTweenable._filterArgs = [current, from, to, easingObject];
+  mockTweenable._currentState = current;
+  mockTweenable._originalState = from;
+  mockTweenable._targetState = to;
+  mockTweenable._easing = easingObject;
 
   // Any defined value transformation must be applied
   mockTweenable._applyFilter('tweenCreated');
