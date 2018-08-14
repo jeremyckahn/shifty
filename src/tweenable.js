@@ -306,7 +306,7 @@ export class Tweenable {
     this._filters.length = 0;
 
     for (const name in filters) {
-      if (filters[name].doesApply(_currentState)) {
+      if (filters[name].doesApply(this)) {
         this._filters.push(filters[name]);
       }
     }

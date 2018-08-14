@@ -51,17 +51,17 @@ export const interpolate = (from, to, position, easing, delay = 0) => {
 
   mockTweenable._filters.length = 0;
 
-  for (const name in filters) {
-    if (filters[name].doesApply(from)) {
-      mockTweenable._filters.push(filters[name]);
-    }
-  }
-
   mockTweenable.set({});
   mockTweenable._currentState = current;
   mockTweenable._originalState = from;
   mockTweenable._targetState = to;
   mockTweenable._easing = easingObject;
+
+  for (const name in filters) {
+    if (filters[name].doesApply(mockTweenable)) {
+      mockTweenable._filters.push(filters[name]);
+    }
+  }
 
   // Any defined value transformation must be applied
   mockTweenable._applyFilter('tweenCreated');

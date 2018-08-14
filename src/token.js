@@ -353,8 +353,10 @@ const collapseEasingObject = (easingObject, tokenData) => {
   }
 };
 
-export const doesApply = fromState =>
-  Object.keys(fromState).some(key => typeof fromState[key] === 'string');
+export const doesApply = ({ _currentState }) =>
+  Object.keys(_currentState).some(
+    key => typeof _currentState[key] === 'string'
+  );
 
 export function tweenCreated(tweenable) {
   const { _currentState, _originalState, _targetState } = tweenable;
