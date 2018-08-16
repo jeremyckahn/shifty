@@ -40,6 +40,12 @@ export { setBezierFunction, unsetBezierFunction } from './bezier';
  */
 
 /**
+ * @callback shifty.scheduleFunction
+ * @param {Function} callback
+ * @param {number} timeout
+ */
+
+/**
  * @typedef {Object} shifty.tweenConfig
  * @property {Object} [from] Starting position.  If omitted, {@link
  * shifty.Tweenable#get} is used.
