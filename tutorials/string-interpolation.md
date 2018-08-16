@@ -2,12 +2,14 @@ In addition to raw `Number`s, Shifty can tween numbers inside of strings.
 Among other things, this allows you to animate CSS properties. For example,
 you can do this:
 
-    import { tween } from 'shifty';
+```js
+import { tween } from 'shifty';
 
-    tween({
-      from: { transform: 'translateX(45px)' },
-      to: { transform: 'translateX(90xp)' }
-    });
+tween({
+  from: { transform: 'translateX(45px)' },
+  to: { transform: 'translateX(90xp)' },
+});
+```
 
 `translateX(45)` will be tweened to `translateX(90)`. To demonstrate:
 
@@ -58,7 +60,7 @@ last easing curve listed is used for the remaining numbers.
 
 Shifty's string interpolation is powerful because it is fully abstract — that
 is, it can handle just about any kind of string format. However, that
-abstration comes at a performance cost. In many cases this cost is
+abstraction comes at a performance cost. In many cases this cost is
 insignificant, but if Shifty is playing many animations simultaneously, you may
 see some slowdown. If you experience performance issues when animating strings,
 consider finding an alternative solution that relies solely on raw numbers. For
