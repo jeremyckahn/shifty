@@ -6,7 +6,7 @@
 
 Shifty is a JavaScript tweening engine designed to fit all of your animation needs. Shifty's key benefits include:
 
-- **Speed**: Shifty is optimized for performance, and offers animation fidelity that is comparable to [GSAP](https://codepen.io/jeremyckahn/pen/prMYXj).
+- **Speed**: Shifty is optimized for performance and offers animation fidelity that is comparable to [GSAP](https://codepen.io/jeremyckahn/pen/prMYXj).
 - **Flexibility and extensibility**: Shifty provides numerous low-level APIs to let you hook into its animation pipeline.
 - **Small footprint**: The full build is [less than 5Kb when minified and gzipped](https://bundlephobia.com/result?p=shifty).
 
