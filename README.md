@@ -14,7 +14,9 @@ animations.
 
 ## Browser compatibility
 
-Shifty officially supports Evergreen browsers, Safari, and Node. If you encounter a browser-specific bug, please [open an issue about it](https://github.com/jeremyckahn/shifty/issues/new)!
+Shifty officially supports Evergreen browsers, Safari, and Node. If you
+encounter a browser-specific bug, please [open an issue about
+it](https://github.com/jeremyckahn/shifty/issues/new)!
 
 ## Installation
 
@@ -91,7 +93,9 @@ shifty.tween({ from: { x: 0 }, to: { x: 10 } });
 
 ## Using Shifty
 
-Please see the [Getting Started](https://jeremyckahn.github.io/shifty/doc/tutorial-getting-started.html) guide and check out the API documentation.
+Please see the [Getting
+Started](https://jeremyckahn.github.io/shifty/doc/tutorial-getting-started.html)
+guide and check out the API documentation.
 
 ## Contributors
 
