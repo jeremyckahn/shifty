@@ -40,6 +40,12 @@ export { setBezierFunction, unsetBezierFunction } from './bezier';
  */
 
 /**
+ * @callback shifty.scheduleFunction
+ * @param {Function} callback
+ * @param {number} timeout
+ */
+
+/**
  * @typedef {Object} shifty.tweenConfig
  * @property {Object} [from] Starting position.  If omitted, {@link
  * shifty.Tweenable#get} is used.
@@ -63,44 +69,42 @@ export { setBezierFunction, unsetBezierFunction } from './bezier';
  */
 
 /**
- * Is called when a tween is created.  This should convert all of the
- * properties of each of its arguments to `Numbers`.
+ * Is called when a tween is created to determine if a filter is needed.
+ * Filters are only added to a tween when it is created so that they are not
+ * unnecessarily processed if they don't apply during an update tick.
+ * @callback {Function} shifty.doesApplyFilter
+ * @param {shifty.Tweenable} tweenable The {@link shifty.Tweenable} instance.
+ * @return {boolean}
+ */
+
+/**
+ * Is called when a tween is created.  This should perform any setup needed by
+ * subsequent per-tick calls to {@link shifty.beforeTween} and {@link
+ * shifty.afterTween}.
  * @callback {Function} shifty.tweenCreatedFilter
- * @param {Object} currentState Gets directly mutated by this function.
- * @param {Object} fromState Gets directly mutated by this function.
- * @param {Object} toState Gets directly mutated by this function.
+ * @param {shifty.Tweenable} tweenable The {@link shifty.Tweenable} instance.
  */
 
 /**
- * Is called right before a tween starts.  This should convert all of the
- * properties of each of `currentState`, `fromState`, and `toState` to
- * `Numbers`.
+ * Is called right before a tween is processed in a tick.
  * @callback {Function} shifty.beforeTweenFilter
- * @param {Object} currentState Gets directly mutated by this function.
- * @param {Object} fromState Gets directly mutated by this function.
- * @param {Object} toState Gets directly mutated by this function.
- * @param {Object.<string|shifty.easingFunction>} easingObject The `easing`
- * that was passed to {@link shifty.Tweenable#setConfig}.
+ * @param {shifty.Tweenable} tweenable The {@link shifty.Tweenable} instance.
  */
 
 /**
- * Is called right after a tween ends.  This should convert all of the
- * properties of each of `currentState`, `fromState`, and `toState` to
- * `Numbers`.
+ * Is called right after a tween is processed in a tick.
  * @callback {Function} shifty.afterTweenFilter
- * @param {Object} currentState Gets directly mutated by this function.
- * @param {Object} fromState Gets directly mutated by this function.
- * @param {Object} toState Gets directly mutated by this function.
- * @param {Object.<string|shifty.easingFunction>} easingObject The `easing`
- * that was passed to {@link shifty.Tweenable#setConfig}.
+ * @param {shifty.Tweenable} tweenable The {@link shifty.Tweenable} instance.
  */
 
 /**
- * An Object that contains functions that called at key points in a tween's
+ * An Object that contains functions that are called at key points in a tween's
  * lifecycle.  Shifty can only process `Number`s internally, but filters can
  * expand support for any type of data.  This is the mechanism that powers
  * [string interpolation]{@tutorial string-interpolation}.
  * @typedef {Object} shifty.filter
+ * @property {shifty.doesApplyFilter} doesApply Is called when a tween is
+ * created.
  * @property {shifty.tweenCreatedFilter} tweenCreated Is called when a tween is
  * created.
  * @property {shifty.beforeTweenFilter} beforeTween Is called right before a

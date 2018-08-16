@@ -228,13 +228,11 @@ export class Tweenable {
    * @private
    */
   _applyFilter(filterName) {
-    const { _filterArgs } = this;
-
     for (const filterType of this._filters) {
       const filter = filterType[filterName];
 
       if (filter) {
-        filter.apply(this, _filterArgs);
+        filter(this);
       }
     }
   }
@@ -308,17 +306,10 @@ export class Tweenable {
     this._filters.length = 0;
 
     for (const name in filters) {
-      if (filters[name].doesApply(_currentState)) {
+      if (filters[name].doesApply(this)) {
         this._filters.push(filters[name]);
       }
     }
-
-    this._filterArgs = [
-      _currentState,
-      this._originalState,
-      this._targetState,
-      this._easing,
-    ];
 
     this._applyFilter(TWEEN_CREATED);
 
@@ -474,14 +465,8 @@ export class Tweenable {
   }
 
   /**
-   * @callback scheduleFunction
-   * @param {Function} callback
-   * @param {number} timeout
-   */
-
-  /**
    * @method shifty.Tweenable#setScheduleFunction
-   * @param {scheduleFunction} scheduleFunction
+   * @param {shifty.scheduleFunction} scheduleFunction
    * @deprecated Will be removed in favor of {@link shifty.Tweenable.setScheduleFunction} in 3.0.
    */
   setScheduleFunction(scheduleFunction) {
@@ -509,9 +494,9 @@ export class Tweenable {
  * [`setTimeout`](https://developer.mozilla.org/en-US/docs/Web/API/Window.setTimeout)
  * is used.
  * @method shifty.Tweenable.setScheduleFunction
- * @param {scheduleFunction} fn The function to be
+ * @param {shifty.scheduleFunction} fn The function to be
  * used to schedule the next frame to be rendered.
- * @return {scheduleFunction} The function that was set.
+ * @return {shifty.scheduleFunction} The function that was set.
  */
 Tweenable.setScheduleFunction = fn => (scheduleFunction = fn);
 
@@ -519,7 +504,8 @@ Tweenable.formulas = formulas;
 
 /**
  * The {@link shifty.filter}s available for use.  These filters are
- * automatically applied at tween-time by Shifty.
+ * automatically applied at tween-time by Shifty. You can define your own
+ * {@link shifty.filter}s and attach them to this object.
  * @member shifty.Tweenable.filters
  * @type {Object.<shifty.filter>}
  */

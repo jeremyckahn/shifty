@@ -353,29 +353,48 @@ const collapseEasingObject = (easingObject, tokenData) => {
   }
 };
 
-export const doesApply = fromState =>
-  Object.keys(fromState).some(key => typeof fromState[key] === 'string');
+export const doesApply = ({ _currentState }) =>
+  Object.keys(_currentState).some(
+    key => typeof _currentState[key] === 'string'
+  );
 
-export function tweenCreated(currentState, fromState, toState) {
-  [currentState, fromState, toState].forEach(sanitizeObjectForHexProps);
+export function tweenCreated(tweenable) {
+  const { _currentState, _originalState, _targetState } = tweenable;
 
-  this._tokenData = getFormatSignatures(currentState);
+  [_currentState, _originalState, _targetState].forEach(
+    sanitizeObjectForHexProps
+  );
+
+  tweenable._tokenData = getFormatSignatures(_currentState);
 }
 
-export function beforeTween(currentState, fromState, toState, easingObject) {
-  const { _tokenData } = this;
-  expandEasingObject(easingObject, _tokenData);
+export function beforeTween(tweenable) {
+  const {
+    _currentState,
+    _originalState,
+    _targetState,
+    _easing,
+    _tokenData,
+  } = tweenable;
 
-  [currentState, fromState, toState].forEach(state =>
+  expandEasingObject(_easing, _tokenData);
+
+  [_currentState, _originalState, _targetState].forEach(state =>
     expandFormattedProperties(state, _tokenData)
   );
 }
 
-export function afterTween(currentState, fromState, toState, easingObject) {
-  const { _tokenData } = this;
-  [currentState, fromState, toState].forEach(state =>
+export function afterTween(tweenable) {
+  const {
+    _currentState,
+    _originalState,
+    _targetState,
+    _easing,
+    _tokenData,
+  } = tweenable;
+  [_currentState, _originalState, _targetState].forEach(state =>
     collapseFormattedProperties(state, _tokenData)
   );
 
-  collapseEasingObject(easingObject, _tokenData);
+  collapseEasingObject(_easing, _tokenData);
 }

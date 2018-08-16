@@ -5,14 +5,13 @@ import { Tweenable, composeEasingObject, tweenProps } from './tweenable';
 // collection pauses.
 const mockTweenable = new Tweenable();
 const { filters } = Tweenable;
-mockTweenable._filterArgs = [];
 
 /**
  * Compute the midpoint of two Objects.  This method effectively calculates a
  * specific frame of animation that {@link shifty.Tweenable#tween} does many times
  * over the course of a full tween.
  *
- *     import { interpolate } from 'shifty';.
+ *     import { interpolate } from 'shifty';
  *
  *     const interpolatedValues = interpolate({
  *         width: '100px',
@@ -26,8 +25,7 @@ mockTweenable._filterArgs = [];
  *       0.5
  *     );
  *
- *     console.log(interpolatedValues);
- *     // {opacity: 0.5, width: "150px", color: "rgb(127,127,127)"}
+ *     console.log(interpolatedValues); // Logs: {opacity: 0.5, width: "150px", color: "rgb(127,127,127)"}
  *
  * @method shifty.interpolate
  * @param {Object} from The starting values to tween from.
@@ -52,14 +50,17 @@ export const interpolate = (from, to, position, easing, delay = 0) => {
 
   mockTweenable._filters.length = 0;
 
+  mockTweenable.set({});
+  mockTweenable._currentState = current;
+  mockTweenable._originalState = from;
+  mockTweenable._targetState = to;
+  mockTweenable._easing = easingObject;
+
   for (const name in filters) {
-    if (filters[name].doesApply(from)) {
+    if (filters[name].doesApply(mockTweenable)) {
       mockTweenable._filters.push(filters[name]);
     }
   }
-
-  mockTweenable.set({});
-  mockTweenable._filterArgs = [current, from, to, easingObject];
 
   // Any defined value transformation must be applied
   mockTweenable._applyFilter('tweenCreated');
