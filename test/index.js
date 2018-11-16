@@ -394,6 +394,64 @@ describe('shifty', () => {
             'The tweened value jumps to the end'
           );
         });
+
+        describe('repeated calls (#105)', () => {
+          describe('first tween is stopped twice', () => {
+            beforeEach(() => {
+              Tweenable.now = () => 0;
+
+              let { tweenable } = tween({
+                from: { x: 0 },
+                to: { x: 10 },
+                duration: 500,
+              });
+
+              tween({
+                from: { x: 0 },
+                to: { x: 10 },
+                duration: 500,
+              });
+
+              Tweenable.now = () => 250;
+              processTweens();
+
+              tweenable.stop(true);
+              tweenable.stop(true);
+            });
+
+            it('does not break when multiple tweens are running and stop() is called twice', () => {
+              assert(true);
+            });
+          });
+
+          describe('second tween is stopped twice', () => {
+            beforeEach(() => {
+              Tweenable.now = () => 0;
+
+              tween({
+                from: { x: 0 },
+                to: { x: 10 },
+                duration: 500,
+              });
+
+              let { tweenable } = tween({
+                from: { x: 0 },
+                to: { x: 10 },
+                duration: 500,
+              });
+
+              Tweenable.now = () => 250;
+              processTweens();
+
+              tweenable.stop(true);
+              tweenable.stop(true);
+            });
+
+            it('does not break when multiple tweens are running and stop() is called twice', () => {
+              assert(true);
+            });
+          });
+        });
       });
 
       describe('#setScheduleFunction', () => {

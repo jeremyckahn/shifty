@@ -193,8 +193,13 @@ const remove = tween => {
     const previousTween = tween._previous;
     const nextTween = tween._next;
 
-    previousTween._next = nextTween;
-    nextTween._previous = previousTween;
+    if (previousTween) {
+      previousTween._next = nextTween;
+    }
+
+    if (nextTween) {
+      nextTween._previous = previousTween;
+    }
   }
 };
 
