@@ -114,6 +114,24 @@ const processTween = (tween, currentTime) => {
   }
 };
 
+/**
+ * Process all tweens currently managed by Shifty for the current tick. This
+ * does not perform any timing or update scheduling; it is the logic that is
+ * run *by* the scheduling functionality. Specifically, it computes the state
+ * and calls all of the relevant {@link shifty.tweenConfig} functions supplied
+ * to each of the tweens for the current point in time (as determined by {@link
+ * shifty.Tweenable.now}.
+ *
+ * This is a low-level API that won't be needed in the majority of situations.
+ * It is primarily useful as a hook for higher-level animation systems that are
+ * built on top of Shifty. If you need this function, it is likely you need to
+ * pass something like `() => {}` to {@link
+ * shifty.Tweenable.setScheduleFunction}, override {@link shifty.Tweenable.now}
+ * and manage the scheduling logic yourself.
+ *
+ * @method shifty.processTweens
+ * @see https://github.com/jeremyckahn/shifty/issues/109
+ */
 export const processTweens = () => {
   const currentTime = Tweenable.now();
   let tween = listHead;
