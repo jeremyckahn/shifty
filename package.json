@@ -21,6 +21,7 @@
     "eslint-plugin-prettier": "^2.6.2",
     "gh-pages": "^0.12.0",
     "husky": "^0.14.3",
+    "jest": "^24.1.0",
     "jsdoc": "^3.4.3",
     "live-server": "^1.2.0",
     "mocha": "^3.2.0",
@@ -34,7 +35,7 @@
   "scripts": {
     "build": "webpack",
     "start": "webpack-dev-server --config webpack.test.config.js",
-    "test": "mocha test",
+    "test": "jest",
     "test:watch": "nodemon --exec \"npm test\" --watch src --watch test",
     "doc": "jsdoc -c .jsdoc src/*.js",
     "doc:view": "live-server dist/doc --port=9124",
