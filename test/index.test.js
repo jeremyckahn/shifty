@@ -1,6 +1,4 @@
-/* global describe:true, it:true, before:true, beforeEach:true, afterEach:true */
 import Promised from 'bluebird';
-import assert from 'assert';
 
 import {
   Tweenable,
@@ -39,7 +37,7 @@ describe('shifty', () => {
       Tweenable.now = now;
     });
 
-    it('can accept initial state', () => {
+    test('can accept initial state', () => {
       tweenable = new Tweenable({ x: 5 });
 
       Tweenable.now = () => 0;
@@ -53,15 +51,11 @@ describe('shifty', () => {
 
       Tweenable.now = () => 500;
       processTweens();
-      assert.equal(
-        state.x,
-        7.5,
-        'data provided to the constuctor was used as "from" state'
-      );
+      expect(state.x).toEqual(7.5);
     });
 
     describe('#tween', () => {
-      it('midpoints of a tween are correctly computed', () => {
+      test('midpoints of a tween are correctly computed', () => {
         Tweenable.now = () => 0;
         tweenable.tween({
           from: { x: 0 },
@@ -69,31 +63,19 @@ describe('shifty', () => {
           duration: 1000,
         });
 
-        assert.equal(tweenable.get().x, 0, 'The tween starts at 0');
+        expect(tweenable.get().x).toEqual(0);
         Tweenable.now = () => 500;
         processTweens();
-        assert.equal(
-          tweenable.get().x,
-          50,
-          'The middle of the tween equates to .5 of the target value'
-        );
+        expect(tweenable.get().x).toEqual(50);
         Tweenable.now = () => 1000;
         processTweens();
-        assert.equal(
-          tweenable.get().x,
-          100,
-          'The end of the tween equates to 1.0 of the target value'
-        );
+        expect(tweenable.get().x).toEqual(100);
         Tweenable.now = () => 100000;
         processTweens();
-        assert.equal(
-          tweenable.get().x,
-          100,
-          'Anything after end of the tween equates to 1.0 of the target value'
-        );
+        expect(tweenable.get().x).toEqual(100);
       });
 
-      it('step handler receives timestamp offset', () => {
+      test('step handler receives timestamp offset', () => {
         Tweenable.now = () => 0;
         let capturedOffset;
         tweenable.tween({
@@ -107,17 +89,13 @@ describe('shifty', () => {
 
         Tweenable.now = () => 500;
         processTweens();
-        assert.equal(
-          capturedOffset,
-          500,
-          'The offset was passed along to the step handler'
-        );
+        expect(capturedOffset).toEqual(500);
       });
 
       describe('custom easing functions', () => {
         let easingFn = pos => pos * 2;
 
-        it('can be given an easing function directly', () => {
+        test('can be given an easing function directly', () => {
           Tweenable.now = () => 0;
           tweenable.tween({
             from: { x: 0 },
@@ -126,30 +104,18 @@ describe('shifty', () => {
             easing: easingFn,
           });
 
-          assert.equal(
-            tweenable.get().x,
-            0,
-            'The easing curve is used at the beginning of the tween'
-          );
+          expect(tweenable.get().x).toEqual(0);
 
           Tweenable.now = () => 500;
           processTweens();
-          assert.equal(
-            tweenable.get().x,
-            10,
-            'The easing curve is used at the middle of the tween'
-          );
+          expect(tweenable.get().x).toEqual(10);
 
           Tweenable.now = () => 1000;
           processTweens();
-          assert.equal(
-            tweenable.get().x,
-            20,
-            'The easing curve is used at the end of the tween'
-          );
+          expect(tweenable.get().x).toEqual(20);
         });
 
-        it('can be given an Object of easing functions directly', () => {
+        test('can be given an Object of easing functions directly', () => {
           Tweenable.now = () => 0;
           tweenable.tween({
             from: { x: 0 },
@@ -158,30 +124,18 @@ describe('shifty', () => {
             easing: { x: easingFn },
           });
 
-          assert.equal(
-            tweenable.get().x,
-            0,
-            'The easing curve is used at the beginning of the tween'
-          );
+          expect(tweenable.get().x).toEqual(0);
 
           Tweenable.now = () => 500;
           processTweens();
-          assert.equal(
-            tweenable.get().x,
-            10,
-            'The easing curve is used at the middle of the tween'
-          );
+          expect(tweenable.get().x).toEqual(10);
 
           Tweenable.now = () => 1000;
           processTweens();
-          assert.equal(
-            tweenable.get().x,
-            20,
-            'The easing curve is used at the end of the tween'
-          );
+          expect(tweenable.get().x).toEqual(20);
         });
 
-        it('supports tokens', () => {
+        test('supports tokens', () => {
           Tweenable.now = () => 0;
           easingFn = pos => pos;
           tweenable.tween({
@@ -191,32 +145,20 @@ describe('shifty', () => {
             easing: { x: easingFn },
           });
 
-          assert.equal(
-            tweenable.get().x,
-            'rgb(0,0,0)',
-            'The easing curve is used at the beginning of the tween'
-          );
+          expect(tweenable.get().x).toEqual('rgb(0,0,0)');
 
           Tweenable.now = () => 500;
           processTweens();
-          assert.equal(
-            tweenable.get().x,
-            'rgb(127,127,127)',
-            'The easing curve is used at the middle of the tween'
-          );
+          expect(tweenable.get().x).toEqual('rgb(127,127,127)');
 
           Tweenable.now = () => 1000;
           processTweens();
-          assert.equal(
-            tweenable.get().x,
-            'rgb(255,255,255)',
-            'The easing curve is used at the end of the tween'
-          );
+          expect(tweenable.get().x).toEqual('rgb(255,255,255)');
         });
       });
 
       describe('#pause', () => {
-        it('moves the end time of the tween', () => {
+        test('moves the end time of the tween', () => {
           Tweenable.now = () => 0;
           tweenable.tween({
             from: { x: 0 },
@@ -226,34 +168,22 @@ describe('shifty', () => {
 
           Tweenable.now = () => 500;
           processTweens();
-          assert.equal(
-            tweenable.get().x,
-            50,
-            'Pre-pause: The middle of the tween equates to .5 of the target value'
-          );
+          expect(tweenable.get().x).toEqual(50);
           tweenable.pause();
 
           Tweenable.now = () => 2000;
           tweenable.resume();
           processTweens();
-          assert.equal(
-            tweenable.get().x,
-            50,
-            'The tween has not changed in the time that it has been paused'
-          );
+          expect(tweenable.get().x).toEqual(50);
 
           Tweenable.now = () => 2500;
           processTweens();
-          assert.equal(
-            tweenable.get().x,
-            100,
-            'The tween ends at the modified end time'
-          );
+          expect(tweenable.get().x).toEqual(100);
         });
       });
 
       describe('#seek', () => {
-        it('forces the tween to a specific point on the timeline', () => {
+        test('forces the tween to a specific point on the timeline', () => {
           Tweenable.now = () => 0;
           tweenable.tween({
             from: { x: 0 },
@@ -262,14 +192,10 @@ describe('shifty', () => {
           });
 
           tweenable.seek(500);
-          assert.equal(
-            tweenable._timestamp,
-            -500,
-            'The timestamp was properly offset'
-          );
+          expect(tweenable._timestamp).toEqual(-500);
         });
 
-        it('provides correct value to step handler via seek() (issue #77)', () => {
+        test('provides correct value to step handler via seek() (issue #77)', () => {
           let computedX;
           tweenable = new Tweenable(null, {
             from: { x: 0 },
@@ -281,10 +207,10 @@ describe('shifty', () => {
           });
 
           tweenable.seek(500);
-          assert.equal(computedX, 50, 'Step handler got correct state value');
+          expect(computedX).toEqual(50);
         });
 
-        it('The seek() parameter cannot be less than 0', () => {
+        test('The seek() parameter cannot be less than 0', () => {
           Tweenable.now = () => 0;
           tweenable.tween({
             from: { x: 0 },
@@ -293,14 +219,10 @@ describe('shifty', () => {
           });
 
           tweenable.seek(-500);
-          assert.equal(
-            tweenable._timestamp,
-            0,
-            'The seek() parameter was forced to 0'
-          );
+          expect(tweenable._timestamp).toEqual(0);
         });
 
-        it('no-ops if seeking to the current millisecond', () => {
+        test('no-ops if seeking to the current millisecond', () => {
           let stepHandlerCallCount = 0;
           Tweenable.now = () => 0;
 
@@ -316,14 +238,10 @@ describe('shifty', () => {
           tweenable.seek(50);
           tweenable.stop();
           tweenable.seek(50);
-          assert.equal(
-            stepHandlerCallCount,
-            1,
-            'The second seek() call did not trigger any handlers'
-          );
+          expect(stepHandlerCallCount).toEqual(1);
         });
 
-        it('keeps time reference (rel #60)', () => {
+        test('keeps time reference (rel #60)', () => {
           tweenable = new Tweenable(
             {},
             {
@@ -348,12 +266,12 @@ describe('shifty', () => {
           };
 
           tweenable.seek(98);
-          assert.equal(callCount, 0, 'stop should not have been called');
+          expect(callCount).toEqual(0);
         });
       });
 
       describe('#stop', () => {
-        it('stop(undefined) leaves a tween where it was stopped', () => {
+        test('stop(undefined) leaves a tween where it was stopped', () => {
           Tweenable.now = () => 0;
           tweenable.tween({
             from: { x: 0 },
@@ -364,19 +282,11 @@ describe('shifty', () => {
           Tweenable.now = () => 500;
           processTweens();
           tweenable.stop();
-          assert.equal(
-            tweenable.get().x,
-            50,
-            'The tweened value did not go to the end, it was left at its last updated position'
-          );
-          assert.equal(
-            tweenable._isTweening,
-            false,
-            'The internal state of the Tweenable indicates it is not running (updating)'
-          );
+          expect(tweenable.get().x).toEqual(50);
+          expect(tweenable._isTweening).toEqual(false);
         });
 
-        it('stop(true) skips a tween to the end', () => {
+        test('stop(true) skips a tween to the end', () => {
           const tweenable = new Tweenable();
           Tweenable.now = () => 0;
           tweenable.tween({
@@ -388,11 +298,7 @@ describe('shifty', () => {
           Tweenable.now = () => 500;
           processTweens();
           tweenable.stop(true);
-          assert.equal(
-            tweenable.get().x,
-            100,
-            'The tweened value jumps to the end'
-          );
+          expect(tweenable.get().x).toEqual(100);
         });
 
         describe('repeated calls (#105)', () => {
@@ -419,8 +325,8 @@ describe('shifty', () => {
               tweenable.stop(true);
             });
 
-            it('does not break when multiple tweens are running and stop() is called twice', () => {
-              assert(true);
+            test('does not break when multiple tweens are running and stop() is called twice', () => {
+              expect(true).toBeTruthy();
             });
           });
 
@@ -447,15 +353,15 @@ describe('shifty', () => {
               tweenable.stop(true);
             });
 
-            it('does not break when multiple tweens are running and stop() is called twice', () => {
-              assert(true);
+            test('does not break when multiple tweens are running and stop() is called twice', () => {
+              expect(true).toBeTruthy();
             });
           });
         });
       });
 
       describe('#setScheduleFunction', () => {
-        it('calling setScheduleFunction change the internal schedule function', () => {
+        test('calling setScheduleFunction change the internal schedule function', () => {
           const mockScheduleFunctionCalls = [];
           function mockScheduleFunction(fn, delay) {
             mockScheduleFunctionCalls.push({ fn, delay });
@@ -473,20 +379,9 @@ describe('shifty', () => {
           scheduleUpdate();
           tweenable.stop(true);
 
-          assert(
-            mockScheduleFunctionCalls.length,
-            'The custom schedule function has been called'
-          );
-          assert.equal(
-            typeof mockScheduleFunctionCalls[0].fn,
-            'function',
-            'The first given parameter to the custom schedule function was a function'
-          );
-          assert.equal(
-            typeof mockScheduleFunctionCalls[0].delay,
-            'number',
-            'The second given parameter to the custom schedule function was a number'
-          );
+          expect(mockScheduleFunctionCalls.length).toBeTruthy();
+          expect(typeof mockScheduleFunctionCalls[0].fn).toEqual('function');
+          expect(typeof mockScheduleFunctionCalls[0].delay).toEqual('number');
         });
       });
 
@@ -494,7 +389,7 @@ describe('shifty', () => {
         let testState;
 
         describe('step', () => {
-          it('receives the current state', () => {
+          test('receives the current state', () => {
             Tweenable.now = () => 0;
             tweenable = new Tweenable();
 
@@ -508,12 +403,12 @@ describe('shifty', () => {
             Tweenable.now = () => 250;
             processTweens();
 
-            assert.deepEqual(testState, { x: 5 });
+            expect(testState).toEqual({ x: 5 });
           });
         });
 
         describe('start', () => {
-          it('receives the current state', () => {
+          test('receives the current state', () => {
             Tweenable.now = () => 0;
             tweenable = new Tweenable();
 
@@ -527,13 +422,13 @@ describe('shifty', () => {
             Tweenable.now = () => 500;
             processTweens();
 
-            assert.deepEqual(testState, { x: 0 });
+            expect(testState).toEqual({ x: 0 });
           });
         });
       });
 
       describe('promise support', () => {
-        it('supports third party libraries', function() {
+        test('supports third party libraries', () => {
           const promised = tweenable.tween({
             promise: Promised,
 
@@ -542,13 +437,13 @@ describe('shifty', () => {
             duration: 500,
           });
 
-          assert.ok(promised instanceof Promised);
+          expect(promised instanceof Promised).toBeTruthy();
         });
 
         describe('resolution', () => {
           let testState;
 
-          before(() => {
+          beforeAll(() => {
             Tweenable.now = () => 0;
             tweenable = new Tweenable();
 
@@ -566,15 +461,15 @@ describe('shifty', () => {
             return tween;
           });
 
-          it('resolves with final state', () => {
-            assert.deepEqual(testState, { x: 10 });
+          test('resolves with final state', () => {
+            expect(testState).toEqual({ x: 10 });
           });
         });
 
         describe('rejection', () => {
           let testState;
 
-          before(() => {
+          beforeAll(() => {
             Tweenable.now = () => 0;
             tweenable = new Tweenable();
 
@@ -593,15 +488,15 @@ describe('shifty', () => {
             return tween;
           });
 
-          it('rejects with most recent state', () => {
-            assert.deepEqual(testState, { x: 5 });
+          test('rejects with most recent state', () => {
+            expect(testState).toEqual({ x: 5 });
           });
         });
       });
     });
 
     describe('delay support', () => {
-      it('tween does not start until delay is met', () => {
+      test('tween does not start until delay is met', () => {
         Tweenable.now = () => 0;
         tweenable.tween({
           from: { x: 0 },
@@ -610,46 +505,26 @@ describe('shifty', () => {
           duration: 1000,
         });
 
-        assert.equal(
-          tweenable.get().x,
-          0,
-          'The tween starts at the initial value'
-        );
+        expect(tweenable.get().x).toEqual(0);
 
         Tweenable.now = () => 250;
         processTweens();
-        assert.equal(
-          tweenable.get().x,
-          0,
-          'The tween is interpolated for position 0 until the delay has been met'
-        );
+        expect(tweenable.get().x).toEqual(0);
 
         Tweenable.now = () => 1000;
         processTweens();
-        assert.equal(
-          tweenable.get().x,
-          5,
-          'The delay offset is accounted for during the tween'
-        );
+        expect(tweenable.get().x).toEqual(5);
 
         Tweenable.now = () => 1500;
         processTweens();
-        assert.equal(
-          tweenable.get().x,
-          10,
-          'The tween ends at position 1 with the delay'
-        );
+        expect(tweenable.get().x).toEqual(10);
 
         Tweenable.now = () => 99999;
         processTweens();
-        assert.equal(
-          tweenable.get().x,
-          10,
-          'The tween ends does not go past position 1 after completing'
-        );
+        expect(tweenable.get().x).toEqual(10);
       });
 
-      it('pause() functionality is not affected by delay', () => {
+      test('pause() functionality is not affected by delay', () => {
         const delay = 5000;
         Tweenable.now = () => 0;
 
@@ -662,182 +537,108 @@ describe('shifty', () => {
 
         Tweenable.now = () => 500 + delay;
         processTweens();
-        assert.equal(
-          tweenable.get().x,
-          50,
-          'Pre-pause: The middle of the tween equates to .5 of the target value'
-        );
+        expect(tweenable.get().x).toEqual(50);
 
         tweenable.pause();
         Tweenable.now = () => 2000 + delay;
         tweenable.resume();
         processTweens();
-        assert.equal(
-          tweenable.get().x,
-          50,
-          'The tween has not changed in the time that it has been paused'
-        );
+        expect(tweenable.get().x).toEqual(50);
 
         Tweenable.now = () => 2500 + delay;
         processTweens();
-        assert.equal(
-          tweenable.get().x,
-          100,
-          'The tween ends at the modified end time'
-        );
+        expect(tweenable.get().x).toEqual(100);
       });
     });
 
     describe('interpolate', () => {
-      it('computes the midpoint of two numbers', () => {
+      test('computes the midpoint of two numbers', () => {
         const interpolated = interpolate({ x: 0 }, { x: 10 }, 0.5);
 
-        assert.equal(5, interpolated.x, 'Midpoint was computed');
+        expect(5).toEqual(interpolated.x);
       });
 
-      it('computes the midpoint of two token strings', () => {
+      test('computes the midpoint of two token strings', () => {
         const interpolated = interpolate(
           { color: '#000' },
           { color: '#fff' },
           0.5
         );
 
-        assert.equal(
-          'rgb(127,127,127)',
-          interpolated.color,
-          'Midpoint color was computed'
-        );
+        expect('rgb(127,127,127)').toEqual(interpolated.color);
       });
 
-      it('accounts for optional delay', () => {
+      test('accounts for optional delay', () => {
         let interpolated = interpolate({ x: 0 }, { x: 10 }, 0.5, 'linear', 0.5);
-        assert.equal(
-          interpolated.x,
-          0,
-          'Beginning of delayed tween was computed'
-        );
+        expect(interpolated.x).toEqual(0);
 
         interpolated = interpolate({ x: 0 }, { x: 10 }, 1.0, 'linear', 0.5);
-        assert.equal(interpolated.x, 5, 'Midpoint delayed tween was computed');
+        expect(interpolated.x).toEqual(5);
 
         interpolated = interpolate({ x: 0 }, { x: 10 }, 1.5, 'linear', 0.5);
-        assert.equal(interpolated.x, 10, 'End of delayed tween was computed');
+        expect(interpolated.x).toEqual(10);
       });
 
-      it('supports per-interpolation custom easing curves', () => {
+      test('supports per-interpolation custom easing curves', () => {
         const easingFn = pos => pos * 2;
 
         const interpolated = interpolate({ x: 0 }, { x: 10 }, 0.5, easingFn);
-        assert.equal(
-          interpolated.x,
-          10,
-          'Accepts and applies non-Tweenable.formula easing function'
-        );
+        expect(interpolated.x).toEqual(10);
       });
 
       describe('token support', () => {
-        it('can tween an rgb color', () => {
+        test('can tween an rgb color', () => {
           const from = { color: 'rgb(0,128,255)' },
             to = { color: 'rgb(128,255,0)' };
 
           let interpolated = interpolate(from, to, 0);
-          assert.equal(
-            interpolated.color,
-            from.color,
-            'The initial interpolated value is the same as the initial color'
-          );
+          expect(interpolated.color).toEqual(from.color);
           interpolated = interpolate(from, to, 0.5);
-          assert.equal(
-            interpolated.color,
-            'rgb(64,191,127)',
-            'The interpolated value at 50% is a 50/50 mixture of the start and end colors'
-          );
+          expect(interpolated.color).toEqual('rgb(64,191,127)');
           interpolated = interpolate(from, to, 1);
-          assert.equal(
-            interpolated.color,
-            to.color,
-            'The final interpolated value is the same as the target color'
-          );
+          expect(interpolated.color).toEqual(to.color);
         });
 
-        it('can tween an rgb color with a number in the tween', () => {
+        test('can tween an rgb color with a number in the tween', () => {
           const from = { color: 'rgb(0,128,255)', x: 0 },
             to = { color: 'rgb(128,255,0)', x: 10 };
 
           let interpolated = interpolate(from, to, 0);
-          assert.equal(
-            interpolated.color,
-            from.color,
-            'The initial interpolated value is the same as the initial color'
-          );
+          expect(interpolated.color).toEqual(from.color);
           interpolated = interpolate(from, to, 0.5);
-          assert.equal(
-            interpolated.color,
-            'rgb(64,191,127)',
-            'The interpolated color value at 50% is a 50/50 mixture of the start and end colors'
-          );
-          assert.equal(
-            interpolated.x,
-            5,
-            'The interpolated x value at 50% is the midpoint of the start and end x values'
-          );
+          expect(interpolated.color).toEqual('rgb(64,191,127)');
+          expect(interpolated.x).toEqual(5);
           interpolated = interpolate(from, to, 1);
-          assert.equal(
-            interpolated.color,
-            to.color,
-            'The final interpolated value is the same as the target color'
-          );
+          expect(interpolated.color).toEqual(to.color);
         });
 
-        it('can tween hex color values', () => {
+        test('can tween hex color values', () => {
           const from = { color: '#ff00ff' },
             to = { color: '#00ff00' };
 
           let interpolated = interpolate(from, to, 0);
-          assert.equal(
-            interpolated.color,
-            'rgb(255,0,255)',
-            'The initial interpolated value is the rgb equivalent as the initial color'
-          );
+          expect(interpolated.color).toEqual('rgb(255,0,255)');
           interpolated = interpolate(from, to, 0.5);
-          assert.equal(
-            interpolated.color,
-            'rgb(127,127,127)',
-            'The interpolated value at 50% is a 50/50 mixture of the start and end colors'
-          );
+          expect(interpolated.color).toEqual('rgb(127,127,127)');
           interpolated = interpolate(from, to, 1);
-          assert.equal(
-            interpolated.color,
-            'rgb(0,255,0)',
-            'The final interpolated value is the rgb equivalent as the target color'
-          );
+          expect(interpolated.color).toEqual('rgb(0,255,0)');
         });
 
-        it('can tween multiple rgb color tokens', () => {
+        test('can tween multiple rgb color tokens', () => {
           const from = { color: 'rgb(0,128,255) rgb(255,0,255)' },
             to = { color: 'rgb(128,255,0) rgb(0,255,0)' };
 
           let interpolated = interpolate(from, to, 0);
-          assert.equal(
-            interpolated.color,
-            from.color,
-            'The initial interpolated value is the same as the initial color'
-          );
+          expect(interpolated.color).toEqual(from.color);
           interpolated = interpolate(from, to, 0.5);
-          assert.equal(
-            interpolated.color,
-            'rgb(64,191,127) rgb(127,127,127)',
-            'The interpolated value at 50% is a 50/50 mixture of the start and end colors'
+          expect(interpolated.color).toEqual(
+            'rgb(64,191,127) rgb(127,127,127)'
           );
           interpolated = interpolate(from, to, 1);
-          assert.equal(
-            interpolated.color,
-            to.color,
-            'The final interpolated value is the same as the target color'
-          );
+          expect(interpolated.color).toEqual(to.color);
         });
 
-        it("each token chunk can have it's own easing curve", () => {
+        test("each token chunk can have it's own easing curve", () => {
           const from = { color: 'rgb(0,0,0)' },
             to = { color: 'rgb(255,255,255)' },
             easing = 'linear easeInQuad easeInCubic';
@@ -864,14 +665,10 @@ describe('shifty', () => {
             interpolatedB +
             ')';
 
-          assert.equal(
-            interpolated.color,
-            targetString,
-            'The computed tween value respects the easing strings supplied and their cardinality'
-          );
+          expect(interpolated.color).toEqual(targetString);
         });
 
-        it('missing token eases inherit from the last easing listed', () => {
+        test('missing token eases inherit from the last easing listed', () => {
           const from = { color: 'rgb(0,0,0)' },
             to = { color: 'rgb(255,255,255)' },
             easing = 'linear easeInQuad';
@@ -898,132 +695,101 @@ describe('shifty', () => {
             interpolatedB +
             ')';
 
-          assert.equal(
-            interpolated.color,
-            targetString,
-            'The computed tween value inherits the last tween listed if there is a cardinality mismatch'
-          );
+          expect(interpolated.color).toEqual(targetString);
         });
 
-        it('can tween a negative value token to a positive value', () => {
+        test('can tween a negative value token to a positive value', () => {
           const from = { transform: 'translateX(-50)' },
             to = { transform: 'translateX(50)' };
 
           let interpolated = interpolate(from, to, 0);
-          assert.equal(
-            interpolated.transform,
-            'translateX(-50)',
-            'The initial interpolated value is the same as the initial transform'
-          );
+          expect(interpolated.transform).toEqual('translateX(-50)');
           interpolated = interpolate(from, to, 0.5);
-          assert.equal(
-            interpolated.transform,
-            'translateX(0)',
-            'The interpolated value at 50% is at the midpoint of the start and end translations'
-          );
+          expect(interpolated.transform).toEqual('translateX(0)');
           interpolated = interpolate(from, to, 1);
-          assert.equal(
-            interpolated.transform,
-            'translateX(50)',
-            'The final interpolated value is the same as the target transform'
-          );
+          expect(interpolated.transform).toEqual('translateX(50)');
         });
 
-        it('can interpolate two number strings that have no non-number token structure', () => {
+        test('can interpolate two number strings that have no non-number token structure', () => {
           const from = { x: '2' };
           const to = { x: '3' };
           const interpolated = interpolate(from, to, 0.5);
 
-          assert.equal(
-            interpolated.x,
-            '2.5',
-            'Token-less strings were successfully interpolated'
-          );
+          expect(interpolated.x).toEqual('2.5');
         });
 
-        it('can tween css value pairs', () => {
+        test('can tween css value pairs', () => {
           const from = { x: '0px 0px' };
           const to = { x: '100px 100px' };
 
           const interpolated = interpolate(from, to, 0.5);
-          assert.equal(
-            interpolated.x,
-            '50px 50px',
-            'The string was interpolated correctly'
-          );
+          expect(interpolated.x).toEqual('50px 50px');
         });
       });
 
       describe('bezier support', () => {
-        it('can create a linear bezier easing curve', () => {
+        test('can create a linear bezier easing curve', () => {
           setBezierFunction('bezier-linear', 0.25, 0.25, 0.75, 0.75);
 
-          assert.equal(
-            interpolate({ x: 0 }, { x: 10 }, 0.25, 'linear').x.toFixed(1),
-            interpolate({ x: 0 }, { x: 10 }, 0.25, 'bezier-linear').x.toFixed(
-              1
-            ),
-            'linear and dynamic bezier-linear are reasonably equivalent at 0.25'
+          expect(
+            interpolate({ x: 0 }, { x: 10 }, 0.25, 'linear').x.toFixed(1)
+          ).toEqual(
+            interpolate({ x: 0 }, { x: 10 }, 0.25, 'bezier-linear').x.toFixed(1)
           );
-          assert.equal(
-            interpolate({ x: 0 }, { x: 10 }, 0.5, 'linear').x.toFixed(1),
-            interpolate({ x: 0 }, { x: 10 }, 0.5, 'bezier-linear').x.toFixed(1),
-            'linear and dynamic bezier-linear are reasonably equivalent at 0.5'
+          expect(
+            interpolate({ x: 0 }, { x: 10 }, 0.5, 'linear').x.toFixed(1)
+          ).toEqual(
+            interpolate({ x: 0 }, { x: 10 }, 0.5, 'bezier-linear').x.toFixed(1)
           );
-          assert.equal(
-            interpolate({ x: 0 }, { x: 10 }, 0.75, 'linear').x.toFixed(1),
-            interpolate({ x: 0 }, { x: 10 }, 0.75, 'bezier-linear').x.toFixed(
-              1
-            ),
-            'linear and dynamic bezier-linear are reasonably equivalent at 0.75'
+          expect(
+            interpolate({ x: 0 }, { x: 10 }, 0.75, 'linear').x.toFixed(1)
+          ).toEqual(
+            interpolate({ x: 0 }, { x: 10 }, 0.75, 'bezier-linear').x.toFixed(1)
           );
         });
 
-        it('can create a "stretched" linear bezier easing curve', () => {
+        test('can create a "stretched" linear bezier easing curve', () => {
           setBezierFunction('bezier-stretched-linear', 0, 0, 1, 1);
 
-          assert.equal(
-            interpolate({ x: 0 }, { x: 10 }, 0.25, 'linear').x.toFixed(1),
+          expect(
+            interpolate({ x: 0 }, { x: 10 }, 0.25, 'linear').x.toFixed(1)
+          ).toEqual(
             interpolate(
               { x: 0 },
               { x: 10 },
               0.25,
               'bezier-stretched-linear'
-            ).x.toFixed(1),
-            'linear and dynamic bezier-stretched-linear are reasonably equivalent at 0.25'
+            ).x.toFixed(1)
           );
-          assert.equal(
-            interpolate({ x: 0 }, { x: 10 }, 0.5, 'linear').x.toFixed(1),
+          expect(
+            interpolate({ x: 0 }, { x: 10 }, 0.5, 'linear').x.toFixed(1)
+          ).toEqual(
             interpolate(
               { x: 0 },
               { x: 10 },
               0.5,
               'bezier-stretched-linear'
-            ).x.toFixed(1),
-            'linear and dynamic bezier-stretched-linear are reasonably equivalent at 0.5'
+            ).x.toFixed(1)
           );
-          assert.equal(
-            interpolate({ x: 0 }, { x: 10 }, 0.75, 'linear').x.toFixed(1),
+          expect(
+            interpolate({ x: 0 }, { x: 10 }, 0.75, 'linear').x.toFixed(1)
+          ).toEqual(
             interpolate(
               { x: 0 },
               { x: 10 },
               0.75,
               'bezier-stretched-linear'
-            ).x.toFixed(1),
-            'linear and dynamic bezier-stretched-linear are reasonably equivalent at 0.75'
+            ).x.toFixed(1)
           );
         });
 
-        it('can remove a bezier easing curve', () => {
+        test('can remove a bezier easing curve', () => {
           setBezierFunction('bezier-linear', 0, 0, 1, 1);
           unsetBezierFunction('bezier-linear');
-          assert(
-            !Tweenable.prototype['bezier-linear'],
-            '"bezier-linear" was deleted'
-          );
+          expect(!Tweenable.prototype['bezier-linear']).toBeTruthy();
         });
 
-        it('bezier handle positions are stored on a custom easing function', () => {
+        test('bezier handle positions are stored on a custom easing function', () => {
           const easingFunction = setBezierFunction(
             'decoration-test',
             0.2,
@@ -1032,42 +798,22 @@ describe('shifty', () => {
             0.8
           );
 
-          assert.equal(
-            easingFunction.displayName,
-            'decoration-test',
-            'Easing function was decorated with name'
-          );
-          assert.equal(
-            easingFunction.x1,
-            0.2,
-            'Easing function was decorated with x1'
-          );
-          assert.equal(
-            easingFunction.y1,
-            0.4,
-            'Easing function was decorated with y1'
-          );
-          assert.equal(
-            easingFunction.x2,
-            0.6,
-            'Easing function was decorated with x2'
-          );
-          assert.equal(
-            easingFunction.y2,
-            0.8,
-            'Easing function was decorated with y2'
-          );
+          expect(easingFunction.displayName).toEqual('decoration-test');
+          expect(easingFunction.x1).toEqual(0.2);
+          expect(easingFunction.y1).toEqual(0.4);
+          expect(easingFunction.x2).toEqual(0.6);
+          expect(easingFunction.y2).toEqual(0.8);
         });
       });
     });
   });
 
   describe('tween', () => {
-    it('exists', () => {
-      assert(tween);
+    test('exists', () => {
+      expect(tween).toBeTruthy();
     });
 
-    it('midpoints of a tween are correctly computed', () => {
+    test('midpoints of a tween are correctly computed', () => {
       Tweenable.now = () => 0;
       const promise = tween({
         from: { x: 0 },
@@ -1077,28 +823,16 @@ describe('shifty', () => {
 
       tweenable = promise.tweenable;
 
-      assert.equal(tweenable.get().x, 0, 'The tween starts at 0');
+      expect(tweenable.get().x).toEqual(0);
       Tweenable.now = () => 500;
       processTweens();
-      assert.equal(
-        tweenable.get().x,
-        50,
-        'The middle of the tween equates to .5 of the target value'
-      );
+      expect(tweenable.get().x).toEqual(50);
       Tweenable.now = () => 1000;
       processTweens();
-      assert.equal(
-        tweenable.get().x,
-        100,
-        'The end of the tween equates to 1.0 of the target value'
-      );
+      expect(tweenable.get().x).toEqual(100);
       Tweenable.now = () => 100000;
       processTweens();
-      assert.equal(
-        tweenable.get().x,
-        100,
-        'Anything after end of the tween equates to 1.0 of the target value'
-      );
+      expect(tweenable.get().x).toEqual(100);
     });
   });
 });

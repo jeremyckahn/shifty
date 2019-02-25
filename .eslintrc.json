@@ -2,14 +2,15 @@
   "env": {
     "browser": true,
     "commonjs": true,
-    "es6": true
+    "es6": true,
+    "jest": true
   },
   "extends": ["eslint:recommended", "prettier"],
   "parserOptions": {
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "plugins": ["prettier"],
+  "plugins": ["jest", "prettier"],
   "rules": {
     "linebreak-style": ["error", "unix"],
     "semi": ["error", "always"],
