@@ -2,12 +2,12 @@
  * @namespace shifty
  */
 
-import { Tweenable, tween } from './tweenable';
+import { processTweens, Tweenable, tween } from './tweenable';
 import * as token from './token';
 
 Tweenable.filters.token = token;
 
-export { Tweenable, tween };
+export { processTweens, Tweenable, tween };
 export { interpolate } from './interpolate';
 export { setBezierFunction, unsetBezierFunction } from './bezier';
 
