@@ -38,7 +38,7 @@ Once those are installed, you can generate `dist/shifty.js` with:
 npm run build
 ```
 
-To run the tests in CLI:
+To run the tests:
 
 ```
 npm test
@@ -50,13 +50,11 @@ To generate the documentation (`dist/doc`):
 npm run doc
 ```
 
-To generate, live-update, and view the documentation in your browser:
+To generate live documentation in your browser:
 
 ```
 npm run doc:live
 ```
-
-Once that's running, you can run the tests at http://localhost:9009/test/.
 
 ## Loading Shifty
 

@@ -34,22 +34,22 @@
   },
   "scripts": {
     "build": "webpack",
-    "test": "jest",
-    "test:watch": "nodemon --exec \"npm test\" --watch src --watch test",
+    "test": "jest --watch",
+    "ci": "npm run lint && jest",
     "doc": "jsdoc -c .jsdoc src/*.js",
     "doc:view": "live-server dist/doc --port=9124",
     "doc:watch": "nodemon --exec \"npm run doc\" --watch src --watch ./ --ext js,md --ignore dist",
     "doc:live": "run-p doc:watch doc:view",
     "lint": "eslint src test webpack.*",
     "deploy": "npm run build && npm run doc && gh-pages -d dist",
-    "preversion": "npm run lint && npm test",
+    "preversion": "npm run ci",
     "prettier": "prettier '{src,test}/**/*.js' webpack.* --write",
     "postversion": "git push && git push --tags && npm run deploy && npm publish"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged && npm test && npm run lint",
-      "pre-push": "npm test && npm run lint"
+      "pre-commit": "pretty-quick --staged && npm run ci",
+      "pre-push": "npm run ci"
     }
   },
   "files": [
