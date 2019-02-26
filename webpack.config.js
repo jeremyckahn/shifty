@@ -9,7 +9,6 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.join(__dirname, 'dist'),
-    publicPath: '/assets/',
     filename: 'shifty.js',
     library: 'shifty',
     libraryTarget: 'umd',
@@ -28,6 +27,8 @@ module.exports = {
     modules: ['node_modules'],
   },
   plugins: [
-    new Webpack.BannerPlugin(version),
+    new Webpack.BannerPlugin(
+      `Shifty ${version} - https://github.com/jeremyckahn/shifty`
+    ),
   ],
 };

@@ -56,12 +56,6 @@ To generate, live-update, and view the documentation in your browser:
 npm run doc:live
 ```
 
-To start a development server:
-
-```
-npm start
-```
-
 Once that's running, you can run the tests at http://localhost:9009/test/.
 
 ## Loading Shifty

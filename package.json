@@ -34,7 +34,6 @@
   },
   "scripts": {
     "build": "webpack",
-    "start": "webpack-dev-server --config webpack.test.config.js",
     "test": "jest",
     "test:watch": "nodemon --exec \"npm test\" --watch src --watch test",
     "doc": "jsdoc -c .jsdoc src/*.js",
