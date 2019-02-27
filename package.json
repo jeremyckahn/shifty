@@ -40,10 +40,10 @@
     "doc:view": "live-server dist/doc --port=9124",
     "doc:watch": "nodemon --exec \"npm run doc\" --watch src --watch ./ --ext js,md --ignore dist",
     "doc:live": "run-p doc:watch doc:view",
-    "lint": "eslint src test webpack.*",
+    "lint": "eslint src webpack.*",
     "deploy": "npm run build && npm run doc && gh-pages -d dist",
     "preversion": "npm run ci",
-    "prettier": "prettier '{src,test}/**/*.js' webpack.* --write",
+    "prettier": "prettier 'src/**/*.js' webpack.* --write",
     "postversion": "git push && git push --tags && npm run deploy && npm publish"
   },
   "husky": {
