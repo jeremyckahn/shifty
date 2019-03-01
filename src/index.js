@@ -9,6 +9,7 @@ Tweenable.filters.token = token;
 
 export { processTweens, Tweenable, tween };
 export { interpolate } from './interpolate';
+export { Scene } from './scene';
 export { setBezierFunction, unsetBezierFunction } from './bezier';
 
 /**

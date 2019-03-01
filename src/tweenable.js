@@ -343,7 +343,7 @@ export class Tweenable {
     });
 
     // Needed to silence (harmless) logged errors when a .catch handler is not
-    // added by downsteam code
+    // added by downstream code
     this._promise.catch(noop);
 
     return this;
