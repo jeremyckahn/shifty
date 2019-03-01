@@ -85,3 +85,21 @@ describe('pause', () => {
     expect(scene.isPlaying()).toBeFalsy();
   });
 });
+
+describe('resume', () => {
+  beforeEach(() => {
+    scene = new Scene(new Tweenable(), new Tweenable());
+  });
+
+  test('resumes all Tweenables', () => {
+    const [tweenable1, tweenable2] = scene.tweenables;
+    tweenable1.setConfig({ from: { x: 0 }, to: { x: 10 } });
+    tweenable2.setConfig({ from: { x: 10 }, to: { x: 0 } });
+    jest.spyOn(tweenable1, 'resume');
+    jest.spyOn(tweenable2, 'resume');
+    scene.resume();
+
+    expect(tweenable1.resume).toHaveBeenCalled();
+    expect(tweenable2.resume).toHaveBeenCalled();
+  });
+});

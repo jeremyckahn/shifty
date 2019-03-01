@@ -65,10 +65,13 @@ export class Scene {
     return this;
   }
 
-  ///**
-  // * @return {Scene}
-  // */
-  //resume() {}
+  /**
+   * @return {Scene}
+   */
+  resume() {
+    this.#tweenables.forEach(tweenable => tweenable.resume());
+    return this;
+  }
 
   ///**
   // * @param {boolean} [gotoEnd]
