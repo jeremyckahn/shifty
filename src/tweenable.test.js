@@ -1,6 +1,6 @@
 import Promised from 'bluebird';
 import { Tweenable, tween } from '../src';
-import { processTweens, scheduleUpdate } from '../src/tweenable';
+import { processTweens, scheduleUpdate } from './tweenable';
 
 const now = Tweenable.now;
 

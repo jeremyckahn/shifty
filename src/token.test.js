@@ -1,4 +1,4 @@
-import { interpolate } from '../src';
+import { interpolate } from './';
 
 test('can tween an rgb color', () => {
   const from = { color: 'rgb(0,128,255)' },

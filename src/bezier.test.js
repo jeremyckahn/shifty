@@ -3,7 +3,7 @@ import {
   interpolate,
   setBezierFunction,
   unsetBezierFunction,
-} from '../src';
+} from './';
 
 test('can create a linear bezier easing curve', () => {
   setBezierFunction('bezier-linear', 0.25, 0.25, 0.75, 0.75);

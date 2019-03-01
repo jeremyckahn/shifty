@@ -1,4 +1,4 @@
-import { interpolate } from '../src';
+import { interpolate } from './';
 
 test('computes the midpoint of two numbers', () => {
   const interpolated = interpolate({ x: 0 }, { x: 10 }, 0.5);
