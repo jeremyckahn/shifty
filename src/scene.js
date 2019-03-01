@@ -48,10 +48,14 @@ export class Scene {
     return this.#tweenables.some(tweenable => tweenable.isPlaying());
   }
 
-  ///**
-  // * @return {Scene}
-  // */
-  //play() {}
+  /**
+   * Plays all {@link shifty.Tweenable}s from their beginning.
+   * @return {Scene}
+   */
+  play() {
+    this.#tweenables.forEach(tweenable => tweenable.seek(0).resume());
+    return this;
+  }
 
   ///**
   // * @return {Scene}
