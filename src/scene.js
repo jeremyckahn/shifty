@@ -82,9 +82,12 @@ export class Scene {
     return this;
   }
 
-  ///**
-  // * @param {number} millisecond
-  // * @return {Scene}
-  // */
-  //seek(millisecond) {}
+  /**
+   * @param {number} millisecond
+   * @return {Scene}
+   */
+  seek(millisecond) {
+    this.#tweenables.forEach(tweenable => tweenable.seek(millisecond));
+    return this;
+  }
 }
