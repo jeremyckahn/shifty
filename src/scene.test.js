@@ -76,7 +76,7 @@ describe('pause', () => {
     scene = new Scene(new Tweenable(), new Tweenable());
   });
 
-  test('plays all Tweenables from their beginning', () => {
+  test('pauses all Tweenables', () => {
     const [tweenable1, tweenable2] = scene.tweenables;
     tweenable1.tween({ from: { x: 0 }, to: { x: 10 } });
     tweenable2.tween({ from: { x: 10 }, to: { x: 0 } });
