@@ -4,16 +4,9 @@ const Webpack = require('webpack');
 
 const { version } = require('./package.json');
 
-module.exports = {
+const config = {
   mode: 'production',
   entry: './src/index.js',
-  output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'shifty.js',
-    library: 'shifty',
-    libraryTarget: 'umd',
-    umdNamedDefine: true,
-  },
   devtool: 'source-map',
   module: {
     rules: [
@@ -32,3 +25,28 @@ module.exports = {
     ),
   ],
 };
+
+module.exports = [
+  {
+    ...config,
+    target: 'web',
+    output: {
+      path: path.join(__dirname, 'dist'),
+      filename: 'shifty.js',
+      library: 'shifty',
+      libraryTarget: 'umd',
+      umdNamedDefine: true,
+    },
+  },
+  {
+    ...config,
+    target: 'node',
+    output: {
+      path: path.join(__dirname, 'dist'),
+      filename: 'shifty.node.js',
+      library: 'shifty',
+      libraryTarget: 'commonjs',
+      umdNamedDefine: true,
+    },
+  },
+];
