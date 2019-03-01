@@ -2,22 +2,27 @@ export class Scene {
   #tweenables;
 
   /**
-   * @param {...Tweenable} tweenables
+   * @param {...shifty.Tweenable} tweenables
+   * @constructs shifty.Scene
    */
   constructor(...tweenables) {
     this.#tweenables = tweenables;
   }
 
   /**
-   * @return {Array.<Tweenable>} A copy of the internal Tweenables array.
+   * A copy of the internal Tweenables array.
+   * @member shifty.Scene#tweenables
+   * @type {Array.<shifty.Tweenable>}
+   * @readonly
    */
   get tweenables() {
     return [...this.#tweenables];
   }
 
   /**
-   * @param {Tweenable} tweenable
-   * @return {Tweenable}
+   * @method shifty.Scene#addTweenable
+   * @param {shifty.Tweenable} tweenable
+   * @return {shifty.Tweenable}
    */
   addTweenable(tweenable) {
     this.#tweenables.push(tweenable);
@@ -26,8 +31,9 @@ export class Scene {
   }
 
   /**
-   * @param {Tweenable} tweenable
-   * @return {Tweenable}
+   * @method shifty.Scene#removeTweenable
+   * @param {shifty.Tweenable} tweenable
+   * @return {shifty.Tweenable}
    */
   removeTweenable(tweenable) {
     const index = this.#tweenables.indexOf(tweenable);
@@ -42,6 +48,7 @@ export class Scene {
   /**
    * Is `true` if any {@link shifty.Tweenable} in this {@link shifty.Scene} is
    * playing.
+   * @method shifty.Scene#isPlaying
    * @return {boolean}
    */
   isPlaying() {
@@ -50,7 +57,8 @@ export class Scene {
 
   /**
    * Plays all {@link shifty.Tweenable}s from their beginning.
-   * @return {Scene}
+   * @method shifty.Scene#play
+   * @return {shifty.Scene}
    */
   play() {
     this.#tweenables.forEach(tweenable => tweenable.seek(0).resume());
@@ -58,7 +66,8 @@ export class Scene {
   }
 
   /**
-   * @return {Scene}
+   * @method shifty.Scene#pause
+   * @return {shifty.Scene}
    */
   pause() {
     this.#tweenables.forEach(tweenable => tweenable.pause());
@@ -66,7 +75,8 @@ export class Scene {
   }
 
   /**
-   * @return {Scene}
+   * @method shifty.Scene#resume
+   * @return {shifty.Scene}
    */
   resume() {
     this.#tweenables.forEach(tweenable => tweenable.resume());
@@ -74,8 +84,9 @@ export class Scene {
   }
 
   /**
+   * @method shifty.Scene#stop
    * @param {boolean} [gotoEnd]
-   * @return {Scene}
+   * @return {shifty.Scene}
    */
   stop(gotoEnd) {
     this.#tweenables.forEach(tweenable => tweenable.stop(gotoEnd));
@@ -83,8 +94,9 @@ export class Scene {
   }
 
   /**
+   * @method shifty.Scene#seek
    * @param {number} millisecond
-   * @return {Scene}
+   * @return {shifty.Scene}
    */
   seek(millisecond) {
     this.#tweenables.forEach(tweenable => tweenable.seek(millisecond));
