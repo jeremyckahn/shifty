@@ -57,10 +57,13 @@ export class Scene {
     return this;
   }
 
-  ///**
-  // * @return {Scene}
-  // */
-  //pause() {}
+  /**
+   * @return {Scene}
+   */
+  pause() {
+    this.#tweenables.forEach(tweenable => tweenable.pause());
+    return this;
+  }
 
   ///**
   // * @return {Scene}

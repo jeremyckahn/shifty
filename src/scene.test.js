@@ -70,3 +70,18 @@ describe('play', () => {
     expect(tweenable2.seek).toHaveBeenCalledWith(0);
   });
 });
+
+describe('pause', () => {
+  beforeEach(() => {
+    scene = new Scene(new Tweenable(), new Tweenable());
+  });
+
+  test('plays all Tweenables from their beginning', () => {
+    const [tweenable1, tweenable2] = scene.tweenables;
+    tweenable1.tween({ from: { x: 0 }, to: { x: 10 } });
+    tweenable2.tween({ from: { x: 10 }, to: { x: 0 } });
+    scene.pause();
+
+    expect(scene.isPlaying()).toBeFalsy();
+  });
+});
