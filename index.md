@@ -18,6 +18,10 @@ Shifty is the heart of [Rekapi](http://rekapi.com/), a higher-level library for 
 
 **Please fork, use and contribute to Shifty! It is distributed under the MIT License, and experimentation is encouraged. If you find a bug or have a question about Shifty, please submit it via the [Github issue tracker](https://github.com/jeremyckahn/shifty/issues).**
 
+### Getting started with Shifty
+
+Take a look at [the Getting Started guide]{@tutorial getting-started} to hit the ground running. The most important class in Shifty is [`Tweenable`]{@link shifty.Tweenable}, but you may also find [`Scene`]{@link shifty.Scene} handy for controlling groups of tweens.
+
 ---
 
 To create a basic tween, you could have something like this:

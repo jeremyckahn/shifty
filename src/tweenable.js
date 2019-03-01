@@ -344,7 +344,7 @@ export class Tweenable {
     });
 
     // Needed to silence (harmless) logged errors when a .catch handler is not
-    // added by downsteam code
+    // added by downstream code
     this._promise.catch(noop);
 
     return this;
@@ -442,7 +442,7 @@ export class Tweenable {
     this._timestamp = currentTime - millisecond;
 
     if (!this._isPlaying) {
-      // If the animation is not running, call scheduleUpdate to make sure that
+      // If the animation is not running, call processTween to make sure that
       // any step handlers are run.
       processTween(this, currentTime);
     }
