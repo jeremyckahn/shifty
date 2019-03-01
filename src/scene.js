@@ -39,10 +39,14 @@ export class Scene {
     return tweenable;
   }
 
-  ///**
-  // * @return {boolean}
-  // */
-  //isPlaying() {}
+  /**
+   * Is `true` if any {@link shifty.Tweenable} in this {@link shifty.Scene} is
+   * playing.
+   * @return {boolean}
+   */
+  isPlaying() {
+    return this.#tweenables.some(tweenable => tweenable.isPlaying());
+  }
 
   ///**
   // * @return {Scene}

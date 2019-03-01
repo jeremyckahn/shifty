@@ -35,3 +35,18 @@ describe('removeTweenable', () => {
     expect(scene.tweenables).toEqual([tweenable2]);
   });
 });
+
+describe('isPlaying', () => {
+  beforeEach(() => {
+    scene = new Scene(new Tweenable(), new Tweenable());
+  });
+
+  test('returns false if no tweenables are playing', () => {
+    expect(scene.isPlaying()).toBeFalsy();
+  });
+
+  test('returns true if any Tweenables are playing', () => {
+    scene.tweenables[1].tween({ from: { x: 0 }, to: { x: 10 } });
+    expect(scene.isPlaying()).toBeTruthy();
+  });
+});
