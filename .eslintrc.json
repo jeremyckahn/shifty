@@ -6,10 +6,7 @@
     "jest": true
   },
   "extends": ["eslint:recommended", "prettier"],
-  "parserOptions": {
-    "ecmaVersion": 2018,
-    "sourceType": "module"
-  },
+  "parser": "babel-eslint",
   "plugins": ["jest", "prettier"],
   "rules": {
     "linebreak-style": ["error", "unix"],
