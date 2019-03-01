@@ -15,17 +15,29 @@ export class Scene {
     return [...this.#tweenables];
   }
 
-  ///**
-  // * @param {Tweenable} tweenable
-  // * @return {Tweenable}
-  // */
-  //addTweenable(tweenable) {}
+  /**
+   * @param {Tweenable} tweenable
+   * @return {Tweenable}
+   */
+  addTweenable(tweenable) {
+    this.#tweenables.push(tweenable);
 
-  ///**
-  // * @param {Tweenable} tweenable
-  // * @return {Tweenable}
-  // */
-  //removeTweenable(tweenable) {}
+    return tweenable;
+  }
+
+  /**
+   * @param {Tweenable} tweenable
+   * @return {Tweenable}
+   */
+  removeTweenable(tweenable) {
+    const index = this.#tweenables.indexOf(tweenable);
+
+    if (~index) {
+      this.#tweenables.splice(index, 1);
+    }
+
+    return tweenable;
+  }
 
   ///**
   // * @return {boolean}
