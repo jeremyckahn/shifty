@@ -73,11 +73,14 @@ export class Scene {
     return this;
   }
 
-  ///**
-  // * @param {boolean} [gotoEnd]
-  // * @return {Scene}
-  // */
-  //stop(gotoEnd) {}
+  /**
+   * @param {boolean} [gotoEnd]
+   * @return {Scene}
+   */
+  stop(gotoEnd) {
+    this.#tweenables.forEach(tweenable => tweenable.stop(gotoEnd));
+    return this;
+  }
 
   ///**
   // * @param {number} millisecond
