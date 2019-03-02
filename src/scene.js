@@ -20,6 +20,19 @@ export class Scene {
   }
 
   /**
+   * The {@link external:Promise}s for all {@link shifty.Tweenable}s in this
+   * {@link shifty.Scene} that have one.
+   * @member shifty.Scene#promises
+   * @type {Array.<external:Promise>}
+   * @readonly
+   */
+  get promises() {
+    return this.#tweenables
+      .map(({ _promise }) => _promise)
+      .filter(isDefined => isDefined);
+  }
+
+  /**
    * @method shifty.Scene#addTweenable
    * @param {shifty.Tweenable} tweenable
    * @return {shifty.Tweenable}

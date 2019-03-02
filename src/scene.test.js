@@ -8,12 +8,18 @@ beforeEach(() => {
 });
 
 describe('constructor', () => {
-  beforeEach(() => {
-    scene = new Scene(new Tweenable(), new Tweenable());
-  });
-
   test('stores internal Tweenables', () => {
+    scene = new Scene(new Tweenable(), new Tweenable());
     expect(scene.tweenables).toEqual([new Tweenable(), new Tweenable()]);
+  });
+});
+
+describe('get promises', () => {
+  test('returns promises for all tweenables that have one', () => {
+    scene = new Scene(new Tweenable(), new Tweenable({}, {}));
+    const { promises } = scene;
+    expect(promises).toHaveLength(1);
+    expect(promises[0]).toBeInstanceOf(Promise);
   });
 });
 
