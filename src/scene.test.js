@@ -1,4 +1,4 @@
-import { Tweenable } from './tweenable';
+import { Tweenable, tween } from './tweenable';
 import { Scene } from './scene';
 
 let scene;
@@ -9,14 +9,18 @@ beforeEach(() => {
 
 describe('constructor', () => {
   test('stores internal Tweenables', () => {
-    scene = new Scene(new Tweenable(), new Tweenable());
-    expect(scene.tweenables).toEqual([new Tweenable(), new Tweenable()]);
+    scene = new Scene(new Tweenable(), tween());
+    const [tweenable1, tweenable2] = scene.tweenables;
+
+    expect(scene.tweenables).toHaveLength(2);
+    expect(tweenable1).toBeInstanceOf(Tweenable);
+    expect(tweenable2).toBeInstanceOf(Tweenable);
   });
 });
 
 describe('get promises', () => {
   test('returns promises for all tweenables that have one', () => {
-    scene = new Scene(new Tweenable(), new Tweenable({}, {}));
+    scene = new Scene(new Tweenable(), tween());
     const { promises } = scene;
     expect(promises).toHaveLength(1);
     expect(promises[0]).toBeInstanceOf(Promise);
@@ -25,8 +29,10 @@ describe('get promises', () => {
 
 describe('addTweenable', () => {
   test('adds a Tweenable', () => {
-    const tweenable = scene.addTweenable(new Tweenable());
-    expect(scene.tweenables).toEqual([tweenable]);
+    const tweenable1 = scene.addTweenable(new Tweenable());
+    const tweenable2 = scene.addTweenable(tween());
+    expect(scene.tweenables[0]).toEqual(tweenable1);
+    expect(scene.tweenables[1]).toEqual(tweenable2);
   });
 });
 

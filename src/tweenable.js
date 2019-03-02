@@ -341,6 +341,8 @@ export class Tweenable {
       this._reject = reject;
     });
 
+    this._promise._tweenable = this;
+
     // Needed to silence (harmless) logged errors when a .catch handler is not
     // added by downsteam code
     this._promise.catch(noop);

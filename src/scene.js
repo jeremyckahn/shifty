@@ -1,12 +1,19 @@
+const getTweenable = promiseOrTweenable =>
+  promiseOrTweenable._tweenable
+    ? promiseOrTweenable._tweenable
+    : promiseOrTweenable;
+
 export class Scene {
   #tweenables;
 
   /**
-   * @param {...shifty.Tweenable} tweenables
+   * @param {...shifty.Tweenable|external:Promise} tweenables Can be {@link
+   * shifty.Tweenable}s or {@link external:Promise}s returned from {@link
+   * shifty.Tweenable#tween} and similar functions.
    * @constructs shifty.Scene
    */
   constructor(...tweenables) {
-    this.#tweenables = tweenables;
+    this.#tweenables = tweenables.map(getTweenable);
   }
 
   /**
@@ -34,13 +41,16 @@ export class Scene {
 
   /**
    * @method shifty.Scene#addTweenable
-   * @param {shifty.Tweenable} tweenable
+   * @param {shifty.Tweenable} tweenable Can be {@link shifty.Tweenable}s or
+   * {@link external:Promise}s returned from {@link shifty.Tweenable#tween} and
+   * similar functions.
    * @return {shifty.Tweenable}
    */
   addTweenable(tweenable) {
-    this.#tweenables.push(tweenable);
+    const rootTweenable = getTweenable(tweenable);
+    this.#tweenables.push(rootTweenable);
 
-    return tweenable;
+    return rootTweenable;
   }
 
   /**
