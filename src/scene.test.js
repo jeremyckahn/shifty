@@ -94,14 +94,10 @@ describe('play', () => {
     const [tweenable1, tweenable2] = scene.tweenables;
     tweenable1.setConfig({ from: { x: 0 }, to: { x: 10 } });
     tweenable2.setConfig({ from: { x: 10 }, to: { x: 0 } });
-    jest.spyOn(tweenable1, 'seek');
-    jest.spyOn(tweenable2, 'seek');
     scene.play();
 
     expect(tweenable1.isPlaying()).toBeTruthy();
     expect(tweenable2.isPlaying()).toBeTruthy();
-    expect(tweenable1.seek).toHaveBeenCalledWith(0);
-    expect(tweenable2.seek).toHaveBeenCalledWith(0);
   });
 });
 

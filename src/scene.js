@@ -83,12 +83,12 @@ export class Scene {
   }
 
   /**
-   * Plays all {@link shifty.Tweenable}s from their beginning.
+   * Plays all {@link shifty.Tweenable}s .
    * @method shifty.Scene#play
    * @return {shifty.Scene}
    */
   play() {
-    this.#tweenables.forEach(tweenable => tweenable.seek(0).resume());
+    this.#tweenables.forEach(tweenable => tweenable.resume());
     return this;
   }
 
