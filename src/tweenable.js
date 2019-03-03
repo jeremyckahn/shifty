@@ -301,7 +301,7 @@ export class Tweenable {
     start = noop,
     step = noop,
     to,
-  }) {
+  } = {}) {
     this._configured = true;
 
     // Attach something to this Tweenable instance (e.g.: a DOM element, an
