@@ -34,28 +34,6 @@ describe('add', () => {
     expect(scene.tweenables[0]).toEqual(tweenable1);
     expect(scene.tweenables[1]).toEqual(tweenable2);
   });
-
-  describe('play state syncing', () => {
-    beforeEach(() => {
-      scene.add(new Tweenable());
-    });
-
-    describe('scene was already playing', () => {
-      test('plays the added tweenable', () => {
-        scene.tweenables[0].tween();
-        const addedTweenable = scene.add(new Tweenable());
-        expect(addedTweenable.isPlaying()).toBeTruthy();
-      });
-    });
-
-    describe('scene was not already playing', () => {
-      test('pauses the added tweenable', () => {
-        scene.pause();
-        const addedTweenable = scene.add(new Tweenable());
-        expect(addedTweenable.isPlaying()).toBeFalsy();
-      });
-    });
-  });
 });
 
 describe('remove', () => {
