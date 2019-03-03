@@ -27,21 +27,21 @@ describe('get promises', () => {
   });
 });
 
-describe('addTweenable', () => {
+describe('add', () => {
   test('adds a Tweenable', () => {
-    const tweenable1 = scene.addTweenable(new Tweenable());
-    const tweenable2 = scene.addTweenable(tween());
+    const tweenable1 = scene.add(new Tweenable());
+    const tweenable2 = scene.add(tween());
     expect(scene.tweenables[0]).toEqual(tweenable1);
     expect(scene.tweenables[1]).toEqual(tweenable2);
   });
 });
 
-describe('removeTweenable', () => {
+describe('remove', () => {
   test('removes a Tweenable', () => {
     const tweenable1 = new Tweenable({ foo: 1 });
     const tweenable2 = new Tweenable({ bar: 1 });
     scene = new Scene(tweenable1, tweenable2);
-    const removedTweenable = scene.removeTweenable(tweenable1);
+    const removedTweenable = scene.remove(tweenable1);
 
     expect(removedTweenable).toEqual(tweenable1);
     expect(scene.tweenables).toEqual([tweenable2]);

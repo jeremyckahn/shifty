@@ -13,7 +13,7 @@ export class Scene {
    * @constructs shifty.Scene
    */
   constructor(...tweenables) {
-    tweenables.forEach(this.addTweenable.bind(this));
+    tweenables.forEach(this.add.bind(this));
   }
 
   /**
@@ -40,13 +40,13 @@ export class Scene {
   }
 
   /**
-   * @method shifty.Scene#addTweenable
-   * @param {shifty.Tweenable} tweenable Can be {@link shifty.Tweenable}s or
-   * {@link external:Promise}s returned from {@link shifty.Tweenable#tween} and
-   * similar functions.
+   * @method shifty.Scene#add
+   * @param {shifty.Tweenable|external:Promise} tweenable Can be {@link
+   * shifty.Tweenable}s or {@link external:Promise}s returned from {@link
+   * shifty.Tweenable#tween} and similar functions.
    * @return {shifty.Tweenable}
    */
-  addTweenable(tweenable) {
+  add(tweenable) {
     const rootTweenable = getTweenable(tweenable);
     this.#tweenables.push(rootTweenable);
 
@@ -54,11 +54,11 @@ export class Scene {
   }
 
   /**
-   * @method shifty.Scene#removeTweenable
+   * @method shifty.Scene#remove
    * @param {shifty.Tweenable} tweenable
    * @return {shifty.Tweenable}
    */
-  removeTweenable(tweenable) {
+  remove(tweenable) {
     const index = this.#tweenables.indexOf(tweenable);
 
     if (~index) {
