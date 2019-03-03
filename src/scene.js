@@ -60,6 +60,12 @@ export class Scene {
       }
     }
 
+    if (!rootTweenable._configured) {
+      rootTweenable.setConfig();
+    }
+
+    rootTweenable._promise.then(() => this.remove(rootTweenable));
+
     return rootTweenable;
   }
 
