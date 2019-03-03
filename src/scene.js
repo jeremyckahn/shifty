@@ -47,8 +47,18 @@ export class Scene {
    * @return {shifty.Tweenable}
    */
   add(tweenable) {
+    const wasAlreadyPlaying = this.isPlaying();
     const rootTweenable = getTweenable(tweenable);
     this.#tweenables.push(rootTweenable);
+
+    // Sync the added Tweenable to the Scene's play state
+    if (this.#tweenables.length > 1) {
+      if (wasAlreadyPlaying) {
+        rootTweenable.resume();
+      } else {
+        rootTweenable.pause();
+      }
+    }
 
     return rootTweenable;
   }
