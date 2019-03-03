@@ -20,7 +20,7 @@ describe('constructor', () => {
 
 describe('get promises', () => {
   test('returns promises for all tweenables', () => {
-    scene = new Scene(new Tweenable());
+    scene = new Scene(new Tweenable({}, {}));
     const { promises } = scene;
     expect(promises).toHaveLength(1);
     expect(promises[0]).toBeInstanceOf(Promise);
@@ -131,18 +131,5 @@ describe('stop', () => {
 
     expect(tweenable1.stop).toHaveBeenCalledWith(true);
     expect(tweenable2.stop).toHaveBeenCalledWith(true);
-  });
-});
-
-describe('automatic removal', () => {
-  beforeEach(done => {
-    scene
-      .add(new Tweenable({}, { duration: 0 }))
-      .tween()
-      .then(() => done());
-  });
-
-  test('removes tweenable when promise is resolved', () => {
-    expect(scene.tweenables).toHaveLength(0);
   });
 });

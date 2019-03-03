@@ -21,7 +21,8 @@ export class Scene {
 
   /**
    * The {@link external:Promise}s for all {@link shifty.Tweenable}s in this
-   * {@link shifty.Scene}.
+   * {@link shifty.Scene} that have been configured with {@link
+   * shifty.Tweenable#setConfig}.
    * @member shifty.Scene#promises
    * @type {Array.<external:Promise>}
    * @readonly
@@ -47,12 +48,6 @@ export class Scene {
         tweenable.pause();
       }
     }
-
-    if (!tweenable._configured) {
-      tweenable.setConfig();
-    }
-
-    tweenable._promise.then(() => this.remove(tweenable));
 
     return tweenable;
   }
