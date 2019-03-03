@@ -88,7 +88,13 @@ export class Scene {
    * @return {shifty.Scene}
    */
   play() {
-    this.#tweenables.forEach(tweenable => tweenable.resume());
+    this.#tweenables.forEach(tweenable => {
+      // Calling both tween and resume ensures a consistent and valid play
+      // state
+      tweenable.tween();
+      tweenable.resume();
+    });
+
     return this;
   }
 
