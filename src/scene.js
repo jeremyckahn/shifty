@@ -4,7 +4,7 @@ const getTweenable = promiseOrTweenable =>
     : promiseOrTweenable;
 
 export class Scene {
-  #tweenables;
+  #tweenables = [];
 
   /**
    * @param {...shifty.Tweenable|external:Promise} tweenables Can be {@link
@@ -13,7 +13,7 @@ export class Scene {
    * @constructs shifty.Scene
    */
   constructor(...tweenables) {
-    this.#tweenables = tweenables.map(getTweenable);
+    tweenables.forEach(this.addTweenable.bind(this));
   }
 
   /**
