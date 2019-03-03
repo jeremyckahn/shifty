@@ -98,31 +98,12 @@ export class Scene {
   }
 
   /**
-   * @method shifty.Scene#resume
-   * @return {shifty.Scene}
-   */
-  resume() {
-    this.#tweenables.forEach(tweenable => tweenable.resume());
-    return this;
-  }
-
-  /**
    * @method shifty.Scene#stop
    * @param {boolean} [gotoEnd]
    * @return {shifty.Scene}
    */
   stop(gotoEnd) {
     this.#tweenables.forEach(tweenable => tweenable.stop(gotoEnd));
-    return this;
-  }
-
-  /**
-   * @method shifty.Scene#seek
-   * @param {number} millisecond
-   * @return {shifty.Scene}
-   */
-  seek(millisecond) {
-    this.#tweenables.forEach(tweenable => tweenable.seek(millisecond));
     return this;
   }
 }
