@@ -388,6 +388,10 @@ export class Tweenable {
    * @return {external:Promise}
    */
   resume() {
+    if (this.isPlaying()) {
+      return;
+    }
+
     const currentTime = Tweenable.now();
 
     if (this._isPaused) {
