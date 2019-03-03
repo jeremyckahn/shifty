@@ -1,4 +1,4 @@
-import { Tweenable, tween } from './tweenable';
+import { Tweenable } from './tweenable';
 import { Scene } from './scene';
 
 let scene;
@@ -9,7 +9,7 @@ beforeEach(() => {
 
 describe('constructor', () => {
   test('stores internal Tweenables', () => {
-    scene = new Scene(new Tweenable(), tween());
+    scene = new Scene(new Tweenable(), new Tweenable());
     const [tweenable1, tweenable2] = scene.tweenables;
 
     expect(scene.tweenables).toHaveLength(2);
@@ -30,19 +30,20 @@ describe('get promises', () => {
 describe('add', () => {
   test('adds a Tweenable', () => {
     const tweenable1 = scene.add(new Tweenable());
-    const tweenable2 = scene.add(tween());
+    const tweenable2 = scene.add(new Tweenable());
     expect(scene.tweenables[0]).toEqual(tweenable1);
     expect(scene.tweenables[1]).toEqual(tweenable2);
   });
 
   describe('play state syncing', () => {
     beforeEach(() => {
-      scene.add(tween());
+      scene.add(new Tweenable());
     });
 
     describe('scene was already playing', () => {
       test('plays the added tweenable', () => {
-        const addedTweenable = scene.add(tween());
+        scene.tweenables[0].tween();
+        const addedTweenable = scene.add(new Tweenable());
         expect(addedTweenable.isPlaying()).toBeTruthy();
       });
     });
@@ -50,7 +51,7 @@ describe('add', () => {
     describe('scene was not already playing', () => {
       test('pauses the added tweenable', () => {
         scene.pause();
-        const addedTweenable = scene.add(tween());
+        const addedTweenable = scene.add(new Tweenable());
         expect(addedTweenable.isPlaying()).toBeFalsy();
       });
     });
@@ -139,8 +140,10 @@ describe('stop', () => {
 
 describe('automatic removal', () => {
   beforeEach(done => {
-    scene.add(tween({ duration: 0 }));
-    Promise.all(scene.promises).then(() => done());
+    scene
+      .add(new Tweenable({}, { duration: 0 }))
+      .tween()
+      .then(() => done());
   });
 
   test('removes tweenable when promise is resolved', () => {

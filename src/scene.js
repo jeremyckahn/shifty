@@ -1,15 +1,8 @@
-const getTweenable = promiseOrTweenable =>
-  promiseOrTweenable._tweenable
-    ? promiseOrTweenable._tweenable
-    : promiseOrTweenable;
-
 export class Scene {
   #tweenables = [];
 
   /**
-   * @param {...shifty.Tweenable|external:Promise} tweenables Can be {@link
-   * shifty.Tweenable}s or {@link external:Promise}s returned from {@link
-   * shifty.Tweenable#tween} and similar functions.
+   * @param {...shifty.Tweenable} tweenables
    * @constructs shifty.Scene
    */
   constructor(...tweenables) {
@@ -28,45 +21,40 @@ export class Scene {
 
   /**
    * The {@link external:Promise}s for all {@link shifty.Tweenable}s in this
-   * {@link shifty.Scene} that have one.
+   * {@link shifty.Scene}.
    * @member shifty.Scene#promises
    * @type {Array.<external:Promise>}
    * @readonly
    */
   get promises() {
-    return this.#tweenables
-      .map(({ _promise }) => _promise)
-      .filter(isDefined => isDefined);
+    return this.#tweenables.map(({ _promise }) => _promise);
   }
 
   /**
    * @method shifty.Scene#add
-   * @param {shifty.Tweenable|external:Promise} tweenable Can be {@link
-   * shifty.Tweenable}s or {@link external:Promise}s returned from {@link
-   * shifty.Tweenable#tween} and similar functions.
+   * @param {shifty.Tweenable} tweenable
    * @return {shifty.Tweenable}
    */
   add(tweenable) {
     const wasAlreadyPlaying = this.isPlaying();
-    const rootTweenable = getTweenable(tweenable);
-    this.#tweenables.push(rootTweenable);
+    this.#tweenables.push(tweenable);
 
     // Sync the added Tweenable to the Scene's play state
     if (this.#tweenables.length > 1) {
       if (wasAlreadyPlaying) {
-        rootTweenable.resume();
+        tweenable.resume();
       } else {
-        rootTweenable.pause();
+        tweenable.pause();
       }
     }
 
-    if (!rootTweenable._configured) {
-      rootTweenable.setConfig();
+    if (!tweenable._configured) {
+      tweenable.setConfig();
     }
 
-    rootTweenable._promise.then(() => this.remove(rootTweenable));
+    tweenable._promise.then(() => this.remove(tweenable));
 
-    return rootTweenable;
+    return tweenable;
   }
 
   /**
