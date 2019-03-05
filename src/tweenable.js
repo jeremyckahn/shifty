@@ -268,11 +268,7 @@ export class Tweenable {
    * @return {external:Promise}
    */
   tween(config = undefined) {
-    const { _attachment, _configured, _isTweening } = this;
-
-    if (_isTweening) {
-      return this;
-    }
+    const { _attachment, _configured } = this;
 
     // Only set default config if no configuration has been set previously and
     // none is provided now.
@@ -309,6 +305,7 @@ export class Tweenable {
     this._attachment = attachment;
 
     // Init the internal state
+    this._isPlaying = false;
     this._pausedAtTime = null;
     this._scheduleId = null;
     this._delay = delay;
@@ -374,7 +371,7 @@ export class Tweenable {
    */
   pause() {
     this._pausedAtTime = Tweenable.now();
-    this._isPaused = true;
+    this._isPlaying = false;
     remove(this);
 
     return this;
@@ -388,12 +385,16 @@ export class Tweenable {
   resume() {
     const currentTime = Tweenable.now();
 
-    if (this._isPaused) {
-      this._timestamp += currentTime - this._pausedAtTime;
+    if (this._isPlaying) {
+      return this._promise;
     }
 
-    this._isPaused = false;
-    this._isTweening = true;
+    if (this._pausedAtTime) {
+      this._timestamp += currentTime - this._pausedAtTime;
+      this._pausedAtTime = null;
+    }
+
+    this._isPlaying = true;
 
     if (listHead === null) {
       listHead = this;
@@ -428,15 +429,10 @@ export class Tweenable {
 
     this._timestamp = currentTime - millisecond;
 
-    if (!this.isPlaying()) {
-      this._isTweening = true;
-      this._isPaused = false;
-
+    if (!this._isPlaying) {
       // If the animation is not running, call scheduleUpdate to make sure that
       // any step handlers are run.
       processTween(this, currentTime);
-
-      this.pause();
     }
 
     return this;
@@ -460,8 +456,7 @@ export class Tweenable {
       _targetState,
     } = this;
 
-    this._isTweening = false;
-    this._isPaused = false;
+    this._isPlaying = false;
 
     remove(this);
 
@@ -484,7 +479,7 @@ export class Tweenable {
    * @return {boolean}
    */
   isPlaying() {
-    return this._isTweening && !this._isPaused;
+    return this._isPlaying;
   }
 
   /**

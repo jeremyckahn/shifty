@@ -266,7 +266,7 @@ describe('#tween', () => {
       processTweens();
       tweenable.stop();
       expect(tweenable.get().x).toEqual(50);
-      expect(tweenable._isTweening).toEqual(false);
+      expect(tweenable._isPlaying).toEqual(false);
     });
 
     test('stop(true) skips a tween to the end', () => {
