@@ -190,10 +190,6 @@ export const composeEasingObject = (
 const remove = tween => {
   // Adapted from:
   // https://github.com/trekhleb/javascript-algorithms/blob/7c9601df3e8ca4206d419ce50b88bd13ff39deb6/src/data-structures/doubly-linked-list/DoublyLinkedList.js#L73-L121
-  if (!listHead) {
-    return;
-  }
-
   if (tween === listHead) {
     listHead = tween._next;
 
@@ -210,6 +206,9 @@ const remove = tween => {
     previousTween._next = nextTween;
     nextTween._previous = previousTween;
   }
+
+  // Clean up any references in case the tween is restarted later.
+  tween._previous = tween._next = null;
 };
 
 export class Tweenable {
@@ -396,9 +395,6 @@ export class Tweenable {
       listTail = this;
       scheduleUpdate();
     } else {
-      // FIXME: Why is this necessary? this._next should already be null here.
-      this._next = null;
-
       this._previous = listTail;
       this._previous._next = this;
 
