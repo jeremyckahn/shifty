@@ -200,10 +200,6 @@ const remove = tween => {
     if (listHead) {
       listHead._previous = null;
     }
-
-    if (tween === listTail) {
-      listTail = null;
-    }
   } else if (tween === listTail) {
     listTail = tween._previous;
     listTail._next = null;
@@ -211,13 +207,8 @@ const remove = tween => {
     const previousTween = tween._previous;
     const nextTween = tween._next;
 
-    if (previousTween) {
-      previousTween._next = nextTween;
-    }
-
-    if (nextTween) {
-      nextTween._previous = previousTween;
-    }
+    previousTween._next = nextTween;
+    nextTween._previous = previousTween;
   }
 };
 
@@ -370,6 +361,10 @@ export class Tweenable {
    * @return {shifty.Tweenable}
    */
   pause() {
+    if (!this._isPlaying) {
+      return;
+    }
+
     this._pausedAtTime = Tweenable.now();
     this._isPlaying = false;
     remove(this);
@@ -401,6 +396,9 @@ export class Tweenable {
       listTail = this;
       scheduleUpdate();
     } else {
+      // FIXME: Why is this necessary? this._next should already be null here.
+      this._next = null;
+
       this._previous = listTail;
       this._previous._next = this;
 
@@ -455,6 +453,10 @@ export class Tweenable {
       _originalState,
       _targetState,
     } = this;
+
+    if (!this._isPlaying) {
+      return;
+    }
 
     this._isPlaying = false;
 
