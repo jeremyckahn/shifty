@@ -137,8 +137,9 @@ export const processTweens = () => {
   let tween = listHead;
 
   while (tween) {
+    const nextTween = tween._next;
     processTween(tween, currentTime);
-    tween = tween._next;
+    tween = nextTween;
   }
 };
 
@@ -195,10 +196,17 @@ const remove = tween => {
 
     if (listHead) {
       listHead._previous = null;
+    } else {
+      listTail = null;
     }
   } else if (tween === listTail) {
     listTail = tween._previous;
-    listTail._next = null;
+
+    if (listTail) {
+      listTail._next = null;
+    } else {
+      listHead = null;
+    }
   } else {
     const previousTween = tween._previous;
     const nextTween = tween._next;
@@ -396,7 +404,7 @@ export class Tweenable {
       scheduleUpdate();
     } else {
       this._previous = listTail;
-      this._previous._next = this;
+      listTail._next = this;
 
       listTail = this;
     }
