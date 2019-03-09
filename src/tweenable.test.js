@@ -144,234 +144,6 @@ describe('#tween', () => {
     });
   });
 
-  describe('#pause', () => {
-    test('moves the end time of the tween', () => {
-      Tweenable.now = () => 0;
-      tweenable.tween({
-        from: { x: 0 },
-        to: { x: 100 },
-        duration: 1000,
-      });
-
-      Tweenable.now = () => 500;
-      processTweens();
-      expect(tweenable.get().x).toEqual(50);
-      tweenable.pause();
-
-      Tweenable.now = () => 2000;
-      tweenable.resume();
-      processTweens();
-      expect(tweenable.get().x).toEqual(50);
-
-      Tweenable.now = () => 2500;
-      processTweens();
-      expect(tweenable.get().x).toEqual(100);
-    });
-  });
-
-  describe('#seek', () => {
-    test('forces the tween to a specific point on the timeline', () => {
-      Tweenable.now = () => 0;
-      tweenable.tween({
-        from: { x: 0 },
-        to: { x: 100 },
-        duration: 1000,
-      });
-
-      tweenable.seek(500);
-      expect(tweenable._timestamp).toEqual(-500);
-    });
-
-    test('provides correct value to step handler via seek() (issue #77)', () => {
-      let computedX;
-      tweenable = new Tweenable(null, {
-        from: { x: 0 },
-        to: { x: 100 },
-        duration: 1000,
-        step: function(state) {
-          computedX = state.x;
-        },
-      });
-
-      tweenable.seek(500);
-      expect(computedX).toEqual(50);
-    });
-
-    test('The seek() parameter cannot be less than 0', () => {
-      Tweenable.now = () => 0;
-      tweenable.tween({
-        from: { x: 0 },
-        to: { x: 100 },
-        duration: 1000,
-      });
-
-      tweenable.seek(-500);
-      expect(tweenable._timestamp).toEqual(0);
-    });
-
-    test('no-ops if seeking to the current millisecond', () => {
-      let stepHandlerCallCount = 0;
-      Tweenable.now = () => 0;
-
-      tweenable.tween({
-        from: { x: 0 },
-        to: { x: 100 },
-        duration: 1000,
-        step: () => {
-          stepHandlerCallCount++;
-        },
-      });
-
-      tweenable.seek(50);
-      tweenable.stop();
-      tweenable.seek(50);
-      expect(stepHandlerCallCount).toEqual(1);
-    });
-
-    test('keeps time reference (rel #60)', () => {
-      tweenable = new Tweenable(
-        {},
-        {
-          from: { x: 0 },
-          to: { x: 100 },
-          duration: 100,
-        }
-      );
-
-      // express a delay in time between the both time it's called
-      // TODO: This could probably be written in a much clearer way.
-      Tweenable.now = () => {
-        Tweenable.now = () => {
-          return 100;
-        };
-        return 98;
-      };
-
-      let callCount = 0;
-      tweenable.stop = () => {
-        callCount += 1;
-      };
-
-      tweenable.seek(98);
-      expect(callCount).toEqual(0);
-    });
-  });
-
-  describe('#stop', () => {
-    test('stop(undefined) leaves a tween where it was stopped', () => {
-      Tweenable.now = () => 0;
-      tweenable.tween({
-        from: { x: 0 },
-        to: { x: 100 },
-        duration: 1000,
-      });
-
-      Tweenable.now = () => 500;
-      processTweens();
-      tweenable.stop();
-      expect(tweenable.get().x).toEqual(50);
-      expect(tweenable._isPlaying).toEqual(false);
-    });
-
-    test('stop(true) skips a tween to the end', () => {
-      const tweenable = new Tweenable();
-      Tweenable.now = () => 0;
-      tweenable.tween({
-        from: { x: 0 },
-        to: { x: 100 },
-        duration: 1000,
-      });
-
-      Tweenable.now = () => 500;
-      processTweens();
-      tweenable.stop(true);
-      expect(tweenable.get().x).toEqual(100);
-    });
-
-    describe('repeated calls (#105)', () => {
-      describe('first tween is stopped twice', () => {
-        beforeEach(() => {
-          Tweenable.now = () => 0;
-
-          let { tweenable } = tween({
-            from: { x: 0 },
-            to: { x: 10 },
-            duration: 500,
-          });
-
-          tween({
-            from: { x: 0 },
-            to: { x: 10 },
-            duration: 500,
-          });
-
-          Tweenable.now = () => 250;
-          processTweens();
-
-          tweenable.stop(true);
-          tweenable.stop(true);
-        });
-
-        test('does not break when multiple tweens are running and stop() is called twice', () => {
-          expect(true).toBeTruthy();
-        });
-      });
-
-      describe('second tween is stopped twice', () => {
-        beforeEach(() => {
-          Tweenable.now = () => 0;
-
-          tween({
-            from: { x: 0 },
-            to: { x: 10 },
-            duration: 500,
-          });
-
-          let { tweenable } = tween({
-            from: { x: 0 },
-            to: { x: 10 },
-            duration: 500,
-          });
-
-          Tweenable.now = () => 250;
-          processTweens();
-
-          tweenable.stop(true);
-          tweenable.stop(true);
-        });
-
-        test('does not break when multiple tweens are running and stop() is called twice', () => {
-          expect(true).toBeTruthy();
-        });
-      });
-    });
-  });
-
-  describe('#setScheduleFunction', () => {
-    test('calling setScheduleFunction change the internal schedule function', () => {
-      const mockScheduleFunctionCalls = [];
-      function mockScheduleFunction(fn, delay) {
-        mockScheduleFunctionCalls.push({ fn, delay });
-      }
-
-      tweenable.setScheduleFunction(mockScheduleFunction);
-      Tweenable.now = () => 0;
-      tweenable.tween({
-        from: { x: 0 },
-        to: { x: 100 },
-        duration: 1000,
-      });
-
-      Tweenable.now = () => 500;
-      scheduleUpdate();
-      tweenable.stop(true);
-
-      expect(mockScheduleFunctionCalls.length).toBeTruthy();
-      expect(typeof mockScheduleFunctionCalls[0].fn).toEqual('function');
-      expect(typeof mockScheduleFunctionCalls[0].delay).toEqual('number');
-    });
-  });
-
   describe('lifecycle hooks', () => {
     let testState;
 
@@ -479,6 +251,234 @@ describe('#tween', () => {
         expect(testState).toEqual({ x: 5 });
       });
     });
+  });
+});
+
+describe('#pause', () => {
+  test('moves the end time of the tween', () => {
+    Tweenable.now = () => 0;
+    tweenable.tween({
+      from: { x: 0 },
+      to: { x: 100 },
+      duration: 1000,
+    });
+
+    Tweenable.now = () => 500;
+    processTweens();
+    expect(tweenable.get().x).toEqual(50);
+    tweenable.pause();
+
+    Tweenable.now = () => 2000;
+    tweenable.resume();
+    processTweens();
+    expect(tweenable.get().x).toEqual(50);
+
+    Tweenable.now = () => 2500;
+    processTweens();
+    expect(tweenable.get().x).toEqual(100);
+  });
+});
+
+describe('#seek', () => {
+  test('forces the tween to a specific point on the timeline', () => {
+    Tweenable.now = () => 0;
+    tweenable.tween({
+      from: { x: 0 },
+      to: { x: 100 },
+      duration: 1000,
+    });
+
+    tweenable.seek(500);
+    expect(tweenable._timestamp).toEqual(-500);
+  });
+
+  test('provides correct value to step handler via seek() (issue #77)', () => {
+    let computedX;
+    tweenable = new Tweenable(null, {
+      from: { x: 0 },
+      to: { x: 100 },
+      duration: 1000,
+      step: function(state) {
+        computedX = state.x;
+      },
+    });
+
+    tweenable.seek(500);
+    expect(computedX).toEqual(50);
+  });
+
+  test('The seek() parameter cannot be less than 0', () => {
+    Tweenable.now = () => 0;
+    tweenable.tween({
+      from: { x: 0 },
+      to: { x: 100 },
+      duration: 1000,
+    });
+
+    tweenable.seek(-500);
+    expect(tweenable._timestamp).toEqual(0);
+  });
+
+  test('no-ops if seeking to the current millisecond', () => {
+    let stepHandlerCallCount = 0;
+    Tweenable.now = () => 0;
+
+    tweenable.tween({
+      from: { x: 0 },
+      to: { x: 100 },
+      duration: 1000,
+      step: () => {
+        stepHandlerCallCount++;
+      },
+    });
+
+    tweenable.seek(50);
+    tweenable.stop();
+    tweenable.seek(50);
+    expect(stepHandlerCallCount).toEqual(1);
+  });
+
+  test('keeps time reference (rel #60)', () => {
+    tweenable = new Tweenable(
+      {},
+      {
+        from: { x: 0 },
+        to: { x: 100 },
+        duration: 100,
+      }
+    );
+
+    // express a delay in time between the both time it's called
+    // TODO: This could probably be written in a much clearer way.
+    Tweenable.now = () => {
+      Tweenable.now = () => {
+        return 100;
+      };
+      return 98;
+    };
+
+    let callCount = 0;
+    tweenable.stop = () => {
+      callCount += 1;
+    };
+
+    tweenable.seek(98);
+    expect(callCount).toEqual(0);
+  });
+});
+
+describe('#stop', () => {
+  test('stop(undefined) leaves a tween where it was stopped', () => {
+    Tweenable.now = () => 0;
+    tweenable.tween({
+      from: { x: 0 },
+      to: { x: 100 },
+      duration: 1000,
+    });
+
+    Tweenable.now = () => 500;
+    processTweens();
+    tweenable.stop();
+    expect(tweenable.get().x).toEqual(50);
+    expect(tweenable._isPlaying).toEqual(false);
+  });
+
+  test('stop(true) skips a tween to the end', () => {
+    const tweenable = new Tweenable();
+    Tweenable.now = () => 0;
+    tweenable.tween({
+      from: { x: 0 },
+      to: { x: 100 },
+      duration: 1000,
+    });
+
+    Tweenable.now = () => 500;
+    processTweens();
+    tweenable.stop(true);
+    expect(tweenable.get().x).toEqual(100);
+  });
+
+  describe('repeated calls (#105)', () => {
+    describe('first tween is stopped twice', () => {
+      beforeEach(() => {
+        Tweenable.now = () => 0;
+
+        let { tweenable } = tween({
+          from: { x: 0 },
+          to: { x: 10 },
+          duration: 500,
+        });
+
+        tween({
+          from: { x: 0 },
+          to: { x: 10 },
+          duration: 500,
+        });
+
+        Tweenable.now = () => 250;
+        processTweens();
+
+        tweenable.stop(true);
+        tweenable.stop(true);
+      });
+
+      test('does not break when multiple tweens are running and stop() is called twice', () => {
+        expect(true).toBeTruthy();
+      });
+    });
+
+    describe('second tween is stopped twice', () => {
+      beforeEach(() => {
+        Tweenable.now = () => 0;
+
+        tween({
+          from: { x: 0 },
+          to: { x: 10 },
+          duration: 500,
+        });
+
+        let { tweenable } = tween({
+          from: { x: 0 },
+          to: { x: 10 },
+          duration: 500,
+        });
+
+        Tweenable.now = () => 250;
+        processTweens();
+
+        tweenable.stop(true);
+        tweenable.stop(true);
+      });
+
+      test('does not break when multiple tweens are running and stop() is called twice', () => {
+        expect(true).toBeTruthy();
+      });
+    });
+  });
+});
+
+describe('#setScheduleFunction', () => {
+  test('calling setScheduleFunction change the internal schedule function', () => {
+    const mockScheduleFunctionCalls = [];
+    function mockScheduleFunction(fn, delay) {
+      mockScheduleFunctionCalls.push({ fn, delay });
+    }
+
+    tweenable.setScheduleFunction(mockScheduleFunction);
+    Tweenable.now = () => 0;
+    tweenable.tween({
+      from: { x: 0 },
+      to: { x: 100 },
+      duration: 1000,
+    });
+
+    Tweenable.now = () => 500;
+    scheduleUpdate();
+    tweenable.stop(true);
+
+    expect(mockScheduleFunctionCalls.length).toBeTruthy();
+    expect(typeof mockScheduleFunctionCalls[0].fn).toEqual('function');
+    expect(typeof mockScheduleFunctionCalls[0].delay).toEqual('number');
   });
 });
 
