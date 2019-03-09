@@ -254,6 +254,29 @@ describe('#tween', () => {
   });
 });
 
+describe('#resume', () => {
+  beforeEach(() => {
+    Tweenable.now = () => 0;
+  });
+
+  test('calls tween if not called previously', () => {
+    jest.spyOn(tweenable, 'tween');
+    tweenable.resume();
+    expect(tweenable.tween).toHaveBeenCalled();
+  });
+
+  test('shifts timestamp to account for amount of time paused', () => {
+    tweenable.tween();
+    expect(tweenable._timestamp).toEqual(0);
+
+    Tweenable.now = () => 500;
+    tweenable.pause();
+    Tweenable.now = () => 750;
+    tweenable.resume();
+    expect(tweenable._timestamp).toEqual(250);
+  });
+});
+
 describe('#pause', () => {
   test('moves the end time of the tween', () => {
     Tweenable.now = () => 0;

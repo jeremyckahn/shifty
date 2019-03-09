@@ -237,6 +237,7 @@ export class Tweenable {
     this._currentState = initialState;
     this._configured = false;
     this._filters = [];
+    this._timestamp = null;
     this._next = null;
     this._previous = null;
 
@@ -275,7 +276,7 @@ export class Tweenable {
 
     // Only set default config if no configuration has been set previously and
     // none is provided now.
-    if (config !== undefined || !_configured) {
+    if (config || !_configured) {
       this.setConfig(config);
     }
 
@@ -300,7 +301,7 @@ export class Tweenable {
     start = noop,
     step = noop,
     to,
-  }) {
+  } = {}) {
     this._configured = true;
 
     // Attach something to this Tweenable instance (e.g.: a DOM element, an
@@ -389,11 +390,15 @@ export class Tweenable {
    * @return {external:Promise}
    */
   resume() {
-    const currentTime = Tweenable.now();
+    if (this._timestamp === null) {
+      return this.tween();
+    }
 
     if (this._isPlaying) {
       return this._promise;
     }
+
+    const currentTime = Tweenable.now();
 
     if (this._pausedAtTime) {
       this._timestamp += currentTime - this._pausedAtTime;
