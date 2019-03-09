@@ -89,7 +89,7 @@ export class Scene {
 
   /**
    * Resumes all paused {@link shifty.Tweenable}s.
-   * @method shifty.Scene#play
+   * @method shifty.Scene#resume
    * @return {shifty.Scene}
    */
   resume() {
