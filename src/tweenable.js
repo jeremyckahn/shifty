@@ -361,9 +361,8 @@ export class Tweenable {
   }
 
   /**
-   * Pause a tween.  Paused tweens can be resumed from the point at which they
-   * were paused.  This is different from {@link shifty.Tweenable#stop}, as
-   * that method causes a tween to start over when it is resumed.
+   * Pause a tween. Paused tweens can be resumed from the point at which they
+   * were paused. If a tween is not running, this is a no-op.
    * @method shifty.Tweenable#pause
    * @return {shifty.Tweenable}
    */
@@ -441,7 +440,7 @@ export class Tweenable {
   }
 
   /**
-   * Stops and cancels a tween.
+   * Stops and cancels a tween. If a tween is not running, this is a no-op.
    * @param {boolean} [gotoEnd] If `false`, the tween just stops at its current
    * state, and the tween promise is not resolved.  If `true`, the tweened
    * object's values are instantly set to the target values, and the promise is
