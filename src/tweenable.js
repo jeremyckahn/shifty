@@ -28,6 +28,11 @@ const noop = () => {};
 let listHead = null;
 let listTail = null;
 
+// Strictly used for testing
+export const resetList = () => (listHead = listTail = null);
+export const getListHead = () => listHead;
+export const getListTail = () => listTail;
+
 const formulas = { ...easingFunctions };
 
 /**

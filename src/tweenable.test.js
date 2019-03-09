@@ -1,6 +1,12 @@
 import Promised from 'bluebird';
 import { Tweenable, tween } from '../src';
-import { processTweens, scheduleUpdate } from './tweenable';
+import {
+  getListHead,
+  getListTail,
+  processTweens,
+  resetList,
+  scheduleUpdate,
+} from './tweenable';
 
 const now = Tweenable.now;
 
@@ -11,9 +17,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  if (tweenable.isPlaying()) {
-    tweenable.stop();
-  }
+  resetList();
 
   tweenable = undefined;
   state = undefined;
@@ -555,5 +559,136 @@ describe('static tween', () => {
     Tweenable.now = () => 100000;
     processTweens();
     expect(tweenable.get().x).toEqual(100);
+  });
+});
+
+describe('linked tween list', () => {
+  let head, middle, tail;
+
+  beforeEach(() => {
+    head = new Tweenable();
+    middle = new Tweenable();
+    tail = new Tweenable();
+  });
+
+  describe('single tweenable', () => {
+    beforeEach(() => {
+      tweenable.tween({});
+    });
+
+    describe('adding to the list', () => {
+      test('tween becomes both head and tail', () => {
+        expect(getListHead()).toBe(tweenable);
+        expect(getListTail()).toBe(tweenable);
+        expect(tweenable._previous).toBe(null);
+        expect(tweenable._next).toBe(null);
+      });
+    });
+
+    describe('removing from the list', () => {
+      describe('pause', () => {
+        test('resets head and tail', () => {
+          tweenable.pause();
+          expect(getListHead()).toBe(null);
+          expect(getListTail()).toBe(null);
+          expect(tweenable._previous).toBe(null);
+          expect(tweenable._next).toBe(null);
+        });
+      });
+
+      describe('stop', () => {
+        test('resets head and tail', () => {
+          tweenable.stop();
+          expect(getListHead()).toBe(null);
+          expect(getListTail()).toBe(null);
+          expect(tweenable._previous).toBe(null);
+          expect(tweenable._next).toBe(null);
+        });
+      });
+    });
+  });
+
+  describe('two tweenables', () => {
+    beforeEach(() => {
+      head.tween({});
+      tail.tween({});
+    });
+
+    describe('adding to the list', () => {
+      test('head and tail are linked up', () => {
+        expect(getListHead()).toBe(head);
+        expect(getListTail()).toBe(tail);
+        expect(head._previous).toBe(null);
+        expect(head._next).toBe(tail);
+        expect(tail._previous).toBe(head);
+        expect(tail._next).toBe(null);
+      });
+    });
+
+    describe('removing from the list', () => {
+      describe('removing the head', () => {
+        test('orphans the tail', () => {
+          head.stop();
+          expect(getListHead()).toBe(tail);
+          expect(getListTail()).toBe(tail);
+          expect(head._previous).toBe(null);
+          expect(head._next).toBe(null);
+          expect(tail._previous).toBe(null);
+          expect(tail._next).toBe(null);
+        });
+      });
+
+      describe('removing the tail', () => {
+        test('orphans the head', () => {
+          tail.stop();
+          expect(getListHead()).toBe(head);
+          expect(getListTail()).toBe(head);
+          expect(head._previous).toBe(null);
+          expect(head._next).toBe(null);
+          expect(tail._previous).toBe(null);
+          expect(tail._next).toBe(null);
+        });
+      });
+    });
+  });
+
+  describe('more than two tweenables', () => {
+    beforeEach(() => {
+      head.tween({});
+      middle.tween({});
+      tail.tween({});
+    });
+
+    describe('adding to the list', () => {
+      test('nodes are linked up', () => {
+        expect(getListHead()).toBe(head);
+        expect(getListTail()).toBe(tail);
+        expect(head._previous).toBe(null);
+        expect(head._next).toBe(middle);
+        expect(middle._previous).toBe(head);
+        expect(middle._next).toBe(tail);
+        expect(tail._previous).toBe(middle);
+        expect(tail._next).toBe(null);
+      });
+    });
+
+    describe('removing from the list', () => {
+      describe('removing the middle', () => {
+        beforeEach(() => {
+          middle.stop();
+        });
+
+        test('updates links', () => {
+          expect(getListHead()).toBe(head);
+          expect(getListTail()).toBe(tail);
+          expect(head._previous).toBe(null);
+          expect(head._next).toBe(tail);
+          expect(middle._previous).toBe(null);
+          expect(middle._next).toBe(null);
+          expect(tail._previous).toBe(head);
+          expect(tail._next).toBe(null);
+        });
+      });
+    });
   });
 });
