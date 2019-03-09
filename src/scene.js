@@ -68,17 +68,12 @@ export class Scene {
   }
 
   /**
-   * Plays all {@link shifty.Tweenable}s .
+   * Plays all {@link shifty.Tweenable}s from their beginning.
    * @method shifty.Scene#play
    * @return {shifty.Scene}
    */
   play() {
-    this.#tweenables.forEach(tweenable => {
-      // Calling both tween and resume ensures a consistent and valid play
-      // state
-      tweenable.tween();
-      tweenable.resume();
-    });
+    this.#tweenables.forEach(tweenable => tweenable.tween());
 
     return this;
   }
@@ -89,6 +84,17 @@ export class Scene {
    */
   pause() {
     this.#tweenables.forEach(tweenable => tweenable.pause());
+    return this;
+  }
+
+  /**
+   * Resumes all paused {@link shifty.Tweenable}s.
+   * @method shifty.Scene#play
+   * @return {shifty.Scene}
+   */
+  resume() {
+    this.#tweenables.forEach(tweenable => tweenable.resume());
+
     return this;
   }
 

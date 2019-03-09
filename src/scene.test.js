@@ -85,12 +85,24 @@ describe('pause', () => {
   });
 
   test('pauses all Tweenables', () => {
-    const [tweenable1, tweenable2] = scene.tweenables;
-    tweenable1.tween({ from: { x: 0 }, to: { x: 10 } });
-    tweenable2.tween({ from: { x: 10 }, to: { x: 0 } });
+    scene.play();
     scene.pause();
 
     expect(scene.isPlaying()).toBeFalsy();
+  });
+});
+
+describe('resume', () => {
+  beforeEach(() => {
+    scene = new Scene(new Tweenable(), new Tweenable());
+  });
+
+  test('resumes all Tweenables', () => {
+    scene.play();
+    scene.pause();
+    scene.resume();
+
+    expect(scene.isPlaying()).toBeTruthy();
   });
 });
 
