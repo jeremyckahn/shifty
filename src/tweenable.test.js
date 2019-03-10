@@ -252,6 +252,19 @@ describe('#tween', () => {
       });
     });
   });
+
+  describe('re-tweening previously paused tweens', () => {
+    test('uses correct _timestamp', () => {
+      Tweenable.now = () => 0;
+      tweenable.tween({});
+      Tweenable.now = () => 250;
+      tweenable.pause();
+      expect(tweenable._timestamp).toEqual(0);
+      Tweenable.now = () => 500;
+      tweenable.tween();
+      expect(tweenable._timestamp).toEqual(500);
+    });
+  });
 });
 
 describe('#resume', () => {

@@ -280,6 +280,7 @@ export class Tweenable {
       this.setConfig(config);
     }
 
+    this._pausedAtTime = null;
     this._timestamp = Tweenable.now();
     this._start(this.get(), _attachment);
     return this.resume();
