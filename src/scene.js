@@ -3,12 +3,12 @@ export class Scene {
 
   /**
    * The {@link shifty.Scene} class provides a way to control groups of {@link
-   * shifty.Tweenable}s. It is lightweight and minimalistic and meant to
-   * provide performant {@link shifty.Tweenable} batch control that users of
-   * Shifty might otherwise have to implement themselves. It is **not** a
-   * robust timeline solution, and it does **not** provide utilities for
-   * sophisticated animation sequencing or orchestration. If that is what you
-   * need for your project, consider using a more robust tool such as
+   * shifty.Tweenable}s. It is lightweight, minimalistic, and meant to provide
+   * performant {@link shifty.Tweenable} batch control that users of Shifty
+   * might otherwise have to implement themselves. It is **not** a robust
+   * timeline solution, and it does **not** provide utilities for sophisticated
+   * animation sequencing or orchestration. If that is what you need for your
+   * project, consider using a more robust tool such as
    * [Rekapi](http://jeremyckahn.github.io/rekapi/doc/) (a timeline layer built
    * on top of Shifty).
    *
@@ -99,7 +99,8 @@ export class Scene {
    * [Remove]{@link shifty.Scene#remove} all {@link shifty.Tweenable}s in this {@link
    * shifty.Scene}.
    * @method shifty.Scene#empty
-   * @return {Array.<shifty.Tweenable>}
+   * @return {Array.<shifty.Tweenable>} The {@link shifty.Tweenable}s that were
+   * removed.
    */
   empty() {
     // Deliberate of the tweenables getter here to create a temporary array
