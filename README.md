@@ -12,17 +12,32 @@ customizable animations. Shifty is optimized to run many times a second with
 minimal processing and memory overhead, which is necessary to achieve smooth
 animations.
 
+## Installation
+
+```
+npm install --save shifty
+```
+
 ## Browser compatibility
 
 Shifty officially supports Evergreen browsers, Safari, and Node. If you
 encounter a browser-specific bug, please [open an issue about
 it](https://github.com/jeremyckahn/shifty/issues/new)!
 
-## Installation
+### IE compatibility
+
+Shifty is compatible with IE11 (possibly older versions as well), but you
+will need to provide your own polyfills for it to work. If you are using
+https://polyfill.io/, you just need the `es6` features enabled:
 
 ```
-npm install --save shifty
+https://polyfill.io/v3/polyfill.min.js?features=es6
 ```
+
+[Here's a polyfilled demo of Shifty that works with
+IE11](https://codepen.io/jeremyckahn/pen/RwbzvEj). Please see [issue
+#113](https://github.com/jeremyckahn/shifty/issues/113) for background on
+this.
 
 ## Developing Shifty
 
