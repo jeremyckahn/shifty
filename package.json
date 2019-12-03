@@ -59,9 +59,6 @@
     "src",
     "dist"
   ],
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
   "contributors": [
     {
       "name": "Miller Medeiros",
