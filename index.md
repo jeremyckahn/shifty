@@ -14,7 +14,7 @@ Shifty is a low-level animation solution. It does not perform any rendering, but
 
 If your project requires extensive animation APIs and a robust plugin ecosystem, Greensock is an excellent choice. If you prefer less overhead and a more permissive license (MIT), Shifty might be the animation engine for you!
 
-Shifty is the heart of [Rekapi](http://rekapi.com/), a higher-level library for making keyframe animations. Shifty is also a low-level part of [Stylie](https://jeremyckahn.github.io/stylie/) and [Mantra](https://jeremyckahn.github.io/mantra/), a suite of graphical animation tools.
+Shifty is the heart of [Rekapi](https://jeremyckahn.github.io/rekapi/doc/), a higher-level library for making keyframe animations. Shifty is also a low-level part of [Stylie](https://jeremyckahn.github.io/stylie/) and [Mantra](https://jeremyckahn.github.io/mantra/), a suite of graphical animation tools.
 
 **Please fork, use and contribute to Shifty! It is distributed under the MIT License, and experimentation is encouraged. If you find a bug or have a question about Shifty, please submit it via the [Github issue tracker](https://github.com/jeremyckahn/shifty/issues).**
 
