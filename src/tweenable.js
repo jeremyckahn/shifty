@@ -265,7 +265,8 @@ export class Tweenable {
   }
 
   /**
-   * Configure and start a tween.
+   * Configure and start a tween. If the tween already playing then the
+   * previous tween will stop and throw an error.
    * @method shifty.Tweenable#tween
    * @param {shifty.tweenConfig} [config] Gets passed to {@link
    * shifty.Tweenable#setConfig}.
@@ -483,7 +484,11 @@ export class Tweenable {
       this._applyFilter(AFTER_TWEEN_END);
       this._resolve(_currentState, _attachment);
     } else {
-      this._reject(_currentState, _attachment);
+      this._reject({
+        error: 'stop() executed while tween isPlaying.',
+        currentState: _currentState,
+        attachment: _attachment,
+      });
     }
 
     return this;
