@@ -236,9 +236,10 @@ describe('#tween', () => {
           .tween({
             from: { x: 0 },
             to: { x: 10 },
+            attachment: { foo: true },
             duration: 500,
           })
-          .catch(currentState => (testState = currentState));
+          .catch(data => (testState = data));
 
         Tweenable.now = () => 250;
         processTweens();
@@ -248,7 +249,11 @@ describe('#tween', () => {
       });
 
       test('rejects with most recent state', () => {
-        expect(testState).toEqual({ x: 5 });
+        expect(testState).toEqual({
+          error: 'stop() executed while tween isPlaying.',
+          currentState: { x: 5 },
+          attachment: { foo: true },
+        });
       });
     });
   });

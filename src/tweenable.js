@@ -483,13 +483,11 @@ export class Tweenable {
       this._applyFilter(AFTER_TWEEN_END);
       this._resolve(_currentState, _attachment);
     } else {
-      this._reject(
-        {
-          error: 'stop() executed while tween isPlaying.',
-          currentState: _currentState,
-        },
-        _attachment
-      );
+      this._reject({
+        error: 'stop() executed while tween isPlaying.',
+        currentState: _currentState,
+        attachment: _attachment,
+      });
     }
 
     return this;
