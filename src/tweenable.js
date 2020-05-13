@@ -265,7 +265,8 @@ export class Tweenable {
   }
 
   /**
-   * Configure and start a tween. If the tween already playing then the previous tween will stop and throw an error.
+   * Configure and start a tween. If the tween already playing then the
+   * previous tween will stop and throw an error.
    * @method shifty.Tweenable#tween
    * @param {shifty.tweenConfig} [config] Gets passed to {@link
    * shifty.Tweenable#setConfig}.
