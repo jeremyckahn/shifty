@@ -26,27 +26,31 @@ const config = {
   ],
 };
 
+const output = {
+  library: 'shifty',
+  libraryTarget: 'umd',
+  path: path.join(__dirname, 'dist'),
+  umdNamedDefine: true,
+};
+
 module.exports = [
   {
     ...config,
     target: 'web',
     output: {
-      path: path.join(__dirname, 'dist'),
+      ...output,
       filename: 'shifty.js',
-      library: 'shifty',
-      libraryTarget: 'umd',
-      umdNamedDefine: true,
     },
   },
   {
     ...config,
     target: 'node',
     output: {
-      path: path.join(__dirname, 'dist'),
+      ...output,
       filename: 'shifty.node.js',
-      library: 'shifty',
-      libraryTarget: 'commonjs',
-      umdNamedDefine: true,
+    },
+    optimization: {
+      minimize: false,
     },
   },
 ];

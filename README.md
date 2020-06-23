@@ -93,12 +93,9 @@ Or even:
 
 ```javascript
 // CommonJS
-// Shifty is packaged for ES6 environments, so it exposes an object called
-// `shifty`. To use it with CommonJS loaders (like Node's `require`), access
-// the properties within that object.
-const shifty = require('shifty').shifty;
+const { tween } = require('shifty');
 
-shifty.tween({ from: { x: 0 }, to: { x: 10 } });
+tween({ from: { x: 0 }, to: { x: 10 } });
 ```
 
 ## Using Shifty
