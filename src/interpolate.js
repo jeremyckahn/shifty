@@ -1,10 +1,10 @@
-import { Tweenable, composeEasingObject, tweenProps } from './tweenable';
+import { Tweenable, composeEasingObject, tweenProps } from './tweenable'
 
 // Fake a Tweenable and patch some internals.  This approach allows us to
 // skip uneccessary processing and object recreation, cutting down on garbage
 // collection pauses.
-const mockTweenable = new Tweenable();
-const { filters } = Tweenable;
+const mockTweenable = new Tweenable()
+const { filters } = Tweenable
 
 /**
  * Compute the midpoint of two Objects.  This method effectively calculates a
@@ -45,26 +45,26 @@ const { filters } = Tweenable;
  * @return {Object}
  */
 export const interpolate = (from, to, position, easing, delay = 0) => {
-  const current = { ...from };
-  const easingObject = composeEasingObject(from, easing);
+  const current = { ...from }
+  const easingObject = composeEasingObject(from, easing)
 
-  mockTweenable._filters.length = 0;
+  mockTweenable._filters.length = 0
 
-  mockTweenable.set({});
-  mockTweenable._currentState = current;
-  mockTweenable._originalState = from;
-  mockTweenable._targetState = to;
-  mockTweenable._easing = easingObject;
+  mockTweenable.set({})
+  mockTweenable._currentState = current
+  mockTweenable._originalState = from
+  mockTweenable._targetState = to
+  mockTweenable._easing = easingObject
 
   for (const name in filters) {
     if (filters[name].doesApply(mockTweenable)) {
-      mockTweenable._filters.push(filters[name]);
+      mockTweenable._filters.push(filters[name])
     }
   }
 
   // Any defined value transformation must be applied
-  mockTweenable._applyFilter('tweenCreated');
-  mockTweenable._applyFilter('beforeTween');
+  mockTweenable._applyFilter('tweenCreated')
+  mockTweenable._applyFilter('beforeTween')
 
   const interpolatedValues = tweenProps(
     position,
@@ -74,10 +74,10 @@ export const interpolate = (from, to, position, easing, delay = 0) => {
     1,
     delay,
     easingObject
-  );
+  )
 
   // Transform data in interpolatedValues back into its original format
-  mockTweenable._applyFilter('afterTween');
+  mockTweenable._applyFilter('afterTween')
 
-  return interpolatedValues;
-};
+  return interpolatedValues
+}

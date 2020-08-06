@@ -1,8 +1,8 @@
 /* global __dirname */
-const path = require('path');
-const Webpack = require('webpack');
+const path = require('path')
+const Webpack = require('webpack')
 
-const { version } = require('./package.json');
+const { version } = require('./package.json')
 
 const config = {
   mode: 'production',
@@ -24,14 +24,14 @@ const config = {
       `Shifty ${version} - https://github.com/jeremyckahn/shifty`
     ),
   ],
-};
+}
 
 const output = {
   library: 'shifty',
   libraryTarget: 'umd',
   path: path.join(__dirname, 'dist'),
   umdNamedDefine: true,
-};
+}
 
 module.exports = [
   {
@@ -53,4 +53,4 @@ module.exports = [
       minimize: false,
     },
   },
-];
+]

@@ -10,7 +10,6 @@
   "plugins": ["jest", "prettier"],
   "rules": {
     "linebreak-style": ["error", "unix"],
-    "semi": ["error", "always"],
     "valid-jsdoc": [
       "error",
       {

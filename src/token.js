@@ -1,18 +1,15 @@
-const R_NUMBER_COMPONENT = /(\d|-|\.)/;
-const R_FORMAT_CHUNKS = /([^\-0-9.]+)/g;
-const R_UNFORMATTED_VALUES = /[0-9.-]+/g;
+const R_NUMBER_COMPONENT = /(\d|-|\.)/
+const R_FORMAT_CHUNKS = /([^\-0-9.]+)/g
+const R_UNFORMATTED_VALUES = /[0-9.-]+/g
 const R_RGB = (() => {
-  const number = R_UNFORMATTED_VALUES.source;
-  const comma = /,\s*/.source;
+  const number = R_UNFORMATTED_VALUES.source
+  const comma = /,\s*/.source
 
-  return new RegExp(
-    `rgb\\(${number}${comma}${number}${comma}${number}\\)`,
-    'g'
-  );
-})();
-const R_RGB_PREFIX = /^.*\(/;
-const R_HEX = /#([0-9]|[a-f]){3,6}/gi;
-const VALUE_PLACEHOLDER = 'VAL';
+  return new RegExp(`rgb\\(${number}${comma}${number}${comma}${number}\\)`, 'g')
+})()
+const R_RGB_PREFIX = /^.*\(/
+const R_HEX = /#([0-9]|[a-f]){3,6}/gi
+const VALUE_PLACEHOLDER = 'VAL'
 
 // HELPERS
 
@@ -24,7 +21,7 @@ const VALUE_PLACEHOLDER = 'VAL';
  * @private
  */
 const getFormatChunksFrom = (rawValues, prefix) =>
-  rawValues.map((val, i) => `_${prefix}_${i}`);
+  rawValues.map((val, i) => `_${prefix}_${i}`)
 
 /**
  * @param {string} formattedString
@@ -33,13 +30,13 @@ const getFormatChunksFrom = (rawValues, prefix) =>
  * @private
  */
 const getFormatStringFrom = formattedString => {
-  let chunks = formattedString.match(R_FORMAT_CHUNKS);
+  let chunks = formattedString.match(R_FORMAT_CHUNKS)
 
   if (!chunks) {
     // chunks will be null if there were no tokens to parse in
     // formattedString (for example, if formattedString is '2').  Coerce
     // chunks to be useful here.
-    chunks = ['', ''];
+    chunks = ['', '']
 
     // If there is only one chunk, assume that the string is a number
     // followed by a token...
@@ -52,11 +49,11 @@ const getFormatStringFrom = formattedString => {
   ) {
     // ...prepend an empty string here to make sure that the formatted number
     // is properly replaced by VALUE_PLACEHOLDER
-    chunks.unshift('');
+    chunks.unshift('')
   }
 
-  return chunks.join(VALUE_PLACEHOLDER);
-};
+  return chunks.join(VALUE_PLACEHOLDER)
+}
 
 /**
  * Convert a base-16 number to base-10.
@@ -67,7 +64,7 @@ const getFormatStringFrom = formattedString => {
  * @private
  */
 function hexToDec(hex) {
-  return parseInt(hex, 16);
+  return parseInt(hex, 16)
 }
 
 /**
@@ -81,21 +78,21 @@ function hexToDec(hex) {
  * @private
  */
 const hexToRGBArray = hex => {
-  hex = hex.replace(/#/, '');
+  hex = hex.replace(/#/, '')
 
   // If the string is a shorthand three digit hex notation, normalize it to
   // the standard six digit notation
   if (hex.length === 3) {
-    hex = hex.split('');
-    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    hex = hex.split('')
+    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2]
   }
 
   return [
     hexToDec(hex.substr(0, 2)),
     hexToDec(hex.substr(2, 2)),
     hexToDec(hex.substr(4, 2)),
-  ];
-};
+  ]
+}
 
 /**
  * @param {string} hexString
@@ -104,7 +101,7 @@ const hexToRGBArray = hex => {
  * @private
  */
 const convertHexToRGB = hexString =>
-  `rgb(${hexToRGBArray(hexString).join(',')})`;
+  `rgb(${hexToRGBArray(hexString).join(',')})`
 
 /**
  * TODO: Can this be rewritten to leverage String#replace more efficiently?
@@ -118,8 +115,8 @@ const convertHexToRGB = hexString =>
  * @private
  */
 const filterStringChunks = (pattern, unfilteredString, filter) => {
-  const patternMatches = unfilteredString.match(pattern);
-  let filteredString = unfilteredString.replace(pattern, VALUE_PLACEHOLDER);
+  const patternMatches = unfilteredString.match(pattern)
+  let filteredString = unfilteredString.replace(pattern, VALUE_PLACEHOLDER)
 
   if (patternMatches) {
     patternMatches.forEach(
@@ -128,11 +125,11 @@ const filterStringChunks = (pattern, unfilteredString, filter) => {
           VALUE_PLACEHOLDER,
           filter(match)
         ))
-    );
+    )
   }
 
-  return filteredString;
-};
+  return filteredString
+}
 
 /**
  * @param {string} str
@@ -141,7 +138,7 @@ const filterStringChunks = (pattern, unfilteredString, filter) => {
  * @private
  */
 const sanitizeHexChunksToRGB = str =>
-  filterStringChunks(R_HEX, str, convertHexToRGB);
+  filterStringChunks(R_HEX, str, convertHexToRGB)
 
 /**
  * Convert all hex color values within a string to an rgb string.
@@ -151,13 +148,13 @@ const sanitizeHexChunksToRGB = str =>
  */
 const sanitizeObjectForHexProps = stateObject => {
   for (const prop in stateObject) {
-    const currentProp = stateObject[prop];
+    const currentProp = stateObject[prop]
 
     if (typeof currentProp === 'string' && currentProp.match(R_HEX)) {
-      stateObject[prop] = sanitizeHexChunksToRGB(currentProp);
+      stateObject[prop] = sanitizeHexChunksToRGB(currentProp)
     }
   }
-};
+}
 
 /**
  * @param {string} rgbChunk
@@ -166,11 +163,11 @@ const sanitizeObjectForHexProps = stateObject => {
  * @private
  */
 const sanitizeRGBChunk = rgbChunk => {
-  const numbers = rgbChunk.match(R_UNFORMATTED_VALUES).map(Math.floor);
-  const prefix = rgbChunk.match(R_RGB_PREFIX)[0];
+  const numbers = rgbChunk.match(R_UNFORMATTED_VALUES).map(Math.floor)
+  const prefix = rgbChunk.match(R_RGB_PREFIX)[0]
 
-  return `${prefix}${numbers.join(',')})`;
-};
+  return `${prefix}${numbers.join(',')})`
+}
 
 /**
  * Check for floating point values within rgb strings and round them.
@@ -181,7 +178,7 @@ const sanitizeRGBChunk = rgbChunk => {
  * @private
  */
 const sanitizeRGBChunks = formattedString =>
-  filterStringChunks(R_RGB, formattedString, sanitizeRGBChunk);
+  filterStringChunks(R_RGB, formattedString, sanitizeRGBChunk)
 
 /**
  * Note: It's the duty of the caller to convert the Array elements of the
@@ -193,7 +190,7 @@ const sanitizeRGBChunks = formattedString =>
  * @private
  */
 const getValuesFrom = formattedString =>
-  formattedString.match(R_UNFORMATTED_VALUES);
+  formattedString.match(R_UNFORMATTED_VALUES)
 
 /**
  * @param {Object} stateObject
@@ -203,21 +200,21 @@ const getValuesFrom = formattedString =>
  * @private
  */
 const getFormatSignatures = stateObject => {
-  const signatures = {};
+  const signatures = {}
 
   for (const propertyName in stateObject) {
-    const property = stateObject[propertyName];
+    const property = stateObject[propertyName]
 
     if (typeof property === 'string') {
       signatures[propertyName] = {
         formatString: getFormatStringFrom(property),
         chunkNames: getFormatChunksFrom(getValuesFrom(property), propertyName),
-      };
+      }
     }
   }
 
-  return signatures;
-};
+  return signatures
+}
 
 /**
  * @param {Object} stateObject
@@ -229,11 +226,11 @@ const expandFormattedProperties = (stateObject, formatSignatures) => {
     getValuesFrom(stateObject[propertyName]).forEach(
       (number, i) =>
         (stateObject[formatSignatures[propertyName].chunkNames[i]] = +number)
-    );
+    )
 
-    delete stateObject[propertyName];
+    delete stateObject[propertyName]
   }
-};
+}
 
 /**
  * @param {Object} stateObject
@@ -243,15 +240,15 @@ const expandFormattedProperties = (stateObject, formatSignatures) => {
  * @private
  */
 const extractPropertyChunks = (stateObject, chunkNames) => {
-  const extractedValues = {};
+  const extractedValues = {}
 
   chunkNames.forEach(chunkName => {
-    extractedValues[chunkName] = stateObject[chunkName];
-    delete stateObject[chunkName];
-  });
+    extractedValues[chunkName] = stateObject[chunkName]
+    delete stateObject[chunkName]
+  })
 
-  return extractedValues;
-};
+  return extractedValues
+}
 
 /**
  * @param {Object} stateObject
@@ -261,7 +258,7 @@ const extractPropertyChunks = (stateObject, chunkNames) => {
  * @private
  */
 const getValuesList = (stateObject, chunkNames) =>
-  chunkNames.map(chunkName => stateObject[chunkName]);
+  chunkNames.map(chunkName => stateObject[chunkName])
 
 /**
  * @param {string} formatString
@@ -277,10 +274,10 @@ const getFormattedValues = (formatString, rawValues) => {
         VALUE_PLACEHOLDER,
         +rawValue.toFixed(4)
       ))
-  );
+  )
 
-  return formatString;
-};
+  return formatString
+}
 
 /**
  * @param {Object} stateObject
@@ -289,16 +286,16 @@ const getFormattedValues = (formatString, rawValues) => {
  */
 const collapseFormattedProperties = (stateObject, formatSignatures) => {
   for (const prop in formatSignatures) {
-    const { chunkNames, formatString } = formatSignatures[prop];
+    const { chunkNames, formatString } = formatSignatures[prop]
 
     const currentProp = getFormattedValues(
       formatString,
       getValuesList(extractPropertyChunks(stateObject, chunkNames), chunkNames)
-    );
+    )
 
-    stateObject[prop] = sanitizeRGBChunks(currentProp);
+    stateObject[prop] = sanitizeRGBChunks(currentProp)
   }
-};
+}
 
 /**
  * @param {Object} easingObject
@@ -307,25 +304,25 @@ const collapseFormattedProperties = (stateObject, formatSignatures) => {
  */
 const expandEasingObject = (easingObject, tokenData) => {
   for (const prop in tokenData) {
-    const { chunkNames } = tokenData[prop];
-    const easing = easingObject[prop];
+    const { chunkNames } = tokenData[prop]
+    const easing = easingObject[prop]
 
     if (typeof easing === 'string') {
-      const easingNames = easing.split(' ');
-      const defaultEasing = easingNames[easingNames.length - 1];
+      const easingNames = easing.split(' ')
+      const defaultEasing = easingNames[easingNames.length - 1]
 
       chunkNames.forEach(
         (chunkName, i) =>
           (easingObject[chunkName] = easingNames[i] || defaultEasing)
-      );
+      )
     } else {
       // easing is a function
-      chunkNames.forEach(chunkName => (easingObject[chunkName] = easing));
+      chunkNames.forEach(chunkName => (easingObject[chunkName] = easing))
     }
 
-    delete easingObject[prop];
+    delete easingObject[prop]
   }
-};
+}
 
 /**
  * @param {Object} easingObject
@@ -334,38 +331,36 @@ const expandEasingObject = (easingObject, tokenData) => {
  */
 const collapseEasingObject = (easingObject, tokenData) => {
   for (const prop in tokenData) {
-    const { chunkNames } = tokenData[prop];
-    const firstEasing = easingObject[chunkNames[0]];
+    const { chunkNames } = tokenData[prop]
+    const firstEasing = easingObject[chunkNames[0]]
 
     if (typeof firstEasing === 'string') {
       easingObject[prop] = chunkNames
         .map(chunkName => {
-          const easingName = easingObject[chunkName];
-          delete easingObject[chunkName];
+          const easingName = easingObject[chunkName]
+          delete easingObject[chunkName]
 
-          return easingName;
+          return easingName
         })
-        .join(' ');
+        .join(' ')
     } else {
       // firstEasing is a function
-      easingObject[prop] = firstEasing;
+      easingObject[prop] = firstEasing
     }
   }
-};
+}
 
 export const doesApply = ({ _currentState }) =>
-  Object.keys(_currentState).some(
-    key => typeof _currentState[key] === 'string'
-  );
+  Object.keys(_currentState).some(key => typeof _currentState[key] === 'string')
 
 export function tweenCreated(tweenable) {
-  const { _currentState, _originalState, _targetState } = tweenable;
+  const { _currentState, _originalState, _targetState } = tweenable
 
-  [_currentState, _originalState, _targetState].forEach(
+  ;[_currentState, _originalState, _targetState].forEach(
     sanitizeObjectForHexProps
-  );
+  )
 
-  tweenable._tokenData = getFormatSignatures(_currentState);
+  tweenable._tokenData = getFormatSignatures(_currentState)
 }
 
 export function beforeTween(tweenable) {
@@ -375,13 +370,12 @@ export function beforeTween(tweenable) {
     _targetState,
     _easing,
     _tokenData,
-  } = tweenable;
+  } = tweenable
 
-  expandEasingObject(_easing, _tokenData);
-
-  [_currentState, _originalState, _targetState].forEach(state =>
+  expandEasingObject(_easing, _tokenData)
+  ;[_currentState, _originalState, _targetState].forEach(state =>
     expandFormattedProperties(state, _tokenData)
-  );
+  )
 }
 
 export function afterTween(tweenable) {
@@ -391,10 +385,10 @@ export function afterTween(tweenable) {
     _targetState,
     _easing,
     _tokenData,
-  } = tweenable;
-  [_currentState, _originalState, _targetState].forEach(state =>
+  } = tweenable
+  ;[_currentState, _originalState, _targetState].forEach(state =>
     collapseFormattedProperties(state, _tokenData)
-  );
+  )
 
-  collapseEasingObject(_easing, _tokenData);
+  collapseEasingObject(_easing, _tokenData)
 }

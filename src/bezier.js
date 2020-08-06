@@ -1,4 +1,4 @@
-import { Tweenable } from './tweenable';
+import { Tweenable } from './tweenable'
 
 /**
  * The Bezier magic in this file is adapted/copied almost wholesale from
@@ -55,78 +55,78 @@ function cubicBezierAtTime(t, p1x, p1y, p2x, p2y, duration) {
     cx = 0,
     ay = 0,
     by = 0,
-    cy = 0;
+    cy = 0
 
-  const sampleCurveX = t => ((ax * t + bx) * t + cx) * t;
+  const sampleCurveX = t => ((ax * t + bx) * t + cx) * t
 
-  const sampleCurveY = t => ((ay * t + by) * t + cy) * t;
+  const sampleCurveY = t => ((ay * t + by) * t + cy) * t
 
-  const sampleCurveDerivativeX = t => (3 * ax * t + 2 * bx) * t + cx;
+  const sampleCurveDerivativeX = t => (3 * ax * t + 2 * bx) * t + cx
 
-  const solveEpsilon = duration => 1 / (200 * duration);
+  const solveEpsilon = duration => 1 / (200 * duration)
 
-  const fabs = n => (n >= 0 ? n : 0 - n);
+  const fabs = n => (n >= 0 ? n : 0 - n)
 
   const solveCurveX = (x, epsilon) => {
-    let t0, t1, t2, x2, d2, i;
+    let t0, t1, t2, x2, d2, i
 
     for (t2 = x, i = 0; i < 8; i++) {
-      x2 = sampleCurveX(t2) - x;
+      x2 = sampleCurveX(t2) - x
 
       if (fabs(x2) < epsilon) {
-        return t2;
+        return t2
       }
 
-      d2 = sampleCurveDerivativeX(t2);
+      d2 = sampleCurveDerivativeX(t2)
 
       if (fabs(d2) < 1e-6) {
-        break;
+        break
       }
 
-      t2 = t2 - x2 / d2;
+      t2 = t2 - x2 / d2
     }
 
-    t0 = 0;
-    t1 = 1;
-    t2 = x;
+    t0 = 0
+    t1 = 1
+    t2 = x
 
     if (t2 < t0) {
-      return t0;
+      return t0
     }
 
     if (t2 > t1) {
-      return t1;
+      return t1
     }
 
     while (t0 < t1) {
-      x2 = sampleCurveX(t2);
+      x2 = sampleCurveX(t2)
 
       if (fabs(x2 - x) < epsilon) {
-        return t2;
+        return t2
       }
 
       if (x > x2) {
-        t0 = t2;
+        t0 = t2
       } else {
-        t1 = t2;
+        t1 = t2
       }
 
-      t2 = (t1 - t0) * 0.5 + t0;
+      t2 = (t1 - t0) * 0.5 + t0
     }
 
-    return t2; // Failure.
-  };
+    return t2 // Failure.
+  }
 
-  const solve = (x, epsilon) => sampleCurveY(solveCurveX(x, epsilon));
+  const solve = (x, epsilon) => sampleCurveY(solveCurveX(x, epsilon))
 
-  cx = 3 * p1x;
-  bx = 3 * (p2x - p1x) - cx;
-  ax = 1 - cx - bx;
-  cy = 3 * p1y;
-  by = 3 * (p2y - p1y) - cy;
-  ay = 1 - cy - by;
+  cx = 3 * p1x
+  bx = 3 * (p2x - p1x) - cx
+  ax = 1 - cx - bx
+  cy = 3 * p1y
+  by = 3 * (p2y - p1y) - cy
+  ay = 1 - cy - by
 
-  return solve(t, solveEpsilon(duration));
+  return solve(t, solveEpsilon(duration))
 }
 // End ported code
 
@@ -148,7 +148,7 @@ function cubicBezierAtTime(t, p1x, p1y, p2x, p2y, duration) {
  *  @private
  */
 const getCubicBezierTransition = (x1, y1, x2, y2) => pos =>
-  cubicBezierAtTime(pos, x1, y1, x2, y2, 1);
+  cubicBezierAtTime(pos, x1, y1, x2, y2, 1)
 
 /**
  * Create a Bezier easing function and attach it to {@link
@@ -166,16 +166,16 @@ const getCubicBezierTransition = (x1, y1, x2, y2) => pos =>
  * attached to {@link shifty.Tweenable.formulas}.
  */
 export const setBezierFunction = (name, x1, y1, x2, y2) => {
-  const cubicBezierTransition = getCubicBezierTransition(x1, y1, x2, y2);
+  const cubicBezierTransition = getCubicBezierTransition(x1, y1, x2, y2)
 
-  cubicBezierTransition.displayName = name;
-  cubicBezierTransition.x1 = x1;
-  cubicBezierTransition.y1 = y1;
-  cubicBezierTransition.x2 = x2;
-  cubicBezierTransition.y2 = y2;
+  cubicBezierTransition.displayName = name
+  cubicBezierTransition.x1 = x1
+  cubicBezierTransition.y1 = y1
+  cubicBezierTransition.x2 = x2
+  cubicBezierTransition.y2 = y2
 
-  return (Tweenable.formulas[name] = cubicBezierTransition);
-};
+  return (Tweenable.formulas[name] = cubicBezierTransition)
+}
 
 /**
  * `delete` an easing function from {@link shifty.Tweenable.formulas}.  Be
@@ -185,4 +185,4 @@ export const setBezierFunction = (name, x1, y1, x2, y2) => {
  * @param {string} name The name of the easing function to delete.
  * @return {boolean} Whether or not the functions was `delete`d.
  */
-export const unsetBezierFunction = name => delete Tweenable.formulas[name];
+export const unsetBezierFunction = name => delete Tweenable.formulas[name]

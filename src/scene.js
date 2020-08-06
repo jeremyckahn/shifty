@@ -1,5 +1,5 @@
 export class Scene {
-  #tweenables = [];
+  #tweenables = []
 
   /**
    * The {@link shifty.Scene} class provides a way to control groups of {@link
@@ -28,7 +28,7 @@ export class Scene {
    * @constructs shifty.Scene
    */
   constructor(...tweenables) {
-    tweenables.forEach(this.add.bind(this));
+    tweenables.forEach(this.add.bind(this))
   }
 
   /**
@@ -38,7 +38,7 @@ export class Scene {
    * @readonly
    */
   get tweenables() {
-    return [...this.#tweenables];
+    return [...this.#tweenables]
   }
 
   /**
@@ -62,7 +62,7 @@ export class Scene {
    * @readonly
    */
   get promises() {
-    return this.#tweenables.map(({ _promise }) => _promise);
+    return this.#tweenables.map(({ _promise }) => _promise)
   }
 
   /**
@@ -73,9 +73,9 @@ export class Scene {
    * @return {shifty.Tweenable} The {@link shifty.Tweenable} that was added.
    */
   add(tweenable) {
-    this.#tweenables.push(tweenable);
+    this.#tweenables.push(tweenable)
 
-    return tweenable;
+    return tweenable
   }
 
   /**
@@ -86,13 +86,13 @@ export class Scene {
    * @return {shifty.Tweenable} The {@link shifty.Tweenable} that was removed.
    */
   remove(tweenable) {
-    const index = this.#tweenables.indexOf(tweenable);
+    const index = this.#tweenables.indexOf(tweenable)
 
     if (~index) {
-      this.#tweenables.splice(index, 1);
+      this.#tweenables.splice(index, 1)
     }
 
-    return tweenable;
+    return tweenable
   }
 
   /**
@@ -104,7 +104,7 @@ export class Scene {
    */
   empty() {
     // Deliberate of the tweenables getter here to create a temporary array
-    return this.tweenables.map(this.remove.bind(this));
+    return this.tweenables.map(this.remove.bind(this))
   }
 
   /**
@@ -114,7 +114,7 @@ export class Scene {
    * @return {boolean}
    */
   isPlaying() {
-    return this.#tweenables.some(tweenable => tweenable.isPlaying());
+    return this.#tweenables.some(tweenable => tweenable.isPlaying())
   }
 
   /**
@@ -123,9 +123,9 @@ export class Scene {
    * @return {shifty.Scene}
    */
   play() {
-    this.#tweenables.forEach(tweenable => tweenable.tween());
+    this.#tweenables.forEach(tweenable => tweenable.tween())
 
-    return this;
+    return this
   }
 
   /**
@@ -135,8 +135,8 @@ export class Scene {
    * @return {shifty.Scene}
    */
   pause() {
-    this.#tweenables.forEach(tweenable => tweenable.pause());
-    return this;
+    this.#tweenables.forEach(tweenable => tweenable.pause())
+    return this
   }
 
   /**
@@ -145,9 +145,9 @@ export class Scene {
    * @return {shifty.Scene}
    */
   resume() {
-    this.#tweenables.forEach(tweenable => tweenable.resume());
+    this.#tweenables.forEach(tweenable => tweenable.resume())
 
-    return this;
+    return this
   }
 
   /**
@@ -158,7 +158,7 @@ export class Scene {
    * @return {shifty.Scene}
    */
   stop(gotoEnd) {
-    this.#tweenables.forEach(tweenable => tweenable.stop(gotoEnd));
-    return this;
+    this.#tweenables.forEach(tweenable => tweenable.stop(gotoEnd))
+    return this
   }
 }

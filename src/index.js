@@ -2,15 +2,15 @@
  * @namespace shifty
  */
 
-import { processTweens, Tweenable, tween } from './tweenable';
-import * as token from './token';
+import { processTweens, Tweenable, tween } from './tweenable'
+import * as token from './token'
 
-Tweenable.filters.token = token;
+Tweenable.filters.token = token
 
-export { processTweens, Tweenable, tween };
-export { interpolate } from './interpolate';
-export { Scene } from './scene';
-export { setBezierFunction, unsetBezierFunction } from './bezier';
+export { processTweens, Tweenable, tween }
+export { interpolate } from './interpolate'
+export { Scene } from './scene'
+export { setBezierFunction, unsetBezierFunction } from './bezier'
 
 /**
  * @external Promise
