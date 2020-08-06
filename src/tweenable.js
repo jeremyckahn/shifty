@@ -265,8 +265,8 @@ export class Tweenable {
   }
 
   /**
-   * Configure and start a tween. If the tween already playing then the
-   * previous tween will stop and throw an error.
+   * Configure and start a tween. If this {@link shifty.Tweenable}'s instance
+   * is already running, then it will stop and throw an error.
    * @method shifty.Tweenable#tween
    * @param {shifty.tweenConfig} [config] Gets passed to {@link
    * shifty.Tweenable#setConfig}.
@@ -570,7 +570,8 @@ Tweenable.now = Date.now || (() => +new Date());
  *       () => console.log('All done!')
  *     );
  *
- * @returns {external:Promise}
+ * @returns {external:Promise} This `Promise` has a property called `tweenable`
+ * that is the {@link shifty.Tweenable} instance that is running the tween.
  */
 export function tween(config = {}) {
   const tweenable = new Tweenable();
