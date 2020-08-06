@@ -266,7 +266,8 @@ export class Tweenable {
 
   /**
    * Configure and start a tween. If this {@link shifty.Tweenable}'s instance
-   * is already running, then it will stop and throw an error.
+   * is already running, then it will stop playing the old tween and
+   * immediately play the new one.
    * @method shifty.Tweenable#tween
    * @param {shifty.tweenConfig} [config] Gets passed to {@link
    * shifty.Tweenable#setConfig}.
@@ -274,6 +275,10 @@ export class Tweenable {
    */
   tween(config = undefined) {
     const { _attachment, _configured } = this;
+
+    if (this._isPlaying) {
+      this.stop();
+    }
 
     // Only set default config if no configuration has been set previously and
     // none is provided now.
@@ -284,6 +289,7 @@ export class Tweenable {
     this._pausedAtTime = null;
     this._timestamp = Tweenable.now();
     this._start(this.get(), _attachment);
+
     return this.resume();
   }
 

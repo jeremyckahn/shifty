@@ -270,6 +270,34 @@ describe('#tween', () => {
       expect(tweenable._timestamp).toEqual(500);
     });
   });
+
+  describe('tween is already running', () => {
+    beforeEach(() => {
+      Tweenable.now = () => 0;
+      tweenable = new Tweenable();
+
+      tweenable.tween({
+        from: { x: 0 },
+        to: { x: 10 },
+        duration: 500,
+      });
+    });
+
+    test('stops the old tween and starts the new one', () => {
+      Tweenable.now = () => 250;
+      processTweens();
+      jest.spyOn(tweenable, 'stop');
+
+      tweenable.tween({
+        from: { x: 10 },
+        to: { x: 20 },
+        duration: 500,
+      });
+
+      expect(tweenable.stop).toHaveBeenCalled();
+      expect(tweenable.isPlaying()).toEqual(true);
+    });
+  });
 });
 
 describe('#resume', () => {
