@@ -224,38 +224,6 @@ describe('#tween', () => {
         expect(testState).toEqual({ x: 10 })
       })
     })
-
-    describe('rejection', () => {
-      let testState
-
-      beforeAll(() => {
-        Tweenable.now = () => 0
-        tweenable = new Tweenable()
-
-        let tween = tweenable
-          .tween({
-            from: { x: 0 },
-            to: { x: 10 },
-            attachment: { foo: true },
-            duration: 500,
-          })
-          .catch(data => (testState = data))
-
-        Tweenable.now = () => 250
-        processTweens()
-        tweenable.stop()
-
-        return tween
-      })
-
-      test('rejects with most recent state', () => {
-        expect(testState).toEqual({
-          error: 'stop() executed while tween isPlaying.',
-          currentState: { x: 5 },
-          attachment: { foo: true },
-        })
-      })
-    })
   })
 
   describe('re-tweening previously paused tweens', () => {

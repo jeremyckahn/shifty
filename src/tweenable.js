@@ -345,9 +345,8 @@ export class Tweenable {
 
     this._applyFilter(TWEEN_CREATED)
 
-    this._promise = new promise((resolve, reject) => {
+    this._promise = new promise(resolve => {
       this._resolve = resolve
-      this._reject = reject
     })
 
     // Needed to silence (harmless) logged errors when a .catch handler is not
@@ -489,12 +488,6 @@ export class Tweenable {
       this._applyFilter(AFTER_TWEEN)
       this._applyFilter(AFTER_TWEEN_END)
       this._resolve(_currentState, _attachment)
-    } else {
-      this._reject({
-        error: 'stop() executed while tween isPlaying.',
-        currentState: _currentState,
-        attachment: _attachment,
-      })
     }
 
     return this
