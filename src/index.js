@@ -26,7 +26,7 @@ export { setBezierFunction, unsetBezierFunction } from './bezier'
 /**
  * @callback {Function} shifty.startFunction
  * @param {Object} state The current state of the tween.
- * @param {Object} [attachment] Cached data provided from a {@link
+ * @param {Object|undefined} [data] User-defined data provided via a {@link
  * shifty.tweenConfig}.
  */
 
@@ -35,7 +35,7 @@ export { setBezierFunction, unsetBezierFunction } from './bezier'
  * final step of the animation.
  * @callback {Function} shifty.stepFunction
  * @param {Object} state The current state of the tween.
- * @param {Object|undefined} attachment Cached data provided from a {@link
+ * @param {Object|undefined} [data] User-defined data provided via a {@link
  * shifty.tweenConfig}.
  * @param {number} timeElapsed The time elapsed since the start of the tween.
  */
@@ -63,10 +63,19 @@ export { setBezierFunction, unsetBezierFunction } from './bezier'
  * to the properties of the tween.  If this is an Object, the keys should
  * correspond to `to`/`from`.  You can learn more about this in the {@tutorial
  * easing-function-in-depth} tutorial.
- * @property {Object} [attachment] Cached value that is passed to {@link
- * shifty.startFunction}/{@link shifty.stepFunction}.
+ * @property {Object} [data] Data that is passed to {@link
+ * shifty.startFunction}, {@link shifty.stepFunction}, and {@link
+ * shifty.promisedData}. Legacy property name: `attachment`.
  * @property {Function} [promise] Promise constructor for when you want
  * to use Promise library or polyfill Promises in unsupported environments.
+ */
+
+/**
+ * @typedef {Object} shifty.promisedData
+ * @property {Object} state The current state of the tween.
+ * @property {Object} data The `data` Object that the tween was configured with.
+ * @property {shifty.Tweenable} tweenable The {@link shifty.Tweenable} instance to
+ * which the tween belonged.
  */
 
 /**

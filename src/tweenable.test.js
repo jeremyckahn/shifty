@@ -69,7 +69,7 @@ describe('#tween', () => {
       from: { x: 0 },
       to: { x: 100 },
       duration: 1000,
-      step: function(state, attachment, offset) {
+      step: function(state, data, offset) {
         capturedOffset = offset
       },
     })
@@ -212,7 +212,7 @@ describe('#tween', () => {
             to: { x: 10 },
             duration: 500,
           })
-          .then(currentState => (testState = currentState))
+          .then(({ state }) => (testState = state))
 
         Tweenable.now = () => 500
         processTweens()

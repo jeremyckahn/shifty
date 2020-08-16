@@ -79,7 +79,7 @@ export const tweenProps = (
 }
 
 const processTween = (tween, currentTime) => {
-  const { _attachment, _currentState, _delay, _easing, _originalState } = tween
+  const { _data, _currentState, _delay, _easing, _originalState } = tween
   let { _duration, _step, _targetState, _timestamp } = tween
 
   const endTime = _timestamp + _delay + _duration
@@ -88,7 +88,7 @@ const processTween = (tween, currentTime) => {
   const offset = _duration - (endTime - timeToCompute)
 
   if (hasEnded) {
-    _step(_targetState, _attachment, offset)
+    _step(_targetState, _data, offset)
     tween.stop(true)
   } else {
     tween._applyFilter(BEFORE_TWEEN)
@@ -115,7 +115,7 @@ const processTween = (tween, currentTime) => {
     )
 
     tween._applyFilter(AFTER_TWEEN)
-    _step(_currentState, _attachment, offset)
+    _step(_currentState, _data, offset)
   }
 }
 
@@ -272,10 +272,11 @@ export class Tweenable {
    * @method shifty.Tweenable#tween
    * @param {shifty.tweenConfig} [config] Gets passed to {@link
    * shifty.Tweenable#setConfig}.
-   * @return {external:Promise}
+   * @return {external:Promise} This `Promise` resolves with a {@link
+   * shifty.promisedData} object.
    */
   tween(config = undefined) {
-    const { _attachment } = this
+    const { _data } = this
 
     if (this._isPlaying) {
       this.stop()
@@ -284,7 +285,7 @@ export class Tweenable {
     this.setConfig(config)
     this._pausedAtTime = null
     this._timestamp = Tweenable.now()
-    this._start(this.get(), _attachment)
+    this._start(this.get(), _data)
 
     return this.resume()
   }
@@ -302,6 +303,7 @@ export class Tweenable {
     // Configuration options to reuse from previous tweens
     const {
       attachment,
+      data,
       duration = DEFAULT_DURATION,
       easing,
       promise = Promise,
@@ -315,7 +317,7 @@ export class Tweenable {
 
     // Attach something to this Tweenable instance (e.g.: a DOM element, an
     // object, a string, etc.);
-    this._attachment = attachment
+    this._data = data || attachment
 
     // Init the internal state
     this._isPlaying = false
@@ -460,20 +462,13 @@ export class Tweenable {
   /**
    * Stops and cancels a tween. If a tween is not running, this is a no-op.
    * @param {boolean} [gotoEnd] If `false`, the tween just stops at its current
-   * state, and the tween promise is not resolved.  If `true`, the tweened
-   * object's values are instantly set to the target values, and the promise is
-   * resolved.
+   * state.  If `true`, the tweened object's values are instantly set to the
+   * target values.
    * @method shifty.Tweenable#stop
    * @return {shifty.Tweenable}
    */
   stop(gotoEnd = false) {
-    const {
-      _attachment,
-      _currentState,
-      _easing,
-      _originalState,
-      _targetState,
-    } = this
+    const { _currentState, _data, _easing, _originalState, _targetState } = this
 
     if (!this._isPlaying) {
       return
@@ -488,8 +483,13 @@ export class Tweenable {
       tweenProps(1, _currentState, _originalState, _targetState, 1, 0, _easing)
       this._applyFilter(AFTER_TWEEN)
       this._applyFilter(AFTER_TWEEN_END)
-      this._resolve(_currentState, _attachment)
     }
+
+    this._resolve({
+      data: _data,
+      state: _currentState,
+      tweenable: this,
+    })
 
     return this
   }
@@ -564,11 +564,13 @@ Tweenable.now = Date.now || (() => +new Date())
  * {@link shifty.Tweenable#tween}.  You can use this to create tweens without
  * needing to set up a {@link shifty.Tweenable} instance.
  *
- *     import { tween } from 'shifty';
+ * ```
+ * import { tween } from 'shifty';
  *
- *     tween({ from: { x: 0 }, to: { x: 10 } }).then(
- *       () => console.log('All done!')
- *     );
+ * tween({ from: { x: 0 }, to: { x: 10 } }).then(
+ *   () => console.log('All done!')
+ * );
+ * ```
  *
  * @returns {external:Promise} This `Promise` has a property called `tweenable`
  * that is the {@link shifty.Tweenable} instance that is running the tween.

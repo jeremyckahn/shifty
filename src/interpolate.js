@@ -11,21 +11,23 @@ const { filters } = Tweenable
  * specific frame of animation that {@link shifty.Tweenable#tween} does many times
  * over the course of a full tween.
  *
- *     import { interpolate } from 'shifty';
+ * ```
+ * import { interpolate } from 'shifty';
  *
- *     const interpolatedValues = interpolate({
- *         width: '100px',
- *         opacity: 0,
- *         color: '#fff'
- *       }, {
- *         width: '200px',
- *         opacity: 1,
- *         color: '#000'
- *       },
- *       0.5
- *     );
+ * const interpolatedValues = interpolate({
+ *     width: '100px',
+ *     opacity: 0,
+ *     color: '#fff'
+ *   }, {
+ *     width: '200px',
+ *     opacity: 1,
+ *     color: '#000'
+ *   },
+ *   0.5
+ * );
  *
- *     console.log(interpolatedValues); // Logs: {opacity: 0.5, width: "150px", color: "rgb(127,127,127)"}
+ * console.log(interpolatedValues); // Logs: {opacity: 0.5, width: "150px", color: "rgb(127,127,127)"}
+ * ```
  *
  * @method shifty.interpolate
  * @param {Object} from The starting values to tween from.
