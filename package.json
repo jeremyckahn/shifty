@@ -46,8 +46,8 @@
     "lint": "eslint src webpack.*",
     "deploy": "npm run build && npm run doc && gh-pages -d dist",
     "preversion": "npm run ci",
-    "prettier": "prettier 'src/**/*.js' webpack.* --write",
-    "postversion": "git push && git push --tags && npm run build && npm run doc && npm publish"
+    "postversion": "git push && git push --tags",
+    "prettier": "prettier 'src/**/*.js' webpack.* --write"
   },
   "husky": {
     "hooks": {
