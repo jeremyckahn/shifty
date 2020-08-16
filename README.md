@@ -1,5 +1,8 @@
 # Shifty - A teeny tiny tweening engine in JavaScript
 
+- `master`: [![Build Status](https://travis-ci.com/jeremyckahn/shifty.svg?branch=master)](https://travis-ci.com/jeremyckahn/shifty)
+- `develop`: [![Build Status](https://travis-ci.com/jeremyckahn/shifty.svg?branch=develop)](https://travis-ci.com/jeremyckahn/shifty)
+
 Shifty is a tweening engine for JavaScript. It is a lightweight library meant
 to be encapsulated by higher level tools. At its core, Shifty provides:
 
@@ -77,7 +80,7 @@ Shifty exposes a UMD module, so you can load it however you like:
 
 ```javascript
 // ES6
-import { tween } from 'shifty';
+import { tween } from 'shifty'
 ```
 
 Or:
@@ -85,17 +88,17 @@ Or:
 ```javascript
 // AMD
 define(['shifty'], function(shifty) {
-  shifty.tween({ from: { x: 0 }, to: { x: 10 } });
-});
+  shifty.tween({ from: { x: 0 }, to: { x: 10 } })
+})
 ```
 
 Or even:
 
 ```javascript
 // CommonJS
-const { tween } = require('shifty');
+const { tween } = require('shifty')
 
-tween({ from: { x: 0 }, to: { x: 10 } });
+tween({ from: { x: 0 }, to: { x: 10 } })
 ```
 
 ## Using Shifty
