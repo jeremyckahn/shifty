@@ -8,9 +8,15 @@ script:
   - npm run build
   - npm run doc
 deploy:
-  provider: npm
-  email: 'jeremyckahn@gmail.com'
-  api_key: $NPM_AUTH_TOKEN
-  skip_cleanup: true
-  on:
-    tags: true
+  - provider: npm
+    email: 'jeremyckahn@gmail.com'
+    api_key: $NPM_AUTH_TOKEN
+    skip_cleanup: true
+    on:
+      tags: true
+  - provider: pages
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN
+    local_dir: dist
+    on:
+      branch: master
