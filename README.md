@@ -1,4 +1,4 @@
-# Shifty - A teeny tiny tweening engine in JavaScript
+# Shifty - A simple, fast, Promise-based tweening engine in JavaScript
 
 - `master`: [![Build Status](https://travis-ci.com/jeremyckahn/shifty.svg?branch=master)](https://travis-ci.com/jeremyckahn/shifty)
 - `develop`: [![Build Status](https://travis-ci.com/jeremyckahn/shifty.svg?branch=develop)](https://travis-ci.com/jeremyckahn/shifty)
@@ -9,11 +9,38 @@ to be encapsulated by higher level tools. At its core, Shifty provides:
 - Interpolation of `Number`s over time (tweening)
 - Playback control of an individual tween
 - Extensibility hooks for key points in the tweening process
+- `Promise` support for `async`/`await` programming
 
 This is useful because it is the least amount of functionality needed to build
 customizable animations. Shifty is optimized to run many times a second with
 minimal processing and memory overhead, which is necessary to achieve smooth
 animations.
+
+```js
+import { tween } from 'shifty'
+
+const animate = async () => {
+  const element = document.querySelector('#tweenable')
+
+  let { tweenable } = await tween({
+    render: ({ scale, x }) => {
+      element.style.transform = `translateX(${x}px) scale(${scale})`
+    },
+    easing: 'easeInOutQuad',
+    duration: 500,
+    from: { scale: 1, x: 0 },
+    to: { x: 200 },
+  })
+
+  await tweenable.tween({
+    to: { x: 0 },
+  })
+
+  await tweenable.tween({
+    to: { scale: 3 },
+  })
+}
+```
 
 ## Installation
 
