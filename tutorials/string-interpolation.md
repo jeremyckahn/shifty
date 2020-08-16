@@ -3,12 +3,12 @@ Among other things, this allows you to animate CSS properties. For example,
 you can do this:
 
 ```js
-import { tween } from 'shifty';
+import { tween } from 'shifty'
 
 tween({
   from: { transform: 'translateX(45px)' },
   to: { transform: 'translateX(90xp)' },
-});
+})
 ```
 
 `translateX(45)` will be tweened to `translateX(90)`. To demonstrate:
@@ -38,7 +38,7 @@ each value along its own easing curve. A basic example:
 <script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
 
 In this case, the values for `translateX` and `translateY` are always the same
-for each step of the tween, because they have the same start and end points and
+for each tick of the tween, because they have the same start and end points and
 both use the same easing curve. We can also tween `translateX` and
 `translateY` along independent curves:
 
@@ -67,26 +67,26 @@ consider finding an alternative solution that relies solely on raw numbers. For
 instance, if your animation looks like this:
 
 ```js
-const div = document.querySelector('div');
+const div = document.querySelector('div')
 
 shifty.tween({
   from: { transform: 'translateX(0px) translateY(0px)' },
   to: { transform: 'translateX(100px) translateY(100px)' },
   easing: { transform: 'easeInQuad' },
-  step: ({ transform }) => (div.style.transform = transform),
-});
+  render: ({ transform }) => (div.style.transform = transform),
+})
 ```
 
 You might rewrite it without strings like this for better performance:
 
 ```js
-const div = document.querySelector('div');
+const div = document.querySelector('div')
 
 shifty.tween({
   from: { x: 0, y: 0 },
   to: { x: 100, y: 100 },
   easing: { transform: 'easeInQuad' },
-  step: ({ x, y }) =>
+  render: ({ x, y }) =>
     (div.style.transform = `translateX(${x}px) translateY(${y}px)`),
-});
+})
 ```

@@ -32,8 +32,8 @@ export { setBezierFunction, unsetBezierFunction } from './bezier'
 
 /**
  * Gets called for every tick of the tween.  This function is not called on the
- * final step of the animation.
- * @callback {Function} shifty.stepFunction
+ * final tick of the animation.
+ * @callback {Function} shifty.renderFunction
  * @param {Object} state The current state of the tween.
  * @param {Object|undefined} [data] User-defined data provided via a {@link
  * shifty.tweenConfig}.
@@ -56,7 +56,8 @@ export { setBezierFunction, unsetBezierFunction } from './bezier'
  * @property {number} [delay] How many milliseconds to wait before starting the
  * tween.
  * @property {shifty.startFunction} [start] Executes when the tween begins.
- * @property {shifty.stepFunction} [step] Executes on every tick.
+ * @property {shifty.renderFunction} [render] Executes on every tick. Legacy
+ * property name: `step`.
  * @property
  * {Object.<string|shifty.easingFunction>|string|shifty.easingFunction}
  * [easing] Easing curve name(s) or {@link shifty.easingFunction}(s) to apply
@@ -64,7 +65,7 @@ export { setBezierFunction, unsetBezierFunction } from './bezier'
  * correspond to `to`/`from`.  You can learn more about this in the {@tutorial
  * easing-function-in-depth} tutorial.
  * @property {Object} [data] Data that is passed to {@link
- * shifty.startFunction}, {@link shifty.stepFunction}, and {@link
+ * shifty.startFunction}, {@link shifty.renderFunction}, and {@link
  * shifty.promisedData}. Legacy property name: `attachment`.
  * @property {Function} [promise] Promise constructor for when you want
  * to use Promise library or polyfill Promises in unsupported environments.

@@ -31,7 +31,7 @@ test('can accept initial state', () => {
   tweenable.tween({
     to: { x: 10 },
     duration: 1000,
-    step: function(_state) {
+    render: function(_state) {
       state = _state
     },
   })
@@ -62,14 +62,14 @@ describe('#tween', () => {
     expect(tweenable.get().x).toEqual(100)
   })
 
-  test('step handler receives timestamp offset', () => {
+  test('render handler receives timestamp offset', () => {
     Tweenable.now = () => 0
     let capturedOffset
     tweenable.tween({
       from: { x: 0 },
       to: { x: 100 },
       duration: 1000,
-      step: function(state, data, offset) {
+      render: function(state, data, offset) {
         capturedOffset = offset
       },
     })
@@ -147,7 +147,7 @@ describe('#tween', () => {
   describe('lifecycle hooks', () => {
     let testState
 
-    describe('step', () => {
+    describe('render', () => {
       test('receives the current state', () => {
         Tweenable.now = () => 0
         tweenable = new Tweenable()
@@ -156,7 +156,7 @@ describe('#tween', () => {
           from: { x: 0 },
           to: { x: 10 },
           duration: 500,
-          step: currentState => (testState = currentState),
+          render: currentState => (testState = currentState),
         })
 
         Tweenable.now = () => 250
@@ -267,7 +267,7 @@ describe('#tween', () => {
   describe('config reuse', () => {
     test('reuses relevant config data from previous tweens', () => {
       const start = () => {}
-      const step = () => {}
+      const render = () => {}
 
       Tweenable.now = () => 0
       tweenable = new Tweenable()
@@ -277,7 +277,7 @@ describe('#tween', () => {
         to: { x: 10 },
         duration: 500,
         start,
-        step,
+        render,
       })
 
       Tweenable.now = () => 500
@@ -288,7 +288,7 @@ describe('#tween', () => {
       })
 
       expect(tweenable._start).toBe(start)
-      expect(tweenable._step).toBe(step)
+      expect(tweenable._render).toBe(render)
       expect(tweenable._currentState).toEqual({ x: 10 })
       expect(tweenable._targetState).toEqual({ x: 20 })
     })
@@ -356,13 +356,13 @@ describe('#seek', () => {
     expect(tweenable._timestamp).toEqual(-500)
   })
 
-  test('provides correct value to step handler via seek() (issue #77)', () => {
+  test('provides correct value to render handler via seek() (issue #77)', () => {
     let computedX
     tweenable = new Tweenable(null, {
       from: { x: 0 },
       to: { x: 100 },
       duration: 1000,
-      step: function(state) {
+      render: function(state) {
         computedX = state.x
       },
     })
@@ -384,22 +384,22 @@ describe('#seek', () => {
   })
 
   test('no-ops if seeking to the current millisecond', () => {
-    let stepHandlerCallCount = 0
+    let renderHandlerCallCount = 0
     Tweenable.now = () => 0
 
     tweenable.tween({
       from: { x: 0 },
       to: { x: 100 },
       duration: 1000,
-      step: () => {
-        stepHandlerCallCount++
+      render: () => {
+        renderHandlerCallCount++
       },
     })
 
     tweenable.seek(50)
     tweenable.stop()
     tweenable.seek(50)
-    expect(stepHandlerCallCount).toEqual(1)
+    expect(renderHandlerCallCount).toEqual(1)
   })
 
   test('keeps time reference (rel #60)', () => {

@@ -80,7 +80,7 @@ export const tweenProps = (
 
 const processTween = (tween, currentTime) => {
   const { _data, _currentState, _delay, _easing, _originalState } = tween
-  let { _duration, _step, _targetState, _timestamp } = tween
+  let { _duration, _render, _targetState, _timestamp } = tween
 
   const endTime = _timestamp + _delay + _duration
   let timeToCompute = currentTime > endTime ? endTime : currentTime
@@ -88,7 +88,7 @@ const processTween = (tween, currentTime) => {
   const offset = _duration - (endTime - timeToCompute)
 
   if (hasEnded) {
-    _step(_targetState, _data, offset)
+    _render(_targetState, _data, offset)
     tween.stop(true)
   } else {
     tween._applyFilter(BEFORE_TWEEN)
@@ -115,7 +115,7 @@ const processTween = (tween, currentTime) => {
     )
 
     tween._applyFilter(AFTER_TWEEN)
-    _step(_currentState, _data, offset)
+    _render(_currentState, _data, offset)
   }
 }
 
@@ -149,7 +149,7 @@ export const processTweens = () => {
 }
 
 /**
- * Handles the update logic for one step of a tween.
+ * Handles the update logic for one tick of a tween.
  * @param {number} [currentTimeOverride] Needed for accurate timestamp in
  * shifty.Tweenable#seek.
  * @private
@@ -310,6 +310,9 @@ export class Tweenable {
       easing,
       promise = Promise,
       start = noop,
+      render = noop,
+
+      // Legacy option. Superseded by `render`.
       step = noop,
     } = (this._config = patchedConfig)
 
@@ -326,7 +329,7 @@ export class Tweenable {
     this._scheduleId = null
     this._delay = delay
     this._start = start
-    this._step = step
+    this._render = render || step
     this._duration = duration
     this._currentState = { ...(from || this.get()) }
     this._originalState = this.get()
@@ -435,7 +438,7 @@ export class Tweenable {
   /**
    * Move the state of the animation to a specific point in the tween's
    * timeline.  If the animation is not running, this will cause {@link
-   * shifty.stepFunction} handlers to be called.
+   * shifty.renderFunction} handlers to be called.
    * @method shifty.Tweenable#seek
    * @param {millisecond} millisecond The millisecond of the animation to seek
    * to.  This must not be less than `0`.
@@ -453,7 +456,7 @@ export class Tweenable {
 
     if (!this._isPlaying) {
       // If the animation is not running, call processTween to make sure that
-      // any step handlers are run.
+      // any render handlers are run.
       processTween(this, currentTime)
     }
 
