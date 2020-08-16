@@ -310,7 +310,7 @@ export class Tweenable {
       easing,
       promise = Promise,
       start = noop,
-      render = noop,
+      render = patchedConfig.step || noop,
 
       // Legacy option. Superseded by `render`.
       step = noop,
