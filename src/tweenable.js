@@ -300,6 +300,8 @@ export class Tweenable {
    * @return {shifty.Tweenable}
    */
   setConfig(config = {}) {
+    const patchedConfig = { ...this._config, ...config }
+
     // Configuration options to reuse from previous tweens
     const {
       attachment,
@@ -309,8 +311,7 @@ export class Tweenable {
       promise = Promise,
       start = noop,
       step = noop,
-    } = { ...this._config, ...config }
-    this._config = { ...config }
+    } = (this._config = patchedConfig)
 
     // Configuration options not to reuse
     const { delay = 0, from, to } = config
