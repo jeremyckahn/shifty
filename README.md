@@ -22,7 +22,7 @@ import { tween } from 'shifty'
 const animate = async () => {
   const element = document.querySelector('#tweenable')
 
-  let { tweenable } = await tween({
+  const { tweenable } = await tween({
     render: ({ scale, x }) => {
       element.style.transform = `translateX(${x}px) scale(${scale})`
     },
