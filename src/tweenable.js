@@ -225,6 +225,12 @@ const remove = tween => {
 }
 
 export class Tweenable {
+  _config = null
+  _filters = []
+  _next = null
+  _previous = null
+  _timestamp = null
+
   /**
    * @param {Object} [initialState={}] The values that the initial tween should
    * start at if a `from` value is not provided to {@link
@@ -235,11 +241,6 @@ export class Tweenable {
    */
   constructor(initialState = {}, config = undefined) {
     this._currentState = initialState
-    this._configured = false
-    this._filters = []
-    this._timestamp = null
-    this._next = null
-    this._previous = null
 
     // To prevent unnecessary calls to setConfig do not set default
     // configuration here.  Only set default configuration immediately before
@@ -274,18 +275,13 @@ export class Tweenable {
    * @return {external:Promise}
    */
   tween(config = undefined) {
-    const { _attachment, _configured } = this
+    const { _attachment } = this
 
     if (this._isPlaying) {
       this.stop()
     }
 
-    // Only set default config if no configuration has been set previously and
-    // none is provided now.
-    if (config || !_configured) {
-      this.setConfig(config)
-    }
-
+    this.setConfig(config)
     this._pausedAtTime = null
     this._timestamp = Tweenable.now()
     this._start(this.get(), _attachment)
@@ -294,23 +290,28 @@ export class Tweenable {
   }
 
   /**
-   * Configure a tween that will start at some point in the future.
+   * Configure a tween that will start at some point in the future. Aside from
+   * `delay`, `from`, and `to`, each configuration option will automatically
+   * default to the same option used in the preceding tween of this {@link
+   * shifty.Tweenable} instance.
    * @method shifty.Tweenable#setConfig
    * @param {shifty.tweenConfig} [config={}]
    * @return {shifty.Tweenable}
    */
-  setConfig({
-    attachment,
-    delay = 0,
-    duration = DEFAULT_DURATION,
-    easing,
-    from,
-    promise = Promise,
-    start = noop,
-    step = noop,
-    to,
-  } = {}) {
-    this._configured = true
+  setConfig(config = {}) {
+    // Configuration options to reuse from previous tweens
+    const {
+      attachment,
+      duration = DEFAULT_DURATION,
+      easing,
+      promise = Promise,
+      start = noop,
+      step = noop,
+    } = { ...this._config, ...config }
+    this._config = { ...config }
+
+    // Configuration options not to reuse
+    const { delay = 0, from, to } = config
 
     // Attach something to this Tweenable instance (e.g.: a DOM element, an
     // object, a string, etc.);

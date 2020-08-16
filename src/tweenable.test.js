@@ -240,7 +240,7 @@ describe('#tween', () => {
   })
 
   describe('tween is already running', () => {
-    beforeEach(() => {
+    test('stops the old tween and starts the new one', () => {
       Tweenable.now = () => 0
       tweenable = new Tweenable()
 
@@ -249,9 +249,6 @@ describe('#tween', () => {
         to: { x: 10 },
         duration: 500,
       })
-    })
-
-    test('stops the old tween and starts the new one', () => {
       Tweenable.now = () => 250
       processTweens()
       jest.spyOn(tweenable, 'stop')
@@ -264,6 +261,36 @@ describe('#tween', () => {
 
       expect(tweenable.stop).toHaveBeenCalled()
       expect(tweenable.isPlaying()).toEqual(true)
+    })
+  })
+
+  describe('config reuse', () => {
+    test('reuses relevant config data from previous tweens', () => {
+      const start = () => {}
+      const step = () => {}
+
+      Tweenable.now = () => 0
+      tweenable = new Tweenable()
+
+      tweenable.tween({
+        from: { x: 0 },
+        to: { x: 10 },
+        duration: 500,
+        start,
+        step,
+      })
+
+      Tweenable.now = () => 500
+      processTweens()
+
+      tweenable.tween({
+        to: { x: 20 },
+      })
+
+      expect(tweenable._start).toBe(start)
+      expect(tweenable._step).toBe(step)
+      expect(tweenable._currentState).toEqual({ x: 10 })
+      expect(tweenable._targetState).toEqual({ x: 20 })
     })
   })
 })
