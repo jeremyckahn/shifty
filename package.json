@@ -51,8 +51,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged && npm run ci",
-      "pre-push": "npm run ci"
+      "pre-commit": "pretty-quick --staged && npm run ci"
     }
   },
   "files": [
