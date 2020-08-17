@@ -32,33 +32,25 @@ Take a look at [the Getting Started guide]{@tutorial getting-started} to hit the
 
 ---
 
-To create a basic tween, you could have something like this:
-
-<p data-height="265" data-theme-id="0" data-slug-hash="dvzXLJ" data-default-tab="js,result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Shifty 2 playground" class="codepen">See the Pen <a href="http://codepen.io/jeremyckahn/pen/dvzXLJ/">Shifty 2 playground</a> by Jeremy Kahn (<a href="http://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="http://codepen.io">CodePen</a>.</p>
-<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
-
-This snippet tweens and prints the `x` variable from 0 to 10 over one second, and then prints the final value. You can animate as many properties in a single tween as you'd like.
-
 ## Performance comparison
 
 <p data-height="658" data-theme-id="0" data-slug-hash="prMYXj" data-default-tab="result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Shifty/GSAP/jQuery animation performance comparison" class="codepen">See the Pen <a href="https://codepen.io/jeremyckahn/pen/prMYXj/">Shifty/GSAP/jQuery animation performance comparison</a> by Jeremy Kahn (<a href="https://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="https://codepen.io">CodePen</a>.</p>
 <script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
 
-## Examples
+## Demos
 
-## Chained tweens
+### Sequencing
+
+<p class="codepen" data-height="500" data-theme-id="dark" data-default-tab="js,result" data-user="jeremyckahn" data-slug-hash="GRZZVLZ" style="height: 500px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="Shifty Sequencing Demo">
+  <span>See the Pen <a href="https://codepen.io/jeremyckahn/pen/GRZZVLZ">
+  Shifty Sequencing Demo</a> by Jeremy Kahn (<a href="https://codepen.io/jeremyckahn">@jeremyckahn</a>)
+  on <a href="https://codepen.io">CodePen</a>.</span>
+</p>
+<script async src="https://static.codepen.io/assets/embed/ei.js"></script>
+
+### `await`ed tweens
 
 <p data-height="388" data-theme-id="0" data-slug-hash="NvQXqP" data-default-tab="js,result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Primise-chained tweens" class="codepen">See the Pen <a href="https://codepen.io/jeremyckahn/pen/NvQXqP/">Primise-chained tweens</a> by Jeremy Kahn (<a href="https://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="https://codepen.io">CodePen</a>.</p>
-<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
-
-### Bouncing blocks
-
-<p data-height="533" data-theme-id="0" data-slug-hash="OpzjRQ" data-default-tab="js,result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Shifty Attachment Demo" class="codepen">See the Pen <a href="http://codepen.io/jeremyckahn/pen/OpzjRQ/">Shifty Attachment Demo</a> by Jeremy Kahn (<a href="http://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="http://codepen.io">CodePen</a>.</p>
-<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
-
-### A helix!
-
-<p data-height="725" data-theme-id="0" data-slug-hash="KWZvXY" data-default-tab="js,result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Shifty Helix Demo" class="codepen">See the Pen <a href="http://codepen.io/jeremyckahn/pen/KWZvXY/">Shifty Helix Demo</a> by Jeremy Kahn (<a href="http://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="http://codepen.io">CodePen</a>.</p>
 <script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
 
 ### Tweening with a custom easing formula
