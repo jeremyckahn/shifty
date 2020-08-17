@@ -276,13 +276,16 @@ export class Tweenable {
    * shifty.promisedData} object.
    */
   tween(config = undefined) {
-    const { _data } = this
+    const { _data, _config } = this
 
     if (this._isPlaying) {
       this.stop()
     }
 
-    this.setConfig(config)
+    if (config || !_config) {
+      this.setConfig(config)
+    }
+
     this._pausedAtTime = null
     this._timestamp = Tweenable.now()
     this._start(this.get(), _data)
