@@ -18,8 +18,7 @@ animations.
 
 ```js
 import { tween } from 'shifty'
-
-const animate = async () => {
+;(async () => {
   const element = document.querySelector('#tweenable')
 
   const { tweenable } = await tween({
@@ -39,7 +38,7 @@ const animate = async () => {
   await tweenable.tween({
     to: { scale: 3 },
   })
-}
+})()
 ```
 
 ## Installation
