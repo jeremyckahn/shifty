@@ -226,6 +226,7 @@ const remove = tween => {
 
 export class Tweenable {
   _config = null
+  _data = {}
   _filters = []
   _next = null
   _previous = null
@@ -326,7 +327,7 @@ export class Tweenable {
 
     // Attach something to this Tweenable instance (e.g.: a DOM element, an
     // object, a string, etc.);
-    this._data = data || attachment
+    this._data = data || attachment || this._data
 
     // Init the internal state
     this._isPlaying = false
@@ -559,6 +560,22 @@ export class Tweenable {
    */
   setScheduleFunction(scheduleFunction) {
     Tweenable.setScheduleFunction(scheduleFunction)
+  }
+
+  /**
+   * Get and optionally set the data that gets passed as `data` to {@link
+   * shifty.promisedData}, {@link shifty.startFunction} and {@link
+   * shifty.renderFunction}.
+   * @param {Object} [data]
+   * @method shifty.Tweenable#data
+   * @return {Object} The internally stored `data`.
+   */
+  data(data = null) {
+    if (data) {
+      this._data = { ...data }
+    }
+
+    return this._data
   }
 
   /**
