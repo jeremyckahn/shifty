@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import Promised from 'bluebird'
 import { Tweenable, tween } from '../src'
 import {
@@ -518,6 +519,29 @@ describe('#stop', () => {
         expect(true).toBeTruthy()
       })
     })
+  })
+})
+
+describe('cancel', () => {
+  test('rejects a tween promise', async () => {
+    Tweenable.now = () => 0
+
+    const tweenable = new Tweenable()
+    ;(async () => {
+      try {
+        await tweenable.tween({
+          from: { x: 0 },
+          to: { x: 10 },
+          duration: 500,
+        })
+      } catch (e) {
+        await expect(e.state.x).toEqual(5)
+      }
+    })()
+
+    Tweenable.now = () => 250
+    processTweens()
+    tweenable.cancel()
   })
 })
 

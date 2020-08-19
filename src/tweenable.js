@@ -230,6 +230,8 @@ export class Tweenable {
   _next = null
   _previous = null
   _timestamp = null
+  _resolve = null
+  _reject = null
 
   /**
    * @param {Object} [initialState={}] The values that the initial tween should
@@ -355,8 +357,9 @@ export class Tweenable {
 
     this._applyFilter(TWEEN_CREATED)
 
-    this._promise = new promise(resolve => {
+    this._promise = new promise((resolve, reject) => {
       this._resolve = resolve
+      this._reject = reject
     })
 
     // Needed to silence (harmless) logged errors when a .catch handler is not
@@ -467,7 +470,7 @@ export class Tweenable {
   }
 
   /**
-   * Stops and cancels a tween. If a tween is not running, this is a no-op.
+   * Stops a tween. If a tween is not running, this is a no-op.
    * @param {boolean} [gotoEnd] If `false`, the tween just stops at its current
    * state.  If `true`, the tweened object's values are instantly set to the
    * target values.
@@ -475,10 +478,17 @@ export class Tweenable {
    * @return {shifty.Tweenable}
    */
   stop(gotoEnd = false) {
-    const { _currentState, _data, _easing, _originalState, _targetState } = this
+    const {
+      _currentState,
+      _data,
+      _easing,
+      _originalState,
+      _resolve,
+      _targetState,
+    } = this
 
     if (!this._isPlaying) {
-      return
+      return this
     }
 
     this._isPlaying = false
@@ -492,13 +502,45 @@ export class Tweenable {
       this._applyFilter(AFTER_TWEEN_END)
     }
 
-    this._resolve({
+    if (_resolve) {
+      _resolve({
+        data: _data,
+        state: _currentState,
+        tweenable: this,
+      })
+    }
+
+    this._resolve = null
+    this._reject = null
+
+    return this
+  }
+
+  /**
+   * {@link shifty.Tweenable#stop}s a tween and also `reject`s its {@link
+   * external:Promise}. If a tween is not running, this is a no-op.
+   * @param {boolean} [gotoEnd] Is propagated to {@link shifty.Tweenable#stop}.
+   * @method shifty.Tweenable#cancel
+   * @return {shifty.Tweenable}
+   * @see https://github.com/jeremyckahn/shifty/issues/122
+   */
+  cancel(gotoEnd = false) {
+    const { _currentState, _data, _isPlaying } = this
+
+    if (!_isPlaying) {
+      return this
+    }
+
+    this._reject({
       data: _data,
       state: _currentState,
       tweenable: this,
     })
 
-    return this
+    this._resolve = null
+    this._reject = null
+
+    return this.stop(gotoEnd)
   }
 
   /**
