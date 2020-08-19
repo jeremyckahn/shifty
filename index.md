@@ -46,6 +46,15 @@ Take a look at [the Getting Started guide]{@tutorial getting-started} to hit the
 <p data-height="388" data-theme-id="0" data-slug-hash="NvQXqP" data-default-tab="js,result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Primise-chained tweens" class="codepen">See the Pen <a href="https://codepen.io/jeremyckahn/pen/NvQXqP/">Primise-chained tweens</a> by Jeremy Kahn (<a href="https://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="https://codepen.io">CodePen</a>.</p>
 <script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
 
+This next example demonstrates how `await`ed tweens interoperate well with standard JavaScript `try`/`catch` blocks, as well as infinite `while` loops. Typically you'd want to avoid intentionally infinite loops, but it's common to need animations to loop indefinitely. A `while (true)` loop is a simple way to achieve this. The ball in this demo pulsates repeatedly, but the animation loop is gracefully interrupted when the user clicks anywhere else within the demo. Response to the user's input is handled in `catch` blocks, wherein the ball swings over to where the user clicked. From there it continues to pulsate. With `await`ed tweens, you can have full control over the lifecycle of an animation with standard JavaScript programming constructs, rather than a library API that may or may not integrate well with other libraries.
+
+<p class="codepen" data-height="542" data-theme-id="dark" data-default-tab="js,result" data-user="jeremyckahn" data-slug-hash="abNmGwV" style="height: 542px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="async/await try/catch demo">
+  <span>See the Pen <a href="https://codepen.io/jeremyckahn/pen/abNmGwV">
+  async/await try/catch demo</a> by Jeremy Kahn (<a href="https://codepen.io/jeremyckahn">@jeremyckahn</a>)
+  on <a href="https://codepen.io">CodePen</a>.</span>
+</p>
+<script async src="https://static.codepen.io/assets/embed/ei.js"></script>
+
 ### Tweening with a custom easing formula
 
 <p data-height="265" data-theme-id="0" data-slug-hash="xqpLQg" data-default-tab="js,result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Tweening with a custom easing formula" class="codepen">See the Pen <a href="http://codepen.io/jeremyckahn/pen/xqpLQg/">Tweening with a custom easing formula</a> by Jeremy Kahn (<a href="http://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="http://codepen.io">CodePen</a>.</p>
