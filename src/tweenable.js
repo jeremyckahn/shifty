@@ -471,7 +471,9 @@ export class Tweenable {
   }
 
   /**
-   * Stops a tween. If a tween is not running, this is a no-op.
+   * Stops a tween. If a tween is not running, this is a no-op. This method
+   * does not cancel the tween {@link external:Promise}. For that, use {@link
+   * shifty.Tweenable#cancel}.
    * @param {boolean} [gotoEnd] If `false`, the tween just stops at its current
    * state.  If `true`, the tweened object's values are instantly set to the
    * target values.
