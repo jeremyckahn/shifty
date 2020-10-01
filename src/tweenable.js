@@ -65,15 +65,11 @@ export const tweenProps = (
     forPosition < timestamp ? 0 : (forPosition - timestamp) / duration
 
   for (const key in currentState) {
-    const easingObjectProp = easing[key]
-    const easingFn = easingObjectProp.call
-      ? easingObjectProp
-      : formulas[easingObjectProp]
-
-    const start = originalState[key]
+    const easingFn = easing[key].call ? easing[key] : formulas[easing[key]]
 
     currentState[key] =
-      start + (targetState[key] - start) * easingFn(normalizedPosition)
+      originalState[key] +
+      (targetState[key] - originalState[key]) * easingFn(normalizedPosition)
   }
 
   return currentState
@@ -119,6 +115,9 @@ const processTween = (tween, currentTime) => {
   }
 }
 
+// Private declaration used below
+let nextTweenToProcess
+
 /**
  * Process all tweens currently managed by Shifty for the current tick. This
  * does not perform any timing or update scheduling; it is the logic that is
@@ -142,9 +141,9 @@ export const processTweens = () => {
   let tween = listHead
 
   while (tween) {
-    const nextTween = tween._next
+    nextTweenToProcess = tween._next
     processTween(tween, currentTime)
-    tween = nextTween
+    tween = nextTweenToProcess
   }
 }
 
@@ -193,6 +192,9 @@ export const composeEasingObject = (
   return composedEasing
 }
 
+// Private declarations used below
+
+let previousTween, nextTween
 const remove = tween => {
   // Adapted from:
   // https://github.com/trekhleb/javascript-algorithms/blob/7c9601df3e8ca4206d419ce50b88bd13ff39deb6/src/data-structures/doubly-linked-list/DoublyLinkedList.js#L73-L121
@@ -213,8 +215,8 @@ const remove = tween => {
       listHead = null
     }
   } else {
-    const previousTween = tween._previous
-    const nextTween = tween._next
+    previousTween = tween._previous
+    nextTween = tween._next
 
     previousTween._next = nextTween
     nextTween._previous = previousTween
