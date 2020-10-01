@@ -360,10 +360,6 @@ export class Tweenable {
       this._reject = reject
     })
 
-    // Needed to silence (harmless) logged errors when a .catch handler is not
-    // added by downstream code
-    this._promise.catch(noop)
-
     return this
   }
 
