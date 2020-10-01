@@ -560,7 +560,7 @@ export class Tweenable {
    */
   data(data = null) {
     if (data) {
-      this._data = assign(data)
+      this._data = assign({}, data)
     }
 
     return this._data
