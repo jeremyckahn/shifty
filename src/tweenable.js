@@ -294,7 +294,7 @@ export class Tweenable {
     this._timestamp = Tweenable.now()
     this._start(this.get(), _data)
 
-    return this.resume()
+    return this._resume(this._timestamp)
   }
 
   /**
@@ -404,6 +404,10 @@ export class Tweenable {
    * @return {external:Promise}
    */
   resume() {
+    return this._resume()
+  }
+
+  _resume(currentTime = Tweenable.now()) {
     if (this._timestamp === null) {
       return this.tween()
     }
@@ -412,7 +416,6 @@ export class Tweenable {
       return this._promise
     }
 
-    const currentTime = Tweenable.now()
 
     if (this._pausedAtTime) {
       this._timestamp += currentTime - this._pausedAtTime
