@@ -85,5 +85,7 @@
     }
   ],
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {
+    "object-assign": "^4.1.1"
+  }
 }

@@ -1,3 +1,4 @@
+import assign from 'object-assign'
 import * as easingFunctions from './easing-functions'
 
 // CONSTANTS
@@ -33,7 +34,7 @@ export const resetList = () => (listHead = listTail = null)
 export const getListHead = () => listHead
 export const getListTail = () => listTail
 
-const formulas = { ...easingFunctions }
+const formulas = assign(easingFunctions)
 
 /**
  * Calculates the interpolated tween values of an Object for a given
@@ -306,7 +307,7 @@ export class Tweenable {
    * @return {shifty.Tweenable}
    */
   setConfig(config = {}) {
-    const patchedConfig = { ...this._config, ...config }
+    const patchedConfig = assign({}, this._config, config)
 
     // Configuration options to reuse from previous tweens
     const {
@@ -337,13 +338,13 @@ export class Tweenable {
     this._start = start
     this._render = render || step
     this._duration = duration
-    this._currentState = { ...(from || this.get()) }
+    this._currentState = assign({}, from || this.get())
     this._originalState = this.get()
-    this._targetState = { ...(to || this.get()) }
+    this._targetState = assign({}, to || this.get())
 
     const { _currentState } = this
     // Ensure that there is always something to tween to.
-    this._targetState = { ..._currentState, ...this._targetState }
+    this._targetState = assign({}, _currentState, this._targetState)
 
     this._easing = composeEasingObject(_currentState, easing)
 
@@ -375,7 +376,7 @@ export class Tweenable {
    * @return {Object} The current state.
    */
   get() {
-    return { ...this._currentState }
+    return assign({}, this._currentState)
   }
 
   /**
@@ -573,7 +574,7 @@ export class Tweenable {
    */
   data(data = null) {
     if (data) {
-      this._data = { ...data }
+      this._data = assign(data)
     }
 
     return this._data
