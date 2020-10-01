@@ -36,6 +36,9 @@ export const getListTail = () => listTail
 
 const formulas = assign(easingFunctions)
 
+// Private declaration used below
+let tweenedPropKey
+
 /**
  * Calculates the interpolated tween values of an Object for a given
  * timestamp.
@@ -64,12 +67,15 @@ export const tweenProps = (
   const normalizedPosition =
     forPosition < timestamp ? 0 : (forPosition - timestamp) / duration
 
-  for (const key in currentState) {
-    const easingFn = easing[key].call ? easing[key] : formulas[easing[key]]
+  for (tweenedPropKey in currentState) {
+    const easingFn = easing[tweenedPropKey].call
+      ? easing[tweenedPropKey]
+      : formulas[easing[tweenedPropKey]]
 
-    currentState[key] =
-      originalState[key] +
-      (targetState[key] - originalState[key]) * easingFn(normalizedPosition)
+    currentState[tweenedPropKey] =
+      originalState[tweenedPropKey] +
+      (targetState[tweenedPropKey] - originalState[tweenedPropKey]) *
+        easingFn(normalizedPosition)
   }
 
   return currentState
