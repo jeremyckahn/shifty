@@ -323,9 +323,6 @@ export class Tweenable {
       step = noop,
     } = (this._config = patchedConfig)
 
-    // Configuration options not to reuse
-    const { delay = 0, from, to } = config
-
     // Attach something to this Tweenable instance (e.g.: a DOM element, an
     // object, a string, etc.);
     this._data = data || attachment || this._data
@@ -334,19 +331,18 @@ export class Tweenable {
     this._isPlaying = false
     this._pausedAtTime = null
     this._scheduleId = null
-    this._delay = delay
+    this._delay = config.delay || 0
     this._start = start
     this._render = render || step
     this._duration = duration
-    this._currentState = assign({}, from || this.get())
+    this._currentState = assign({}, config.from || this.get())
     this._originalState = this.get()
-    this._targetState = assign({}, to || this.get())
+    this._targetState = assign({}, config.to || this.get())
 
-    const { _currentState } = this
     // Ensure that there is always something to tween to.
-    this._targetState = assign({}, _currentState, this._targetState)
+    this._targetState = assign({}, this._currentState, this._targetState)
 
-    this._easing = composeEasingObject(_currentState, easing)
+    this._easing = composeEasingObject(this._currentState, easing)
 
     const { filters } = Tweenable
     this._filters.length = 0
