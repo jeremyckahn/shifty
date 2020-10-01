@@ -258,7 +258,8 @@ export class Tweenable {
    * @private
    */
   _applyFilter(filterName) {
-    for (const filterType of this._filters) {
+    for (let i = this._filters.length; i > 0; i--) {
+      const filterType = this._filters[i - i]
       const filter = filterType[filterName]
 
       if (filter) {
