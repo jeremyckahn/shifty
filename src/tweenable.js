@@ -481,15 +481,6 @@ export class Tweenable {
    * @return {shifty.Tweenable}
    */
   stop(gotoEnd = false) {
-    const {
-      _currentState,
-      _data,
-      _easing,
-      _originalState,
-      _resolve,
-      _targetState,
-    } = this
-
     if (!this._isPlaying) {
       return this
     }
@@ -500,15 +491,23 @@ export class Tweenable {
 
     if (gotoEnd) {
       this._applyFilter(BEFORE_TWEEN)
-      tweenProps(1, _currentState, _originalState, _targetState, 1, 0, _easing)
+      tweenProps(
+        1,
+        this._currentState,
+        this._originalState,
+        this._targetState,
+        1,
+        0,
+        this._easing
+      )
       this._applyFilter(AFTER_TWEEN)
       this._applyFilter(AFTER_TWEEN_END)
     }
 
-    if (_resolve) {
-      _resolve({
-        data: _data,
-        state: _currentState,
+    if (this._resolve) {
+      this._resolve({
+        data: this._data,
+        state: this._currentState,
         tweenable: this,
       })
     }
