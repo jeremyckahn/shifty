@@ -350,8 +350,15 @@ const collapseEasingObject = (easingObject, tokenData) => {
   }
 }
 
-export const doesApply = ({ _currentState }) =>
-  Object.keys(_currentState).some(key => typeof _currentState[key] === 'string')
+export const doesApply = tweenable => {
+  for (const key in tweenable._currentState) {
+    if (typeof tweenable._currentState[key] === 'string') {
+      return true
+    }
+  }
+
+  return false
+}
 
 export function tweenCreated(tweenable) {
   const { _currentState, _originalState, _targetState } = tweenable
