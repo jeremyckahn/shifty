@@ -79,16 +79,15 @@ export const tweenProps = (
 }
 
 const processTween = (tween, currentTime) => {
-  const { _data, _currentState, _delay, _easing, _originalState } = tween
-  let { _duration, _render, _targetState, _timestamp } = tween
+  let { _duration: duration, _timestamp: timestamp } = tween
 
-  const endTime = _timestamp + _delay + _duration
+  const endTime = timestamp + tween._delay + duration
   let timeToCompute = currentTime > endTime ? endTime : currentTime
   const hasEnded = timeToCompute >= endTime
-  const offset = _duration - (endTime - timeToCompute)
+  const offset = duration - (endTime - timeToCompute)
 
   if (hasEnded) {
-    _render(_targetState, _data, offset)
+    tween._render(tween._targetState, tween._data, offset)
     tween.stop(true)
   } else {
     tween._applyFilter(BEFORE_TWEEN)
@@ -96,26 +95,26 @@ const processTween = (tween, currentTime) => {
     // If the animation has not yet reached the start point (e.g., there was
     // delay that has not yet completed), just interpolate the starting
     // position of the tween.
-    if (timeToCompute < _timestamp + _delay) {
+    if (timeToCompute < timestamp + tween._delay) {
       timeToCompute = 1
-      _duration = 1
-      _timestamp = 1
+      duration = 1
+      timestamp = 1
     } else {
-      _timestamp += _delay
+      timestamp += tween._delay
     }
 
     tweenProps(
       timeToCompute,
-      _currentState,
-      _originalState,
-      _targetState,
-      _duration,
-      _timestamp,
-      _easing
+      tween._currentState,
+      tween._originalState,
+      tween._targetState,
+      duration,
+      timestamp,
+      tween._easing
     )
 
     tween._applyFilter(AFTER_TWEEN)
-    _render(_currentState, _data, offset)
+    tween._render(tween._currentState, tween._data, offset)
   }
 }
 
