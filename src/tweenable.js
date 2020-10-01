@@ -280,19 +280,17 @@ export class Tweenable {
    * shifty.promisedData} object.
    */
   tween(config = undefined) {
-    const { _data, _config } = this
-
     if (this._isPlaying) {
       this.stop()
     }
 
-    if (config || !_config) {
+    if (config || !this._config) {
       this.setConfig(config)
     }
 
     this._pausedAtTime = null
     this._timestamp = Tweenable.now()
-    this._start(this.get(), _data)
+    this._start(this.get(), this._data)
 
     return this._resume(this._timestamp)
   }
@@ -311,10 +309,6 @@ export class Tweenable {
 
     // Configuration options to reuse from previous tweens
     const {
-      attachment,
-      data,
-      duration = DEFAULT_DURATION,
-      easing,
       promise = Promise,
       start = noop,
       render = patchedConfig.step || noop,
@@ -325,7 +319,7 @@ export class Tweenable {
 
     // Attach something to this Tweenable instance (e.g.: a DOM element, an
     // object, a string, etc.);
-    this._data = data || attachment || this._data
+    this._data = this._config.data || this._config.attachment || this._data
 
     // Init the internal state
     this._isPlaying = false
@@ -334,22 +328,20 @@ export class Tweenable {
     this._delay = config.delay || 0
     this._start = start
     this._render = render || step
-    this._duration = duration
+    this._duration = this._config.duration || DEFAULT_DURATION
     this._currentState = assign({}, config.from || this.get())
     this._originalState = this.get()
-    this._targetState = assign({}, config.to || this.get())
 
     // Ensure that there is always something to tween to.
-    this._targetState = assign({}, this._currentState, this._targetState)
+    this._targetState = assign({}, this._currentState, config.to || this.get())
 
-    this._easing = composeEasingObject(this._currentState, easing)
+    this._easing = composeEasingObject(this._currentState, this._config.easing)
 
-    const { filters } = Tweenable
     this._filters.length = 0
 
-    for (const name in filters) {
-      if (filters[name].doesApply(this)) {
-        this._filters.push(filters[name])
+    for (const name in Tweenable.filters) {
+      if (Tweenable.filters[name].doesApply(this)) {
+        this._filters.push(Tweenable.filters[name])
       }
     }
 
@@ -415,7 +407,6 @@ export class Tweenable {
     if (this._isPlaying) {
       return this._promise
     }
-
 
     if (this._pausedAtTime) {
       this._timestamp += currentTime - this._pausedAtTime
