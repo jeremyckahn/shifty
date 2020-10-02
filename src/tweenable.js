@@ -99,9 +99,7 @@ const processTween = (tween, currentTime) => {
     // delay that has not yet completed), just interpolate the starting
     // position of the tween.
     if (timeToCompute < timestamp + tween._delay) {
-      timeToCompute = 1
-      duration = 1
-      timestamp = 1
+      timestamp = duration = timeToCompute = 1
     } else {
       timestamp += tween._delay
     }
