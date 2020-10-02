@@ -36,9 +36,6 @@ export const getListTail = () => listTail
 
 const formulas = assign(easingFunctions)
 
-// Private declaration used below
-let tweenedPropKey
-
 /**
  * Calculates the interpolated tween values of an Object for a given
  * timestamp.
@@ -55,7 +52,13 @@ let tweenedPropKey
  * @returns {Object}
  * @private
  */
-export const tweenProps = (
+export const tweenProps = ((
+  normalizedPosition,
+  key,
+  easingObjectProp,
+  easingFn,
+  start
+) => (
   forPosition,
   currentState,
   originalState,
@@ -64,33 +67,47 @@ export const tweenProps = (
   timestamp,
   easing
 ) => {
-  const normalizedPosition =
+  normalizedPosition =
     forPosition < timestamp ? 0 : (forPosition - timestamp) / duration
 
-  for (tweenedPropKey in currentState) {
-    const easingFn = easing[tweenedPropKey].call
-      ? easing[tweenedPropKey]
-      : formulas[easing[tweenedPropKey]]
+  for (key in currentState) {
+    easingObjectProp = easing[key]
+    easingFn = easingObjectProp.call
+      ? easingObjectProp
+      : formulas[easingObjectProp]
+    start = originalState[key]
 
-    currentState[tweenedPropKey] =
-      originalState[tweenedPropKey] +
-      (targetState[tweenedPropKey] - originalState[tweenedPropKey]) *
-        easingFn(normalizedPosition)
+    currentState[key] =
+      start + (targetState[key] - start) * easingFn(normalizedPosition)
   }
 
   return currentState
-}
+})()
 
-const processTween = (tween, currentTime) => {
-  let { _duration: duration, _timestamp: timestamp } = tween
+const processTween = ((
+  duration,
+  timestamp,
+  endTime,
+  timeToCompute,
+  hasEnded,
+  offset,
+  currentState,
+  targetState,
+  delay
+) => (tween, currentTime) => {
+  duration = tween._duration
+  timestamp = tween._timestamp
+  currentState = tween._currentState
+  targetState = tween._targetState
+  delay = tween._delay
 
-  const endTime = timestamp + tween._delay + duration
-  let timeToCompute = currentTime > endTime ? endTime : currentTime
-  const hasEnded = timeToCompute >= endTime
-  const offset = duration - (endTime - timeToCompute)
+  endTime = timestamp + delay + duration
+  timeToCompute = currentTime > endTime ? endTime : currentTime
+  hasEnded = timeToCompute >= endTime
+  offset = duration - (endTime - timeToCompute)
 
   if (hasEnded) {
-    tween._render(tween._targetState, tween._data, offset)
+    tween._render(targetState, tween._data, offset)
     tween.stop(true)
   } else {
     tween._applyFilter(BEFORE_TWEEN)
@@ -98,58 +115,56 @@ const processTween = (tween, currentTime) => {
     // If the animation has not yet reached the start point (e.g., there was
     // delay that has not yet completed), just interpolate the starting
     // position of the tween.
-    if (timeToCompute < timestamp + tween._delay) {
+    if (timeToCompute < timestamp + delay) {
       timestamp = duration = timeToCompute = 1
     } else {
-      timestamp += tween._delay
+      timestamp += delay
     }
 
     tweenProps(
       timeToCompute,
-      tween._currentState,
+      currentState,
       tween._originalState,
-      tween._targetState,
+      targetState,
       duration,
       timestamp,
       tween._easing
     )
 
     tween._applyFilter(AFTER_TWEEN)
-    tween._render(tween._currentState, tween._data, offset)
+    tween._render(currentState, tween._data, offset)
   }
-}
+})()
 
-// Private declaration used below
-let nextTweenToProcess
+export const processTweens = (currentTime, currentTween, nextTweenToProcess) =>
+  /**
+   * Process all tweens currently managed by Shifty for the current tick. This
+   * does not perform any timing or update scheduling; it is the logic that is
+   * run *by* the scheduling functionality. Specifically, it computes the state
+   * and calls all of the relevant {@link shifty.tweenConfig} functions supplied
+   * to each of the tweens for the current point in time (as determined by {@link
+   * shifty.Tweenable.now}.
+   *
+   * This is a low-level API that won't be needed in the majority of situations.
+   * It is primarily useful as a hook for higher-level animation systems that are
+   * built on top of Shifty. If you need this function, it is likely you need to
+   * pass something like `() => {}` to {@link
+   * shifty.Tweenable.setScheduleFunction}, override {@link shifty.Tweenable.now}
+   * and manage the scheduling logic yourself.
+   *
+   * @method shifty.processTweens
+   * @see https://github.com/jeremyckahn/shifty/issues/109
+   */
+  (() => {
+    currentTime = Tweenable.now()
+    currentTween = listHead
 
-/**
- * Process all tweens currently managed by Shifty for the current tick. This
- * does not perform any timing or update scheduling; it is the logic that is
- * run *by* the scheduling functionality. Specifically, it computes the state
- * and calls all of the relevant {@link shifty.tweenConfig} functions supplied
- * to each of the tweens for the current point in time (as determined by {@link
- * shifty.Tweenable.now}.
- *
- * This is a low-level API that won't be needed in the majority of situations.
- * It is primarily useful as a hook for higher-level animation systems that are
- * built on top of Shifty. If you need this function, it is likely you need to
- * pass something like `() => {}` to {@link
- * shifty.Tweenable.setScheduleFunction}, override {@link shifty.Tweenable.now}
- * and manage the scheduling logic yourself.
- *
- * @method shifty.processTweens
- * @see https://github.com/jeremyckahn/shifty/issues/109
- */
-export const processTweens = () => {
-  const currentTime = Tweenable.now()
-  let tween = listHead
-
-  while (tween) {
-    nextTweenToProcess = tween._next
-    processTween(tween, currentTime)
-    tween = nextTweenToProcess
-  }
-}
+    while (currentTween) {
+      nextTweenToProcess = currentTween._next
+      processTween(currentTween, currentTime)
+      currentTween = nextTweenToProcess
+    }
+  })()
 
 /**
  * Handles the update logic for one tick of a tween.
