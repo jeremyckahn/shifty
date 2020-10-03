@@ -187,15 +187,16 @@ export const scheduleUpdate = () => {
  * Object.  If `easing` is an Object, then this function clones it and fills
  * in the missing properties with `"linear"`.
  * @param {Object.<string|Function>} fromTweenParams
- * @param {Object|string|Function} easing
+ * @param {Object|string|Function} [easing]
+ * @param {Object} [composedEasing] Reused composedEasing object (used internally)
  * @return {Object.<string|Function>}
  * @private
  */
 export const composeEasingObject = (
   fromTweenParams,
-  easing = DEFAULT_EASING
+  easing = DEFAULT_EASING,
+  composedEasing = {}
 ) => {
-  const composedEasing = {}
   let typeofEasing = typeof easing
 
   if (typeofEasing === TYPE_STRING || typeofEasing === TYPE_FUNCTION) {
@@ -361,7 +362,11 @@ export class Tweenable {
     // Ensure that there is always something to tween to.
     assign(this._targetState, this._currentState, config.to)
 
-    this._easing = composeEasingObject(this._currentState, this._config.easing)
+    this._easing = composeEasingObject(
+      this._currentState,
+      this._config.easing,
+      this._easing
+    )
 
     this._filters.length = 0
 
