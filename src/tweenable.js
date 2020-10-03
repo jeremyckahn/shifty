@@ -503,8 +503,6 @@ export class Tweenable {
       return this
     }
 
-    const { _originalState, _targetState } = this
-
     this._isPlaying = false
 
     remove(this)
@@ -514,8 +512,8 @@ export class Tweenable {
       tweenProps(
         1,
         this._currentState,
-        _originalState,
-        _targetState,
+        this._originalState,
+        this._targetState,
         1,
         0,
         this._easing
@@ -535,10 +533,8 @@ export class Tweenable {
     this._resolve = null
     this._reject = null
 
-    for (const key in _targetState) {
-      delete _originalState[key]
-      delete _targetState[key]
-    }
+    assign(this._targetState, this._currentState)
+    assign(this._originalState, this._targetState)
 
     return this
   }
