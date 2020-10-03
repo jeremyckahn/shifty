@@ -254,6 +254,9 @@ export class Tweenable {
   _timestamp = null
   _resolve = null
   _reject = null
+  _currentState = {}
+  _originalState = {}
+  _targetState = {}
 
   /**
    * @param {Object} [initialState={}] The values that the initial tween should
@@ -264,7 +267,9 @@ export class Tweenable {
    * @constructs shifty.Tweenable
    */
   constructor(initialState = {}, config = undefined) {
-    this._currentState = initialState
+    // The || doesn't seem necessary here, but it prevents a (tested) issue
+    // where initialState is null.
+    this._currentState = initialState || this._currentState
 
     // To prevent unnecessary calls to setConfig do not set default
     // configuration here.  Only set default configuration immediately before
@@ -350,11 +355,11 @@ export class Tweenable {
     this._start = start
     this._render = render || step
     this._duration = this._config.duration || DEFAULT_DURATION
-    this._currentState = assign({}, config.from || this.get())
-    this._originalState = this.get()
+    assign(this._currentState, config.from)
+    assign(this._originalState, this._currentState)
 
     // Ensure that there is always something to tween to.
-    this._targetState = assign({}, this._currentState, config.to || this.get())
+    assign(this._targetState, this._currentState, config.to)
 
     this._easing = composeEasingObject(this._currentState, this._config.easing)
 
@@ -493,6 +498,8 @@ export class Tweenable {
       return this
     }
 
+    const { _originalState, _targetState } = this
+
     this._isPlaying = false
 
     remove(this)
@@ -502,8 +509,8 @@ export class Tweenable {
       tweenProps(
         1,
         this._currentState,
-        this._originalState,
-        this._targetState,
+        _originalState,
+        _targetState,
         1,
         0,
         this._easing
@@ -522,6 +529,11 @@ export class Tweenable {
 
     this._resolve = null
     this._reject = null
+
+    for (const key in _targetState) {
+      delete _originalState[key]
+      delete _targetState[key]
+    }
 
     return this
   }
