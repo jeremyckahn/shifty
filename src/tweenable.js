@@ -34,7 +34,7 @@ export const resetList = () => (listHead = listTail = null)
 export const getListHead = () => listHead
 export const getListTail = () => listTail
 
-const formulas = assign(easingFunctions)
+const formulas = assign({}, easingFunctions)
 
 /**
  * Calculates the interpolated tween values of an Object for a given
@@ -214,8 +214,7 @@ export const composeEasingObject = (
 
 // Private declarations used below
 
-let previousTween, nextTween
-const remove = tween => {
+const remove = ((previousTween, nextTween) => tween => {
   // Adapted from:
   // https://github.com/trekhleb/javascript-algorithms/blob/7c9601df3e8ca4206d419ce50b88bd13ff39deb6/src/data-structures/doubly-linked-list/DoublyLinkedList.js#L73-L121
   if (tween === listHead) {
@@ -244,7 +243,7 @@ const remove = tween => {
 
   // Clean up any references in case the tween is restarted later.
   tween._previous = tween._next = null
-}
+})()
 
 export class Tweenable {
   _config = {}
