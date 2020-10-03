@@ -247,7 +247,7 @@ const remove = tween => {
 }
 
 export class Tweenable {
-  _config = null
+  _config = {}
   _data = {}
   _filters = []
   _next = null
@@ -258,6 +258,8 @@ export class Tweenable {
   _currentState = {}
   _originalState = {}
   _targetState = {}
+  _start = noop
+  _render = noop
 
   /**
    * @param {Object} [initialState={}] The values that the initial tween should
@@ -332,17 +334,17 @@ export class Tweenable {
    * @return {shifty.Tweenable}
    */
   setConfig(config = {}) {
-    const patchedConfig = assign({}, this._config, config)
+    assign(this._config, config)
 
     // Configuration options to reuse from previous tweens
     const {
       promise = Promise,
       start = noop,
-      render = patchedConfig.step || noop,
+      render = this._config.step || noop,
 
       // Legacy option. Superseded by `render`.
       step = noop,
-    } = (this._config = patchedConfig)
+    } = this._config
 
     // Attach something to this Tweenable instance (e.g.: a DOM element, an
     // object, a string, etc.);
