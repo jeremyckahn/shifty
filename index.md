@@ -11,20 +11,20 @@ Shifty is a JavaScript tweening engine designed to fit all of your animation nee
 - **Small footprint**: The full build is [less than 6Kb when minified and gzipped](https://bundlephobia.com/result?p=shifty).
 - **`Promise` support**: Shifty's tweens can be `await`ed. [Learn about the benefits of `async`/`await`-based animations](https://dev.to/jeremyckahn/the-case-for-async-await-based-javascript-animations-pkl).
 
+If you're looking for a high-performance animation engine with low overhead, minimal memory footprint, and a permissive license (MIT), Shifty might be the right choice for you!
+
+Shifty is a low-level animation solution. It does not perform any rendering, but it can be easily integrated into whatever rendering mechanism is most appropriate for your project. Shifty is meant to be a lightweight alternative to richer tools like the excellent [GreenSock Animation Platform](https://greensock.com/).
+
+Shifty powers [Stylie](https://jeremyckahn.github.io/stylie/) and [Mantra](https://jeremyckahn.github.io/mantra/), a suite of graphical animation tools. It is also the tweening engine used by [GDevelop](https://gdevelop-app.com/) and [ProgessBar.js](https://progressbarjs.readthedocs.io/en/latest/#how-it-works). Even [Yelp](http://engineeringblog.yelp.com/2015/01/animating-the-mobile-web.html) has used it!
+
+**Please use, fork, and contribute to Shifty! It is distributed under the MIT License, and experimentation is encouraged. If you find a bug or have a question about Shifty, please submit it via the [Github issue tracker](https://github.com/jeremyckahn/shifty/issues).**
+
 <p class="codepen" data-height="590" data-theme-id="dark" data-default-tab="js,result" data-user="jeremyckahn" data-slug-hash="PoNNNye" style="height: 590px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="Shifty async/await demo">
   <span>See the Pen <a href="https://codepen.io/jeremyckahn/pen/PoNNNye">
   Shifty async/await demo</a> by Jeremy Kahn (<a href="https://codepen.io/jeremyckahn">@jeremyckahn</a>)
   on <a href="https://codepen.io">CodePen</a>.</span>
 </p>
 <script async src="https://static.codepen.io/assets/embed/ei.js"></script>
-
-Shifty is a low-level animation solution. It does not perform any rendering, but it can be integrated into whatever rendering mechanism is most appropriate for your project. Shifty is meant to be a lightweight alternative to richer tools like the excellent [GreenSock Animation Platform](https://greensock.com/).
-
-Shifty powers [Stylie](https://jeremyckahn.github.io/stylie/) and [Mantra](https://jeremyckahn.github.io/mantra/), a suite of graphical animation tools. It is also the tweening engine used by [GDevelop](https://gdevelop-app.com/) and [ProgessBar.js](https://progressbarjs.readthedocs.io/en/latest/#how-it-works). Even [Yelp](http://engineeringblog.yelp.com/2015/01/animating-the-mobile-web.html) has used it!
-
-If you're looking for a high-performance `Promise`-based animation engine with low overhead and a permissive license (MIT), Shifty might be the right choice for you!
-
-**Please fork, use and contribute to Shifty! It is distributed under the MIT License, and experimentation is encouraged. If you find a bug or have a question about Shifty, please submit it via the [Github issue tracker](https://github.com/jeremyckahn/shifty/issues).**
 
 ### Getting started with Shifty
 
