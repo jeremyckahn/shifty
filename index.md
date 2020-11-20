@@ -19,6 +19,8 @@ Shifty powers [Stylie](https://jeremyckahn.github.io/stylie/) and [Mantra](https
 
 **Please use, fork, and contribute to Shifty! It is distributed under the MIT License, and experimentation is encouraged. If you find a bug or have a question about Shifty, please submit it via the [Github issue tracker](https://github.com/jeremyckahn/shifty/issues).**
 
+Shifty is a labor of love that will always be free and open source. If you've gotten value out of Shifty, **[please consider supporting the developer with a small donation](https://github.com/jeremyckahn#please-help-support-my-work)**!
+
 <p class="codepen" data-height="590" data-theme-id="dark" data-default-tab="js,result" data-user="jeremyckahn" data-slug-hash="PoNNNye" style="height: 590px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="Shifty async/await demo">
   <span>See the Pen <a href="https://codepen.io/jeremyckahn/pen/PoNNNye">
   Shifty async/await demo</a> by Jeremy Kahn (<a href="https://codepen.io/jeremyckahn">@jeremyckahn</a>)

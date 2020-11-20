@@ -68,6 +68,12 @@ IE11](https://codepen.io/jeremyckahn/pen/RwbzvEj). Please see [issue
 #113](https://github.com/jeremyckahn/shifty/issues/113) for background on
 this.
 
+## Support this project!
+
+Shifty is a labor of love that will always be free and open source. If you've
+gotten value out of Shifty, **[please consider supporting the developer with a
+small donation](https://github.com/jeremyckahn#please-help-support-my-work)**!
+
 ## Developing Shifty
 
 First, install the dependencies via npm like so:
