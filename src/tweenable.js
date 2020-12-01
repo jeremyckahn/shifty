@@ -639,12 +639,22 @@ Tweenable.formulas = formulas
  */
 Tweenable.filters = {}
 
+// Auto-updating ticker. Prevents multiple Date.now calls per tick.
+const getCurrentTime = Date.now || (() => +new Date())
+let now
+const tickTimer = () => {
+  now = getCurrentTime()
+  requestAnimationFrame(tickTimer)
+}
+
+tickTimer()
+
 /**
  * @method shifty.Tweenable.now
  * @static
  * @returns {number} The current timestamp.
  */
-Tweenable.now = Date.now || (() => +new Date())
+Tweenable.now = () => now
 
 /**
  * @method shifty.tween
