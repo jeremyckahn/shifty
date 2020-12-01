@@ -644,7 +644,7 @@ const getCurrentTime = Date.now || (() => +new Date())
 let now
 const tickTimer = () => {
   now = getCurrentTime()
-  requestAnimationFrame(tickTimer)
+  scheduleFunction(tickTimer)
 }
 
 tickTimer()
