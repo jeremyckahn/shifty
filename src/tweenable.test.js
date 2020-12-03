@@ -398,6 +398,7 @@ describe('#seek', () => {
     })
 
     tweenable.seek(50)
+    expect(renderHandlerCallCount).toEqual(1)
     tweenable.stop()
     tweenable.seek(50)
     expect(renderHandlerCallCount).toEqual(1)

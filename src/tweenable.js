@@ -185,6 +185,9 @@ export const processTweens = (currentTime, currentTween, nextTweenToProcess) =>
     }
   })()
 
+const getCurrentTime = Date.now || (() => +new Date())
+let now
+
 /**
  * Handles the update logic for one tick of a tween.
  * @param {number} [currentTimeOverride] Needed for accurate timestamp in
@@ -192,10 +195,7 @@ export const processTweens = (currentTime, currentTween, nextTweenToProcess) =>
  * @private
  */
 export const scheduleUpdate = () => {
-  if (!listHead) {
-    return
-  }
-
+  now = getCurrentTime()
   scheduleFunction.call(root, scheduleUpdate, UPDATE_TIME)
 
   processTweens()
@@ -285,6 +285,13 @@ export class Tweenable {
   _targetState = {}
   _start = noop
   _render = noop
+
+  /**
+   * @method shifty.Tweenable.now
+   * @static
+   * @returns {number} The current timestamp.
+   */
+  static now = () => now
 
   /**
    * @param {Object} [initialState={}] The values that the initial tween should
@@ -476,7 +483,6 @@ export class Tweenable {
     if (listHead === null) {
       listHead = this
       listTail = this
-      scheduleUpdate()
     } else {
       this._previous = listTail
       listTail._next = this
@@ -506,11 +512,8 @@ export class Tweenable {
 
     this._timestamp = currentTime - millisecond
 
-    if (!this._isPlaying) {
-      // If the animation is not running, call processTween to make sure that
-      // any render handlers are run.
-      processTween(this, currentTime)
-    }
+    // Make sure that any render handlers are run.
+    processTween(this, currentTime)
 
     return this
   }
@@ -639,6 +642,8 @@ export class Tweenable {
   }
 }
 
+// TODO: Make these proper static methods.
+
 /**
  * Set a custom schedule function.
  *
@@ -665,23 +670,6 @@ Tweenable.formulas = formulas
  */
 Tweenable.filters = {}
 
-// Auto-updating ticker. Prevents multiple Date.now calls per tick.
-const getCurrentTime = Date.now || (() => +new Date())
-let now
-const tickTimer = () => {
-  now = getCurrentTime()
-  scheduleFunction(tickTimer)
-}
-
-tickTimer()
-
-/**
- * @method shifty.Tweenable.now
- * @static
- * @returns {number} The current timestamp.
- */
-Tweenable.now = () => now
-
 /**
  * @method shifty.tween
  * @param {shifty.tweenConfig} [config={}]
@@ -707,3 +695,5 @@ export function tween(config = {}) {
 
   return promise
 }
+
+scheduleUpdate()
