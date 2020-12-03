@@ -115,6 +115,11 @@ const processTween = ((
   targetState = tween._targetState
   delay = tween._delay
 
+  if (currentTime < timestamp + delay) {
+    tween._render(currentState, tween._data, offset)
+    return
+  }
+
   endTime = timestamp + delay + duration
   timeToCompute = currentTime > endTime ? endTime : currentTime
   hasEnded = timeToCompute >= endTime
