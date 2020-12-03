@@ -109,16 +109,16 @@ const processTween = ((
   targetState,
   delay
 ) => (tween, currentTime) => {
-  duration = tween._duration
   timestamp = tween._timestamp
   currentState = tween._currentState
-  targetState = tween._targetState
   delay = tween._delay
 
   if (currentTime < timestamp + delay) {
-    tween._render(currentState, tween._data, offset)
-    return
+    return tween._render(currentState, tween._data, offset)
   }
+
+  duration = tween._duration
+  targetState = tween._targetState
 
   endTime = timestamp + delay + duration
   timeToCompute = currentTime > endTime ? endTime : currentTime
@@ -127,32 +127,32 @@ const processTween = ((
 
   if (hasEnded) {
     tween._render(targetState, tween._data, offset)
-    tween.stop(true)
-  } else {
-    tween._applyFilter(BEFORE_TWEEN)
-
-    // If the animation has not yet reached the start point (e.g., there was
-    // delay that has not yet completed), just interpolate the starting
-    // position of the tween.
-    if (timeToCompute < timestamp + delay) {
-      timestamp = duration = timeToCompute = 1
-    } else {
-      timestamp += delay
-    }
-
-    tweenProps(
-      timeToCompute,
-      currentState,
-      tween._originalState,
-      targetState,
-      duration,
-      timestamp,
-      tween._easing
-    )
-
-    tween._applyFilter(AFTER_TWEEN)
-    tween._render(currentState, tween._data, offset)
+    return tween.stop(true)
   }
+
+  tween._applyFilter(BEFORE_TWEEN)
+
+  // If the animation has not yet reached the start point (e.g., there was
+  // delay that has not yet completed), just interpolate the starting
+  // position of the tween.
+  if (timeToCompute < timestamp + delay) {
+    timestamp = duration = timeToCompute = 1
+  } else {
+    timestamp += delay
+  }
+
+  tweenProps(
+    timeToCompute,
+    currentState,
+    tween._originalState,
+    targetState,
+    duration,
+    timestamp,
+    tween._easing
+  )
+
+  tween._applyFilter(AFTER_TWEEN)
+  tween._render(currentState, tween._data, offset)
 })()
 
 export const processTweens = (currentTime, currentTween, nextTweenToProcess) =>
