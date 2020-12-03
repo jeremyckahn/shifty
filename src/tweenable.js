@@ -563,8 +563,11 @@ export class Tweenable {
     this._resolve = null
     this._reject = null
 
-    assign(this._targetState, this._currentState)
-    assign(this._originalState, this._targetState)
+    const { _currentState, _originalState, _targetState } = this
+
+    for (let key in _currentState) {
+      _originalState[key] = _targetState[key] = _currentState[key]
+    }
 
     return this
   }
