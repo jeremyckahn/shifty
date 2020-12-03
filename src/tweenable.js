@@ -53,10 +53,12 @@ const formulas = assign({}, easingFunctions)
  * @private
  */
 export const tweenProps = ((
-  normalizedPosition,
-  key,
-  easingObjectProp,
+  easedPosition,
   easingFn,
+  easingObjectProp,
+  hasOneEase,
+  key,
+  normalizedPosition,
   start
 ) => (
   forPosition,
@@ -70,15 +72,27 @@ export const tweenProps = ((
   normalizedPosition =
     forPosition < timestamp ? 0 : (forPosition - timestamp) / duration
 
+  easingFn = null
+  hasOneEase = false
+
+  if (easing && easing.call) {
+    hasOneEase = true
+    easedPosition = easing(normalizedPosition)
+  }
+
   for (key in currentState) {
-    easingObjectProp = easing[key]
-    easingFn = easingObjectProp.call
-      ? easingObjectProp
-      : formulas[easingObjectProp]
+    if (!hasOneEase) {
+      easingObjectProp = easing[key]
+      easingFn = easingObjectProp.call
+        ? easingObjectProp
+        : formulas[easingObjectProp]
+
+      easedPosition = easingFn(normalizedPosition)
+    }
+
     start = originalState[key]
 
-    currentState[key] =
-      start + (targetState[key] - start) * easingFn(normalizedPosition)
+    currentState[key] = start + (targetState[key] - start) * easedPosition
   }
 
   return currentState
@@ -186,10 +200,13 @@ export const scheduleUpdate = () => {
  * Creates a usable easing Object from a string, a function or another easing
  * Object.  If `easing` is an Object, then this function clones it and fills
  * in the missing properties with `"linear"`.
+ *
+ * If the tween has only one easing across all properties, that function is
+ * returned directly.
  * @param {Object.<string|Function>} fromTweenParams
  * @param {Object|string|Function} [easing]
  * @param {Object} [composedEasing] Reused composedEasing object (used internally)
- * @return {Object.<string|Function>}
+ * @return {Object.<string|Function>|Function}
  * @private
  */
 export const composeEasingObject = (
@@ -198,6 +215,10 @@ export const composeEasingObject = (
   composedEasing = {}
 ) => {
   let typeofEasing = typeof easing
+
+  if (formulas[easing]) {
+    return formulas[easing]
+  }
 
   if (typeofEasing === TYPE_STRING || typeofEasing === TYPE_FUNCTION) {
     for (const prop in fromTweenParams) {
