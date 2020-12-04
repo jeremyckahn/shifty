@@ -114,7 +114,11 @@ const processTween = ((
   delay = tween._delay
 
   if (currentTime < timestamp + delay) {
-    return tween._render(currentState, tween._data, offset)
+    if (!tween.retainedModeRendering) {
+      tween._render(currentState, tween._data, offset)
+    }
+
+    return
   }
 
   duration = tween._duration
@@ -287,6 +291,11 @@ export class Tweenable {
   _render = noop
 
   /**
+   * @property shifty.Tweenable#retainedModeRendering
+   */
+  retainedModeRendering = false
+
+  /**
    * @method shifty.Tweenable.now
    * @static
    * @returns {number} The current timestamp.
@@ -390,6 +399,7 @@ export class Tweenable {
     this._start = start
     this._render = render || step
     this._duration = this._config.duration || DEFAULT_DURATION
+    this.retainedModeRendering = config.retainedModeRendering
     assign(this._currentState, config.from)
     assign(this._originalState, this._currentState)
 
