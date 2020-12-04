@@ -410,13 +410,19 @@ export class Tweenable {
       _currentState[key] = from[key]
     }
 
-    for (const key in _currentState) {
-      _originalState[key] = _currentState[key]
-    }
+    let anyPropsAreStrings = false
 
-    // Ensure that there is always something to tween to.
     for (const key in _currentState) {
-      _targetState[key] = to.hasOwnProperty(key) ? to[key] : _currentState[key]
+      const currentProp = _currentState[key]
+
+      if (!anyPropsAreStrings && typeof currentProp === TYPE_STRING) {
+        anyPropsAreStrings = true
+      }
+
+      _originalState[key] = currentProp
+
+      // Ensure that there is always something to tween to.
+      _targetState[key] = to.hasOwnProperty(key) ? to[key] : currentProp
     }
 
     this._easing = composeEasingObject(
@@ -427,9 +433,11 @@ export class Tweenable {
 
     this._filters.length = 0
 
-    for (const name in Tweenable.filters) {
-      if (Tweenable.filters[name].doesApply(this)) {
-        this._filters.push(Tweenable.filters[name])
+    if (anyPropsAreStrings) {
+      for (const name in Tweenable.filters) {
+        if (Tweenable.filters[name].doesApply(this)) {
+          this._filters.push(Tweenable.filters[name])
+        }
       }
     }
 
