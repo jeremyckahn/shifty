@@ -277,6 +277,7 @@ const remove = ((previousTween, nextTween) => tween => {
 export class Tweenable {
   _config = {}
   _data = {}
+  _delay = 0
   _filters = []
   _next = null
   _previous = null
@@ -359,7 +360,12 @@ export class Tweenable {
 
     this._pausedAtTime = null
     this._timestamp = Tweenable.now()
+
     this._start(this.get(), this._data)
+
+    if (this._delay && this.retainedModeRendering) {
+      this._render(this._currentState, this._data, 0)
+    }
 
     return this._resume(this._timestamp)
   }
