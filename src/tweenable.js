@@ -1,4 +1,3 @@
-import assign from 'object-assign'
 import * as easingFunctions from './easing-functions'
 
 // CONSTANTS
@@ -34,7 +33,7 @@ export const resetList = () => (listHead = listTail = null)
 export const getListHead = () => listHead
 export const getListTail = () => listTail
 
-const formulas = assign({}, easingFunctions)
+const formulas = { ...easingFunctions }
 
 /**
  * Calculates the interpolated tween values of an Object for a given
@@ -375,7 +374,10 @@ export class Tweenable {
    * @return {shifty.Tweenable}
    */
   setConfig(config = {}) {
-    assign(this._config, config)
+    const { _config } = this
+    for (const key in config) {
+      _config[key] = config[key]
+    }
 
     // Configuration options to reuse from previous tweens
     const {
@@ -385,11 +387,11 @@ export class Tweenable {
 
       // Legacy option. Superseded by `render`.
       step = noop,
-    } = this._config
+    } = _config
 
     // Attach something to this Tweenable instance (e.g.: a DOM element, an
     // object, a string, etc.);
-    this._data = this._config.data || this._config.attachment || this._data
+    this._data = _config.data || _config.attachment || this._data
 
     // Init the internal state
     this._isPlaying = false
@@ -398,17 +400,28 @@ export class Tweenable {
     this._delay = config.delay || 0
     this._start = start
     this._render = render || step
-    this._duration = this._config.duration || DEFAULT_DURATION
+    this._duration = _config.duration || DEFAULT_DURATION
     this.retainedModeRendering = config.retainedModeRendering
-    assign(this._currentState, config.from)
-    assign(this._originalState, this._currentState)
+
+    const { from, to } = config
+    const { _currentState, _originalState, _targetState } = this
+
+    for (const key in from) {
+      _currentState[key] = from[key]
+    }
+
+    for (const key in _currentState) {
+      _originalState[key] = _currentState[key]
+    }
 
     // Ensure that there is always something to tween to.
-    assign(this._targetState, this._currentState, config.to)
+    for (const key in _currentState) {
+      _targetState[key] = to.hasOwnProperty(key) ? to[key] : _currentState[key]
+    }
 
     this._easing = composeEasingObject(
       this._currentState,
-      this._config.easing,
+      _config.easing,
       this._easing
     )
 
@@ -435,7 +448,7 @@ export class Tweenable {
    * @return {Object} The current state.
    */
   get() {
-    return assign({}, this._currentState)
+    return { ...this._currentState }
   }
 
   /**
@@ -575,7 +588,7 @@ export class Tweenable {
 
     const { _currentState, _originalState, _targetState } = this
 
-    for (let key in _currentState) {
+    for (const key in _currentState) {
       _originalState[key] = _targetState[key] = _currentState[key]
     }
 
@@ -637,7 +650,7 @@ export class Tweenable {
    */
   data(data = null) {
     if (data) {
-      this._data = assign({}, data)
+      this._data = { ...data }
     }
 
     return this._data
