@@ -274,23 +274,9 @@ const remove = ((previousTween, nextTween) => tween => {
   tween._previous = tween._next = null
 })()
 
-export class Tweenable {
-  _config = {}
-  _data = {}
-  _delay = 0
-  _filters = []
-  _next = null
-  _previous = null
-  _timestamp = null
-  _resolve = null
-  _reject = null
-  _currentState = {}
-  _originalState = {}
-  _targetState = {}
-  _start = noop
-  _render = noop
-  _promiseCtor = typeof Promise === 'function' ? Promise : null
+const defaultPromiseCtor = typeof Promise === 'function' ? Promise : null
 
+export class Tweenable {
   /**
    * @property shifty.Tweenable#retainedModeRendering
    */
@@ -312,6 +298,22 @@ export class Tweenable {
    * @constructs shifty.Tweenable
    */
   constructor(initialState = {}, config = undefined) {
+    this._config = {}
+    this._data = {}
+    this._delay = 0
+    this._filters = []
+    this._next = null
+    this._previous = null
+    this._timestamp = null
+    this._resolve = null
+    this._reject = null
+    this._currentState = {}
+    this._originalState = {}
+    this._targetState = {}
+    this._start = noop
+    this._render = noop
+    this._promiseCtor = defaultPromiseCtor
+
     // The || doesn't seem necessary here, but it prevents a (tested) issue
     // where initialState is null.
     this._currentState = initialState || this._currentState
