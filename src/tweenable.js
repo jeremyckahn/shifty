@@ -629,7 +629,8 @@ export class Tweenable {
 
   /**
    * {@link shifty.Tweenable#stop}s a tween and also `reject`s its {@link
-   * external:Promise}. If a tween is not running, this is a no-op.
+   * external:Promise}. If a tween is not running, this is a no-op. Prevents
+   * calling any provided `finish` function.
    * @param {boolean} [gotoEnd] Is propagated to {@link shifty.Tweenable#stop}.
    * @method shifty.Tweenable#cancel
    * @return {shifty.Tweenable}
@@ -642,11 +643,13 @@ export class Tweenable {
       return this
     }
 
-    this._reject({
-      data: _data,
-      state: _currentState,
-      tweenable: this,
-    })
+    if (this._reject) {
+      this._reject({
+        data: _data,
+        state: _currentState,
+        tweenable: this,
+      })
+    }
 
     this._resolve = null
     this._reject = null
