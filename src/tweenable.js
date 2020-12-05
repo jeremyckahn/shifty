@@ -289,6 +289,7 @@ export class Tweenable {
   _targetState = {}
   _start = noop
   _render = noop
+  _promiseCtor = typeof Promise === 'function' ? Promise : null
 
   /**
    * @property shifty.Tweenable#retainedModeRendering
@@ -346,8 +347,7 @@ export class Tweenable {
    * @method shifty.Tweenable#tween
    * @param {shifty.tweenConfig} [config] Gets passed to {@link
    * shifty.Tweenable#setConfig}.
-   * @return {external:Promise} This `Promise` resolves with a {@link
-   * shifty.promisedData} object.
+   * @return {shifty.Tweenable}
    */
   tween(config = undefined) {
     if (this._isPlaying) {
@@ -387,8 +387,9 @@ export class Tweenable {
 
     // Configuration options to reuse from previous tweens
     const {
-      promise = Promise,
+      promise = this._promiseCtor,
       start = noop,
+      finish,
       render = this._config.step || noop,
 
       // Legacy option. Superseded by `render`.
@@ -408,6 +409,11 @@ export class Tweenable {
     this._render = render || step
     this._duration = _config.duration || DEFAULT_DURATION
     this.retainedModeRendering = config.retainedModeRendering
+    this._promiseCtor = promise
+
+    if (finish) {
+      this._resolve = finish
+    }
 
     const { from, to } = config
     const { _currentState, _originalState, _targetState } = this
@@ -449,12 +455,24 @@ export class Tweenable {
 
     this._applyFilter(TWEEN_CREATED)
 
-    this._promise = new promise((resolve, reject) => {
+    return this
+  }
+
+  /**
+   * @method shifty.Tweenable#then
+   * @param {function} onFulfilled
+   * @param {function} onRejected
+   * @return {external:Promise} This {@link external:Promise} resolves with a
+   * {@link shifty.promisedData} object.
+   * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then
+   */
+  then(onFulfilled, onRejected) {
+    this._promise = new this._promiseCtor((resolve, reject) => {
       this._resolve = resolve
       this._reject = reject
     })
 
-    return this
+    return this._promise.then(onFulfilled, onRejected)
   }
 
   /**
@@ -495,7 +513,7 @@ export class Tweenable {
   /**
    * Resume a paused tween.
    * @method shifty.Tweenable#resume
-   * @return {external:Promise}
+   * @return {shifty.Tweenable}
    */
   resume() {
     return this._resume()
@@ -527,7 +545,7 @@ export class Tweenable {
       listTail = this
     }
 
-    return this._promise
+    return this
   }
 
   /**
@@ -730,10 +748,10 @@ Tweenable.filters = {}
  */
 export function tween(config = {}) {
   const tweenable = new Tweenable()
-  const promise = tweenable.tween(config)
-  promise.tweenable = tweenable
+  const thenable = tweenable.tween(config)
+  thenable.tweenable = tweenable
 
-  return promise
+  return thenable
 }
 
 scheduleUpdate()

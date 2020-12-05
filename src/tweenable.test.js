@@ -189,7 +189,7 @@ describe('#tween', () => {
 
   describe('promise support', () => {
     test('supports third party libraries', () => {
-      const promised = tweenable.tween({
+      const { _promiseCtor } = tweenable.tween({
         promise: Promised,
 
         from: { x: 0 },
@@ -197,7 +197,7 @@ describe('#tween', () => {
         duration: 500,
       })
 
-      expect(promised instanceof Promised).toBeTruthy()
+      expect(_promiseCtor).toEqual(Promised)
     })
 
     describe('resolution', () => {
@@ -524,10 +524,11 @@ describe('#stop', () => {
 })
 
 describe('cancel', () => {
-  test('rejects a tween promise', async () => {
+  test('rejects a tween promise', async done => {
     Tweenable.now = () => 0
 
     const tweenable = new Tweenable()
+
     ;(async () => {
       try {
         await tweenable.tween({
@@ -537,12 +538,16 @@ describe('cancel', () => {
         })
       } catch (e) {
         await expect(e.state.x).toEqual(5)
+        done()
       }
     })()
 
-    Tweenable.now = () => 250
-    processTweens()
-    tweenable.cancel()
+    // This needs to be deferred until after the async closure above runs.
+    setTimeout(() => {
+      Tweenable.now = () => 250
+      processTweens()
+      tweenable.cancel()
+    })
   })
 })
 
@@ -630,13 +635,13 @@ describe('delay support', () => {
 describe('static tween', () => {
   test('midpoints of a tween are correctly computed', () => {
     Tweenable.now = () => 0
-    const promise = tween({
+    const thenable = tween({
       from: { x: 0 },
       to: { x: 100 },
       duration: 1000,
     })
 
-    tweenable = promise.tweenable
+    tweenable = thenable.tweenable
 
     expect(tweenable.get().x).toEqual(0)
     Tweenable.now = () => 500

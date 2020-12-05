@@ -62,7 +62,7 @@ export class Scene {
    * @readonly
    */
   get promises() {
-    return this.#tweenables.map(({ _promise }) => _promise)
+    return this.#tweenables.map(tweenable => tweenable.then())
   }
 
   /**
