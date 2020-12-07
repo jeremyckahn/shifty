@@ -61,8 +61,15 @@ export { setBezierFunction, unsetBezierFunction } from './bezier'
  * @property {number} [delay] How many milliseconds to wait before starting the
  * tween.
  * @property {shifty.startFunction} [start] Executes when the tween begins.
- * @property {shifty.renderFunction} [render] Executes on every tick. Legacy
- * property name: `step`.
+ * @property {shifty.renderFunction} [render] Executes on every tick. Shifty
+ * assumes a [retained mode](https://en.wikipedia.org/wiki/Retained_mode)
+ * rendering environment, which in practice means that `render` only gets
+ * called when the tween state changes. Importantly, this means that `render`
+ * is _not_ called when a tween is paused or waiting to start via the `delay`
+ * option. This works naturally with DOM environments, but you may need to
+ * account for this design in more custom environments such as `<canvas>`.
+ *
+ * Legacy property name: `step`.
  * @property
  * {Object.<string|shifty.easingFunction>|string|shifty.easingFunction}
  * [easing] Easing curve name(s) or {@link shifty.easingFunction}(s) to apply

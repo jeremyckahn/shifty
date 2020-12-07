@@ -4,16 +4,18 @@
 
 ## [Download](../shifty.js) • [Source](https://github.com/jeremyckahn/shifty)
 
-Shifty is a JavaScript tweening engine designed to fit all of your animation needs. Shifty's key benefits include:
+Shifty is a JavaScript tweening engine designed to fit all of your animation needs. It is a low-level animation library focused on optimal performance and flexibility that can easily be built upon and extended. Shifty's key benefits are:
 
 - **Speed**: Shifty is optimized for smooth animation performance, even with many concurrent animations.
-- **Flexibility and extensibility**: Shifty provides numerous low-level APIs to let you hook into its animation pipeline.
+- **Flexibility and extensibility**: Shifty can easily be built upon and extended via it's unopinionated API.
 - **Small footprint**: The full build is [less than 6Kb when minified and gzipped](https://bundlephobia.com/result?p=shifty).
-- **`Promise` support**: Shifty's tweens can be `await`ed. [Learn about the benefits of `async`/`await`-based animations](https://dev.to/jeremyckahn/the-case-for-async-await-based-javascript-animations-pkl).
+- **`Promise` support**: Shifty's tweens are `await`-able [thenables](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then). ([Learn about the benefits of `async`/`await`-based animations here](https://dev.to/jeremyckahn/the-case-for-async-await-based-javascript-animations-pkl)).
 
-If you're looking for a high-performance animation engine with low overhead, minimal memory footprint, and a permissive license (MIT), Shifty might be the right choice for you!
+If you're looking for an animation engine with top-tier performance, minimal overhead, and a permissive license (MIT), Shifty might be the right choice for you!
 
-Shifty is a low-level animation solution. It does not perform any rendering, but it can be easily integrated into whatever rendering mechanism is most appropriate for your project. Shifty is meant to be a lightweight alternative to richer tools like the excellent [GreenSock Animation Platform](https://greensock.com/).
+---
+
+Shifty does not perform any rendering, but it can be easily integrated into whatever rendering mechanism is most appropriate for your project. Shifty is meant to be a lightweight alternative to richer tools like the excellent [GreenSock Animation Platform](https://greensock.com/).
 
 Shifty powers [Stylie](https://jeremyckahn.github.io/stylie/) and [Mantra](https://jeremyckahn.github.io/mantra/), a suite of graphical animation tools. It is also the tweening engine used by [GDevelop](https://gdevelop-app.com/) and [ProgessBar.js](https://progressbarjs.readthedocs.io/en/latest/#how-it-works). Even [Yelp](http://engineeringblog.yelp.com/2015/01/animating-the-mobile-web.html) has used it!
 
