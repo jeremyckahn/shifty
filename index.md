@@ -2,26 +2,17 @@
 
 ### `npm install --save shifty`
 
+[![Shifty license](https://badgen.net/github/license/jeremyckahn/shifty)](https://github.com/jeremyckahn/shifty/blob/develop/LICENSE-MIT)
+
 ## [Download](../shifty.js) • [Source](https://github.com/jeremyckahn/shifty)
 
 Shifty is a JavaScript tweening engine designed to fit all of your animation needs. It is a low-level animation library focused on optimal performance and flexibility that can easily be built upon and extended. Shifty's key benefits are:
 
-- **Speed**: Shifty is optimized for smooth animation performance, even with many concurrent animations.
-- **Flexibility and extensibility**: Shifty can easily be built upon and extended via it's unopinionated API.
-- **Small footprint**: The full build is [less than 6Kb when minified and gzipped](https://bundlephobia.com/result?p=shifty).
+- **Speed**: Shifty is optimized for maximum animation performance and minimal memory usage. [Compare it with the venerable GreenSock](https://codepen.io/jeremyckahn/pen/GRjZLZX).
+- **Flexibility and extensibility**: Shifty can easily be built upon and extended via its unopinionated API.
+- **Renderer-agnostic**: Shifty does not perform any rendering, but it can be easily integrated into whatever rendering mechanism is most appropriate for your project such as DOM or `<canvas>`.
 - **`Promise` support**: Shifty's tweens are `await`-able [thenables](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then). ([Learn about the benefits of `async`/`await`-based animations here](https://dev.to/jeremyckahn/the-case-for-async-await-based-javascript-animations-pkl)).
-
-If you're looking for an animation engine with top-tier performance, minimal overhead, and a permissive license (MIT), Shifty might be the right choice for you!
-
----
-
-Shifty does not perform any rendering, but it can be easily integrated into whatever rendering mechanism is most appropriate for your project. Shifty is meant to be a lightweight alternative to richer tools like the excellent [GreenSock Animation Platform](https://greensock.com/).
-
-Shifty powers [Stylie](https://jeremyckahn.github.io/stylie/) and [Mantra](https://jeremyckahn.github.io/mantra/), a suite of graphical animation tools. It is also the tweening engine used by [GDevelop](https://gdevelop-app.com/) and [ProgessBar.js](https://progressbarjs.readthedocs.io/en/latest/#how-it-works). Even [Yelp](http://engineeringblog.yelp.com/2015/01/animating-the-mobile-web.html) has used it!
-
-**Please use, fork, and contribute to Shifty! It is distributed under the MIT License, and experimentation is encouraged. If you find a bug or have a question about Shifty, please submit it via the [Github issue tracker](https://github.com/jeremyckahn/shifty/issues).**
-
-Shifty is a labor of love that will always be free and open source. If you've gotten value out of Shifty, **[please consider supporting the developer with a small donation](https://github.com/jeremyckahn#please-help-support-my-work)**!
+- **Small footprint**: [![Shifty bundle size](https://badgen.net/bundlephobia/minzip/shifty)](https://bundlephobia.com/result?p=shifty)
 
 <p class="codepen" data-height="590" data-theme-id="dark" data-default-tab="js,result" data-user="jeremyckahn" data-slug-hash="PoNNNye" style="height: 590px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="Shifty async/await demo">
   <span>See the Pen <a href="https://codepen.io/jeremyckahn/pen/PoNNNye">
@@ -30,11 +21,38 @@ Shifty is a labor of love that will always be free and open source. If you've go
 </p>
 <script async src="https://static.codepen.io/assets/embed/ei.js"></script>
 
-### Getting started with Shifty
+Shifty powers [Stylie](https://jeremyckahn.github.io/stylie/) and [Mantra](https://jeremyckahn.github.io/mantra/), a suite of graphical animation tools. It is also the tweening engine used by [GDevelop](https://gdevelop-app.com/) and [ProgessBar.js](https://progressbarjs.readthedocs.io/en/latest/#how-it-works). Even [Yelp](http://engineeringblog.yelp.com/2015/01/animating-the-mobile-web.html) has used it!
 
-Take a look at [the Getting Started guide]{@tutorial getting-started} to hit the ground running. The most important class in Shifty is [`Tweenable`]{@link shifty.Tweenable}, but you may also find [`Scene`]{@link shifty.Scene} handy for controlling groups of tweens.
+**Please use, fork, and contribute to Shifty! It is distributed under the MIT License, and experimentation is encouraged. If you find a bug or have a question about Shifty, please submit it via the [GitHub issue tracker](https://github.com/jeremyckahn/shifty/issues).**
 
-## Demos
+Shifty is a labor of love that will always be free and open source. If you've gotten value out of Shifty, **[please consider supporting the developer with a small donation](https://github.com/jeremyckahn#please-help-support-my-work)**!
+
+## Comparison with other animation libraries
+
+Shifty is meant to be a lightweight alternative to rich tools like the excellent [GreenSock Animation Platform](https://greensock.com/). It is intentionally minimalistic so that you can easily embed it into your projects. This works well with its MIT license, as you can redistribute it worry-free without bloating your app or [concerning yourself with royalties or licensing restrictions](https://greensock.com/licensing/).
+
+<details>
+<summary>Expand to see how Shifty compares to GreenSock's performance</summary>
+<p class="codepen" data-height="550" data-theme-id="dark" data-default-tab="result" data-user="jeremyckahn" data-slug-hash="GRjZLZX" style="height: 550px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="GSAP vs Shifty">
+  <span>See the Pen <a href="https://codepen.io/jeremyckahn/pen/GRjZLZX">
+  GSAP vs Shifty</a> by Jeremy Kahn (<a href="https://codepen.io/jeremyckahn">@jeremyckahn</a>)
+  on <a href="https://codepen.io">CodePen</a>.</span>
+</p>
+<script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>
+</details>
+
+Shifty's tiny footprint compares very favorably with other popular animation libraries:
+
+| Library      | Size                                                                                                                                   |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Shifty       | [![Shifty bundle size](https://badgen.net/bundlephobia/minzip/shifty)](https://bundlephobia.com/result?p=shifty)                       |
+| GreenSock    | [![GreenSock bundle size](https://badgen.net/bundlephobia/minzip/gsap)](https://bundlephobia.com/result?p=gsap)                        |
+| AnimeJS      | [![AnimeJS bundle size](https://badgen.net/bundlephobia/minzip/animejs)](https://bundlephobia.com/result?p=animejs)                    |
+| `@mojs/core` | [![@core/mojs bundle size](https://badgen.net/bundlephobia/minzip/@mojs/core)](https://bundlephobia.com/result?p=@mojs/core)           |
+| Velocity     | [![Velocity bundle size](https://badgen.net/bundlephobia/minzip/velocity-animate)](https://bundlephobia.com/result?p=velocity-animate) |
+| Popmotion    | [![Popmotion bundle size](https://badgen.net/bundlephobia/minzip/popmotion)](https://bundlephobia.com/result?p=popmotion)              |
+
+## Examples
 
 ### Sequencing
 
