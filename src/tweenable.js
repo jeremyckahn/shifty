@@ -103,6 +103,7 @@ const processTween = ((
   endTime,
   timeToCompute,
   hasEnded,
+  hasFilters,
   offset,
   currentState,
   targetState,
@@ -123,13 +124,16 @@ const processTween = ((
   timeToCompute = currentTime > endTime ? endTime : currentTime
   hasEnded = timeToCompute >= endTime
   offset = duration - (endTime - timeToCompute)
+  hasFilters = tween._filters.length > 0
 
   if (hasEnded) {
     tween._render(targetState, tween._data, offset)
     return tween.stop(true)
   }
 
-  tween._applyFilter(BEFORE_TWEEN)
+  if (hasFilters) {
+    tween._applyFilter(BEFORE_TWEEN)
+  }
 
   // If the animation has not yet reached the start point (e.g., there was
   // delay that has not yet completed), just interpolate the starting
@@ -150,7 +154,10 @@ const processTween = ((
     tween._easing
   )
 
-  tween._applyFilter(AFTER_TWEEN)
+  if (hasFilters) {
+    tween._applyFilter(AFTER_TWEEN)
+  }
+
   tween._render(currentState, tween._data, offset)
 })()
 
@@ -443,9 +450,9 @@ export class Tweenable {
           this._filters.push(Tweenable.filters[name])
         }
       }
-    }
 
-    this._applyFilter(TWEEN_CREATED)
+      this._applyFilter(TWEEN_CREATED)
+    }
 
     return this
   }
@@ -584,8 +591,13 @@ export class Tweenable {
 
     remove(this)
 
+    const hasFilters = this._filters.length > 0
+
     if (gotoEnd) {
-      this._applyFilter(BEFORE_TWEEN)
+      if (hasFilters) {
+        this._applyFilter(BEFORE_TWEEN)
+      }
+
       tweenProps(
         1,
         this._currentState,
@@ -595,8 +607,11 @@ export class Tweenable {
         0,
         this._easing
       )
-      this._applyFilter(AFTER_TWEEN)
-      this._applyFilter(AFTER_TWEEN_END)
+
+      if (hasFilters) {
+        this._applyFilter(AFTER_TWEEN)
+        this._applyFilter(AFTER_TWEEN_END)
+      }
     }
 
     if (this._resolve) {
