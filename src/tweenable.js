@@ -407,7 +407,7 @@ export class Tweenable {
       this._resolve = finish
     }
 
-    const { from, to } = config
+    const { from, to = {} } = config
     const { _currentState, _originalState, _targetState } = this
 
     for (const key in from) {
