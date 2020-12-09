@@ -305,16 +305,12 @@ export class Tweenable {
     this._timestamp = null
     this._resolve = null
     this._reject = null
-    this._currentState = {}
+    this._currentState = initialState || {}
     this._originalState = {}
     this._targetState = {}
     this._start = noop
     this._render = noop
     this._promiseCtor = defaultPromiseCtor
-
-    // The || doesn't seem necessary here, but it prevents a (tested) issue
-    // where initialState is null.
-    this._currentState = initialState || this._currentState
 
     // To prevent unnecessary calls to setConfig do not set default
     // configuration here.  Only set default configuration immediately before
@@ -360,7 +356,6 @@ export class Tweenable {
 
     this._pausedAtTime = null
     this._timestamp = Tweenable.now()
-
     this._start(this.get(), this._data)
 
     if (this._delay) {
@@ -381,6 +376,7 @@ export class Tweenable {
    */
   setConfig(config = {}) {
     const { _config } = this
+
     for (const key in config) {
       _config[key] = config[key]
     }
@@ -416,14 +412,15 @@ export class Tweenable {
 
     const { from, to = {} } = config
     const { _currentState, _originalState, _targetState } = this
+    let key
 
-    for (const key in from) {
+    for (key in from) {
       _currentState[key] = from[key]
     }
 
     let anyPropsAreStrings = false
 
-    for (const key in _currentState) {
+    for (key in _currentState) {
       const currentProp = _currentState[key]
 
       if (!anyPropsAreStrings && typeof currentProp === TYPE_STRING) {
@@ -445,9 +442,9 @@ export class Tweenable {
     this._filters.length = 0
 
     if (anyPropsAreStrings) {
-      for (const name in Tweenable.filters) {
-        if (Tweenable.filters[name].doesApply(this)) {
-          this._filters.push(Tweenable.filters[name])
+      for (key in Tweenable.filters) {
+        if (Tweenable.filters[key].doesApply(this)) {
+          this._filters.push(Tweenable.filters[key])
         }
       }
 
@@ -458,13 +455,13 @@ export class Tweenable {
   }
 
   /**
+   * Overrides any `finish` function passed via a {@link shifty.tweenConfig}.
    * @method shifty.Tweenable#then
    * @param {function} onFulfilled Receives {@link shifty.promisedData} as the
    * first parameter.
    * @param {function} onRejected Receives {@link shifty.promisedData} as the
    * first parameter.
-   * @return {external:Promise} This {@link external:Promise} resolves with a
-   * {@link shifty.promisedData} object.
+   * @return {external:Promise}
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then
    */
   then(onFulfilled, onRejected) {
