@@ -752,15 +752,17 @@ Tweenable.filters = {}
  * );
  * ```
  *
- * @returns {external:Promise} This `Promise` has a property called `tweenable`
- * that is the {@link shifty.Tweenable} instance that is running the tween.
+ * @returns {shifty.Tweenable} A new {@link shifty.Tweenable} instance.
  */
 export function tween(config = {}) {
   const tweenable = new Tweenable()
-  const thenable = tweenable.tween(config)
-  thenable.tweenable = tweenable
+  tweenable.tween(config)
 
-  return thenable
+  // This is strictly a legacy shim from when this function returned a Promise.
+  // REMOVE THIS LINE IN THE NEXT MAJOR VERSION
+  tweenable.tweenable = tweenable
+
+  return tweenable
 }
 
 scheduleUpdate()
