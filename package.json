@@ -39,7 +39,6 @@
   "scripts": {
     "build": "webpack",
     "test": "jest --watch",
-    "test:ci": "jest",
     "ci": "npm run lint && jest",
     "doc": "jsdoc -c .jsdoc src/*.js",
     "doc:view": "live-server dist/doc --port=9124",
