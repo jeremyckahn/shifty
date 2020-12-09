@@ -1,7 +1,7 @@
 # Shifty - A simple, fast, Promise-based tweening engine in JavaScript
 
-- `master`: [![Build Status](https://travis-ci.com/jeremyckahn/shifty.svg?branch=master)](https://travis-ci.com/jeremyckahn/shifty)
-- `develop`: [![Build Status](https://travis-ci.com/jeremyckahn/shifty.svg?branch=develop)](https://travis-ci.com/jeremyckahn/shifty)
+- `master`: [![CI](https://github.com/jeremyckahn/shifty/workflows/CI/badge.svg?branch=master)](https://github.com/jeremyckahn/shifty/actions?query=workflow%3ACI+branch%3Amaster)
+- `develop`: [![CI](https://github.com/jeremyckahn/shifty/workflows/CI/badge.svg?branch=develop)](https://github.com/jeremyckahn/shifty/actions?query=workflow%3ACI+branch%3Adevelop)
 
 Shifty is a tweening engine for JavaScript. It is a lightweight library meant
 to be encapsulated by higher level tools. At its core, Shifty provides:
