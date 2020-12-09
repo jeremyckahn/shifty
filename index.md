@@ -41,7 +41,7 @@ Shifty is meant to be a lightweight alternative to rich tools like the excellent
 <script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>
 </details>
 
-Shifty's tiny footprint compares very favorably with other popular animation libraries:
+Shifty's tiny footprint compares very favorably against other popular animation libraries:
 
 | Library      | Size                                                                                                                                   |
 | ------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
