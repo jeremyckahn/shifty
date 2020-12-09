@@ -1,8 +1,9 @@
 name: Publish
 
 on:
-  release:
-    types: [created]
+  create:
+    tags:
+      - v*
 
 jobs:
   run_tests:
