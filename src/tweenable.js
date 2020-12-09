@@ -459,8 +459,10 @@ export class Tweenable {
 
   /**
    * @method shifty.Tweenable#then
-   * @param {function} onFulfilled
-   * @param {function} onRejected
+   * @param {function} onFulfilled Receives {@link shifty.promisedData} as the
+   * first parameter.
+   * @param {function} onRejected Receives {@link shifty.promisedData} as the
+   * first parameter.
    * @return {external:Promise} This {@link external:Promise} resolves with a
    * {@link shifty.promisedData} object.
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then

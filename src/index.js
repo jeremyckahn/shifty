@@ -36,6 +36,11 @@ export { setBezierFunction, unsetBezierFunction } from './bezier'
  */
 
 /**
+ * @callback {Function} shifty.finishFunction
+ * @param {shifty.promisedData} promisedData
+ */
+
+/**
  * Gets called for every tick of the tween.  This function is not called on the
  * final tick of the animation.
  * @callback {Function} shifty.renderFunction
@@ -61,13 +66,18 @@ export { setBezierFunction, unsetBezierFunction } from './bezier'
  * @property {number} [delay] How many milliseconds to wait before starting the
  * tween.
  * @property {shifty.startFunction} [start] Executes when the tween begins.
+ * @property {shifty.finishFunction} [finish] Executes when the tween
+ * completes. This will get overridden by {@link shifty.Tweenable#then} if that
+ * is called, and it will not fire if {@link shifty.Tweenable#cancel} is
+ * called.
  * @property {shifty.renderFunction} [render] Executes on every tick. Shifty
  * assumes a [retained mode](https://en.wikipedia.org/wiki/Retained_mode)
  * rendering environment, which in practice means that `render` only gets
  * called when the tween state changes. Importantly, this means that `render`
- * is _not_ called when a tween is paused or waiting to start via the `delay`
- * option. This works naturally with DOM environments, but you may need to
- * account for this design in more custom environments such as `<canvas>`.
+ * is _not_ called when a tween is not animating (for instance, when it is
+ * paused or waiting to start via the `delay` option). This works naturally
+ * with DOM environments, but you may need to account for this design in more
+ * custom environments such as `<canvas>`.
  *
  * Legacy property name: `step`.
  * @property
