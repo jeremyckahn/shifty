@@ -635,13 +635,11 @@ describe('delay support', () => {
 describe('static tween', () => {
   test('midpoints of a tween are correctly computed', () => {
     Tweenable.now = () => 0
-    const thenable = tween({
+    const tweenable = tween({
       from: { x: 0 },
       to: { x: 100 },
       duration: 1000,
     })
-
-    tweenable = thenable.tweenable
 
     expect(tweenable.get().x).toEqual(0)
     Tweenable.now = () => 500
