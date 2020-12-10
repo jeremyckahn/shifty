@@ -1,8 +1,10 @@
 # Shifty
 
+**_The fastest JavaScript animation engine on the web_**
+
 ### `npm install --save shifty`
 
-[![Shifty license](https://badgen.net/github/license/jeremyckahn/shifty)](https://github.com/jeremyckahn/shifty/blob/develop/LICENSE-MIT)
+[![Current Shifty version](https://badgen.net/npm/v/shifty)](https://www.npmjs.com/package/shifty) [![Shifty license](https://badgen.net/github/license/jeremyckahn/shifty)](https://github.com/jeremyckahn/shifty/blob/develop/LICENSE-MIT) [![Downloads per week](https://badgen.net/npm/dw/shifty)](https://www.npmjs.com/package/shifty) [![GitHub stars](https://badgen.net/github/stars/jeremyckahn/shifty)](https://github.com/jeremyckahn/shifty/stargazers) [![Repo dependents](https://badgen.net/github/dependents-repo/jeremyckahn/shifty)](https://github.com/jeremyckahn/shifty/network/dependents)
 
 ## [Download](../shifty.js) • [Source](https://github.com/jeremyckahn/shifty)
 
