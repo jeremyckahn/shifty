@@ -225,6 +225,34 @@ describe('#tween', () => {
         expect(testState).toEqual({ x: 10 })
       })
     })
+
+    describe('rejection', () => {
+      let testState
+
+      test('rejects with final state', done => {
+        Tweenable.now = () => 0
+        tweenable = new Tweenable()
+
+        const tween = tweenable.tween({
+          from: { x: 0 },
+          to: { x: 10 },
+          duration: 500,
+        })
+
+        tween.catch(({ state }) => (testState = state))
+
+        Tweenable.now = () => 250
+        processTweens()
+
+        tween.cancel()
+
+        // Needs to be deferred to the next tick so the catch handler runs
+        setTimeout(() => {
+          expect(testState).toEqual({ x: 5 })
+          done()
+        })
+      })
+    })
   })
 
   describe('re-tweening previously paused tweens', () => {

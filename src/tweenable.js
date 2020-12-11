@@ -474,6 +474,17 @@ export class Tweenable {
   }
 
   /**
+   * @method shifty.Tweenable#catch
+   * @param {function} onRejected Receives {@link shifty.promisedData} as the
+   * first parameter.
+   * @return {external:Promise}
+   * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch
+   */
+  catch(onRejected) {
+    return this.then().catch(onRejected)
+  }
+
+  /**
    * @method shifty.Tweenable#get
    * @return {Object} The current state.
    */
