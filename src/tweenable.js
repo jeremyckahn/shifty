@@ -51,15 +51,7 @@ const formulas = { ...easingFunctions }
  * @returns {Object}
  * @private
  */
-export const tweenProps = ((
-  easedPosition,
-  easingFn,
-  easingObjectProp,
-  hasOneEase,
-  key,
-  normalizedPosition,
-  start
-) => (
+export const tweenProps = (
   forPosition,
   currentState,
   originalState,
@@ -68,18 +60,22 @@ export const tweenProps = ((
   timestamp,
   easing
 ) => {
-  normalizedPosition =
+  let easedPosition
+  let easingObjectProp
+  let start
+
+  const normalizedPosition =
     forPosition < timestamp ? 0 : (forPosition - timestamp) / duration
 
-  easingFn = null
-  hasOneEase = false
+  let easingFn = null
+  let hasOneEase = false
 
   if (easing && easing.call) {
     hasOneEase = true
     easedPosition = easing(normalizedPosition)
   }
 
-  for (key in currentState) {
+  for (const key in currentState) {
     if (!hasOneEase) {
       easingObjectProp = easing[key]
       easingFn = easingObjectProp.call
@@ -95,36 +91,25 @@ export const tweenProps = ((
   }
 
   return currentState
-})()
+}
 
-const processTween = ((
-  duration,
-  timestamp,
-  endTime,
-  timeToCompute,
-  hasEnded,
-  hasFilters,
-  offset,
-  currentState,
-  targetState,
-  delay
-) => (tween, currentTime) => {
-  timestamp = tween._timestamp
-  currentState = tween._currentState
-  delay = tween._delay
+const processTween = (tween, currentTime) => {
+  let timestamp = tween._timestamp
+  const currentState = tween._currentState
+  const delay = tween._delay
 
   if (currentTime < timestamp + delay) {
     return
   }
 
-  duration = tween._duration
-  targetState = tween._targetState
+  let duration = tween._duration
+  const targetState = tween._targetState
 
-  endTime = timestamp + delay + duration
-  timeToCompute = currentTime > endTime ? endTime : currentTime
-  hasEnded = timeToCompute >= endTime
-  offset = duration - (endTime - timeToCompute)
-  hasFilters = tween._filters.length > 0
+  const endTime = timestamp + delay + duration
+  let timeToCompute = currentTime > endTime ? endTime : currentTime
+  const hasEnded = timeToCompute >= endTime
+  const offset = duration - (endTime - timeToCompute)
+  const hasFilters = tween._filters.length > 0
 
   if (hasEnded) {
     tween._render(targetState, tween._data, offset)
@@ -159,37 +144,38 @@ const processTween = ((
   }
 
   tween._render(currentState, tween._data, offset)
-})()
+}
 
-export const processTweens = (currentTime, currentTween, nextTweenToProcess) =>
-  /**
-   * Process all tweens currently managed by Shifty for the current tick. This
-   * does not perform any timing or update scheduling; it is the logic that is
-   * run *by* the scheduling functionality. Specifically, it computes the state
-   * and calls all of the relevant {@link shifty.tweenConfig} functions supplied
-   * to each of the tweens for the current point in time (as determined by {@link
-   * shifty.Tweenable.now}.
-   *
-   * This is a low-level API that won't be needed in the majority of situations.
-   * It is primarily useful as a hook for higher-level animation systems that are
-   * built on top of Shifty. If you need this function, it is likely you need to
-   * pass something like `() => {}` to {@link
-   * shifty.Tweenable.setScheduleFunction}, override {@link shifty.Tweenable.now}
-   * and manage the scheduling logic yourself.
-   *
-   * @method shifty.processTweens
-   * @see https://github.com/jeremyckahn/shifty/issues/109
-   */
-  (() => {
-    currentTime = Tweenable.now()
-    currentTween = listHead
+/**
+ * Process all tweens currently managed by Shifty for the current tick. This
+ * does not perform any timing or update scheduling; it is the logic that is
+ * run *by* the scheduling functionality. Specifically, it computes the state
+ * and calls all of the relevant {@link shifty.tweenConfig} functions supplied
+ * to each of the tweens for the current point in time (as determined by {@link
+ * shifty.Tweenable.now}.
+ *
+ * This is a low-level API that won't be needed in the majority of situations.
+ * It is primarily useful as a hook for higher-level animation systems that are
+ * built on top of Shifty. If you need this function, it is likely you need to
+ * pass something like `() => {}` to {@link
+ * shifty.Tweenable.setScheduleFunction}, override {@link shifty.Tweenable.now}
+ * and manage the scheduling logic yourself.
+ *
+ * @method shifty.processTweens
+ * @see https://github.com/jeremyckahn/shifty/issues/109
+ */
+export const processTweens = () => {
+  let nextTweenToProcess
 
-    while (currentTween) {
-      nextTweenToProcess = currentTween._next
-      processTween(currentTween, currentTime)
-      currentTween = nextTweenToProcess
-    }
-  })()
+  const currentTime = Tweenable.now()
+  let currentTween = listHead
+
+  while (currentTween) {
+    nextTweenToProcess = currentTween._next
+    processTween(currentTween, currentTime)
+    currentTween = nextTweenToProcess
+  }
+}
 
 const getCurrentTime = Date.now || (() => +new Date())
 let now
@@ -412,15 +398,14 @@ export class Tweenable {
 
     const { from, to = {} } = config
     const { _currentState, _originalState, _targetState } = this
-    let key
 
-    for (key in from) {
+    for (const key in from) {
       _currentState[key] = from[key]
     }
 
     let anyPropsAreStrings = false
 
-    for (key in _currentState) {
+    for (const key in _currentState) {
       const currentProp = _currentState[key]
 
       if (!anyPropsAreStrings && typeof currentProp === TYPE_STRING) {
@@ -442,7 +427,7 @@ export class Tweenable {
     this._filters.length = 0
 
     if (anyPropsAreStrings) {
-      for (key in Tweenable.filters) {
+      for (const key in Tweenable.filters) {
         if (Tweenable.filters[key].doesApply(this)) {
           this._filters.push(Tweenable.filters[key])
         }
