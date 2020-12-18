@@ -44,6 +44,15 @@ module.exports = [
   },
   {
     ...config,
+    entry: './src/core.index.js',
+    target: 'web',
+    output: {
+      ...output,
+      filename: 'shifty.core.js',
+    },
+  },
+  {
+    ...config,
     target: 'node',
     output: {
       ...output,
