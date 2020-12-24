@@ -1,4 +1,4 @@
-# Shifty - A simple, fast, Promise-based tweening engine in JavaScript
+# Shifty - The fastest JavaScript animation engine on the web
 
 - `master`: [![CI](https://github.com/jeremyckahn/shifty/workflows/CI/badge.svg?branch=master)](https://github.com/jeremyckahn/shifty/actions?query=workflow%3ACI+branch%3Amaster)
 - `develop`: [![CI](https://github.com/jeremyckahn/shifty/workflows/CI/badge.svg?branch=develop)](https://github.com/jeremyckahn/shifty/actions?query=workflow%3ACI+branch%3Adevelop)
@@ -6,6 +6,7 @@
 Shifty is a tweening engine for JavaScript. It is a lightweight library meant
 to be encapsulated by higher level tools. At its core, Shifty provides:
 
+- Best-in-class performance
 - Interpolation of `Number`s over time (tweening)
 - Playback control of an individual tween
 - Extensibility hooks for key points in the tweening process
@@ -47,10 +48,10 @@ import { tween } from 'shifty'
 npm install --save shifty
 ```
 
-## Browser compatibility
+## Environment compatibility
 
-Shifty officially supports Evergreen browsers, Safari, and Node. If you
-encounter a browser-specific bug, please [open an issue about
+Shifty officially supports Evergreen browsers, Safari, and Node 10 and above.
+If you encounter a browser-specific bug, please [open an issue about
 it](https://github.com/jeremyckahn/shifty/issues/new)!
 
 ### IE compatibility

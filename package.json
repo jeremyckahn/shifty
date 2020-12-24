@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/jeremyckahn/shifty.git"
   },
-  "description": "A teeny tiny tweening engine in JavaScript.",
+  "description": "The fastest JavaScript animation engine on the web",
   "browser": "dist/shifty.js",
   "main": "dist/shifty.node.js",
   "devDependencies": {
