@@ -33,12 +33,21 @@ const output = {
   umdNamedDefine: true,
 }
 
+const webEnvironmentConfig = {
+  arrowFunction: false,
+  const: false,
+  destructuring: false,
+  // forOf: false,
+  module: false,
+}
+
 module.exports = [
   {
     ...config,
     target: 'web',
     output: {
       ...output,
+      environment: webEnvironmentConfig,
       filename: 'shifty.js',
     },
   },
@@ -48,6 +57,7 @@ module.exports = [
     target: 'web',
     output: {
       ...output,
+      environment: webEnvironmentConfig,
       filename: 'shifty.core.js',
     },
   },
