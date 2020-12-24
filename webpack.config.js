@@ -1,12 +1,9 @@
-/* global __dirname */
-const path = require('path')
 const Webpack = require('webpack')
 
 const { version } = require('./package.json')
 
 const config = {
   mode: 'production',
-  entry: './src/index.js',
   devtool: 'source-map',
   module: {
     rules: [
@@ -29,41 +26,30 @@ const config = {
 const output = {
   library: 'shifty',
   libraryTarget: 'umd',
-  path: path.join(__dirname, 'dist'),
   umdNamedDefine: true,
-}
-
-const webEnvironmentConfig = {
-  arrowFunction: false,
-  const: false,
-  destructuring: false,
-  // forOf: false,
-  module: false,
 }
 
 module.exports = [
   {
     ...config,
-    target: 'web',
+    target: ['web', 'es5'],
     output: {
       ...output,
-      environment: webEnvironmentConfig,
       filename: 'shifty.js',
     },
   },
   {
     ...config,
     entry: './src/core.index.js',
-    target: 'web',
+    target: ['web', 'es5'],
     output: {
       ...output,
-      environment: webEnvironmentConfig,
       filename: 'shifty.core.js',
     },
   },
   {
     ...config,
-    target: 'node',
+    target: 'node10',
     output: {
       ...output,
       filename: 'shifty.node.js',
