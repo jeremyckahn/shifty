@@ -1,5 +1,7 @@
 # Shifty - The fastest JavaScript animation engine on the web
 
+[![Current Shifty version](https://badgen.net/npm/v/shifty)](https://www.npmjs.com/package/shifty)
+
 - `master`: [![CI](https://github.com/jeremyckahn/shifty/workflows/CI/badge.svg?branch=master)](https://github.com/jeremyckahn/shifty/actions?query=workflow%3ACI+branch%3Amaster)
 - `develop`: [![CI](https://github.com/jeremyckahn/shifty/workflows/CI/badge.svg?branch=develop)](https://github.com/jeremyckahn/shifty/actions?query=workflow%3ACI+branch%3Adevelop)
 
@@ -101,7 +103,7 @@ To generate the documentation (`dist/doc`):
 npm run doc
 ```
 
-To generate live documentation in your browser:
+To generate live documentation to preview in your browser:
 
 ```
 npm run doc:live
