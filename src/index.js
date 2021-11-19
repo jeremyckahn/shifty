@@ -23,43 +23,47 @@ export { setBezierFunction, unsetBezierFunction } from './bezier'
  */
 
 /**
- * @callback {Function} shifty.easingFunction
+ * @callback shifty.easingFunction
  * @param {number} position The normalized (0-1) position of the tween.
  * @return {number} The curve-adjusted value.
  */
 
 /**
- * @callback {Function} shifty.startFunction
+ * @callback shifty.startFunction
  * @param {Object} state The current state of the tween.
  * @param {Object|undefined} [data] User-defined data provided via a {@link
  * shifty.tweenConfig}.
+ * @returns {void}
  */
 
 /**
- * @callback {Function} shifty.finishFunction
+ * @callback shifty.finishFunction
  * @param {shifty.promisedData} promisedData
+ * @returns {void}
  */
 
 /**
  * Gets called for every tick of the tween.  This function is not called on the
  * final tick of the animation.
- * @callback {Function} shifty.renderFunction
+ * @callback shifty.renderFunction
  * @param {Object} state The current state of the tween.
- * @param {Object|undefined} [data] User-defined data provided via a {@link
+ * @param {Object|undefined} data User-defined data provided via a {@link
  * shifty.tweenConfig}.
  * @param {number} timeElapsed The time elapsed since the start of the tween.
+ * @returns {void}
  */
 
 /**
  * @callback shifty.scheduleFunction
  * @param {Function} callback
  * @param {number} timeout
+ * @returns {void}
  */
 
 /**
  * @typedef {Object} shifty.tweenConfig
  * @property {Object} [from] Starting position.  If omitted, {@link
- * shifty.Tweenable#get} is used.
+ * Tweenable#get} is used.
  * @property {Object} [to] Ending position.  The keys of this Object should
  * match those of `to`.
  * @property {number} [duration] How many milliseconds to animate for.
@@ -67,8 +71,8 @@ export { setBezierFunction, unsetBezierFunction } from './bezier'
  * tween.
  * @property {shifty.startFunction} [start] Executes when the tween begins.
  * @property {shifty.finishFunction} [finish] Executes when the tween
- * completes. This will get overridden by {@link shifty.Tweenable#then} if that
- * is called, and it will not fire if {@link shifty.Tweenable#cancel} is
+ * completes. This will get overridden by {@link Tweenable#then} if that
+ * is called, and it will not fire if {@link Tweenable#cancel} is
  * called.
  * @property {shifty.renderFunction} [render] Executes on every tick. Shifty
  * assumes a [retained mode](https://en.wikipedia.org/wiki/Retained_mode)
@@ -80,9 +84,8 @@ export { setBezierFunction, unsetBezierFunction } from './bezier'
  * custom environments such as `<canvas>`.
  *
  * Legacy property name: `step`.
- * @property
- * {Object.<string|shifty.easingFunction>|string|shifty.easingFunction}
- * [easing] Easing curve name(s) or {@link shifty.easingFunction}(s) to apply
+ * @property {Object<string|shifty.easingFunction>|string|shifty.easingFunction} [easing]
+ * Easing curve name(s) or {@link shifty.easingFunction}(s) to apply
  * to the properties of the tween.  If this is an Object, the keys should
  * correspond to `to`/`from`.  You can learn more about this in the {@tutorial
  * easing-function-in-depth} tutorial.
@@ -97,7 +100,7 @@ export { setBezierFunction, unsetBezierFunction } from './bezier'
  * @typedef {Object} shifty.promisedData
  * @property {Object} state The current state of the tween.
  * @property {Object} data The `data` Object that the tween was configured with.
- * @property {shifty.Tweenable} tweenable The {@link shifty.Tweenable} instance to
+ * @property {Tweenable} tweenable The {@link Tweenable} instance to
  * which the tween belonged.
  */
 
@@ -105,8 +108,8 @@ export { setBezierFunction, unsetBezierFunction } from './bezier'
  * Is called when a tween is created to determine if a filter is needed.
  * Filters are only added to a tween when it is created so that they are not
  * unnecessarily processed if they don't apply during an update tick.
- * @callback {Function} shifty.doesApplyFilter
- * @param {shifty.Tweenable} tweenable The {@link shifty.Tweenable} instance.
+ * @callback shifty.doesApplyFilter
+ * @param {Tweenable} tweenable The {@link Tweenable} instance.
  * @return {boolean}
  */
 
@@ -114,20 +117,23 @@ export { setBezierFunction, unsetBezierFunction } from './bezier'
  * Is called when a tween is created.  This should perform any setup needed by
  * subsequent per-tick calls to {@link shifty.beforeTween} and {@link
  * shifty.afterTween}.
- * @callback {Function} shifty.tweenCreatedFilter
- * @param {shifty.Tweenable} tweenable The {@link shifty.Tweenable} instance.
+ * @callback shifty.tweenCreatedFilter
+ * @param {Tweenable} tweenable The {@link Tweenable} instance.
+ * @returns {void}
  */
 
 /**
  * Is called right before a tween is processed in a tick.
- * @callback {Function} shifty.beforeTweenFilter
- * @param {shifty.Tweenable} tweenable The {@link shifty.Tweenable} instance.
+ * @callback shifty.beforeTweenFilter
+ * @param {Tweenable} tweenable The {@link Tweenable} instance.
+ * @returns {void}
  */
 
 /**
  * Is called right after a tween is processed in a tick.
- * @callback {Function} shifty.afterTweenFilter
- * @param {shifty.Tweenable} tweenable The {@link shifty.Tweenable} instance.
+ * @callback shifty.afterTweenFilter
+ * @param {Tweenable} tweenable The {@link Tweenable} instance.
+ * @returns {void}
  */
 
 /**

@@ -1,3 +1,5 @@
+/** @typedef {import("./tweenable").Tweenable} Tweenable */
+
 const R_NUMBER_COMPONENT = /(\d|-|\.)/
 const R_FORMAT_CHUNKS = /([^\-0-9.]+)/g
 const R_UNFORMATTED_VALUES = /[0-9.-]+/g
@@ -350,6 +352,10 @@ const collapseEasingObject = (easingObject, tokenData) => {
   }
 }
 
+/**
+ * @memberof Tweenable.filters.token
+ * @param {Tweenable} tweenable
+ */
 export const doesApply = tweenable => {
   for (const key in tweenable._currentState) {
     if (typeof tweenable._currentState[key] === 'string') {
@@ -360,6 +366,10 @@ export const doesApply = tweenable => {
   return false
 }
 
+/**
+ * @memberof Tweenable.filters.token
+ * @param {Tweenable} tweenable
+ */
 export function tweenCreated(tweenable) {
   const { _currentState, _originalState, _targetState } = tweenable
 
@@ -370,6 +380,10 @@ export function tweenCreated(tweenable) {
   tweenable._tokenData = getFormatSignatures(_currentState)
 }
 
+/**
+ * @memberof Tweenable.filters.token
+ * @param {Tweenable} tweenable
+ */
 export function beforeTween(tweenable) {
   const {
     _currentState,
@@ -385,6 +399,10 @@ export function beforeTween(tweenable) {
   )
 }
 
+/**
+ * @memberof Tweenable.filters.token
+ * @param {Tweenable} tweenable
+ */
 export function afterTween(tweenable) {
   const {
     _currentState,

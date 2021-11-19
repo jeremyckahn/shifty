@@ -1,4 +1,5 @@
 import { Tweenable } from './tweenable'
+/** @typedef {import(".").shifty.easingFunction} shifty.easingFunction */
 
 /**
  * The Bezier magic in this file is adapted/copied almost wholesale from
@@ -152,18 +153,18 @@ const getCubicBezierTransition = (x1, y1, x2, y2) => pos =>
 
 /**
  * Create a Bezier easing function and attach it to {@link
- * shifty.Tweenable.formulas}.  This function gives you total control over the
+ * Tweenable.formulas}.  This function gives you total control over the
  * easing curve.  Matthew Lein's [Ceaser](http://matthewlein.com/ceaser/) is a
  * useful tool for visualizing the curves you can make with this function.
  * @method shifty.setBezierFunction
  * @param {string} name The name of the easing curve.  Overwrites the old
- * easing function on {@link shifty.Tweenable.formulas} if it exists.
+ * easing function on {@link Tweenable.formulas} if it exists.
  * @param {number} x1
  * @param {number} y1
  * @param {number} x2
  * @param {number} y2
  * @return {shifty.easingFunction} The {@link shifty.easingFunction} that was
- * attached to {@link shifty.Tweenable.formulas}.
+ * attached to {@link Tweenable.formulas}.
  */
 export const setBezierFunction = (name, x1, y1, x2, y2) => {
   const cubicBezierTransition = getCubicBezierTransition(x1, y1, x2, y2)
@@ -178,7 +179,7 @@ export const setBezierFunction = (name, x1, y1, x2, y2) => {
 }
 
 /**
- * `delete` an easing function from {@link shifty.Tweenable.formulas}.  Be
+ * `delete` an easing function from {@link Tweenable.formulas}.  Be
  * careful with this method, as it `delete`s whatever easing formula matches
  * `name` (which means you can delete standard Shifty easing functions).
  * @method shifty.unsetBezierFunction
