@@ -1,4 +1,5 @@
 /** @typedef {import("./tweenable").Tweenable} Tweenable */
+
 export class Scene {
   #tweenables = []
 

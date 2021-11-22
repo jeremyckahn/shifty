@@ -355,6 +355,7 @@ const collapseEasingObject = (easingObject, tokenData) => {
 /**
  * @memberof Tweenable.filters.token
  * @param {Tweenable} tweenable
+ * @returns {boolean}
  */
 export const doesApply = tweenable => {
   for (const key in tweenable._currentState) {

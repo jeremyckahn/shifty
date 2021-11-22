@@ -1,5 +1,4 @@
 import * as easingFunctions from './easing-functions'
-import * as token from './token'
 /** @typedef {import("./index").shifty.filter} shifty.filter */
 /** @typedef {import("./index").shifty.tweenConfig} shifty.tweenConfig */
 /** @typedef {import("./index").shifty.scheduleFunction} shifty.scheduleFunction */
@@ -37,10 +36,13 @@ let listTail = null
  * @private
  * @internal
  */
-export const resetList = () => (listHead = listTail = null)
+export const resetList = () => {
+  listHead = listTail = null
+}
 
 /**
  * Strictly for testing.
+ * @returns {Tweenable}
  * @private
  * @internal
  */
@@ -48,6 +50,7 @@ export const getListHead = () => listHead
 
 /**
  * Strictly for testing.
+ * @returns {Tweenable}
  * @private
  * @internal
  */
@@ -560,7 +563,11 @@ export class Tweenable {
     return this._resume()
   }
 
-  /** @private */
+  /**
+   * @private
+   * @param {number} currentTime
+   * @returns {Tweenable}
+   */
   _resume(currentTime = Tweenable.now()) {
     if (this._timestamp === null) {
       return this.tween()
