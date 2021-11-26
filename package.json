@@ -44,7 +44,7 @@
     "test": "jest --watch",
     "ci": "npm run lint && jest",
     "doc": "jsdoc -c .jsdoc src/*.js",
-    "doc:view": "serve -s dist/doc",
+    "doc:view": "serve dist/doc",
     "doc:watch": "nodemon --exec \"npm run doc\" --watch src --watch ./ --ext js,md --ignore dist",
     "doc:live": "run-p doc:watch doc:view",
     "lint": "eslint src webpack.*",
