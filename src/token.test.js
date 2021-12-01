@@ -25,6 +25,19 @@ test('can tween an rgb color with a number in the tween', () => {
   expect(interpolated.color).toEqual(to.color)
 })
 
+test('can tween an rgba color with a number in the tween', () => {
+  const from = { color: 'rgba(0,128,255,0)', x: 0 },
+    to = { color: 'rgba(128,255,0,1)', x: 10 }
+
+  let interpolated = interpolate(from, to, 0)
+  expect(interpolated.color).toEqual(from.color)
+  interpolated = interpolate(from, to, 0.5)
+  expect(interpolated.color).toEqual('rgba(64,191,127,0.5)')
+  expect(interpolated.x).toEqual(5)
+  interpolated = interpolate(from, to, 1)
+  expect(interpolated.color).toEqual(to.color)
+})
+
 test('can tween hex color values', () => {
   const from = { color: '#ff00ff' },
     to = { color: '#00ff00' }
@@ -49,7 +62,7 @@ test('can tween multiple rgb color tokens', () => {
   expect(interpolated.color).toEqual(to.color)
 })
 
-test("each token chunk can have it's own easing curve", () => {
+test('each token chunk can have its own easing curve', () => {
   const from = { color: 'rgb(0,0,0)' },
     to = { color: 'rgb(255,255,255)' },
     easing = 'linear easeInQuad easeInCubic'
