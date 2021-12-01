@@ -3,13 +3,16 @@
 const R_NUMBER_COMPONENT = /(\d|-|\.)/
 const R_FORMAT_CHUNKS = /([^\-0-9.]+)/g
 const R_UNFORMATTED_VALUES = /[0-9.-]+/g
-const R_RGB = (() => {
+const R_RGBA = (() => {
   const number = R_UNFORMATTED_VALUES.source
   const comma = /,\s*/.source
 
-  return new RegExp(`rgb\\(${number}${comma}${number}${comma}${number}\\)`, 'g')
+  return new RegExp(
+    `rgba?\\(${number}${comma}${number}${comma}${number}(${comma}${number})?\\)`,
+    'g'
+  )
 })()
-const R_RGB_PREFIX = /^.*\(/
+const R_RGBA_PREFIX = /^.*\(/
 const R_HEX = /#([0-9]|[a-f]){3,6}/gi
 const VALUE_PLACEHOLDER = 'VAL'
 
@@ -164,11 +167,18 @@ const sanitizeObjectForHexProps = stateObject => {
  * @return {string}
  * @private
  */
-const sanitizeRGBChunk = rgbChunk => {
-  const numbers = rgbChunk.match(R_UNFORMATTED_VALUES).map(Math.floor)
-  const prefix = rgbChunk.match(R_RGB_PREFIX)[0]
+const sanitizeRGBAChunk = rgbChunk => {
+  const rgbaRawValues = rgbChunk.match(R_UNFORMATTED_VALUES)
+  const rgbNumbers = rgbaRawValues.slice(0, 3).map(Math.floor)
+  const prefix = rgbChunk.match(R_RGBA_PREFIX)[0]
 
-  return `${prefix}${numbers.join(',')})`
+  if (rgbaRawValues.length === 3) {
+    return `${prefix}${rgbNumbers.join(',')})`
+  } else if (rgbaRawValues.length === 4) {
+    return `${prefix}${rgbNumbers.join(',')},${rgbaRawValues[3]})`
+  }
+
+  throw new Error(`Invalid rgbChunk: ${rgbChunk}`)
 }
 
 /**
@@ -180,7 +190,7 @@ const sanitizeRGBChunk = rgbChunk => {
  * @private
  */
 const sanitizeRGBChunks = formattedString =>
-  filterStringChunks(R_RGB, formattedString, sanitizeRGBChunk)
+  filterStringChunks(R_RGBA, formattedString, sanitizeRGBAChunk)
 
 /**
  * Note: It's the duty of the caller to convert the Array elements of the
