@@ -42,7 +42,7 @@
     "typegen": "tsc",
     "typegen:watch": "tsc --watch",
     "test": "jest --watch",
-    "ci": "npm run lint && jest",
+    "ci": "npm run lint && jest && tsc",
     "doc": "jsdoc -c .jsdoc src/*.js",
     "doc:view": "serve dist/doc",
     "doc:watch": "nodemon --exec \"npm run doc\" --watch src --watch ./ --ext js,md --ignore dist",
