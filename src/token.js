@@ -175,6 +175,8 @@ const sanitizeRGBAChunk = rgbChunk => {
   } else if (rgbaRawValues.length === 4) {
     return `${prefix}${rgbNumbers.join(',')},${rgbaRawValues[3]})`
   }
+
+  throw new Error(`Invalid rgbChunk: ${rgbChunk}`)
 }
 
 /**
