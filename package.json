@@ -10,6 +10,7 @@
   "description": "The fastest JavaScript animation engine on the web",
   "browser": "dist/shifty.js",
   "main": "dist/shifty.node.js",
+  "types": "./dist/index.d.ts",
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
@@ -32,15 +33,18 @@
     "prettier": "^1.16.4",
     "pretty-quick": "^1.10.0",
     "serve": "^11.3.2",
+    "typescript": "^4.4.4",
     "webpack": "^5.11.0",
     "webpack-cli": "^4.2.0"
   },
   "scripts": {
     "build": "webpack",
+    "typegen": "tsc",
+    "typegen:watch": "tsc --watch",
     "test": "jest --watch",
-    "ci": "npm run lint && jest",
+    "ci": "npm run lint && jest && tsc",
     "doc": "jsdoc -c .jsdoc src/*.js",
-    "doc:view": "serve -s dist/doc",
+    "doc:view": "serve dist/doc",
     "doc:watch": "nodemon --exec \"npm run doc\" --watch src --watch ./ --ext js,md --ignore dist",
     "doc:live": "run-p doc:watch doc:view",
     "lint": "eslint src webpack.*",

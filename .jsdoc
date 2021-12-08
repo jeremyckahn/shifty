@@ -1,5 +1,8 @@
 {
-  "plugins": ["plugins/markdown"],
+  "plugins": [
+    "plugins/markdown",
+    "./jsdoc-ts.js"
+  ],
   "opts": {
     "destination": "dist/doc",
     "readme": "index.md",

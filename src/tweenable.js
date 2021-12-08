@@ -1,4 +1,7 @@
 import * as easingFunctions from './easing-functions'
+/** @typedef {import("./index").shifty.filter} shifty.filter */
+/** @typedef {import("./index").shifty.tweenConfig} shifty.tweenConfig */
+/** @typedef {import("./index").shifty.scheduleFunction} shifty.scheduleFunction */
 
 // CONSTANTS
 const DEFAULT_EASING = 'linear'
@@ -28,9 +31,29 @@ const noop = () => {}
 let listHead = null
 let listTail = null
 
-// Strictly used for testing
-export const resetList = () => (listHead = listTail = null)
+/**
+ * Strictly for testing.
+ * @private
+ * @internal
+ */
+export const resetList = () => {
+  listHead = listTail = null
+}
+
+/**
+ * Strictly for testing.
+ * @returns {Tweenable}
+ * @private
+ * @internal
+ */
 export const getListHead = () => listHead
+
+/**
+ * Strictly for testing.
+ * @returns {Tweenable}
+ * @private
+ * @internal
+ */
 export const getListTail = () => listTail
 
 const formulas = { ...easingFunctions }
@@ -46,7 +69,7 @@ const formulas = { ...easingFunctions }
  * is tweening to.
  * @param {number} duration: The length of the tween in milliseconds.
  * @param {number} timestamp: The UNIX epoch time at which the tween began.
- * @param {Object<string|Function>} easing: This Object's keys must correspond
+ * @param {Record<string, string|Function>} easing: This Object's keys must correspond
  * to the keys in targetState.
  * @returns {Object}
  * @private
@@ -152,13 +175,13 @@ const processTween = (tween, currentTime) => {
  * run *by* the scheduling functionality. Specifically, it computes the state
  * and calls all of the relevant {@link shifty.tweenConfig} functions supplied
  * to each of the tweens for the current point in time (as determined by {@link
- * shifty.Tweenable.now}.
+ * Tweenable.now}.
  *
  * This is a low-level API that won't be needed in the majority of situations.
  * It is primarily useful as a hook for higher-level animation systems that are
  * built on top of Shifty. If you need this function, it is likely you need to
  * pass something like `() => {}` to {@link
- * shifty.Tweenable.setScheduleFunction}, override {@link shifty.Tweenable.now}
+ * Tweenable.setScheduleFunction}, override {@link Tweenable.now}
  * and manage the scheduling logic yourself.
  *
  * @method shifty.processTweens
@@ -183,7 +206,7 @@ let now
 /**
  * Handles the update logic for one tick of a tween.
  * @param {number} [currentTimeOverride] Needed for accurate timestamp in
- * shifty.Tweenable#seek.
+ * Tweenable#seek.
  * @private
  */
 export const scheduleUpdate = () => {
@@ -200,10 +223,10 @@ export const scheduleUpdate = () => {
  *
  * If the tween has only one easing across all properties, that function is
  * returned directly.
- * @param {Object.<string|Function>} fromTweenParams
+ * @param {Record<string, string|Function>} fromTweenParams
  * @param {Object|string|Function} [easing]
  * @param {Object} [composedEasing] Reused composedEasing object (used internally)
- * @return {Object.<string|Function>|Function}
+ * @return {Record<string, string|Function>|Function}
  * @private
  */
 export const composeEasingObject = (
@@ -267,7 +290,7 @@ const defaultPromiseCtor = typeof Promise === 'function' ? Promise : null
 
 export class Tweenable {
   /**
-   * @method shifty.Tweenable.now
+   * @method Tweenable.now
    * @static
    * @returns {number} The current timestamp.
    */
@@ -276,26 +299,42 @@ export class Tweenable {
   /**
    * @param {Object} [initialState={}] The values that the initial tween should
    * start at if a `from` value is not provided to {@link
-   * shifty.Tweenable#tween} or {@link shifty.Tweenable#setConfig}.
+   * Tweenable#tween} or {@link Tweenable#setConfig}.
    * @param {shifty.tweenConfig} [config] Configuration object to be passed to
-   * {@link shifty.Tweenable#setConfig}.
-   * @constructs shifty.Tweenable
+   * {@link Tweenable#setConfig}.
+   * @constructs Tweenable
+   * @memberof shifty
    */
   constructor(initialState = {}, config = undefined) {
+    /** @private */
     this._config = {}
+    /** @private */
     this._data = {}
+    /** @private */
     this._delay = 0
+    /** @private */
     this._filters = []
+    /** @private */
     this._next = null
+    /** @private */
     this._previous = null
+    /** @private */
     this._timestamp = null
+    /** @private */
     this._resolve = null
+    /** @private */
     this._reject = null
+    /** @private */
     this._currentState = initialState || {}
+    /** @private */
     this._originalState = {}
+    /** @private */
     this._targetState = {}
+    /** @private */
     this._start = noop
+    /** @private */
     this._render = noop
+    /** @private */
     this._promiseCtor = defaultPromiseCtor
 
     // To prevent unnecessary calls to setConfig do not set default
@@ -323,13 +362,13 @@ export class Tweenable {
   }
 
   /**
-   * Configure and start a tween. If this {@link shifty.Tweenable}'s instance
+   * Configure and start a tween. If this {@link Tweenable}'s instance
    * is already running, then it will stop playing the old tween and
    * immediately play the new one.
-   * @method shifty.Tweenable#tween
+   * @method Tweenable#tween
    * @param {shifty.tweenConfig} [config] Gets passed to {@link
-   * shifty.Tweenable#setConfig}.
-   * @return {shifty.Tweenable}
+   * Tweenable#setConfig}.
+   * @return {Tweenable}
    */
   tween(config = undefined) {
     if (this._isPlaying) {
@@ -340,6 +379,7 @@ export class Tweenable {
       this.setConfig(config)
     }
 
+    /** @private */
     this._pausedAtTime = null
     this._timestamp = Tweenable.now()
     this._start(this.get(), this._data)
@@ -355,10 +395,10 @@ export class Tweenable {
    * Configure a tween that will start at some point in the future. Aside from
    * `delay`, `from`, and `to`, each configuration option will automatically
    * default to the same option used in the preceding tween of this {@link
-   * shifty.Tweenable} instance.
-   * @method shifty.Tweenable#setConfig
+   * Tweenable} instance.
+   * @method Tweenable#setConfig
    * @param {shifty.tweenConfig} [config={}]
-   * @return {shifty.Tweenable}
+   * @return {Tweenable}
    */
   setConfig(config = {}) {
     const { _config } = this
@@ -383,13 +423,21 @@ export class Tweenable {
     this._data = _config.data || _config.attachment || this._data
 
     // Init the internal state
+    /** @private */
     this._isPlaying = false
+    /** @private */
     this._pausedAtTime = null
+    /** @private */
     this._scheduleId = null
+    /** @private */
     this._delay = config.delay || 0
+    /** @private */
     this._start = start
+    /** @private */
     this._render = render || step
+    /** @private */
     this._duration = _config.duration || DEFAULT_DURATION
+    /** @private */
     this._promiseCtor = promise
 
     if (finish) {
@@ -418,6 +466,7 @@ export class Tweenable {
       _targetState[key] = to.hasOwnProperty(key) ? to[key] : currentProp
     }
 
+    /** @private */
     this._easing = composeEasingObject(
       this._currentState,
       _config.easing,
@@ -441,15 +490,16 @@ export class Tweenable {
 
   /**
    * Overrides any `finish` function passed via a {@link shifty.tweenConfig}.
-   * @method shifty.Tweenable#then
+   * @method Tweenable#then
    * @param {function} onFulfilled Receives {@link shifty.promisedData} as the
    * first parameter.
    * @param {function} onRejected Receives {@link shifty.promisedData} as the
    * first parameter.
-   * @return {external:Promise}
+   * @return {Promise<Object>}
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then
    */
   then(onFulfilled, onRejected) {
+    /** @private */
     this._promise = new this._promiseCtor((resolve, reject) => {
       this._resolve = resolve
       this._reject = reject
@@ -459,10 +509,10 @@ export class Tweenable {
   }
 
   /**
-   * @method shifty.Tweenable#catch
+   * @method Tweenable#catch
    * @param {function} onRejected Receives {@link shifty.promisedData} as the
    * first parameter.
-   * @return {external:Promise}
+   * @return {Promise<Object>}
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch
    */
   catch(onRejected) {
@@ -470,7 +520,7 @@ export class Tweenable {
   }
 
   /**
-   * @method shifty.Tweenable#get
+   * @method Tweenable#get
    * @return {Object} The current state.
    */
   get() {
@@ -479,7 +529,7 @@ export class Tweenable {
 
   /**
    * Set the current state.
-   * @method shifty.Tweenable#set
+   * @method Tweenable#set
    * @param {Object} state The state to set.
    */
   set(state) {
@@ -489,8 +539,8 @@ export class Tweenable {
   /**
    * Pause a tween. Paused tweens can be resumed from the point at which they
    * were paused. If a tween is not running, this is a no-op.
-   * @method shifty.Tweenable#pause
-   * @return {shifty.Tweenable}
+   * @method Tweenable#pause
+   * @return {Tweenable}
    */
   pause() {
     if (!this._isPlaying) {
@@ -506,13 +556,18 @@ export class Tweenable {
 
   /**
    * Resume a paused tween.
-   * @method shifty.Tweenable#resume
-   * @return {shifty.Tweenable}
+   * @method Tweenable#resume
+   * @return {Tweenable}
    */
   resume() {
     return this._resume()
   }
 
+  /**
+   * @private
+   * @param {number} currentTime
+   * @returns {Tweenable}
+   */
   _resume(currentTime = Tweenable.now()) {
     if (this._timestamp === null) {
       return this.tween()
@@ -546,10 +601,10 @@ export class Tweenable {
    * Move the state of the animation to a specific point in the tween's
    * timeline.  If the animation is not running, this will cause {@link
    * shifty.renderFunction} handlers to be called.
-   * @method shifty.Tweenable#seek
-   * @param {millisecond} millisecond The millisecond of the animation to seek
+   * @method Tweenable#seek
+   * @param {number} millisecond The millisecond of the animation to seek
    * to.  This must not be less than `0`.
-   * @return {shifty.Tweenable}
+   * @return {Tweenable}
    */
   seek(millisecond) {
     millisecond = Math.max(millisecond, 0)
@@ -570,12 +625,12 @@ export class Tweenable {
   /**
    * Stops a tween. If a tween is not running, this is a no-op. This method
    * does not cancel the tween {@link external:Promise}. For that, use {@link
-   * shifty.Tweenable#cancel}.
+   * Tweenable#cancel}.
    * @param {boolean} [gotoEnd] If `false`, the tween just stops at its current
    * state.  If `true`, the tweened object's values are instantly set to the
    * target values.
-   * @method shifty.Tweenable#stop
-   * @return {shifty.Tweenable}
+   * @method Tweenable#stop
+   * @return {Tweenable}
    */
   stop(gotoEnd = false) {
     if (!this._isPlaying) {
@@ -624,12 +679,12 @@ export class Tweenable {
   }
 
   /**
-   * {@link shifty.Tweenable#stop}s a tween and also `reject`s its {@link
+   * {@link Tweenable#stop}s a tween and also `reject`s its {@link
    * external:Promise}. If a tween is not running, this is a no-op. Prevents
    * calling any provided `finish` function.
-   * @param {boolean} [gotoEnd] Is propagated to {@link shifty.Tweenable#stop}.
-   * @method shifty.Tweenable#cancel
-   * @return {shifty.Tweenable}
+   * @param {boolean} [gotoEnd] Is propagated to {@link Tweenable#stop}.
+   * @method Tweenable#cancel
+   * @return {Tweenable}
    * @see https://github.com/jeremyckahn/shifty/issues/122
    */
   cancel(gotoEnd = false) {
@@ -655,7 +710,7 @@ export class Tweenable {
 
   /**
    * Whether or not a tween is running.
-   * @method shifty.Tweenable#isPlaying
+   * @method Tweenable#isPlaying
    * @return {boolean}
    */
   isPlaying() {
@@ -663,9 +718,9 @@ export class Tweenable {
   }
 
   /**
-   * @method shifty.Tweenable#setScheduleFunction
+   * @method Tweenable#setScheduleFunction
    * @param {shifty.scheduleFunction} scheduleFunction
-   * @deprecated Will be removed in favor of {@link shifty.Tweenable.setScheduleFunction} in 3.0.
+   * @deprecated Will be removed in favor of {@link Tweenable.setScheduleFunction} in 3.0.
    */
   setScheduleFunction(scheduleFunction) {
     Tweenable.setScheduleFunction(scheduleFunction)
@@ -676,7 +731,7 @@ export class Tweenable {
    * shifty.promisedData}, {@link shifty.startFunction} and {@link
    * shifty.renderFunction}.
    * @param {Object} [data]
-   * @method shifty.Tweenable#data
+   * @method Tweenable#data
    * @return {Object} The internally stored `data`.
    */
   data(data = null) {
@@ -689,8 +744,8 @@ export class Tweenable {
 
   /**
    * `delete` all "own" properties.  Call this when the {@link
-   * shifty.Tweenable} instance is no longer needed to free memory.
-   * @method shifty.Tweenable#dispose
+   * Tweenable} instance is no longer needed to free memory.
+   * @method Tweenable#dispose
    */
   dispose() {
     for (const prop in this) {
@@ -709,7 +764,7 @@ export class Tweenable {
  * is used if available, otherwise
  * [`setTimeout`](https://developer.mozilla.org/en-US/docs/Web/API/Window.setTimeout)
  * is used.
- * @method shifty.Tweenable.setScheduleFunction
+ * @method Tweenable.setScheduleFunction
  * @param {shifty.scheduleFunction} fn The function to be
  * used to schedule the next frame to be rendered.
  * @return {shifty.scheduleFunction} The function that was set.
@@ -722,8 +777,8 @@ Tweenable.formulas = formulas
  * The {@link shifty.filter}s available for use.  These filters are
  * automatically applied at tween-time by Shifty. You can define your own
  * {@link shifty.filter}s and attach them to this object.
- * @member shifty.Tweenable.filters
- * @type {Object.<shifty.filter>}
+ * @member Tweenable.filters
+ * @type {Record<string, shifty.filter>}
  */
 Tweenable.filters = {}
 
@@ -731,8 +786,8 @@ Tweenable.filters = {}
  * @method shifty.tween
  * @param {shifty.tweenConfig} [config={}]
  * @description Standalone convenience method that functions identically to
- * {@link shifty.Tweenable#tween}.  You can use this to create tweens without
- * needing to set up a {@link shifty.Tweenable} instance.
+ * {@link Tweenable#tween}.  You can use this to create tweens without
+ * needing to set up a {@link Tweenable} instance.
  *
  * ```
  * import { tween } from 'shifty';
@@ -742,7 +797,7 @@ Tweenable.filters = {}
  * );
  * ```
  *
- * @returns {shifty.Tweenable} A new {@link shifty.Tweenable} instance.
+ * @returns {Tweenable} A new {@link Tweenable} instance.
  */
 export function tween(config = {}) {
   const tweenable = new Tweenable()

@@ -1,0 +1,22 @@
+{
+  "include": ["./src/index.js", "./src/index.core.js"],
+  "compilerOptions": {
+    // Tells TypeScript to read JS files, as
+    // normally they are ignored as source files
+    "allowJs": true,
+    // By uncommenting this, you can enable typescript typechecking on the library code,
+    // but that is not necessary to the generation of type definitions.
+    //"checkJs": true,
+    // Generate d.ts files
+    "declaration": true,
+    // Generate maps to go to the source code from a definition
+    "declarationMap": true,
+    // This compiler run should
+    // only output d.ts files
+    "emitDeclarationOnly": true,
+    // Types should go into this directory.
+    // Removing this would place the .d.ts files
+    // next to the .js files
+    "outDir": "dist"
+  }
+}
