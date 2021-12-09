@@ -87,5 +87,8 @@
       "email": "adrian.voica@nanokyte.com"
     }
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
+  }
 }
