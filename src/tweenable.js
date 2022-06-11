@@ -107,11 +107,11 @@ const processTween = (tween, currentTime) => {
 
   const endTime = timestamp + delay + duration
   let timeToCompute = currentTime > endTime ? endTime : currentTime
-  const hasEnded = timeToCompute >= endTime
+  tween._hasEnded = timeToCompute >= endTime
   const offset = duration - (endTime - timeToCompute)
   const hasFilters = tween._filters.length > 0
 
-  if (hasEnded) {
+  if (tween._hasEnded) {
     tween._render(targetState, tween._data, offset)
     return tween.stop(true)
   }
@@ -297,6 +297,8 @@ export class Tweenable {
     this._start = noop
     this._render = noop
     this._promiseCtor = defaultPromiseCtor
+    /** @private */
+    this._hasEnded = false
 
     // To prevent unnecessary calls to setConfig do not set default
     // configuration here.  Only set default configuration immediately before
@@ -663,7 +665,16 @@ export class Tweenable {
   }
 
   /**
-   * @method shifty.Tweenable#setScheduleFunction
+   * Whether or not a tween has finished running.
+   * @method Tweenable#hasEnded
+   * @return {boolean}
+   */
+  hasEnded() {
+    return this._hasEnded
+  }
+
+  /**
+   * @method Tweenable#setScheduleFunction
    * @param {shifty.scheduleFunction} scheduleFunction
    * @deprecated Will be removed in favor of {@link shifty.Tweenable.setScheduleFunction} in 3.0.
    */
