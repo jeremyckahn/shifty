@@ -1,10 +1,12 @@
+/** @typedef {import("./tweenable").Tweenable} Tweenable */
+
 export class Scene {
   #tweenables = []
 
   /**
-   * The {@link shifty.Scene} class provides a way to control groups of {@link
-   * shifty.Tweenable}s. It is lightweight, minimalistic, and meant to provide
-   * performant {@link shifty.Tweenable} batch control that users of Shifty
+   * The {@link Scene} class provides a way to control groups of {@link
+   * Tweenable}s. It is lightweight, minimalistic, and meant to provide
+   * performant {@link Tweenable} batch control that users of Shifty
    * might otherwise have to implement themselves. It is **not** a robust
    * timeline solution, and it does **not** provide utilities for sophisticated
    * animation sequencing or orchestration. If that is what you need for your
@@ -12,10 +14,10 @@ export class Scene {
    * [Rekapi](http://jeremyckahn.github.io/rekapi/doc/) (a timeline layer built
    * on top of Shifty).
    *
-   * Please be aware that {@link shifty.Scene} does **not** perform any
-   * automatic cleanup. If you want to remove a {@link shifty.Tweenable} from a
-   * {@link shifty.Scene}, you must do so explicitly with either {@link
-   * shifty.Scene#remove} or {@link shifty.Scene#empty}.
+   * Please be aware that {@link Scene} does **not** perform any
+   * automatic cleanup. If you want to remove a {@link Tweenable} from a
+   * {@link Scene}, you must do so explicitly with either {@link
+   * Scene#remove} or {@link Scene#empty}.
    *
    * <p class="codepen" data-height="677" data-theme-id="0" data-default-tab="js,result" data-user="jeremyckahn" data-slug-hash="qvZKbe" style="height: 677px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid black; margin: 1em 0; padding: 1em;" data-pen-title="Shifty Scene Demo">
    * <span>See the Pen <a href="https://codepen.io/jeremyckahn/pen/qvZKbe/">
@@ -23,29 +25,29 @@ export class Scene {
    * on <a href="https://codepen.io">CodePen</a>.</span>
    * </p>
    * <script async src="https://static.codepen.io/assets/embed/ei.js"></script>
-   * @param {...shifty.Tweenable} tweenables
+   * @param {...Tweenable} tweenables
    * @see https://codepen.io/jeremyckahn/pen/qvZKbe
-   * @constructs shifty.Scene
+   * @constructs Scene
+   * @memberof shifty
    */
   constructor(...tweenables) {
     tweenables.forEach(this.add.bind(this))
   }
 
   /**
-   * A copy of the internal {@link shifty.Tweenable}s array.
-   * @member shifty.Scene#tweenables
-   * @type {Array.<shifty.Tweenable>}
-   * @readonly
+   * A copy of the internal {@link Tweenable}s array.
+   * @member Scene#tweenables
+   * @type {Array.<Tweenable>}
    */
   get tweenables() {
     return [...this.#tweenables]
   }
 
   /**
-   * The {@link external:Promise}s for all {@link shifty.Tweenable}s in this
-   * {@link shifty.Scene} that have been configured with {@link
-   * shifty.Tweenable#setConfig}. Note that each call of {@link
-   * shifty.Scene#play} or {@link shifty.Scene#pause} creates new {@link
+   * The {@link external:Promise}s for all {@link Tweenable}s in this
+   * {@link Scene} that have been configured with {@link
+   * Tweenable#setConfig}. Note that each call of {@link
+   * Scene#play} or {@link Scene#pause} creates new {@link
    * external:Promise}s:
    *
    *     const scene = new Scene(new Tweenable());
@@ -57,20 +59,19 @@ export class Scene {
    *       scene.play()
    *     );
    *
-   * @member shifty.Scene#promises
-   * @type {Array.<external:Promise>}
-   * @readonly
+   * @member Scene#promises
+   * @type {Array.<Promise<any>>}
    */
   get promises() {
     return this.#tweenables.map(tweenable => tweenable.then())
   }
 
   /**
-   * Add a {@link shifty.Tweenable} to be controlled by this {@link
-   * shifty.Scene}.
-   * @method shifty.Scene#add
-   * @param {shifty.Tweenable} tweenable
-   * @return {shifty.Tweenable} The {@link shifty.Tweenable} that was added.
+   * Add a {@link Tweenable} to be controlled by this {@link
+   * Scene}.
+   * @method Scene#add
+   * @param {Tweenable} tweenable
+   * @return {Tweenable} The {@link Tweenable} that was added.
    */
   add(tweenable) {
     this.#tweenables.push(tweenable)
@@ -79,11 +80,11 @@ export class Scene {
   }
 
   /**
-   * Remove a {@link shifty.Tweenable} that is controlled by this {@link
-   * shifty.Scene}.
-   * @method shifty.Scene#remove
-   * @param {shifty.Tweenable} tweenable
-   * @return {shifty.Tweenable} The {@link shifty.Tweenable} that was removed.
+   * Remove a {@link Tweenable} that is controlled by this {@link
+   * Scene}.
+   * @method Scene#remove
+   * @param {Tweenable} tweenable
+   * @return {Tweenable} The {@link Tweenable} that was removed.
    */
   remove(tweenable) {
     const index = this.#tweenables.indexOf(tweenable)
@@ -96,10 +97,10 @@ export class Scene {
   }
 
   /**
-   * [Remove]{@link shifty.Scene#remove} all {@link shifty.Tweenable}s in this {@link
-   * shifty.Scene}.
-   * @method shifty.Scene#empty
-   * @return {Array.<shifty.Tweenable>} The {@link shifty.Tweenable}s that were
+   * [Remove]{@link Scene#remove} all {@link Tweenable}s in this {@link
+   * Scene}.
+   * @method Scene#empty
+   * @return {Array.<Tweenable>} The {@link Tweenable}s that were
    * removed.
    */
   empty() {
@@ -108,9 +109,9 @@ export class Scene {
   }
 
   /**
-   * Is `true` if any {@link shifty.Tweenable} in this {@link shifty.Scene} is
+   * Is `true` if any {@link Tweenable} in this {@link Scene} is
    * playing.
-   * @method shifty.Scene#isPlaying
+   * @method Scene#isPlaying
    * @return {boolean}
    */
   isPlaying() {
@@ -118,9 +119,9 @@ export class Scene {
   }
 
   /**
-   * Play all {@link shifty.Tweenable}s from their beginning.
-   * @method shifty.Scene#play
-   * @return {shifty.Scene}
+   * Play all {@link Tweenable}s from their beginning.
+   * @method Scene#play
+   * @return {Scene}
    */
   play() {
     this.#tweenables.forEach(tweenable => tweenable.tween())
@@ -129,10 +130,10 @@ export class Scene {
   }
 
   /**
-   * {@link shifty.Tweenable#pause} all {@link shifty.Tweenable}s in this
-   * {@link shifty.Scene}.
-   * @method shifty.Scene#pause
-   * @return {shifty.Scene}
+   * {@link Tweenable#pause} all {@link Tweenable}s in this
+   * {@link Scene}.
+   * @method Scene#pause
+   * @return {Scene}
    */
   pause() {
     this.#tweenables.forEach(tweenable => tweenable.pause())
@@ -140,9 +141,9 @@ export class Scene {
   }
 
   /**
-   * {@link shifty.Tweenable#resume} all paused {@link shifty.Tweenable}s.
-   * @method shifty.Scene#resume
-   * @return {shifty.Scene}
+   * {@link Tweenable#resume} all paused {@link Tweenable}s.
+   * @method Scene#resume
+   * @return {Scene}
    */
   resume() {
     this.#tweenables.forEach(tweenable => tweenable.resume())
@@ -151,11 +152,11 @@ export class Scene {
   }
 
   /**
-   * {@link shifty.Tweenable#stop} all {@link shifty.Tweenable}s in this {@link
-   * shifty.Scene}.
-   * @method shifty.Scene#stop
+   * {@link Tweenable#stop} all {@link Tweenable}s in this {@link
+   * Scene}.
+   * @method Scene#stop
    * @param {boolean} [gotoEnd]
-   * @return {shifty.Scene}
+   * @return {Scene}
    */
   stop(gotoEnd) {
     this.#tweenables.forEach(tweenable => tweenable.stop(gotoEnd))
