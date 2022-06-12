@@ -130,11 +130,11 @@ const processTween = (tween, currentTime) => {
 
   const endTime = timestamp + delay + duration
   let timeToCompute = currentTime > endTime ? endTime : currentTime
-  const hasEnded = timeToCompute >= endTime
+  tween._hasEnded = timeToCompute >= endTime
   const offset = duration - (endTime - timeToCompute)
   const hasFilters = tween._filters.length > 0
 
-  if (hasEnded) {
+  if (tween._hasEnded) {
     tween._render(targetState, tween._data, offset)
     return tween.stop(true)
   }
@@ -320,6 +320,8 @@ export class Tweenable {
     this._previous = null
     /** @private */
     this._timestamp = null
+    /** @private */
+    this._hasEnded = false
     /** @private */
     this._resolve = null
     /** @private */
@@ -715,6 +717,15 @@ export class Tweenable {
    */
   isPlaying() {
     return this._isPlaying
+  }
+
+  /**
+   * Whether or not a tween has finished running.
+   * @method Tweenable#hasEnded
+   * @return {boolean}
+   */
+  hasEnded() {
+    return this._hasEnded
   }
 
   /**

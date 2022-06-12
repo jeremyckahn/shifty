@@ -324,6 +324,37 @@ describe('#tween', () => {
   })
 })
 
+describe('#hasEnded', () => {
+  test('Only trigger after the end of the tween', () => {
+    tweenable = new Tweenable()
+
+    tweenable.tween({
+      from: { x: 0 },
+      to: { x: 10 },
+      duration: 500,
+    })
+
+    expect(tweenable.hasEnded()).toBe(false)
+    tweenable.seek(500)
+    expect(tweenable.hasEnded()).toBe(true)
+  })
+
+  test('Triggers again after restarting the tween', () => {
+    tweenable = new Tweenable()
+
+    tweenable.tween({
+      from: { x: 0 },
+      to: { x: 10 },
+      duration: 500,
+    })
+
+    tweenable.seek(500)
+    expect(tweenable.hasEnded()).toBe(true)
+    tweenable.seek(0)
+    expect(tweenable.hasEnded()).toBe(false)
+  })
+})
+
 describe('#resume', () => {
   beforeEach(() => {
     Tweenable.now = () => 0
