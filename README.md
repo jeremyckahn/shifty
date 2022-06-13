@@ -142,6 +142,13 @@ Please see the [Getting
 Started](https://jeremyckahn.github.io/shifty/doc/tutorial-getting-started.html)
 guide and check out the API documentation.
 
+## Releasing
+
+Releases are done from the CLI. Assuming you have commit access, use [`npm version`](https://docs.npmjs.com/cli/v8/commands/npm-version) to tag and push a
+new release in a single operation. This will kick off [a GitHub
+action](https://github.com/jeremyckahn/shifty/blob/develop/.github/workflows/publish-package.yml)
+that builds and publishes Shifty to NPM.
+
 ## Contributors
 
 Take a peek at the [Network](https://github.com/jeremyckahn/shifty/network)
