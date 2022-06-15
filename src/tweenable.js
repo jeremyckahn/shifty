@@ -297,6 +297,32 @@ export class Tweenable {
   static now = () => now
 
   /**
+   * Set a custom schedule function.
+   *
+   * By default,
+   * [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window.requestAnimationFrame)
+   * is used if available, otherwise
+   * [`setTimeout`](https://developer.mozilla.org/en-US/docs/Web/API/Window.setTimeout)
+   * is used.
+   * @method Tweenable.setScheduleFunction
+   * @param {shifty.scheduleFunction} fn The function to be
+   * used to schedule the next frame to be rendered.
+   * @return {shifty.scheduleFunction} The function that was set.
+   */
+  static setScheduleFunction = fn => (scheduleFunction = fn)
+
+  /**
+   * The {@link shifty.filter}s available for use.  These filters are
+   * automatically applied at tween-time by Shifty. You can define your own
+   * {@link shifty.filter}s and attach them to this object.
+   * @member Tweenable.filters
+   * @type {Record<string, shifty.filter>}
+   */
+  static filters = {}
+
+  static formulas = formulas
+
+  /**
    * @param {Object} [initialState={}] The values that the initial tween should
    * start at if a `from` value is not provided to {@link
    * Tweenable#tween} or {@link Tweenable#setConfig}.
@@ -765,34 +791,6 @@ export class Tweenable {
   }
 }
 
-// TODO: Make these proper static methods.
-
-/**
- * Set a custom schedule function.
- *
- * By default,
- * [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window.requestAnimationFrame)
- * is used if available, otherwise
- * [`setTimeout`](https://developer.mozilla.org/en-US/docs/Web/API/Window.setTimeout)
- * is used.
- * @method Tweenable.setScheduleFunction
- * @param {shifty.scheduleFunction} fn The function to be
- * used to schedule the next frame to be rendered.
- * @return {shifty.scheduleFunction} The function that was set.
- */
-Tweenable.setScheduleFunction = fn => (scheduleFunction = fn)
-
-Tweenable.formulas = formulas
-
-/**
- * The {@link shifty.filter}s available for use.  These filters are
- * automatically applied at tween-time by Shifty. You can define your own
- * {@link shifty.filter}s and attach them to this object.
- * @member Tweenable.filters
- * @type {Record<string, shifty.filter>}
- */
-Tweenable.filters = {}
-
 /**
  * @method shifty.tween
  * @param {shifty.tweenConfig} [config={}]
@@ -815,7 +813,7 @@ export function tween(config = {}) {
   tweenable.tween(config)
 
   // This is strictly a legacy shim from when this function returned a Promise.
-  // REMOVE THIS LINE IN THE NEXT MAJOR VERSION
+  // TODO: Remove this line in the next major version
   tweenable.tweenable = tweenable
 
   return tweenable
