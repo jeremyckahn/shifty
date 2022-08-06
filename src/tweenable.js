@@ -202,7 +202,7 @@ export const processTweens = () => {
 
 const getCurrentTime = Date.now || (() => +new Date())
 let now
-let heartbeatIsRunning = true
+let heartbeatIsRunning = false
 
 /**
  * Determines whether or not a heartbeat tick should be scheduled. This is
@@ -223,6 +223,10 @@ let heartbeatIsRunning = true
  * @see https://github.com/jeremyckahn/shifty/issues/156
  */
 export const shouldScheduleUpdate = _shouldScheduleUpdate => {
+  if (_shouldScheduleUpdate && heartbeatIsRunning) {
+    return
+  }
+
   heartbeatIsRunning = _shouldScheduleUpdate
 
   if (_shouldScheduleUpdate) {
