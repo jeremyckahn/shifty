@@ -1,4 +1,8 @@
-import { interpolate } from './'
+import { interpolate, shouldScheduleUpdate } from './'
+
+afterAll(() => {
+  shouldScheduleUpdate(false)
+})
 
 test('computes the midpoint of two numbers', () => {
   const interpolated = interpolate({ x: 0 }, { x: 10 }, 0.5)

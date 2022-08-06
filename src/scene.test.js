@@ -1,10 +1,15 @@
 import { Tweenable } from './tweenable'
 import { Scene } from './scene'
+import { shouldScheduleUpdate } from './'
 
 let scene
 
 beforeEach(() => {
   scene = new Scene()
+})
+
+afterAll(() => {
+  shouldScheduleUpdate(false)
 })
 
 describe('constructor', () => {

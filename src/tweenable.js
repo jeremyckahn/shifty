@@ -202,16 +202,26 @@ export const processTweens = () => {
 
 const getCurrentTime = Date.now || (() => +new Date())
 let now
+let heartbeatIsRunning = true
+
+export const shouldScheduleUpdate = _shouldScheduleUpdate => {
+  heartbeatIsRunning = _shouldScheduleUpdate
+
+  if (_shouldScheduleUpdate) {
+    scheduleUpdate()
+  }
+}
 
 /**
  * Handles the update logic for one tick of a tween.
- * @param {number} [currentTimeOverride] Needed for accurate timestamp in
- * Tweenable#seek.
  * @private
  */
 export const scheduleUpdate = () => {
   now = getCurrentTime()
-  scheduleFunction.call(root, scheduleUpdate, UPDATE_TIME)
+
+  if (heartbeatIsRunning) {
+    scheduleFunction.call(root, scheduleUpdate, UPDATE_TIME)
+  }
 
   processTweens()
 }
@@ -819,4 +829,4 @@ export function tween(config = {}) {
   return tweenable
 }
 
-scheduleUpdate()
+shouldScheduleUpdate(true)
