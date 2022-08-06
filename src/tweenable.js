@@ -204,6 +204,24 @@ const getCurrentTime = Date.now || (() => +new Date())
 let now
 let heartbeatIsRunning = true
 
+/**
+ * Determines whether or not a heartbeat tick should be scheduled. This is
+ * generally only useful for testing environments where Shifty's continuous
+ * heartbeat mechanism causes test runner issues.
+ *
+ * If you are using Jest, you'll want to put this in a global `afterAll` hook.
+ * If you don't already have a Jest setup file, follow the setup in
+ * https://stackoverflow.com/a/57647146, and then add this to it:
+ *
+ *   import { shouldScheduleUpdate } from 'shifty'
+ *
+ *   afterAll(() => {
+ *     shouldScheduleUpdate(false)
+ *   })
+ *
+ * @param {boolean} _shouldScheduleUpdate
+ * @see https://github.com/jeremyckahn/shifty/issues/156
+ */
 export const shouldScheduleUpdate = _shouldScheduleUpdate => {
   heartbeatIsRunning = _shouldScheduleUpdate
 
