@@ -1,8 +1,4 @@
-import { interpolate, shouldScheduleUpdate } from './'
-
-afterAll(() => {
-  shouldScheduleUpdate(false)
-})
+import { interpolate } from './'
 
 test('can tween an rgb color', () => {
   const from = { color: 'rgb(0,128,255)' },

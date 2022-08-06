@@ -1,6 +1,6 @@
 import 'babel-polyfill'
 import Promised from 'bluebird'
-import { Tweenable, tween, shouldScheduleUpdate } from '../src'
+import { Tweenable, tween } from '../src'
 import {
   getListHead,
   getListTail,
@@ -23,10 +23,6 @@ afterEach(() => {
   tweenable = undefined
   state = undefined
   Tweenable.now = now
-})
-
-afterAll(() => {
-  shouldScheduleUpdate(false)
 })
 
 test('can accept initial state', () => {
