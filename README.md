@@ -142,6 +142,30 @@ Please see the [Getting
 Started](https://jeremyckahn.github.io/shifty/doc/tutorial-getting-started.html)
 guide and check out the API documentation.
 
+### Troubleshooting
+
+#### Jest
+
+With later versions of Jest [it is
+known](https://github.com/jeremyckahn/shifty/issues/156) that by default Shifty
+may cause warnings that look like:
+
+```
+Jest has detected the following 1 open handle potentially keeping Jest from exiting:
+```
+
+To prevent this, use
+[`shouldScheduleUpdate`](https://jeremyckahn.github.io/shifty/doc/shifty.html#.shouldScheduleUpdate)
+in your test setup like so:
+
+```js
+import { shouldScheduleUpdate } from 'shifty'
+
+afterAll(() => {
+  shouldScheduleUpdate(false)
+})
+```
+
 ## Releasing
 
 Releases are done from the CLI. Assuming you have commit access, use [`npm version`](https://docs.npmjs.com/cli/v8/commands/npm-version) to tag and push a
