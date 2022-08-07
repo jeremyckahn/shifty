@@ -210,26 +210,30 @@ let heartbeatIsRunning = false
  * heartbeat mechanism causes test runner issues.
  *
  * If you are using Jest, you'll want to put this in a global `afterAll` hook.
- * If you don't already have a Jest setup file, follow the setup in
- * https://stackoverflow.com/a/57647146, and then add this to it:
+ * If you don't already have a Jest setup file, follow the setup in [this
+ * StackOverflow post](https://stackoverflow.com/a/57647146), and then add this
+ * to it:
  *
- *   import { shouldScheduleUpdate } from 'shifty'
+ * ```
+ * import { shouldScheduleUpdate } from 'shifty'
  *
- *   afterAll(() => {
- *     shouldScheduleUpdate(false)
- *   })
+ * afterAll(() => {
+ *   shouldScheduleUpdate(false)
+ * })
+ * ```
  *
- * @param {boolean} _shouldScheduleUpdate
+ * @method shifty.shouldScheduleUpdate
+ * @param {boolean} doScheduleUpdate
  * @see https://github.com/jeremyckahn/shifty/issues/156
  */
-export const shouldScheduleUpdate = _shouldScheduleUpdate => {
-  if (_shouldScheduleUpdate && heartbeatIsRunning) {
+export const shouldScheduleUpdate = doScheduleUpdate => {
+  if (doScheduleUpdate && heartbeatIsRunning) {
     return
   }
 
-  heartbeatIsRunning = _shouldScheduleUpdate
+  heartbeatIsRunning = doScheduleUpdate
 
-  if (_shouldScheduleUpdate) {
+  if (doScheduleUpdate) {
     scheduleUpdate()
   }
 }
