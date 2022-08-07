@@ -202,16 +202,52 @@ export const processTweens = () => {
 
 const getCurrentTime = Date.now || (() => +new Date())
 let now
+let heartbeatIsRunning = false
+
+/**
+ * Determines whether or not a heartbeat tick should be scheduled. This is
+ * generally only useful for testing environments where Shifty's continuous
+ * heartbeat mechanism causes test runner issues.
+ *
+ * If you are using Jest, you'll want to put this in a global `afterAll` hook.
+ * If you don't already have a Jest setup file, follow the setup in [this
+ * StackOverflow post](https://stackoverflow.com/a/57647146), and then add this
+ * to it:
+ *
+ * ```
+ * import { shouldScheduleUpdate } from 'shifty'
+ *
+ * afterAll(() => {
+ *   shouldScheduleUpdate(false)
+ * })
+ * ```
+ *
+ * @method shifty.shouldScheduleUpdate
+ * @param {boolean} doScheduleUpdate
+ * @see https://github.com/jeremyckahn/shifty/issues/156
+ */
+export const shouldScheduleUpdate = doScheduleUpdate => {
+  if (doScheduleUpdate && heartbeatIsRunning) {
+    return
+  }
+
+  heartbeatIsRunning = doScheduleUpdate
+
+  if (doScheduleUpdate) {
+    scheduleUpdate()
+  }
+}
 
 /**
  * Handles the update logic for one tick of a tween.
- * @param {number} [currentTimeOverride] Needed for accurate timestamp in
- * Tweenable#seek.
  * @private
  */
 export const scheduleUpdate = () => {
   now = getCurrentTime()
-  scheduleFunction.call(root, scheduleUpdate, UPDATE_TIME)
+
+  if (heartbeatIsRunning) {
+    scheduleFunction.call(root, scheduleUpdate, UPDATE_TIME)
+  }
 
   processTweens()
 }
@@ -819,4 +855,4 @@ export function tween(config = {}) {
   return tweenable
 }
 
-scheduleUpdate()
+shouldScheduleUpdate(true)

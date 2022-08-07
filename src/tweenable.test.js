@@ -583,7 +583,7 @@ describe('#stop', () => {
 })
 
 describe('cancel', () => {
-  test('rejects a tween promise', async done => {
+  test('rejects a tween promise', done => {
     Tweenable.now = () => 0
 
     const tweenable = new Tweenable()
