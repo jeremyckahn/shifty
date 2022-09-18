@@ -7,7 +7,7 @@ import { tween } from 'shifty'
 
 tween({
   from: { transform: 'translateX(45px)' },
-  to: { transform: 'translateX(90xp)' },
+  to: { transform: 'translateX(90px)' },
 })
 ```
 
