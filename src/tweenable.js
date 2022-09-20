@@ -325,11 +325,11 @@ const remove = ((previousTween, nextTween) => tween => {
 const defaultPromiseCtor = typeof Promise === 'function' ? Promise : null
 /**
  * @class
- * @implements {Promise<unknown>} 
+ * @implements {Promise<unknown>}
  */
 export class Tweenable {
   //required for Promise implementation
-  [Symbol.toStringTag] = "Promise";
+  [Symbol.toStringTag] = 'Promise'
   /**
    * @method Tweenable.now
    * @static
@@ -594,10 +594,9 @@ export class Tweenable {
    * @return {Promise<undefined>}
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally
    */
-   finally(onFinally) {
+  finally(onFinally) {
     return this.then().finally(onFinally)
   }
-
 
   /**
    * @method Tweenable#get

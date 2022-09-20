@@ -237,7 +237,7 @@ describe('#tween', () => {
           to: { x: 10 },
           duration: 500,
         })
-        tween.catch(() => { }).finally( state => (testState = state))
+        tween.catch(() => {}).finally(state => (testState = state))
 
         Tweenable.now = () => 250
         processTweens()
