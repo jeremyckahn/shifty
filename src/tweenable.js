@@ -325,7 +325,7 @@ const remove = ((previousTween, nextTween) => tween => {
 const defaultPromiseCtor = typeof Promise === 'function' ? Promise : null
 /**
  * @class
- * @implements {Promise<unknown>}
+ * @implements {Promise<Object>}
  */
 export class Tweenable {
   //required for Promise implementation
