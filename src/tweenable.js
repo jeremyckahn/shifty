@@ -589,8 +589,7 @@ export class Tweenable {
   }
   /**
    * @method Tweenable#finally
-   * @param {function} onFinally Receives {@link shifty.promisedData} as the
-   * first parameter.
+   * @param {function} onFinally
    * @return {Promise<undefined>}
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally
    */
