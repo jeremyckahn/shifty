@@ -225,6 +225,29 @@ describe('#tween', () => {
         expect(testState).toEqual({ x: 10 })
       })
     })
+    describe('finally', () => {
+      test('runs finally with no parameters', done => {
+        Tweenable.now = () => 0
+        tweenable = new Tweenable()
+
+        const tween = tweenable.tween({
+          from: { x: 0 },
+          to: { x: 10 },
+          duration: 500,
+        })
+        tween
+          .catch(() => {})
+          .finally(state => {
+            expect(state).toEqual(undefined)
+            done()
+          })
+
+        Tweenable.now = () => 250
+        processTweens()
+
+        tween.cancel()
+      })
+    })
 
     describe('rejection', () => {
       let testState
