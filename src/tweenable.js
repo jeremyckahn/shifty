@@ -1,4 +1,5 @@
 import * as easingFunctions from './easing-functions'
+import { getCubicBezierTransition } from './bezier'
 /** @typedef {import("./index").shifty.filter} shifty.filter */
 /** @typedef {import("./index").shifty.tweenConfig} shifty.tweenConfig */
 /** @typedef {import("./index").shifty.scheduleFunction} shifty.scheduleFunction */
@@ -270,6 +271,12 @@ export const composeEasingObject = (
   easing = DEFAULT_EASING,
   composedEasing = {}
 ) => {
+  if (Array.isArray(easing)) {
+    const cubicBezierTransition = getCubicBezierTransition(...easing)
+
+    return cubicBezierTransition
+  }
+
   let typeofEasing = typeof easing
 
   if (formulas[easing]) {

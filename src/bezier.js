@@ -148,7 +148,7 @@ function cubicBezierAtTime(t, p1x, p1y, p2x, p2y, duration) {
  *  @return {Function}
  *  @private
  */
-const getCubicBezierTransition = (x1, y1, x2, y2) => pos =>
+export const getCubicBezierTransition = (x1, y1, x2, y2) => pos =>
   cubicBezierAtTime(pos, x1, y1, x2, y2, 1)
 
 /**
