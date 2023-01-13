@@ -89,7 +89,7 @@ export { setBezierFunction, unsetBezierFunction } from './bezier'
  * custom environments such as `<canvas>`.
  *
  * Legacy property name: `step`.
- * @property {Object<string|shifty.easingFunction>|string|shifty.easingFunction} [easing]
+ * @property {Object<string|shifty.easingFunction>|string|shifty.easingFunction|Array.<number>} [easing]
  * Easing curve name(s) or {@link shifty.easingFunction}(s) to apply
  * to the properties of the tween.  If this is an Object, the keys should
  * correspond to `to`/`from`.  You can learn more about this in the {@tutorial
