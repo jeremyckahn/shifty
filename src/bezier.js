@@ -141,14 +141,18 @@ function cubicBezierAtTime(t, p1x, p1y, p2x, p2y, duration) {
  *  The W3C has more information about CSS3 transition timing functions:
  *  http://www.w3.org/TR/css3-transitions/#transition-timing-function_tag
  *
- *  @param {number} x1
- *  @param {number} y1
- *  @param {number} x2
- *  @param {number} y2
+ *  @param {number} [x1]
+ *  @param {number} [y1]
+ *  @param {number} [x2]
+ *  @param {number} [y2]
  *  @return {Function}
  */
-export const getCubicBezierTransition = (x1 = 0.250, y1 = 0.250, x2 = 0.750, y2 = 0.750) => pos =>
-  cubicBezierAtTime(pos, x1, y1, x2, y2, 1)
+export const getCubicBezierTransition = (
+  x1 = 0.25,
+  y1 = 0.25,
+  x2 = 0.75,
+  y2 = 0.75
+) => pos => cubicBezierAtTime(pos, x1, y1, x2, y2, 1)
 
 /**
  * Create a Bezier easing function and attach it to {@link
