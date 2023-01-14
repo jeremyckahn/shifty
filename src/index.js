@@ -89,10 +89,20 @@ export { setBezierFunction, unsetBezierFunction } from './bezier'
  * custom environments such as `<canvas>`.
  *
  * Legacy property name: `step`.
- * @property {Object<string|shifty.easingFunction>|string|shifty.easingFunction} [easing]
- * Easing curve name(s) or {@link shifty.easingFunction}(s) to apply
- * to the properties of the tween.  If this is an Object, the keys should
- * correspond to `to`/`from`.  You can learn more about this in the {@tutorial
+ * @property {string|shifty.easingFunction|Object<string|shifty.easingFunction>|Array.<number>} [easing]
+ * - `string`: Name of the {@link Tweenable.formulas} to apply to all
+ *   properties of the tween.
+ * - {@link shifty.easingFunction}: A custom function that computes the rendered
+ *   position of the tween for the given normalized position of the tween.
+ * - `Object`: Keys are tween property names. Values are the {@link
+ *   Tweenable.formulas} to be applied to each tween property, or a {@link
+ *   shifty.easingFunction}. Any tween properties not included in the `Object`
+ *   default to `'linear'`.
+ * - `Array.<number>`: The array must contain four `number` values that
+ *   correspond to the `[x1, y1, x2, y2]` values of a [Bezier
+ * curve](https://cubic-bezier.com/).
+ *
+ * You can learn more about this in the {@tutorial
  * easing-function-in-depth} tutorial.
  * @property {Object} [data] Data that is passed to {@link
  * shifty.startFunction}, {@link shifty.renderFunction}, and {@link

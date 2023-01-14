@@ -1,4 +1,5 @@
 import * as easingFunctions from './easing-functions'
+import { getCubicBezierTransition } from './bezier'
 /** @typedef {import("./index").shifty.filter} shifty.filter */
 /** @typedef {import("./index").shifty.tweenConfig} shifty.tweenConfig */
 /** @typedef {import("./index").shifty.scheduleFunction} shifty.scheduleFunction */
@@ -260,7 +261,7 @@ export const scheduleUpdate = () => {
  * If the tween has only one easing across all properties, that function is
  * returned directly.
  * @param {Record<string, string|Function>} fromTweenParams
- * @param {Object|string|Function} [easing]
+ * @param {Object|string|Function|Array.<number>} [easing]
  * @param {Object} [composedEasing] Reused composedEasing object (used internally)
  * @return {Record<string, string|Function>|Function}
  * @private
@@ -270,6 +271,12 @@ export const composeEasingObject = (
   easing = DEFAULT_EASING,
   composedEasing = {}
 ) => {
+  if (Array.isArray(easing)) {
+    const cubicBezierTransition = getCubicBezierTransition(...easing)
+
+    return cubicBezierTransition
+  }
+
   let typeofEasing = typeof easing
 
   if (formulas[easing]) {

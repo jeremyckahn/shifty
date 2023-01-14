@@ -145,6 +145,48 @@ describe('#tween', () => {
     })
   })
 
+  describe('cubic bezier array easing', () => {
+    test('accepts bezier point array for easing', () => {
+      Tweenable.now = () => 0
+      tweenable.tween({
+        from: { x: 0 },
+        to: { x: 10 },
+        duration: 1000,
+        easing: [0, 1, 0, 1],
+      })
+
+      expect(tweenable.get().x).toEqual(0)
+
+      Tweenable.now = () => 500
+      processTweens()
+      expect(tweenable.get().x).toEqual(9.914547270233196)
+
+      Tweenable.now = () => 1000
+      processTweens()
+      expect(tweenable.get().x).toEqual(10)
+    })
+
+    test('defaults to linear bezier point array for easing', () => {
+      Tweenable.now = () => 0
+      tweenable.tween({
+        from: { x: 0 },
+        to: { x: 10 },
+        duration: 1000,
+        easing: [],
+      })
+
+      expect(tweenable.get().x).toEqual(0)
+
+      Tweenable.now = () => 500
+      processTweens()
+      expect(tweenable.get().x).toEqual(5)
+
+      Tweenable.now = () => 1000
+      processTweens()
+      expect(tweenable.get().x).toEqual(10)
+    })
+  })
+
   describe('lifecycle hooks', () => {
     let testState
 
