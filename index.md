@@ -10,7 +10,7 @@
 
 Shifty is a highly-optimized JavaScript tweening engine designed to fit all of your animation needs. It is a low-level animation library focused on optimal performance and flexibility that can easily be built upon and extended. Shifty's key benefits are:
 
-- **Speed**: Shifty is engineered for [maximum animation performance and minimal memory usage](https://twitter.com/jeremyckahn/status/1336319804123308032).
+- **Speed**: Shifty is engineered for maximum animation performance and minimal memory usage
 - **Flexibility and extensibility**: Shifty can easily be built upon and extended via its unopinionated API.
 - **Renderer-agnostic**: Shifty does not perform any rendering, but it can be easily integrated into whatever rendering mechanism is most appropriate for your project such as DOM or `<canvas>`.
 - **`Promise` support**: Shifty's tweens are `await`-able [thenables](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then). ([Learn about the benefits of `async`/`await`-based animations here](https://dev.to/jeremyckahn/the-case-for-async-await-based-javascript-animations-pkl)).
