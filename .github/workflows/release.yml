@@ -45,13 +45,15 @@ jobs:
           tags: true
           branch: ${{ github.head_ref }}
 
+      - name: Prepare build artifacts
+        run: |
+          npm run build
+          zip shifty-${{ env.PACKAGE_VERSION }}.zip -r dist/*
+
       - name: Publish to NPM
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Prepare build artifacts
-        run: zip shifty-${{ env.PACKAGE_VERSION }}.zip -r dist/*
 
       - name: Create Release
         id: create_release
