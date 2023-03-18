@@ -2,8 +2,7 @@
 
 [![Current Shifty version](https://badgen.net/npm/v/shifty)](https://www.npmjs.com/package/shifty)
 
-- `master`: [![CI](https://github.com/jeremyckahn/shifty/workflows/CI/badge.svg?branch=master)](https://github.com/jeremyckahn/shifty/actions?query=workflow%3ACI+branch%3Amaster)
-- `develop`: [![CI](https://github.com/jeremyckahn/shifty/workflows/CI/badge.svg?branch=develop)](https://github.com/jeremyckahn/shifty/actions?query=workflow%3ACI+branch%3Adevelop)
+- `main`: [![CI](https://github.com/jeremyckahn/shifty/workflows/CI/badge.svg?branch=main)](https://github.com/jeremyckahn/shifty/actions?query=workflow%3ACI+branch%3Amain)
 
 Shifty is a tweening engine for JavaScript. It is a lightweight library meant
 to be encapsulated by higher level tools. At its core, Shifty provides:
@@ -82,7 +81,7 @@ small donation](https://github.com/jeremyckahn#please-help-support-my-work)**!
 First, install the dependencies via npm like so:
 
 ```
-npm install
+npm ci
 ```
 
 Once those are installed, you can generate `dist/shifty.js` with:

@@ -1,0 +1,67 @@
+name: Release New Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      releaseType:
+        description: 'Release type'
+        required: true
+        default: 'patch'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+          ref: ${{ github.head_ref }}
+
+      - name: Setup Git user
+        uses: fregante/setup-git-user@v1
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Tag release
+        run: npm version ${{ github.event.inputs.releaseType }}
+
+        # Sets new package version as ${{ env.PACKAGE_VERSION }}
+      - uses: jozsefsallai/node-package-version@v1.0.4
+
+      # If running from main branch, this will trigger publish-docs.yml.
+      - name: Update repo with tag commit
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tags: true
+          branch: ${{ github.head_ref }}
+
+      - name: Publish to NPM
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Prepare build artifacts
+        run: zip shifty-${{ env.PACKAGE_VERSION }}.zip -r dist/*
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.PACKAGE_VERSION }}
+          name: ${{ env.PACKAGE_VERSION }}
+          draft: false
+          prerelease: false
+          files: |
+            ./shifty-${{ env.PACKAGE_VERSION }}.zip
