@@ -44,6 +44,16 @@ export class Scene {
   }
 
   /**
+   * A list of {@link Tweenable}s in the scene that have not yet ended (playing
+   * or not).
+   * @member Scene#playingTweenables
+   * @type {Array.<Tweenable>}
+   */
+  get playingTweenables() {
+    return this.#tweenables.filter(tweenable => !tweenable.hasEnded())
+  }
+
+  /**
    * The {@link external:Promise}s for all {@link Tweenable}s in this
    * {@link Scene} that have been configured with {@link
    * Tweenable#setConfig}. Note that each call of {@link
@@ -146,7 +156,7 @@ export class Scene {
    * @return {Scene}
    */
   resume() {
-    this.#tweenables.forEach(tweenable => tweenable.resume())
+    this.playingTweenables.forEach(tweenable => tweenable.resume())
 
     return this
   }
