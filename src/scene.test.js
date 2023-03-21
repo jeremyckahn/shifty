@@ -109,12 +109,31 @@ describe('resume', () => {
     scene = new Scene(new Tweenable(), new Tweenable())
   })
 
-  test('resumes all Tweenables', () => {
+  test('resumes Tweenables', () => {
     scene.play()
     scene.pause()
     scene.resume()
 
     expect(scene.isPlaying()).toBeTruthy()
+  })
+
+  test('does not resume Tweenables that have ended', () => {
+    const tweenable1 = new Tweenable()
+    const tweenable2 = new Tweenable()
+
+    scene = new Scene(tweenable1, tweenable2)
+
+    jest.spyOn(tweenable1, 'hasEnded').mockReturnValue(false)
+    jest.spyOn(tweenable1, 'resume')
+    jest.spyOn(tweenable2, 'hasEnded').mockReturnValue(true)
+    jest.spyOn(tweenable2, 'resume')
+
+    scene.play()
+    scene.pause()
+    scene.resume()
+
+    expect(tweenable1.resume).toHaveBeenCalled()
+    expect(tweenable2.resume).not.toHaveBeenCalled()
   })
 })
 
