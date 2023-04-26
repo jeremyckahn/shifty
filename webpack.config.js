@@ -7,13 +7,14 @@ const config = {
   devtool: 'source-map',
   module: {
     rules: [
-      {
-        test: /\.js$/,
-        use: 'babel-loader',
-      },
+      // All files with a '.ts' extension will be handled by 'ts-loader'.
+      { test: /\.ts$/, loader: 'ts-loader' },
+      // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
+      { test: /\.js$/, loader: 'source-map-loader' },
     ],
   },
   resolve: {
+    extensions: ['.ts', '.js'],
     modules: ['node_modules'],
   },
   plugins: [
