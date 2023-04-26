@@ -19,13 +19,17 @@ const TYPE_STRING = 'string'
 
 // requestAnimationFrame() shim by Paul Irish (modified for Shifty)
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-let scheduleFunction =
-  root.requestAnimationFrame ||
-  root.webkitRequestAnimationFrame ||
-  root.oRequestAnimationFrame ||
-  root.msRequestAnimationFrame ||
-  (root.mozCancelRequestAnimationFrame && root.mozRequestAnimationFrame) ||
-  setTimeout
+let scheduleFunction = root.requestAnimationFrame
+
+if (!scheduleFunction && typeof window !== 'undefined') {
+  scheduleFunction =
+    window.webkitRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    (window.mozCancelRequestAnimationFrame &&
+      window.mozRequestAnimationFrame) ||
+    setTimeout
+}
 
 const noop = () => {}
 
@@ -277,7 +281,7 @@ export const composeEasingObject = (
     return cubicBezierTransition
   }
 
-  let typeofEasing = typeof easing
+  const typeofEasing = typeof easing
 
   if (formulas[easing]) {
     return formulas[easing]
