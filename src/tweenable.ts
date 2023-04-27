@@ -21,14 +21,18 @@ const TYPE_STRING = 'string'
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 let scheduleFunction = root.requestAnimationFrame
 
-if (!scheduleFunction && typeof window !== 'undefined') {
-  scheduleFunction =
-    window.webkitRequestAnimationFrame ||
-    window.oRequestAnimationFrame ||
-    window.msRequestAnimationFrame ||
-    (window.mozCancelRequestAnimationFrame &&
-      window.mozRequestAnimationFrame) ||
-    setTimeout
+if (!scheduleFunction) {
+  if (typeof window === 'undefined') {
+    scheduleFunction = setTimeout
+  } else {
+    scheduleFunction =
+      window.webkitRequestAnimationFrame ||
+      window.oRequestAnimationFrame ||
+      window.msRequestAnimationFrame ||
+      (window.mozCancelRequestAnimationFrame &&
+        window.mozRequestAnimationFrame) ||
+      setTimeout
+  }
 }
 
 const noop = () => {}
