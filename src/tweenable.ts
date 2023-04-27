@@ -35,10 +35,11 @@ if (!scheduleFunction) {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {}
 
-let listHead = null
-let listTail = null
+let listHead: Tweenable | null = null
+let listTail: Tweenable | null = null
 
 /**
  * Strictly for testing.
@@ -377,6 +378,10 @@ export class Tweenable {
   static filters = {}
 
   static formulas = formulas
+
+  _next: Tweenable | null = null
+
+  _previous: Tweenable | null = null
 
   /**
    * @param {Object} [initialState={}] The values that the initial tween should
