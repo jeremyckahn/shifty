@@ -53,6 +53,8 @@ interface PromisedData {
 type FulfillmentHandler = (promisedData: PromisedData) => void
 type RejectionHandler = (promisedData: PromisedData) => void
 
+type EasingFunction = (normalizedPosition: number) => number
+
 /**
  * Strictly for testing.
  * @private
@@ -68,7 +70,7 @@ export const resetList = () => {
  * @private
  * @internal
  */
-export const getListHead = (): Tweenable => listHead
+export const getListHead = (): Tweenable | null => listHead
 
 /**
  * Strictly for testing.
@@ -76,7 +78,7 @@ export const getListHead = (): Tweenable => listHead
  * @private
  * @internal
  */
-export const getListTail = (): Tweenable => listTail
+export const getListTail = (): Tweenable | null => listTail
 
 const formulas = { ...easingFunctions }
 
@@ -103,7 +105,7 @@ export const tweenProps = (
   targetState: object,
   duration: number,
   timestamp: number,
-  easing: Record<string, string | Function>
+  easing: Record<string, string | EasingFunction>
 ): object => {
   let easedPosition
   let easingObjectProp
@@ -115,7 +117,7 @@ export const tweenProps = (
   let easingFn = null
   let hasOneEase = false
 
-  if (easing && easing.call) {
+  if (easing instanceof Function) {
     hasOneEase = true
     easedPosition = easing(normalizedPosition)
   }
@@ -123,9 +125,12 @@ export const tweenProps = (
   for (const key in currentState) {
     if (!hasOneEase) {
       easingObjectProp = easing[key]
-      easingFn = easingObjectProp.call
-        ? easingObjectProp
-        : formulas[easingObjectProp]
+
+      if (easingObjectProp instanceof Function) {
+        easingFn = easingObjectProp
+      } else {
+        easingFn = formulas[easingObjectProp]
+      }
 
       easedPosition = easingFn(normalizedPosition)
     }
