@@ -41,6 +41,18 @@ const noop = () => {}
 let listHead: Tweenable | null = null
 let listTail: Tweenable | null = null
 
+type TweenState = Record<string, number>
+
+interface PromisedData {
+  state: TweenState
+  // FIXME: Improve this typing
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Object: any
+}
+
+type FulfillmentHandler = (promisedData: PromisedData) => void
+type RejectionHandler = (promisedData: PromisedData) => void
+
 /**
  * Strictly for testing.
  * @private
@@ -56,7 +68,7 @@ export const resetList = () => {
  * @private
  * @internal
  */
-export const getListHead = () => listHead
+export const getListHead = (): Tweenable => listHead
 
 /**
  * Strictly for testing.
@@ -64,7 +76,7 @@ export const getListHead = () => listHead
  * @private
  * @internal
  */
-export const getListTail = () => listTail
+export const getListTail = (): Tweenable => listTail
 
 const formulas = { ...easingFunctions }
 
@@ -85,14 +97,14 @@ const formulas = { ...easingFunctions }
  * @private
  */
 export const tweenProps = (
-  forPosition,
-  currentState,
-  originalState,
-  targetState,
-  duration,
-  timestamp,
-  easing
-) => {
+  forPosition: number,
+  currentState: object,
+  originalState: object,
+  targetState: object,
+  duration: number,
+  timestamp: number,
+  easing: Record<string, string | Function>
+): object => {
   let easedPosition
   let easingObjectProp
   let start
@@ -236,7 +248,7 @@ let heartbeatIsRunning = false
  * @param {boolean} doScheduleUpdate
  * @see https://github.com/jeremyckahn/shifty/issues/156
  */
-export const shouldScheduleUpdate = doScheduleUpdate => {
+export const shouldScheduleUpdate = (doScheduleUpdate: boolean) => {
   if (doScheduleUpdate && heartbeatIsRunning) {
     return
   }
@@ -276,10 +288,10 @@ export const scheduleUpdate = () => {
  * @private
  */
 export const composeEasingObject = (
-  fromTweenParams,
-  easing = DEFAULT_EASING,
-  composedEasing = {}
-) => {
+  fromTweenParams: Record<string, string | Function>,
+  easing: object | string | Function | Array<number> = DEFAULT_EASING,
+  composedEasing: object = {}
+): Record<string, string | Function> | Function => {
   if (Array.isArray(easing)) {
     const cubicBezierTransition = getCubicBezierTransition(...easing)
 
@@ -351,7 +363,7 @@ export class Tweenable {
    * @static
    * @returns {number} The current timestamp.
    */
-  static now = () => now
+  static now = (): number => now
 
   /**
    * Set a custom schedule function.
@@ -366,7 +378,9 @@ export class Tweenable {
    * used to schedule the next frame to be rendered.
    * @return {shifty.scheduleFunction} The function that was set.
    */
-  static setScheduleFunction = fn => (scheduleFunction = fn)
+  static setScheduleFunction = (
+    fn: shifty.scheduleFunction
+  ): shifty.scheduleFunction => (scheduleFunction = fn)
 
   /**
    * The {@link shifty.filter}s available for use.  These filters are
@@ -375,7 +389,7 @@ export class Tweenable {
    * @member Tweenable.filters
    * @type {Record<string, shifty.filter>}
    */
-  static filters = {}
+  static filters: Record<string, shifty.filter> = {}
 
   static formulas = formulas
 
@@ -392,7 +406,10 @@ export class Tweenable {
    * @constructs Tweenable
    * @memberof shifty
    */
-  constructor(initialState = {}, config = undefined) {
+  constructor(
+    initialState: object = {},
+    config: shifty.tweenConfig = undefined
+  ) {
     /** @private */
     this._config = {}
     /** @private */
@@ -439,7 +456,7 @@ export class Tweenable {
    * @param {string} filterName The name of the filter to apply.
    * @private
    */
-  _applyFilter(filterName) {
+  _applyFilter(filterName: string) {
     for (let i = this._filters.length; i > 0; i--) {
       const filterType = this._filters[i - i]
       const filter = filterType[filterName]
@@ -459,7 +476,7 @@ export class Tweenable {
    * Tweenable#setConfig}.
    * @return {Tweenable}
    */
-  tween(config = undefined) {
+  tween(config: shifty.tweenConfig = undefined): Tweenable {
     if (this._isPlaying) {
       this.stop()
     }
@@ -489,7 +506,7 @@ export class Tweenable {
    * @param {shifty.tweenConfig} [config={}]
    * @return {Tweenable}
    */
-  setConfig(config = {}) {
+  setConfig(config: shifty.tweenConfig = {}): Tweenable {
     const { _config } = this
 
     for (const key in config) {
@@ -587,7 +604,10 @@ export class Tweenable {
    * @return {Promise<Object>}
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then
    */
-  then(onFulfilled, onRejected) {
+  then(
+    onFulfilled?: FulfillmentHandler,
+    onRejected?: RejectionHandler
+  ): Promise<TweenState> {
     /** @private */
     this._promise = new this._promiseCtor((resolve, reject) => {
       this._resolve = resolve
@@ -604,7 +624,7 @@ export class Tweenable {
    * @return {Promise<Object>}
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch
    */
-  catch(onRejected) {
+  catch(onRejected: RejectionHandler): Promise<TweenState> {
     return this.then().catch(onRejected)
   }
   /**
@@ -613,7 +633,7 @@ export class Tweenable {
    * @return {Promise<undefined>}
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally
    */
-  finally(onFinally) {
+  finally(onFinally: () => TweenState): Promise<TweenState> {
     return this.then().finally(onFinally)
   }
 
@@ -621,7 +641,7 @@ export class Tweenable {
    * @method Tweenable#get
    * @return {Object} The current state.
    */
-  get() {
+  get(): object {
     return { ...this._currentState }
   }
 
@@ -630,7 +650,7 @@ export class Tweenable {
    * @method Tweenable#set
    * @param {Object} state The state to set.
    */
-  set(state) {
+  set(state: object) {
     this._currentState = state
   }
 
@@ -640,7 +660,7 @@ export class Tweenable {
    * @method Tweenable#pause
    * @return {Tweenable}
    */
-  pause() {
+  pause(): Tweenable {
     if (!this._isPlaying) {
       return
     }
@@ -657,7 +677,7 @@ export class Tweenable {
    * @method Tweenable#resume
    * @return {Tweenable}
    */
-  resume() {
+  resume(): Tweenable {
     return this._resume()
   }
 
@@ -666,7 +686,7 @@ export class Tweenable {
    * @param {number} currentTime
    * @returns {Tweenable}
    */
-  _resume(currentTime = Tweenable.now()) {
+  _resume(currentTime: number = Tweenable.now()): Tweenable {
     if (this._timestamp === null) {
       return this.tween()
     }
@@ -704,7 +724,7 @@ export class Tweenable {
    * to.  This must not be less than `0`.
    * @return {Tweenable}
    */
-  seek(millisecond) {
+  seek(millisecond: number): Tweenable {
     millisecond = Math.max(millisecond, 0)
     const currentTime = Tweenable.now()
 
@@ -730,7 +750,7 @@ export class Tweenable {
    * @method Tweenable#stop
    * @return {Tweenable}
    */
-  stop(gotoEnd = false) {
+  stop(gotoEnd = false): Tweenable {
     if (!this._isPlaying) {
       return this
     }
@@ -785,7 +805,7 @@ export class Tweenable {
    * @return {Tweenable}
    * @see https://github.com/jeremyckahn/shifty/issues/122
    */
-  cancel(gotoEnd = false) {
+  cancel(gotoEnd = false): Tweenable {
     const { _currentState, _data, _isPlaying } = this
 
     if (!_isPlaying) {
@@ -811,7 +831,7 @@ export class Tweenable {
    * @method Tweenable#isPlaying
    * @return {boolean}
    */
-  isPlaying() {
+  isPlaying(): boolean {
     return this._isPlaying
   }
 
@@ -820,7 +840,7 @@ export class Tweenable {
    * @method Tweenable#hasEnded
    * @return {boolean}
    */
-  hasEnded() {
+  hasEnded(): boolean {
     return this._hasEnded
   }
 
@@ -829,7 +849,7 @@ export class Tweenable {
    * @param {shifty.scheduleFunction} scheduleFunction
    * @deprecated Will be removed in favor of {@link Tweenable.setScheduleFunction} in 3.0.
    */
-  setScheduleFunction(scheduleFunction) {
+  setScheduleFunction(scheduleFunction: shifty.scheduleFunction) {
     Tweenable.setScheduleFunction(scheduleFunction)
   }
 
@@ -841,7 +861,7 @@ export class Tweenable {
    * @method Tweenable#data
    * @return {Object} The internally stored `data`.
    */
-  data(data = null) {
+  data(data: object = null): object {
     if (data) {
       this._data = { ...data }
     }
@@ -878,7 +898,7 @@ export class Tweenable {
  *
  * @returns {Tweenable} A new {@link Tweenable} instance.
  */
-export function tween(config = {}) {
+export function tween(config: shifty.tweenConfig = {}): Tweenable {
   const tweenable = new Tweenable()
   tweenable.tween(config)
 
