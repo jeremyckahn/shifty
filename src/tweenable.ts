@@ -1,7 +1,6 @@
 import EasingFunctions from './easing-functions'
 import { getCubicBezierTransition } from './bezier'
 /** @typedef {import("./index").shifty.filter} shifty.filter */
-/** @typedef {import("./index").shifty.tweenConfig} shifty.tweenConfig */
 /** @typedef {import("./index").shifty.scheduleFunction} shifty.scheduleFunction */
 
 // FIXME: Ensure all @tutorial links work
@@ -307,8 +306,8 @@ const processTween = (tween: Tweenable, currentTime: number) => {
  * Process all tweens currently managed by Shifty for the current tick. This
  * does not perform any timing or update scheduling; it is the logic that is
  * run *by* the scheduling functionality. Specifically, it computes the state
- * and calls all of the relevant {@link shifty.tweenConfig} functions supplied
- * to each of the tweens for the current point in time (as determined by {@link
+ * and calls all of the relevant {@link TweenConfig} functions supplied to each
+ * of the tweens for the current point in time (as determined by {@link
  * Tweenable.now}.
  *
  * This is a low-level API that won't be needed in the majority of situations.
@@ -510,17 +509,17 @@ export class Tweenable {
   _previous: Tweenable | null = null
 
   /**
-   * @param {Object} [initialState={}] The values that the initial tween should
+   * @param {TweenState} [initialState={}] The values that the initial tween should
    * start at if a `from` value is not provided to {@link
    * Tweenable#tween} or {@link Tweenable#setConfig}.
-   * @param {shifty.tweenConfig} [config] Configuration object to be passed to
+   * @param {TweenConfig} [config] Configuration object to be passed to
    * {@link Tweenable#setConfig}.
    * @constructs Tweenable
    * @memberof shifty
    */
   constructor(
-    initialState: object = {},
-    config: shifty.tweenConfig = undefined
+    initialState: TweenState = {},
+    config: TweenConfig
   ) {
     /** @private */
     this._config = {}
@@ -584,13 +583,11 @@ export class Tweenable {
    * is already running, then it will stop playing the old tween and
    * immediately play the new one.
    * @method Tweenable#tween
-   * @param {shifty.tweenConfig} [config] Gets passed to {@link
-   * Tweenable#setConfig}.
-   * @return {Tweenable}
+   * @param {TweenConfig} [config] Gets passed to {@link Tweenable#setConfig}.
+   * @returns {Tweenable}
    */
-  tween(config: shifty.tweenConfig = undefined): Tweenable {
-    if (this._isPlaying) {
-      this.stop()
+  tween(config?: TweenConfig): Tweenable { if
+    (this._isPlaying) { this.stop()
     }
 
     if (config || !this._config) {
@@ -615,10 +612,10 @@ export class Tweenable {
    * default to the same option used in the preceding tween of this {@link
    * Tweenable} instance.
    * @method Tweenable#setConfig
-   * @param {shifty.tweenConfig} [config={}]
+   * @param {TweenConfig} [config={}]
    * @return {Tweenable}
    */
-  setConfig(config: shifty.tweenConfig = {}): Tweenable {
+  setConfig(config: TweenConfig = {}): Tweenable {
     const { _config } = this
 
     for (const key in config) {
@@ -707,7 +704,7 @@ export class Tweenable {
   }
 
   /**
-   * Overrides any `finish` function passed via a {@link shifty.tweenConfig}.
+   * Overrides any `finish` function passed via a {@link TweenConfig}.
    * @method Tweenable#then
    * @param {function=} onFulfilled Receives {@link shifty.promisedData} as the
    * first parameter.
@@ -995,7 +992,7 @@ export class Tweenable {
 
 /**
  * @method shifty.tween
- * @param {shifty.tweenConfig} [config={}]
+ * @param {TweenConfig} [config={}]
  * @description Standalone convenience method that functions identically to
  * {@link Tweenable#tween}.  You can use this to create tweens without
  * needing to set up a {@link Tweenable} instance.
@@ -1010,7 +1007,7 @@ export class Tweenable {
  *
  * @returns {Tweenable} A new {@link Tweenable} instance.
  */
-export function tween(config: shifty.tweenConfig = {}): Tweenable {
+export function tween(config: TweenConfig = {}): Tweenable {
   const tweenable = new Tweenable()
   tweenable.tween(config)
 
