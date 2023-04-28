@@ -1,4 +1,4 @@
-import * as easingFunctions from './easing-functions'
+import EasingFunctions from './easing-functions'
 import { getCubicBezierTransition } from './bezier'
 /** @typedef {import("./index").shifty.filter} shifty.filter */
 /** @typedef {import("./index").shifty.tweenConfig} shifty.tweenConfig */
@@ -80,7 +80,7 @@ export const getListHead = (): Tweenable | null => listHead
  */
 export const getListTail = (): Tweenable | null => listTail
 
-const formulas = { ...easingFunctions }
+const formulas = { ...EasingFunctions }
 
 /**
  * Calculates the interpolated tween values of an Object for a given
@@ -99,22 +99,21 @@ const formulas = { ...easingFunctions }
  * @private
  */
 export const tweenProps = (
-  forPosition: number,
-  currentState: object,
-  originalState: object,
-  targetState: object,
+  forPosition: number, // The position to compute the state for.
+  currentState: TweenState,
+  originalState: TweenState,
+  targetState: TweenState,
   duration: number,
   timestamp: number,
-  easing: Record<string, string | EasingFunction>
+  easing: Record<string, keyof EasingFunctions | EasingFunction>
 ): object => {
-  let easedPosition
-  let easingObjectProp
-  let start
+  let easedPosition = 0
+  let start: number
 
   const normalizedPosition =
     forPosition < timestamp ? 0 : (forPosition - timestamp) / duration
 
-  let easingFn = null
+  let easingFn: EasingFunction
   let hasOneEase = false
 
   if (easing instanceof Function) {
@@ -124,7 +123,8 @@ export const tweenProps = (
 
   for (const key in currentState) {
     if (!hasOneEase) {
-      easingObjectProp = easing[key]
+
+      const easingObjectProp = easing[key]
 
       if (easingObjectProp instanceof Function) {
         easingFn = easingObjectProp
