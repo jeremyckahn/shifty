@@ -16,7 +16,6 @@
  */
 
 /**
- * @member Tweenable.formulas
  * @description A static Object of {@link shifty.easingFunction}s that can by
  * used by Shifty. The default values are defined in
  * [`easing-functions.js`](easing-functions.js.html), but you can add your own

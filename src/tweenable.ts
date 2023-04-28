@@ -4,6 +4,9 @@ import { getCubicBezierTransition } from './bezier'
 /** @typedef {import("./index").shifty.tweenConfig} shifty.tweenConfig */
 /** @typedef {import("./index").shifty.scheduleFunction} shifty.scheduleFunction */
 
+// FIXME: Ensure all @tutorial links work
+// FIXME: Replace `unknown`s with generic types
+
 // CONSTANTS
 const DEFAULT_EASING = 'linear'
 const DEFAULT_DURATION = 500
@@ -43,6 +46,32 @@ let listTail: Tweenable | null = null
 
 type TweenState = Record<string, number>
 
+type StartFunction = (data: unknown) => void
+
+type FinishFunction = (data: unknown) => void
+
+// FIXME: Reorder data and timeElapsed
+/**
+ * @param {TweenState} state The current state of the tween.
+ * @param {unknown} data User-defined `data` provided via a {@link
+ * TweenConfig}.
+ * @param {number} timeElapsed The time elapsed since the start of the tween.
+ */
+type RenderFunction = (
+  state: TweenState,
+  data: unknown,
+  timeElapsed: number
+) => void
+
+/**
+ * @param {number} position The normalized (0-1) position of the tween.
+ * @returns {number} The curve-adjusted value.
+ */
+type EasingFunction = (normalizedPosition: number) => number
+
+type FulfillmentHandler = (promisedData: PromisedData) => void
+type RejectionHandler = (promisedData: PromisedData) => void
+
 interface PromisedData {
   state: TweenState
   // FIXME: Improve this typing
@@ -50,10 +79,89 @@ interface PromisedData {
   Object: any
 }
 
-type FulfillmentHandler = (promisedData: PromisedData) => void
-type RejectionHandler = (promisedData: PromisedData) => void
+interface TweenConfig {
+  /**
+   * Starting position.  If omitted, {@link Tweenable#get} is used.
+   */
+  from?: TweenState
 
-type EasingFunction = (normalizedPosition: number) => number
+  /**
+   * Ending position.  The keys of this Object should match those of `to`.
+   */
+  to?: TweenState
+
+  /**
+   * How many milliseconds to animate for.
+   */
+  duration?: number
+
+  /**
+   * How many milliseconds to wait before starting the tween.
+   */
+  delay?: number
+
+  /**
+   * Executes when the tween begins.
+   */
+  start?: StartFunction
+
+  /**
+   * Executes when the tween completes. This will get overridden by {@link
+   * Tweenable#then} if that is called, and it will not fire if {@link
+   * Tweenable#cancel} is called.
+   */
+  finish?: FinishFunction
+
+  /**
+   * Executes on every tick. Shifty assumes a [retained
+   * mode](https://en.wikipedia.org/wiki/Retained_mode) rendering environment,
+   * which in practice means that `render` only gets called when the tween
+   * state changes. Importantly, this means that `render` is _not_ called when
+   * a tween is not animating (for instance, when it is paused or waiting to
+   * start via the `delay` option). This works naturally with DOM environments,
+   * but you may need to account for this design in more custom environments
+   * such as `<canvas>`.
+   */
+  render?: RenderFunction
+
+  /**
+   * This value can be one of several different types:
+   *
+   * - `string`: Name of the {@link EasingFunctions} to apply to all properties
+   * of the tween.
+   * - {@link EasingFunction}: A custom function that computes the rendered
+   * position of the tween for the given normalized (0-1) position of the
+   * tween.
+   * - `Record<string, string | EasingFunction>`: Keys are tween property
+   * names. Values are the {@link EasingFunctions} string IDs to be applied to
+   * each tween property, or a {@link EasingFunction}. Any tween properties not
+   * explicitly included in the `Record` default to `'linear'`.
+   * - `Array.<number>`: The array must contain four `number` values that
+   * correspond to the `[x1, y1, x2, y2]` values of a [Bezier
+   * curve](https://cubic-bezier.com/).
+   *
+   * You can learn more about this in the {@tutorial easing-function-in-depth}
+   * tutorial.
+   */
+  easing?:
+    | string
+    | EasingFunction
+    | Record<string, string | EasingFunction>
+    | number[]
+
+  /**
+   * Data that is passed to {@link StartFunction}, {@link RenderFunction}, and
+   * {@link PromisedData}.
+   */
+  data?: unknown
+
+  /**
+   * Promise implementation constructor for when you want to use Promise
+   * library or polyfill Promises in environments where it is not already
+   * defined.
+   */
+  promise?: PromiseLike<unknown>
+}
 
 /**
  * Strictly for testing.
@@ -123,7 +231,6 @@ export const tweenProps = (
 
   for (const key in currentState) {
     if (!hasOneEase) {
-
       const easingObjectProp = easing[key]
 
       if (easingObjectProp instanceof Function) {
@@ -143,7 +250,7 @@ export const tweenProps = (
   return currentState
 }
 
-const processTween = (tween, currentTime) => {
+const processTween = (tween: Tweenable, currentTime: number) => {
   let timestamp = tween._timestamp
   const currentState = tween._currentState
   const delay = tween._delay
@@ -531,7 +638,7 @@ export class Tweenable {
 
     // Attach something to this Tweenable instance (e.g.: a DOM element, an
     // object, a string, etc.);
-    this._data = _config.data || _config.attachment || this._data
+    this._data = _config.data || _config.attachment || this._data // FIXME: Remove `attachment`
 
     // Init the internal state
     /** @private */
@@ -545,7 +652,7 @@ export class Tweenable {
     /** @private */
     this._start = start
     /** @private */
-    this._render = render || step
+    this._render = render || step // FIXME: Remove step
     /** @private */
     this._duration = _config.duration || DEFAULT_DURATION
     /** @private */
