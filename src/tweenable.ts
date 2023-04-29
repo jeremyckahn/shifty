@@ -78,7 +78,7 @@ interface PromisedData {
   Object: any
 }
 
-interface TweenConfig {
+interface TweenableConfig {
   /**
    * Starting position.  If omitted, {@link Tweenable#get} is used.
    */
@@ -159,7 +159,7 @@ interface TweenConfig {
    * library or polyfill Promises in environments where it is not already
    * defined.
    */
-  promise?: PromiseLike<unknown>
+  promise?: typeof Promise
 }
 
 /**
@@ -186,6 +186,8 @@ export const getListHead = (): Tweenable | null => listHead
  * @internal
  */
 export const getListTail = (): Tweenable | null => listTail
+
+type FilterFunction = (tweenable: Tweenable) => void
 
 const formulas = { ...EasingFunctions }
 
@@ -306,7 +308,7 @@ const processTween = (tween: Tweenable, currentTime: number) => {
  * Process all tweens currently managed by Shifty for the current tick. This
  * does not perform any timing or update scheduling; it is the logic that is
  * run *by* the scheduling functionality. Specifically, it computes the state
- * and calls all of the relevant {@link TweenConfig} functions supplied to each
+ * and calls all of the relevant {@link TweenableConfig} functions supplied to each
  * of the tweens for the current point in time (as determined by {@link
  * Tweenable.now}.
  *
@@ -462,6 +464,7 @@ const remove = ((previousTween, nextTween) => tween => {
 })()
 
 const defaultPromiseCtor = typeof Promise === 'function' ? Promise : null
+
 /**
  * @class
  * @implements {Promise<unknown>}
@@ -508,19 +511,44 @@ export class Tweenable {
 
   _previous: Tweenable | null = null
 
+  _config: TweenableConfig
+
+  _data: unknown
+
+  _delay: number
+
+  _filters: FilterFunction[]
+
+  _timestamp: number | null
+
+  _hasEnded: boolean
+
+  _resolve: ((tweenable: Tweenable) => void) | null
+
+  _reject: ((tweenable: Tweenable) => void) | null
+
+  _currentState: TweenState
+
+  _originalState: TweenState
+
+  _targetState: TweenState
+
+  _start: StartFunction
+
+  _render: RenderFunction
+
+  _promiseCtor: typeof Promise | null
+
   /**
    * @param {TweenState} [initialState={}] The values that the initial tween should
    * start at if a `from` value is not provided to {@link
    * Tweenable#tween} or {@link Tweenable#setConfig}.
-   * @param {TweenConfig} [config] Configuration object to be passed to
+   * @param {TweenableConfig} [config] Configuration object to be passed to
    * {@link Tweenable#setConfig}.
    * @constructs Tweenable
    * @memberof shifty
    */
-  constructor(
-    initialState: TweenState = {},
-    config: TweenConfig
-  ) {
+  constructor(initialState: TweenState = {}, config: TweenableConfig) {
     /** @private */
     this._config = {}
     /** @private */
@@ -583,11 +611,12 @@ export class Tweenable {
    * is already running, then it will stop playing the old tween and
    * immediately play the new one.
    * @method Tweenable#tween
-   * @param {TweenConfig} [config] Gets passed to {@link Tweenable#setConfig}.
+   * @param {TweenableConfig} [config] Gets passed to {@link Tweenable#setConfig}.
    * @returns {Tweenable}
    */
-  tween(config?: TweenConfig): Tweenable { if
-    (this._isPlaying) { this.stop()
+  tween(config?: TweenableConfig): Tweenable {
+    if (this._isPlaying) {
+      this.stop()
     }
 
     if (config || !this._config) {
@@ -612,10 +641,10 @@ export class Tweenable {
    * default to the same option used in the preceding tween of this {@link
    * Tweenable} instance.
    * @method Tweenable#setConfig
-   * @param {TweenConfig} [config={}]
+   * @param {TweenableConfig} [config={}]
    * @return {Tweenable}
    */
-  setConfig(config: TweenConfig = {}): Tweenable {
+  setConfig(config: TweenableConfig = {}): Tweenable {
     const { _config } = this
 
     for (const key in config) {
@@ -704,7 +733,7 @@ export class Tweenable {
   }
 
   /**
-   * Overrides any `finish` function passed via a {@link TweenConfig}.
+   * Overrides any `finish` function passed via a {@link TweenableConfig}.
    * @method Tweenable#then
    * @param {function=} onFulfilled Receives {@link shifty.promisedData} as the
    * first parameter.
@@ -992,7 +1021,7 @@ export class Tweenable {
 
 /**
  * @method shifty.tween
- * @param {TweenConfig} [config={}]
+ * @param {TweenableConfig} [config={}]
  * @description Standalone convenience method that functions identically to
  * {@link Tweenable#tween}.  You can use this to create tweens without
  * needing to set up a {@link Tweenable} instance.
@@ -1007,7 +1036,7 @@ export class Tweenable {
  *
  * @returns {Tweenable} A new {@link Tweenable} instance.
  */
-export function tween(config: TweenConfig = {}): Tweenable {
+export function tween(config: TweenableConfig = {}): Tweenable {
   const tweenable = new Tweenable()
   tweenable.tween(config)
 
