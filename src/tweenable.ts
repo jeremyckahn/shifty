@@ -5,19 +5,6 @@ import { getCubicBezierTransition } from './bezier'
 // FIXME: Ensure all @tutorial links work
 // FIXME: Replace `unknown`s with generic types
 
-// CONSTANTS
-const DEFAULT_EASING = 'linear'
-const DEFAULT_DURATION = 500
-const UPDATE_TIME = 1000 / 60
-const root = typeof window !== 'undefined' ? window : global
-
-const AFTER_TWEEN = 'afterTween'
-const AFTER_TWEEN_END = 'afterTweenEnd'
-const BEFORE_TWEEN = 'beforeTween'
-const TWEEN_CREATED = 'tweenCreated'
-const TYPE_FUNCTION = 'function'
-const TYPE_STRING = 'string'
-
 type ScheduleFunction = (callback: () => void, timeout: number) => void
 
 type TweenState = Record<string, number>
@@ -44,6 +31,51 @@ type RenderFunction = (
  * @returns {number} The curve-adjusted value.
  */
 type EasingFunction = (normalizedPosition: number) => number
+
+type EasingKey =
+  | 'bounce'
+  | 'bouncePast'
+  | 'easeFrom'
+  | 'easeFromTo'
+  | 'easeInBack'
+  | 'easeInCirc'
+  | 'easeInCubic'
+  | 'easeInExpo'
+  | 'easeInOutBack'
+  | 'easeInOutCirc'
+  | 'easeInOutCubic'
+  | 'easeInOutExpo'
+  | 'easeInOutQuad'
+  | 'easeInOutQuart'
+  | 'easeInOutQuint'
+  | 'easeInOutSine'
+  | 'easeInQuad'
+  | 'easeInQuart'
+  | 'easeInQuint'
+  | 'easeInSine'
+  | 'easeOutBack'
+  | 'easeOutBounce'
+  | 'easeOutCirc'
+  | 'easeOutCubic'
+  | 'easeOutExpo'
+  | 'easeOutQuad'
+  | 'easeOutQuart'
+  | 'easeOutQuint'
+  | 'easeOutSine'
+  | 'easeTo'
+  | 'elastic'
+  | 'linear'
+  | 'swingFrom'
+  | 'swingFromTo'
+  | 'swingTo'
+
+type EasingObject = Record<string, EasingKey | EasingFunction>
+
+type Easing =
+  | EasingKey
+  | EasingFunction
+  | Record<string, EasingKey | EasingFunction>
+  | number[]
 
 type FulfillmentHandler = (promisedData: PromisedData) => void
 type RejectionHandler = (promisedData: PromisedData) => void
@@ -119,11 +151,7 @@ interface TweenableConfig {
    * You can learn more about this in the {@tutorial easing-function-in-depth}
    * tutorial.
    */
-  easing?:
-    | string
-    | EasingFunction
-    | Record<string, string | EasingFunction>
-    | number[]
+  easing?: Easing
 
   /**
    * Data that is passed to {@link StartFunction}, {@link RenderFunction}, and
@@ -138,6 +166,23 @@ interface TweenableConfig {
    */
   promise?: typeof Promise
 }
+
+const isEasingKey = (key: string): key is EasingKey => {
+  return key in EasingFunctions
+}
+
+// CONSTANTS
+const DEFAULT_EASING: EasingKey = 'linear'
+const DEFAULT_DURATION = 500
+const UPDATE_TIME = 1000 / 60
+const root = typeof window !== 'undefined' ? window : global
+
+const AFTER_TWEEN = 'afterTween'
+const AFTER_TWEEN_END = 'afterTweenEnd'
+const BEFORE_TWEEN = 'beforeTween'
+const TWEEN_CREATED = 'tweenCreated'
+const TYPE_FUNCTION = 'function'
+const TYPE_STRING = 'string'
 
 // requestAnimationFrame() shim by Paul Irish (modified for Shifty)
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
@@ -215,7 +260,7 @@ export const tweenProps = (
   targetState: TweenState,
   duration: number,
   timestamp: number,
-  easing: Record<string, keyof EasingFunctions | EasingFunction>
+  easing: EasingObject
 ): object => {
   let easedPosition = 0
   let start: number
@@ -395,30 +440,32 @@ export const scheduleUpdate = () => {
  *
  * If the tween has only one easing across all properties, that function is
  * returned directly.
- * @param {Record<string, string|Function>} fromTweenParams
- * @param {Object|string|Function|Array.<number>} [easing]
- * @param {Object} [composedEasing] Reused composedEasing object (used internally)
- * @return {Record<string, string|Function>|Function}
+ * @param {EasingObject} fromTweenParams
+ * @param {Easing} [easing]
+ * @param {EasingObject} [composedEasing] Reused composedEasing object (used internally)
+ * @return {EasingObject | EasingFunction}
  * @private
  */
 export const composeEasingObject = (
-  fromTweenParams: Record<string, string | Function>,
-  easing: object | string | Function | Array<number> = DEFAULT_EASING,
-  composedEasing: object = {}
-): Record<string, string | Function> | Function => {
+  fromTweenParams: EasingObject,
+  easing: Easing = DEFAULT_EASING,
+  composedEasing: EasingObject = {}
+): EasingObject | EasingFunction => {
   if (Array.isArray(easing)) {
-    const cubicBezierTransition = getCubicBezierTransition(...easing)
+    const cubicBezierTransition: EasingFunction = getCubicBezierTransition(
+      ...easing
+    )
 
     return cubicBezierTransition
   }
 
-  const typeofEasing = typeof easing
-
-  if (formulas[easing]) {
-    return formulas[easing]
+  if (typeof easing === 'string') {
+    if (isEasingKey(easing)) {
+      return formulas[easing]
+    }
   }
 
-  if (typeofEasing === TYPE_STRING || typeofEasing === TYPE_FUNCTION) {
+  if (typeof easing === 'string' || typeof easing === 'function') {
     for (const prop in fromTweenParams) {
       composedEasing[prop] = easing
     }
@@ -546,6 +593,8 @@ export class Tweenable {
   _pausedAtTime: number | null = null
 
   _scheduleId: number | null = null
+
+  _easing: EasingObject = {}
 
   /**
    * @param {TweenState} [initialState={}] The values that the initial tween should

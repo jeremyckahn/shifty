@@ -1,5 +1,4 @@
 import { Tweenable } from './tweenable'
-/** @typedef {import(".").shifty.easingFunction} shifty.easingFunction */
 
 /**
  * The Bezier magic in this file is adapted/copied almost wholesale from
@@ -145,7 +144,7 @@ function cubicBezierAtTime(t, p1x, p1y, p2x, p2y, duration) {
  *  @param {number} [y1]
  *  @param {number} [x2]
  *  @param {number} [y2]
- *  @return {Function}
+ *  @return {EasingFunction}
  */
 export const getCubicBezierTransition = (
   x1 = 0.25,
@@ -166,7 +165,7 @@ export const getCubicBezierTransition = (
  * @param {number} y1
  * @param {number} x2
  * @param {number} y2
- * @return {shifty.easingFunction} The {@link shifty.easingFunction} that was
+ * @return {EasingFunction} The {@link EasingFunction} that was
  * attached to {@link Tweenable.formulas}.
  */
 export const setBezierFunction = (name, x1, y1, x2, y2) => {
