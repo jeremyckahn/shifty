@@ -1,7 +1,6 @@
 import EasingFunctions from './easing-functions'
 import { getCubicBezierTransition } from './bezier'
 /** @typedef {import("./index").shifty.filter} shifty.filter */
-/** @typedef {import("./index").shifty.scheduleFunction} shifty.scheduleFunction */
 
 // FIXME: Ensure all @tutorial links work
 // FIXME: Replace `unknown`s with generic types
@@ -19,29 +18,7 @@ const TWEEN_CREATED = 'tweenCreated'
 const TYPE_FUNCTION = 'function'
 const TYPE_STRING = 'string'
 
-// requestAnimationFrame() shim by Paul Irish (modified for Shifty)
-// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-let scheduleFunction = root.requestAnimationFrame
-
-if (!scheduleFunction) {
-  if (typeof window === 'undefined') {
-    scheduleFunction = setTimeout
-  } else {
-    scheduleFunction =
-      window.webkitRequestAnimationFrame ||
-      window.oRequestAnimationFrame ||
-      window.msRequestAnimationFrame ||
-      (window.mozCancelRequestAnimationFrame &&
-        window.mozRequestAnimationFrame) ||
-      setTimeout
-  }
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const noop = () => {}
-
-let listHead: Tweenable | null = null
-let listTail: Tweenable | null = null
+type ScheduleFunction = (callback: () => void, timeout: number) => void
 
 type TweenState = Record<string, number>
 
@@ -162,6 +139,30 @@ interface TweenableConfig {
   promise?: typeof Promise
 }
 
+// requestAnimationFrame() shim by Paul Irish (modified for Shifty)
+// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+let scheduleFunction: ScheduleFunction = root.requestAnimationFrame
+
+if (!scheduleFunction) {
+  if (typeof window === 'undefined') {
+    scheduleFunction = setTimeout
+  } else {
+    scheduleFunction =
+      window.webkitRequestAnimationFrame ||
+      window.oRequestAnimationFrame ||
+      window.msRequestAnimationFrame ||
+      (window.mozCancelRequestAnimationFrame &&
+        window.mozRequestAnimationFrame) ||
+      setTimeout
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const noop = () => {}
+
+let listHead: Tweenable | null = null
+let listTail: Tweenable | null = null
+
 /**
  * Strictly for testing.
  * @private
@@ -252,7 +253,7 @@ export const tweenProps = (
 }
 
 const processTween = (tween: Tweenable, currentTime: number) => {
-  let timestamp = tween._timestamp
+  let timestamp = tween._timestamp ?? 0
   const currentState = tween._currentState
   const delay = tween._delay
 
@@ -336,7 +337,7 @@ export const processTweens = () => {
 }
 
 const getCurrentTime = Date.now || (() => +new Date())
-let now
+let now: number
 let heartbeatIsRunning = false
 
 /**
@@ -488,13 +489,12 @@ export class Tweenable {
    * [`setTimeout`](https://developer.mozilla.org/en-US/docs/Web/API/Window.setTimeout)
    * is used.
    * @method Tweenable.setScheduleFunction
-   * @param {shifty.scheduleFunction} fn The function to be
+   * @param {ScheduleFunction} fn The function to be
    * used to schedule the next frame to be rendered.
-   * @return {shifty.scheduleFunction} The function that was set.
+   * @return {ScheduleFunction} The function that was set.
    */
-  static setScheduleFunction = (
-    fn: shifty.scheduleFunction
-  ): shifty.scheduleFunction => (scheduleFunction = fn)
+  static setScheduleFunction = (fn: ScheduleFunction): ScheduleFunction =>
+    (scheduleFunction = fn)
 
   /**
    * The {@link shifty.filter}s available for use.  These filters are
@@ -503,7 +503,7 @@ export class Tweenable {
    * @member Tweenable.filters
    * @type {Record<string, shifty.filter>}
    */
-  static filters: Record<string, shifty.filter> = {}
+  static filters: Record<string, FilterFunction> = {}
 
   static formulas = formulas
 
@@ -511,33 +511,41 @@ export class Tweenable {
 
   _previous: Tweenable | null = null
 
-  _config: TweenableConfig
+  _config: TweenableConfig = {}
 
-  _data: unknown
+  _data: unknown = {}
 
-  _delay: number
+  _delay = 0
 
-  _filters: FilterFunction[]
+  _duration = DEFAULT_DURATION
 
-  _timestamp: number | null
+  _filters: FilterFunction[] = []
 
-  _hasEnded: boolean
+  _timestamp: number | null = null
 
-  _resolve: ((tweenable: Tweenable) => void) | null
+  _hasEnded = false
 
-  _reject: ((tweenable: Tweenable) => void) | null
+  _resolve: ((tweenable: Tweenable) => void) | null = null
+
+  _reject: ((tweenable: Tweenable) => void) | null = null
 
   _currentState: TweenState
 
-  _originalState: TweenState
+  _originalState: TweenState = {}
 
-  _targetState: TweenState
+  _targetState: TweenState = {}
 
-  _start: StartFunction
+  _start: StartFunction = noop
 
-  _render: RenderFunction
+  _render: RenderFunction = noop
 
-  _promiseCtor: typeof Promise | null
+  _promiseCtor: typeof Promise | null = defaultPromiseCtor
+
+  _isPlaying = false
+
+  _pausedAtTime: number | null = null
+
+  _scheduleId: number | null = null
 
   /**
    * @param {TweenState} [initialState={}] The values that the initial tween should
@@ -550,37 +558,7 @@ export class Tweenable {
    */
   constructor(initialState: TweenState = {}, config: TweenableConfig) {
     /** @private */
-    this._config = {}
-    /** @private */
-    this._data = {}
-    /** @private */
-    this._delay = 0
-    /** @private */
-    this._filters = []
-    /** @private */
-    this._next = null
-    /** @private */
-    this._previous = null
-    /** @private */
-    this._timestamp = null
-    /** @private */
-    this._hasEnded = false
-    /** @private */
-    this._resolve = null
-    /** @private */
-    this._reject = null
-    /** @private */
     this._currentState = initialState || {}
-    /** @private */
-    this._originalState = {}
-    /** @private */
-    this._targetState = {}
-    /** @private */
-    this._start = noop
-    /** @private */
-    this._render = noop
-    /** @private */
-    this._promiseCtor = defaultPromiseCtor
 
     // To prevent unnecessary calls to setConfig do not set default
     // configuration here.  Only set default configuration immediately before
@@ -987,7 +965,7 @@ export class Tweenable {
    * @param {shifty.scheduleFunction} scheduleFunction
    * @deprecated Will be removed in favor of {@link Tweenable.setScheduleFunction} in 3.0.
    */
-  setScheduleFunction(scheduleFunction: shifty.scheduleFunction) {
+  setScheduleFunction(scheduleFunction: ScheduleFunction) {
     Tweenable.setScheduleFunction(scheduleFunction)
   }
 
