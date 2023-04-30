@@ -13,7 +13,7 @@ type TweenState = Record<string, number>
 
 type StartFunction = (state: TweenState, data: unknown) => void
 
-type FinishFunction = ((tweenable: Tweenable) => void) | null
+type FinishFunction = ((data: PromisedData) => void) | null
 
 // FIXME: Reorder data and timeElapsed
 /**
@@ -79,14 +79,14 @@ type Easing =
   | Record<string, EasingKey | EasingFunction>
   | number[]
 
-type FulfillmentHandler = (promisedData: PromisedData) => void
-type RejectionHandler = (promisedData: PromisedData) => void
+type FulfillmentHandler = (promisedData: PromisedData) => PromisedData
+
+type RejectionHandler = (promisedData: PromisedData) => PromisedData
 
 interface PromisedData {
   state: TweenState
-  // FIXME: Improve this typing
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Object: any
+  data: unknown
+  tweenable: Tweenable
 }
 
 interface TweenableConfig {
@@ -587,7 +587,6 @@ export class Tweenable {
   _duration = DEFAULT_DURATION
 
   _filters: Filter[] = []
-  //_filters: Record<FilterName, Filter>[] = []
 
   _timestamp: number | null = null
 
@@ -609,7 +608,7 @@ export class Tweenable {
 
   _promiseCtor: typeof Promise | null = defaultPromiseCtor
 
-  _promise: Promise<Tweenable> | null = null
+  _promise: Promise<PromisedData> | null = null
 
   _isPlaying = false
 
@@ -777,17 +776,17 @@ export class Tweenable {
   /**
    * Overrides any `finish` function passed via a {@link TweenableConfig}.
    * @method Tweenable#then
-   * @param {function=} onFulfilled Receives {@link shifty.promisedData} as the
-   * first parameter.
-   * @param {function=} onRejected Receives {@link shifty.promisedData} as the
-   * first parameter.
+   * @param {FulfillmentHandler=} onFulfilled Receives {@link
+   * shifty.promisedData} as the first parameter.
+   * @param {RejectionHandler=} onRejected Receives {@link shifty.promisedData}
+   * as the first parameter.
    * @return {Promise<Object>}
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then
    */
   then(
     onFulfilled?: FulfillmentHandler,
     onRejected?: RejectionHandler
-  ): Promise<TweenState> {
+  ): Promise<PromisedData> {
     if (!this._promiseCtor) {
       throw new Error('Promise implementation is unavailable')
     }
@@ -807,7 +806,7 @@ export class Tweenable {
    * @return {Promise<Object>}
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch
    */
-  catch(onRejected: RejectionHandler): Promise<TweenState> {
+  catch(onRejected: RejectionHandler): Promise<PromisedData> {
     return this.then().catch(onRejected)
   }
   /**
@@ -816,7 +815,7 @@ export class Tweenable {
    * @return {Promise<undefined>}
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally
    */
-  finally(onFinally: () => TweenState): Promise<TweenState> {
+  finally(onFinally: () => TweenState): Promise<PromisedData> {
     return this.then().finally(onFinally)
   }
 
