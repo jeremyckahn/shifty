@@ -185,6 +185,8 @@ const AFTER_TWEEN_END = 'afterTweenEnd'
 const BEFORE_TWEEN = 'beforeTween'
 const TWEEN_CREATED = 'tweenCreated'
 const TYPE_STRING = 'string'
+const TYPE_FUNCTION = 'function'
+const TYPE_OBJECT = 'object'
 
 // requestAnimationFrame() shim by Paul Irish (modified for Shifty)
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
@@ -281,15 +283,17 @@ export const tweenProps = (
   let easingFn: EasingFunction
 
   for (const key in currentState) {
-    if (typeof easing === 'function') {
+    if (typeof easing === TYPE_FUNCTION) {
+      easing = easing as EasingFunction
       easingFn = easing
     } else {
+      easing = easing as EasingObject
       const easingObjectProp = easing[key]
 
-      if (typeof easingObjectProp === 'function') {
-        easingFn = easingObjectProp
+      if (typeof easingObjectProp === TYPE_FUNCTION) {
+        easingFn = easingObjectProp as EasingFunction
       } else {
-        easingFn = formulas[easingObjectProp]
+        easingFn = formulas[easingObjectProp as EasingKey]
       }
     }
 
@@ -457,9 +461,9 @@ export const composeEasingObject = (
   easing: Easing = DEFAULT_EASING,
   composedEasing: EasingObject | EasingFunction = {}
 ): EasingObject | EasingFunction => {
-  if (typeof easing === 'string') {
-    if (isEasingKey(easing)) {
-      return formulas[easing]
+  if (typeof easing === TYPE_STRING) {
+    if (isEasingKey(easing as string)) {
+      return formulas[easing as EasingKey]
     }
   }
 
@@ -471,13 +475,15 @@ export const composeEasingObject = (
     return cubicBezierTransition
   }
 
-  if (typeof composedEasing === 'object') {
-    if (typeof easing === 'string' || typeof easing === 'function') {
+  if (typeof composedEasing === TYPE_OBJECT) {
+    composedEasing = composedEasing as EasingObject
+    if (typeof easing === TYPE_STRING || typeof easing === TYPE_FUNCTION) {
       for (const prop in fromTweenParams) {
-        composedEasing[prop] = easing
+        composedEasing[prop] = easing as EasingKey | EasingFunction
       }
     } else {
       for (const prop in fromTweenParams) {
+        easing = easing as Record<string, EasingKey | EasingFunction>
         composedEasing[prop] = easing[prop] || DEFAULT_EASING
       }
     }
@@ -532,7 +538,7 @@ const remove = (() => {
   }
 })()
 
-const defaultPromiseCtor = typeof Promise === 'function' ? Promise : null
+const defaultPromiseCtor = typeof Promise === TYPE_FUNCTION ? Promise : null
 
 /**
  * @class
