@@ -272,12 +272,12 @@ export const tweenProps = (
   let easingFn: EasingFunction
 
   for (const key in currentState) {
-    if (easing instanceof Function) {
+    if (typeof easing === 'function') {
       easingFn = easing
     } else {
       const easingObjectProp = easing[key]
 
-      if (easingObjectProp instanceof Function) {
+      if (typeof easingObjectProp === 'function') {
         easingFn = easingObjectProp
       } else {
         easingFn = formulas[easingObjectProp]
