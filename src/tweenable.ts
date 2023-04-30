@@ -261,7 +261,7 @@ export const tweenProps = (
   targetState: TweenState,
   duration: number,
   timestamp: number,
-  easing: EasingObject
+  easing: EasingObject | EasingFunction
 ): object => {
   let easedPosition = 0
   let start: number
@@ -270,15 +270,11 @@ export const tweenProps = (
     forPosition < timestamp ? 0 : (forPosition - timestamp) / duration
 
   let easingFn: EasingFunction
-  let hasOneEase = false
-
-  if (easing instanceof Function) {
-    hasOneEase = true
-    easedPosition = easing(normalizedPosition)
-  }
 
   for (const key in currentState) {
-    if (!hasOneEase) {
+    if (easing instanceof Function) {
+      easingFn = easing
+    } else {
       const easingObjectProp = easing[key]
 
       if (easingObjectProp instanceof Function) {
@@ -286,9 +282,9 @@ export const tweenProps = (
       } else {
         easingFn = formulas[easingObjectProp]
       }
-
-      easedPosition = easingFn(normalizedPosition)
     }
+
+    easedPosition = easingFn(normalizedPosition)
 
     start = originalState[key]
 
@@ -441,17 +437,23 @@ export const scheduleUpdate = () => {
  *
  * If the tween has only one easing across all properties, that function is
  * returned directly.
- * @param {EasingObject} fromTweenParams
+ * @param {TweenState} fromTweenParams
  * @param {Easing} [easing]
- * @param {EasingObject} [composedEasing] Reused composedEasing object (used internally)
+ * @param {EasingObject | EasingFunction} [composedEasing] Reused composedEasing object (used internally)
  * @return {EasingObject | EasingFunction}
  * @private
  */
 export const composeEasingObject = (
-  fromTweenParams: EasingObject,
+  fromTweenParams: TweenState,
   easing: Easing = DEFAULT_EASING,
-  composedEasing: EasingObject = {}
+  composedEasing: EasingObject | EasingFunction = {}
 ): EasingObject | EasingFunction => {
+  if (typeof easing === 'string') {
+    if (isEasingKey(easing)) {
+      return formulas[easing]
+    }
+  }
+
   if (Array.isArray(easing)) {
     const cubicBezierTransition: EasingFunction = getCubicBezierTransition(
       ...easing
@@ -460,19 +462,15 @@ export const composeEasingObject = (
     return cubicBezierTransition
   }
 
-  if (typeof easing === 'string') {
-    if (isEasingKey(easing)) {
-      return formulas[easing]
-    }
-  }
-
-  if (typeof easing === 'string' || typeof easing === 'function') {
-    for (const prop in fromTweenParams) {
-      composedEasing[prop] = easing
-    }
-  } else {
-    for (const prop in fromTweenParams) {
-      composedEasing[prop] = easing[prop] || DEFAULT_EASING
+  if (typeof composedEasing === 'object') {
+    if (typeof easing === 'string' || typeof easing === 'function') {
+      for (const prop in fromTweenParams) {
+        composedEasing[prop] = easing
+      }
+    } else {
+      for (const prop in fromTweenParams) {
+        composedEasing[prop] = easing[prop] || DEFAULT_EASING
+      }
     }
   }
 
@@ -608,7 +606,7 @@ export class Tweenable {
 
   _scheduleId: number | null = null
 
-  _easing: EasingObject = {}
+  _easing: EasingObject | EasingFunction = {}
 
   /**
    * @param {TweenState} [initialState={}] The values that the initial tween should
