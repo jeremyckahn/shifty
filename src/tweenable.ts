@@ -181,7 +181,6 @@ const AFTER_TWEEN = 'afterTween'
 const AFTER_TWEEN_END = 'afterTweenEnd'
 const BEFORE_TWEEN = 'beforeTween'
 const TWEEN_CREATED = 'tweenCreated'
-const TYPE_FUNCTION = 'function'
 const TYPE_STRING = 'string'
 
 // requestAnimationFrame() shim by Paul Irish (modified for Shifty)
@@ -480,35 +479,48 @@ export const composeEasingObject = (
 
 // Private declarations used below
 
-const remove = ((previousTween, nextTween) => tween => {
-  // Adapted from:
-  // https://github.com/trekhleb/javascript-algorithms/blob/7c9601df3e8ca4206d419ce50b88bd13ff39deb6/src/data-structures/doubly-linked-list/DoublyLinkedList.js#L73-L121
-  if (tween === listHead) {
-    listHead = tween._next
+const remove = (() => {
+  let previousTween: Tweenable | null
+  let nextTween: Tweenable | null
 
-    if (listHead) {
-      listHead._previous = null
+  return (tween: Tweenable) => {
+    previousTween = null
+    nextTween = null
+
+    // Adapted from:
+    // https://github.com/trekhleb/javascript-algorithms/blob/7c9601df3e8ca4206d419ce50b88bd13ff39deb6/src/data-structures/doubly-linked-list/DoublyLinkedList.js#L73-L121
+    if (tween === listHead) {
+      listHead = tween._next
+
+      if (listHead) {
+        listHead._previous = null
+      } else {
+        listTail = null
+      }
+    } else if (tween === listTail) {
+      listTail = tween._previous
+
+      if (listTail) {
+        listTail._next = null
+      } else {
+        listHead = null
+      }
     } else {
-      listTail = null
-    }
-  } else if (tween === listTail) {
-    listTail = tween._previous
+      previousTween = tween._previous
+      nextTween = tween._next
 
-    if (listTail) {
-      listTail._next = null
-    } else {
-      listHead = null
-    }
-  } else {
-    previousTween = tween._previous
-    nextTween = tween._next
+      if (previousTween) {
+        previousTween._next = nextTween
+      }
 
-    previousTween._next = nextTween
-    nextTween._previous = previousTween
+      if (nextTween) {
+        nextTween._previous = previousTween
+      }
+    }
+
+    // Clean up any references in case the tween is restarted later.
+    tween._previous = tween._next = null
   }
-
-  // Clean up any references in case the tween is restarted later.
-  tween._previous = tween._next = null
 })()
 
 const defaultPromiseCtor = typeof Promise === 'function' ? Promise : null
