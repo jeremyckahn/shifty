@@ -236,10 +236,13 @@ export const getListTail = (): Tweenable | null => listTail
 
 interface Filter {
   doesApply: (tweenable: Tweenable) => boolean
-  tweenCreated: (tweenable: Tweenable) => void
-  beforeTween: (tweenable: Tweenable) => void
-  afterTween: (tweenable: Tweenable) => void
+  tweenCreated?: (tweenable: Tweenable) => void
+  beforeTween?: (tweenable: Tweenable) => void
+  afterTween?: (tweenable: Tweenable) => void
+  afterTweenEnd?: (tweenable: Tweenable) => void
 }
+
+type FilterName = keyof Omit<Filter, 'doesApply'>
 
 const formulas = { ...EasingFunctions }
 
@@ -584,6 +587,7 @@ export class Tweenable {
   _duration = DEFAULT_DURATION
 
   _filters: Filter[] = []
+  //_filters: Record<FilterName, Filter>[] = []
 
   _timestamp: number | null = null
 
@@ -604,6 +608,8 @@ export class Tweenable {
   _render: RenderFunction = noop
 
   _promiseCtor: typeof Promise | null = defaultPromiseCtor
+
+  _promise: Promise<Tweenable> | null = null
 
   _isPlaying = false
 
@@ -636,16 +642,17 @@ export class Tweenable {
 
   /**
    * Applies a filter to Tweenable instance.
-   * @param {string} filterName The name of the filter to apply.
+   * @param {FilterName} filterName The name of the filter to apply.
    * @private
    */
-  _applyFilter(filterName: string) {
+  _applyFilter(filterName: FilterName) {
     for (let i = this._filters.length; i > 0; i--) {
-      const filterType = this._filters[i - i]
-      const filter = filterType[filterName]
+      const filters = this._filters[i - i]
 
-      if (filter) {
-        filter(this)
+      const filterFn = filters[filterName]
+
+      if (filterFn) {
+        filterFn(this)
       }
     }
   }
@@ -781,7 +788,10 @@ export class Tweenable {
     onFulfilled?: FulfillmentHandler,
     onRejected?: RejectionHandler
   ): Promise<TweenState> {
-    /** @private */
+    if (!this._promiseCtor) {
+      throw new Error('Promise implementation is unavailable')
+    }
+
     this._promise = new this._promiseCtor((resolve, reject) => {
       this._resolve = resolve
       this._reject = reject
