@@ -593,7 +593,7 @@ describe('#stop', () => {
       beforeEach(() => {
         Tweenable.now = () => 0
 
-        let { tweenable } = tween({
+        const tweenable = tween({
           from: { x: 0 },
           to: { x: 10 },
           duration: 500,
@@ -627,7 +627,7 @@ describe('#stop', () => {
           duration: 500,
         })
 
-        let { tweenable } = tween({
+        const tweenable = tween({
           from: { x: 0 },
           to: { x: 10 },
           duration: 500,

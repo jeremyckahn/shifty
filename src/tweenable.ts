@@ -6,6 +6,7 @@ import { getCubicBezierTransition } from './bezier'
 // FIXME: Replace `unknown`s with generic types
 // FIXME: Document removal of `step`
 // FIXME: Document removal of `attachment`
+// FIXME: Document removal of tweenable.tweenable (https://github.com/jeremyckahn/shifty/blob/fee93af69c9b4fa9ad462095920adb558ff19ee3/src/tweenable.js#L872-L874)
 
 type ScheduleFunction = (callback: () => void, timeout: number) => void
 
@@ -594,7 +595,7 @@ export class Tweenable {
 
   _resolve: FinishFunction = null
 
-  _reject: ((tweenable: Tweenable) => void) | null = null
+  _reject: ((data: PromisedData) => void) | null = null
 
   _currentState: TweenState
 
@@ -830,9 +831,9 @@ export class Tweenable {
   /**
    * Set the current state.
    * @method Tweenable#set
-   * @param {Object} state The state to set.
+   * @param {TweenState} state The state to set.
    */
-  set(state: object) {
+  set(state: TweenState) {
     this._currentState = state
   }
 
@@ -844,7 +845,7 @@ export class Tweenable {
    */
   pause(): Tweenable {
     if (!this._isPlaying) {
-      return
+      return this
     }
 
     this._pausedAtTime = Tweenable.now()
@@ -873,8 +874,8 @@ export class Tweenable {
       return this.tween()
     }
 
-    if (this._isPlaying) {
-      return this._promise
+    if (this._isPlaying && this._promise) {
+      return this
     }
 
     if (this._pausedAtTime) {
@@ -885,12 +886,18 @@ export class Tweenable {
     this._isPlaying = true
 
     if (listHead === null) {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       listHead = this
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       listTail = this
     } else {
       this._previous = listTail
-      listTail._next = this
 
+      if (listTail) {
+        listTail._next = this
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       listTail = this
     }
 
@@ -910,7 +917,7 @@ export class Tweenable {
     millisecond = Math.max(millisecond, 0)
     const currentTime = Tweenable.now()
 
-    if (this._timestamp + millisecond === 0) {
+    if ((this._timestamp ?? 0) + millisecond === 0) {
       return this
     }
 
@@ -1043,7 +1050,7 @@ export class Tweenable {
    * @method Tweenable#data
    * @return {Object} The internally stored `data`.
    */
-  data(data: object = null): object {
+  data(data: unknown = null): unknown {
     if (data) {
       this._data = { ...data }
     }
@@ -1081,14 +1088,8 @@ export class Tweenable {
  * @returns {Tweenable} A new {@link Tweenable} instance.
  */
 export function tween(config: TweenableConfig = {}): Tweenable {
-  const tweenable = new Tweenable()
-  tweenable.tween(config)
-
-  // This is strictly a legacy shim from when this function returned a Promise.
-  // TODO: Remove this line in the next major version
-  tweenable.tweenable = tweenable
-
-  return tweenable
+  const tweenable = new Tweenable({}, {})
+  return tweenable.tween(config)
 }
 
 shouldScheduleUpdate(true)
