@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const Webpack = require('webpack')
 
 const { version } = require('./package.json')

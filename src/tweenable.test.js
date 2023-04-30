@@ -70,7 +70,7 @@ describe('#tween', () => {
       from: { x: 0 },
       to: { x: 100 },
       duration: 1000,
-      render: function(state, data, offset) {
+      render: function(_state, _data, offset) {
         capturedOffset = offset
       },
     })
@@ -278,7 +278,7 @@ describe('#tween', () => {
           duration: 500,
         })
         tween
-          .catch(() => {})
+          .catch(_ => _)
           .finally(state => {
             expect(state).toEqual(undefined)
             done()
@@ -360,8 +360,8 @@ describe('#tween', () => {
 
   describe('config reuse', () => {
     test('reuses relevant config data from previous tweens', () => {
-      const start = () => {}
-      const render = () => {}
+      const start = _ => _
+      const render = _ => _
 
       Tweenable.now = () => 0
       tweenable = new Tweenable()
