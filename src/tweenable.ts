@@ -4,14 +4,16 @@ import { getCubicBezierTransition } from './bezier'
 
 // FIXME: Ensure all @tutorial links work
 // FIXME: Replace `unknown`s with generic types
+// FIXME: Document removal of `step`
+// FIXME: Document removal of `attachment`
 
 type ScheduleFunction = (callback: () => void, timeout: number) => void
 
 type TweenState = Record<string, number>
 
-type StartFunction = (data: unknown) => void
+type StartFunction = (state: TweenState, data: unknown) => void
 
-type FinishFunction = (data: unknown) => void
+type FinishFunction = ((tweenable: Tweenable) => void) | null
 
 // FIXME: Reorder data and timeElapsed
 /**
@@ -578,13 +580,13 @@ export class Tweenable {
 
   _duration = DEFAULT_DURATION
 
-  _filters: FilterFunction[] = []
+  _filters: Record<string, FilterFunction>[] = []
 
   _timestamp: number | null = null
 
   _hasEnded = false
 
-  _resolve: ((tweenable: Tweenable) => void) | null = null
+  _resolve: FinishFunction = null
 
   _reject: ((tweenable: Tweenable) => void) | null = null
 
@@ -686,8 +688,10 @@ export class Tweenable {
   setConfig(config: TweenableConfig = {}): Tweenable {
     const { _config } = this
 
-    for (const key in config) {
-      _config[key] = config[key]
+    let key: keyof TweenableConfig
+    for (key in config) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      _config[key] = config[key] as any
     }
 
     // Configuration options to reuse from previous tweens
@@ -695,32 +699,21 @@ export class Tweenable {
       promise = this._promiseCtor,
       start = noop,
       finish,
-      render = this._config.step || noop,
-
-      // Legacy option. Superseded by `render`.
-      step = noop,
+      render = noop,
     } = _config
 
     // Attach something to this Tweenable instance (e.g.: a DOM element, an
     // object, a string, etc.);
-    this._data = _config.data || _config.attachment || this._data // FIXME: Remove `attachment`
+    this._data = _config.data || this._data
 
     // Init the internal state
-    /** @private */
     this._isPlaying = false
-    /** @private */
     this._pausedAtTime = null
-    /** @private */
     this._scheduleId = null
-    /** @private */
     this._delay = config.delay || 0
-    /** @private */
     this._start = start
-    /** @private */
-    this._render = render || step // FIXME: Remove step
-    /** @private */
+    this._render = render
     this._duration = _config.duration || DEFAULT_DURATION
-    /** @private */
     this._promiseCtor = promise
 
     if (finish) {
@@ -746,7 +739,7 @@ export class Tweenable {
       _originalState[key] = currentProp
 
       // Ensure that there is always something to tween to.
-      _targetState[key] = to.hasOwnProperty(key) ? to[key] : currentProp
+      _targetState[key] = to[key] ?? currentProp
     }
 
     /** @private */
@@ -816,9 +809,9 @@ export class Tweenable {
 
   /**
    * @method Tweenable#get
-   * @return {Object} The current state.
+   * @return {TweenState} The current state.
    */
-  get(): object {
+  get(): TweenState {
     return { ...this._currentState }
   }
 
