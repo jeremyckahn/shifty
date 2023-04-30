@@ -234,7 +234,12 @@ export const getListHead = (): Tweenable | null => listHead
  */
 export const getListTail = (): Tweenable | null => listTail
 
-type FilterFunction = (tweenable: Tweenable) => void
+interface Filter {
+  doesApply: (tweenable: Tweenable) => boolean
+  tweenCreated: (tweenable: Tweenable) => void
+  beforeTween: (tweenable: Tweenable) => void
+  afterTween: (tweenable: Tweenable) => void
+}
 
 const formulas = { ...EasingFunctions }
 
@@ -562,7 +567,7 @@ export class Tweenable {
    * @member Tweenable.filters
    * @type {Record<string, shifty.filter>}
    */
-  static filters: Record<string, FilterFunction> = {}
+  static filters: Record<string, Filter> = {}
 
   static formulas = formulas
 
@@ -578,7 +583,7 @@ export class Tweenable {
 
   _duration = DEFAULT_DURATION
 
-  _filters: Record<string, FilterFunction>[] = []
+  _filters: Filter[] = []
 
   _timestamp: number | null = null
 
