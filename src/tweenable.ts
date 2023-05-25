@@ -10,7 +10,12 @@ import { getCubicBezierTransition } from './bezier'
 
 type ScheduleFunction = (callback: () => void, timeout: number) => void
 
-type TweenState = Record<string, number>
+// NOTE: TweenState values are numbers whenever they are worked with internally
+// by Tweenable. The user may define them as strings, but they get
+// automatically converted to numbers before they are processed.
+//
+// FIXME: Improve the typing to avoid this confusing discrepancy.
+export type TweenState = Record<string, number | string>
 
 type StartFunction = (state: TweenState, data: unknown) => void
 
@@ -35,7 +40,7 @@ type RenderFunction = (
  */
 type EasingFunction = (normalizedPosition: number) => number
 
-type EasingKey =
+export type EasingKey =
   | 'bounce'
   | 'bouncePast'
   | 'easeFrom'
@@ -72,7 +77,7 @@ type EasingKey =
   | 'swingFromTo'
   | 'swingTo'
 
-type EasingObject = Record<string, EasingKey | EasingFunction>
+export type EasingObject = Record<string, EasingKey | EasingFunction>
 
 type Easing =
   | EasingKey
@@ -170,7 +175,7 @@ interface TweenableConfig {
   promise?: typeof Promise
 }
 
-const isEasingKey = (key: string): key is EasingKey => {
+export const isEasingKey = (key: string): key is EasingKey => {
   return key in EasingFunctions
 }
 
@@ -299,9 +304,10 @@ export const tweenProps = (
 
     easedPosition = easingFn(normalizedPosition)
 
-    start = originalState[key]
+    start = originalState[key] as number
 
-    currentState[key] = start + (targetState[key] - start) * easedPosition
+    currentState[key] =
+      start + ((targetState[key] as number) - start) * easedPosition
   }
 
   return currentState
@@ -540,11 +546,16 @@ const remove = (() => {
 
 const defaultPromiseCtor = typeof Promise === TYPE_FUNCTION ? Promise : null
 
+// This empty interface is dynamically extended by non-core modules.
+//
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface ITweenable {}
+
 /**
  * @class
  * @implements {Promise<unknown>}
  */
-export class Tweenable {
+export class Tweenable implements ITweenable {
   //required for Promise implementation
   [Symbol.toStringTag] = 'Promise'
   /**
