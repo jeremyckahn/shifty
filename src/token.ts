@@ -1,9 +1,10 @@
 /** @typedef {import("./tweenable").Tweenable} Tweenable */
 
-import { EasingKey, EasingObject, isEasingKey, TweenState } from './tweenable'
+import { Tweenable } from './scene'
+import { TweenState } from './tweenable'
 
 declare module './tweenable' {
-  interface ITweenable {
+  interface Tweenable {
     _tokenData?: FormatSignature
   }
 }
@@ -20,6 +21,7 @@ type PropertyChunks = { [chunkName: string]: string | number }
 const R_NUMBER_COMPONENT = /(\d|-|\.)/
 const R_FORMAT_CHUNKS = /([^\-0-9.]+)/g
 const R_UNFORMATTED_VALUES = /[0-9.-]+/g
+
 const R_RGBA = (() => {
   const number = R_UNFORMATTED_VALUES.source
   const comma = /,\s*/.source
@@ -29,6 +31,7 @@ const R_RGBA = (() => {
     'g'
   )
 })()
+
 const R_RGBA_PREFIX = /^.*\(/
 const R_HEX = /#([0-9]|[a-f]){3,6}/gi
 const VALUE_PLACEHOLDER = 'VAL'
@@ -230,13 +233,13 @@ const getValuesFrom = (formattedString: string): Array<string> =>
   formattedString.match(R_UNFORMATTED_VALUES) ?? []
 
 /**
- * @param {Object} stateObject
+ * @param {TweenState} stateObject
  *
- * @return {Object} An Object of formatSignatures that correspond to
+ * @return {FormatSignature} An Object of formatSignatures that correspond to
  * the string properties of stateObject.
  * @private
  */
-const getFormatSignatures = (stateObject: TweenState): object => {
+const getFormatSignatures = (stateObject: TweenState): FormatSignature => {
   const signatures: FormatSignature = {}
 
   for (const propertyName in stateObject) {
@@ -257,8 +260,8 @@ const getFormatSignatures = (stateObject: TweenState): object => {
 }
 
 /**
- * @param {Object} stateObject
- * @param {Object} formatSignatures
+ * @param {TweenState} stateObject
+ * @param {FormatSignature} formatSignatures
  * @private
  */
 const expandFormattedProperties = (
@@ -352,12 +355,12 @@ const collapseFormattedProperties = (
 }
 
 /**
- * @param {EasingObject} easingObject
+ * @param {Record<string, string>} easingObject
  * @param {FormatSignature} formatSignature
  * @private
  */
 const expandEasingObject = (
-  easingObject: EasingObject,
+  easingObject: Record<string, string>,
   formatSignature: FormatSignature
 ) => {
   for (const prop in formatSignature) {
@@ -365,7 +368,7 @@ const expandEasingObject = (
     const easing = easingObject[prop]
 
     if (typeof easing === 'string') {
-      const easingNames: EasingKey[] = easing.split(' ').filter(isEasingKey)
+      const easingNames = easing.split(' ')
       const defaultEasing = easingNames[easingNames.length - 1]
 
       chunkNames.forEach(
@@ -382,13 +385,16 @@ const expandEasingObject = (
 }
 
 /**
- * @param {Object} easingObject
- * @param {Object} tokenData
+ * @param {Record<string, string>} easingObject
+ * @param {FormatSignature} formatSignature
  * @private
  */
-const collapseEasingObject = (easingObject: object, tokenData: object) => {
-  for (const prop in tokenData) {
-    const { chunkNames } = tokenData[prop]
+const collapseEasingObject = (
+  easingObject: Record<string, string>,
+  formatSignature: FormatSignature
+) => {
+  for (const prop in formatSignature) {
+    const { chunkNames } = formatSignature[prop]
     const firstEasing = easingObject[chunkNames[0]]
 
     if (typeof firstEasing === 'string') {
@@ -450,7 +456,7 @@ export function beforeTween(tweenable: Tweenable) {
 
   expandEasingObject(_easing, _tokenData)
   ;[_currentState, _originalState, _targetState].forEach(state =>
-    expandFormattedProperties(state, _tokenData)
+    expandFormattedProperties(state, _tokenData ?? {})
   )
 }
 
@@ -467,7 +473,7 @@ export function afterTween(tweenable: Tweenable) {
     _tokenData,
   } = tweenable
   ;[_currentState, _originalState, _targetState].forEach(state =>
-    collapseFormattedProperties(state, _tokenData)
+    collapseFormattedProperties(state, _tokenData ?? {})
   )
 
   collapseEasingObject(_easing, _tokenData)

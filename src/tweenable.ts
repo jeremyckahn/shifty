@@ -175,6 +175,7 @@ interface TweenableConfig {
   promise?: typeof Promise
 }
 
+// FIXME: This needs to support custom easing functions.
 export const isEasingKey = (key: string): key is EasingKey => {
   return key in EasingFunctions
 }
@@ -546,16 +547,11 @@ const remove = (() => {
 
 const defaultPromiseCtor = typeof Promise === TYPE_FUNCTION ? Promise : null
 
-// This empty interface is dynamically extended by non-core modules.
-//
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface ITweenable {}
-
 /**
  * @class
  * @implements {Promise<unknown>}
  */
-export class Tweenable implements ITweenable {
+export class Tweenable {
   //required for Promise implementation
   [Symbol.toStringTag] = 'Promise'
   /**
