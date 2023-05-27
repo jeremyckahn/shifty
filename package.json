@@ -57,7 +57,7 @@
     "deploy-docs": "npm run build && npm run doc && gh-pages -d dist",
     "preversion": "npm run ci",
     "postversion": "git push && git push --tags",
-    "prettier": "prettier 'src/**/*.js' webpack.* --write"
+    "prettier": "prettier 'src/**/*.ts' webpack.* --write"
   },
   "husky": {
     "hooks": {
