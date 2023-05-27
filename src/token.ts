@@ -1,7 +1,7 @@
 /** @typedef {import("./tweenable").Tweenable} Tweenable */
 
 import { Tweenable } from './scene'
-import { TweenState } from './tweenable'
+import { EasingObject, isEasingKey, TweenState } from './tweenable'
 
 declare module './tweenable' {
   interface Tweenable {
@@ -360,7 +360,7 @@ const collapseFormattedProperties = (
  * @private
  */
 const expandEasingObject = (
-  easingObject: Record<string, string>,
+  easingObject: EasingObject,
   formatSignature: FormatSignature
 ) => {
   for (const prop in formatSignature) {
@@ -371,10 +371,14 @@ const expandEasingObject = (
       const easingNames = easing.split(' ')
       const defaultEasing = easingNames[easingNames.length - 1]
 
-      chunkNames.forEach(
-        (chunkName, i) =>
-          (easingObject[chunkName] = easingNames[i] || defaultEasing)
-      )
+      for (let i = 0; i < chunkNames.length; i++) {
+        const chunkName = chunkNames[i]
+        const easingName = easingNames[i] ?? defaultEasing
+
+        if (isEasingKey(easingName)) {
+          easingObject[chunkName] = easingName
+        }
+      }
     } else {
       // easing is a function
       chunkNames.forEach(chunkName => (easingObject[chunkName] = easing))
@@ -385,12 +389,12 @@ const expandEasingObject = (
 }
 
 /**
- * @param {Record<string, string>} easingObject
+ * @param {EasingObject} easingObject
  * @param {FormatSignature} formatSignature
  * @private
  */
 const collapseEasingObject = (
-  easingObject: Record<string, string>,
+  easingObject: EasingObject,
   formatSignature: FormatSignature
 ) => {
   for (const prop in formatSignature) {
@@ -454,8 +458,11 @@ export function beforeTween(tweenable: Tweenable) {
     _tokenData,
   } = tweenable
 
-  expandEasingObject(_easing, _tokenData)
-  ;[_currentState, _originalState, _targetState].forEach(state =>
+  if (typeof _easing !== 'function' && _tokenData) {
+    expandEasingObject(_easing, _tokenData)
+  }
+
+  [_currentState, _originalState, _targetState].forEach(state =>
     expandFormattedProperties(state, _tokenData ?? {})
   )
 }
@@ -476,5 +483,7 @@ export function afterTween(tweenable: Tweenable) {
     collapseFormattedProperties(state, _tokenData ?? {})
   )
 
-  collapseEasingObject(_easing, _tokenData)
+  if (typeof _easing !== 'function' && _tokenData) {
+    collapseEasingObject(_easing, _tokenData)
+  }
 }
