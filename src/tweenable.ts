@@ -175,9 +175,8 @@ interface TweenableConfig {
   promise?: typeof Promise
 }
 
-// FIXME: This needs to support custom easing functions.
 export const isEasingKey = (key: string): key is EasingKey => {
-  return key in EasingFunctions
+  return key in formulas
 }
 
 // CONSTANTS
