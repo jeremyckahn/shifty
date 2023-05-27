@@ -1,7 +1,7 @@
 /** @typedef {import("./tweenable").Tweenable} Tweenable */
 
 import { Tweenable } from './scene'
-import { EasingObject, isEasingKey, TweenState } from './tweenable'
+import { EasingKey, EasingObject, isEasingKey, TweenState } from './tweenable'
 
 declare module './tweenable' {
   interface Tweenable {
@@ -409,7 +409,12 @@ const collapseEasingObject = (
 
           return easingName
         })
-        .join(' ')
+        // This typecast isn't accurate, but the logic works and it's performant.
+        //
+        // TODO: In a future major version, drop support for a single string
+        // containing a space-separated list of EasingKeys and add support for an
+        // Array of EasingKeys.
+        .join(' ') as EasingKey
     } else {
       // firstEasing is a function
       easingObject[prop] = firstEasing
@@ -462,7 +467,8 @@ export function beforeTween(tweenable: Tweenable) {
     expandEasingObject(_easing, _tokenData)
   }
 
-  [_currentState, _originalState, _targetState].forEach(state =>
+  // eslint-disable-next-line @typescript-eslint/no-extra-semi
+  ;[_currentState, _originalState, _targetState].forEach(state =>
     expandFormattedProperties(state, _tokenData ?? {})
   )
 }
