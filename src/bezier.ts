@@ -1,4 +1,4 @@
-import { Tweenable } from './tweenable'
+import { EasingFunction, Tweenable } from './tweenable'
 
 /**
  * The Bezier magic in this file is adapted/copied almost wholesale from
@@ -7,6 +7,17 @@ import { Tweenable } from './tweenable'
  * [here](http://opensource.apple.com/source/WebCore/WebCore-955.66/platform/graphics/UnitBezier.h)).
  * Special thanks to Apple and Thomas Fuchs for much of this code.
  */
+
+declare module './tweenable' {
+  interface EasingFunction {
+    (normalizedPosition: number): number
+    displayName?: string
+    x1?: number
+    y1?: number
+    x2?: number
+    y2?: number
+  }
+}
 
 /**
  *  Copyright (c) 2006 Apple Computer, Inc. All rights reserved.
@@ -49,7 +60,14 @@ import { Tweenable } from './tweenable'
  * @returns {Function}
  * @private
  */
-function cubicBezierAtTime(t, p1x, p1y, p2x, p2y, duration) {
+function cubicBezierAtTime(
+  t: number,
+  p1x: number,
+  p1y: number,
+  p2x: number,
+  p2y: number,
+  duration: number
+): number {
   let ax = 0,
     bx = 0,
     cx = 0,
@@ -144,14 +162,14 @@ function cubicBezierAtTime(t, p1x, p1y, p2x, p2y, duration) {
  *  @param {number} [y1]
  *  @param {number} [x2]
  *  @param {number} [y2]
- *  @return {EasingFunction}
+ *  @returns {EasingFunction}
  */
 export const getCubicBezierTransition = (
   x1 = 0.25,
   y1 = 0.25,
   x2 = 0.75,
   y2 = 0.75
-) => pos => cubicBezierAtTime(pos, x1, y1, x2, y2, 1)
+): EasingFunction => pos => cubicBezierAtTime(pos, x1, y1, x2, y2, 1)
 
 /**
  * Create a Bezier easing function and attach it to {@link
@@ -168,7 +186,13 @@ export const getCubicBezierTransition = (
  * @return {EasingFunction} The {@link EasingFunction} that was
  * attached to {@link Tweenable.formulas}.
  */
-export const setBezierFunction = (name, x1, y1, x2, y2) => {
+export const setBezierFunction = (
+  name: string,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number
+): EasingFunction => {
   const cubicBezierTransition = getCubicBezierTransition(x1, y1, x2, y2)
 
   cubicBezierTransition.displayName = name
@@ -188,4 +212,5 @@ export const setBezierFunction = (name, x1, y1, x2, y2) => {
  * @param {string} name The name of the easing function to delete.
  * @return {boolean} Whether or not the functions was `delete`d.
  */
-export const unsetBezierFunction = name => delete Tweenable.formulas[name]
+export const unsetBezierFunction = (name: string): boolean =>
+  delete Tweenable.formulas[name]

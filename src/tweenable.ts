@@ -34,11 +34,14 @@ type RenderFunction = (
   timeElapsed: number
 ) => void
 
-/**
- * @param {number} position The normalized (0-1) position of the tween.
- * @returns {number} The curve-adjusted value.
- */
-type EasingFunction = (normalizedPosition: number) => number
+export interface EasingFunction {
+  /**
+   * @param {number} normalizedPosition The normalized (0-1) position of the
+   * tween.
+   * @returns {number} The curve-adjusted value.
+   */
+  (normalizedPosition: number): number
+}
 
 export type EasingKey =
   | 'bounce'
