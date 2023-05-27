@@ -1,4 +1,4 @@
-import { EasingFunction, Tweenable } from './tweenable'
+import { EasingFunction, EasingKey, Tweenable } from './tweenable'
 
 /**
  * The Bezier magic in this file is adapted/copied almost wholesale from
@@ -75,17 +75,17 @@ function cubicBezierAtTime(
     by = 0,
     cy = 0
 
-  const sampleCurveX = t => ((ax * t + bx) * t + cx) * t
+  const sampleCurveX = (t: number) => ((ax * t + bx) * t + cx) * t
 
-  const sampleCurveY = t => ((ay * t + by) * t + cy) * t
+  const sampleCurveY = (t: number) => ((ay * t + by) * t + cy) * t
 
-  const sampleCurveDerivativeX = t => (3 * ax * t + 2 * bx) * t + cx
+  const sampleCurveDerivativeX = (t: number) => (3 * ax * t + 2 * bx) * t + cx
 
-  const solveEpsilon = duration => 1 / (200 * duration)
+  const solveEpsilon = (duration: number) => 1 / (200 * duration)
 
-  const fabs = n => (n >= 0 ? n : 0 - n)
+  const fabs = (n: number) => (n >= 0 ? n : 0 - n)
 
-  const solveCurveX = (x, epsilon) => {
+  const solveCurveX = (x: number, epsilon: number) => {
     let t0, t1, t2, x2, d2, i
 
     for (t2 = x, i = 0; i < 8; i++) {
@@ -135,7 +135,8 @@ function cubicBezierAtTime(
     return t2 // Failure.
   }
 
-  const solve = (x, epsilon) => sampleCurveY(solveCurveX(x, epsilon))
+  const solve = (x: number, epsilon: number) =>
+    sampleCurveY(solveCurveX(x, epsilon))
 
   cx = 3 * p1x
   bx = 3 * (p2x - p1x) - cx
@@ -201,7 +202,7 @@ export const setBezierFunction = (
   cubicBezierTransition.x2 = x2
   cubicBezierTransition.y2 = y2
 
-  return (Tweenable.formulas[name] = cubicBezierTransition)
+  return (Tweenable.formulas[name as EasingKey] = cubicBezierTransition)
 }
 
 /**
@@ -213,4 +214,4 @@ export const setBezierFunction = (
  * @return {boolean} Whether or not the functions was `delete`d.
  */
 export const unsetBezierFunction = (name: string): boolean =>
-  delete Tweenable.formulas[name]
+  delete Tweenable.formulas[name as EasingKey]
