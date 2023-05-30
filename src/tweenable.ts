@@ -17,6 +17,8 @@ type ScheduleFunction = (callback: () => void, timeout: number) => void
 // FIXME: Improve the typing to avoid this confusing discrepancy.
 export type TweenState = Record<string, number | string>
 
+export type TweenRawState = Record<string, number>
+
 type StartFunction = (state: TweenState, data: unknown) => void
 
 type FinishFunction = ((data: PromisedData) => void) | null
@@ -82,7 +84,7 @@ export type EasingKey =
 
 export type EasingObject = Record<string, EasingKey | EasingFunction>
 
-type Easing =
+export type Easing =
   | EasingKey
   | EasingFunction
   | Record<string, EasingKey | EasingFunction>
@@ -273,15 +275,15 @@ const formulas = { ...EasingFunctions }
  * @returns {Object}
  * @private
  */
-export const tweenProps = (
+export const tweenProps = <T extends TweenRawState>(
   forPosition: number, // The position to compute the state for.
-  currentState: TweenState,
-  originalState: TweenState,
-  targetState: TweenState,
+  currentState: T,
+  originalState: T,
+  targetState: T,
   duration: number,
   timestamp: number,
   easing: EasingObject | EasingFunction
-): object => {
+): T => {
   let easedPosition = 0
   let start: number
 
@@ -307,10 +309,10 @@ export const tweenProps = (
 
     easedPosition = easingFn(normalizedPosition)
 
-    start = originalState[key] as number
+    start = originalState[key]
 
-    currentState[key] =
-      start + ((targetState[key] as number) - start) * easedPosition
+    currentState[key] = (start +
+      (targetState[key] - start) * easedPosition) as T[Extract<keyof T, string>]
   }
 
   return currentState
@@ -354,9 +356,9 @@ const processTween = (tween: Tweenable, currentTime: number) => {
 
   tweenProps(
     timeToCompute,
-    currentState,
-    tween._originalState,
-    targetState,
+    currentState as TweenRawState,
+    tween._originalState as TweenRawState,
+    targetState as TweenRawState,
     duration,
     timestamp,
     tween._easing
@@ -643,7 +645,7 @@ export class Tweenable {
    * @constructs Tweenable
    * @memberof shifty
    */
-  constructor(initialState: TweenState = {}, config: TweenableConfig) {
+  constructor(initialState: TweenState = {}, config?: TweenableConfig) {
     /** @private */
     this._currentState = initialState || {}
 
@@ -972,9 +974,9 @@ export class Tweenable {
 
       tweenProps(
         1,
-        this._currentState,
-        this._originalState,
-        this._targetState,
+        this._currentState as TweenRawState,
+        this._originalState as TweenRawState,
+        this._targetState as TweenRawState,
         1,
         0,
         this._easing

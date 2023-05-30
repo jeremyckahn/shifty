@@ -1,4 +1,11 @@
-import { Tweenable, composeEasingObject, tweenProps } from './tweenable'
+import {
+  Tweenable,
+  composeEasingObject,
+  tweenProps,
+  TweenState,
+  Easing,
+  TweenRawState,
+} from './tweenable'
 /** @typedef {import("./index").shifty.easingFunction} shifty.easingFunction */
 
 // Fake a Tweenable and patch some internals.  This approach allows us to
@@ -48,7 +55,13 @@ const { filters } = Tweenable
  * increase all valid values of `position` to numbers between `0` and `1.5`.
  * @return {T}
  */
-export const interpolate = (from, to, position, easing, delay = 0) => {
+export const interpolate = <T extends TweenState>(
+  from: T,
+  to: T,
+  position: number,
+  easing: Easing,
+  delay = 0
+): T => {
   const current = { ...from }
   const easingObject = composeEasingObject(from, easing)
 
@@ -72,9 +85,9 @@ export const interpolate = (from, to, position, easing, delay = 0) => {
 
   const interpolatedValues = tweenProps(
     position,
-    current,
-    from,
-    to,
+    current as TweenRawState,
+    from as TweenRawState,
+    to as TweenRawState,
     1,
     delay,
     easingObject
@@ -83,5 +96,5 @@ export const interpolate = (from, to, position, easing, delay = 0) => {
   // Transform data in interpolatedValues back into its original format
   mockTweenable._applyFilter('afterTween')
 
-  return interpolatedValues
+  return interpolatedValues as T
 }
