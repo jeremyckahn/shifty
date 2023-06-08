@@ -1,7 +1,10 @@
-/** @typedef {import("./tweenable").Tweenable} Tweenable */
-
-import { Tweenable } from './scene'
-import { EasingKey, EasingObject, isEasingKey, TweenState } from './tweenable'
+import {
+  Tweenable,
+  EasingKey,
+  EasingObject,
+  isEasingKey,
+  TweenState,
+} from './tweenable'
 
 declare module './tweenable' {
   interface Tweenable {

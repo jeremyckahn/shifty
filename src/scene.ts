@@ -1,7 +1,7 @@
-/** @typedef {import("./tweenable").Tweenable} Tweenable */
+import { Tweenable } from './tweenable'
 
 export class Scene {
-  #tweenables = []
+  private _tweenables: Tweenable[] = []
 
   /**
    * The {@link Scene} class provides a way to control groups of {@link
@@ -25,22 +25,22 @@ export class Scene {
    * on <a href="https://codepen.io">CodePen</a>.</span>
    * </p>
    * <script async src="https://static.codepen.io/assets/embed/ei.js"></script>
-   * @param {...Tweenable} tweenables
+   * @param {...Tweenable[]} tweenables
    * @see https://codepen.io/jeremyckahn/pen/qvZKbe
    * @constructs Scene
    * @memberof shifty
    */
-  constructor(...tweenables) {
+  constructor(...tweenables: Tweenable[]) {
     tweenables.forEach(this.add.bind(this))
   }
 
   /**
    * A copy of the internal {@link Tweenable}s array.
-   * @member Scene#tweenables
+   * @member Scene_tweenables
    * @type {Array.<Tweenable>}
    */
   get tweenables() {
-    return [...this.#tweenables]
+    return [...this._tweenables]
   }
 
   /**
@@ -50,7 +50,7 @@ export class Scene {
    * @type {Array.<Tweenable>}
    */
   get playingTweenables() {
-    return this.#tweenables.filter(tweenable => !tweenable.hasEnded())
+    return this._tweenables.filter(tweenable => !tweenable.hasEnded())
   }
 
   /**
@@ -73,7 +73,7 @@ export class Scene {
    * @type {Array.<Promise<any>>}
    */
   get promises() {
-    return this.#tweenables.map(tweenable => tweenable.then())
+    return this._tweenables.map(tweenable => tweenable.then())
   }
 
   /**
@@ -83,8 +83,8 @@ export class Scene {
    * @param {Tweenable} tweenable
    * @return {Tweenable} The {@link Tweenable} that was added.
    */
-  add(tweenable) {
-    this.#tweenables.push(tweenable)
+  add(tweenable: Tweenable): Tweenable {
+    this._tweenables.push(tweenable)
 
     return tweenable
   }
@@ -96,11 +96,11 @@ export class Scene {
    * @param {Tweenable} tweenable
    * @return {Tweenable} The {@link Tweenable} that was removed.
    */
-  remove(tweenable) {
-    const index = this.#tweenables.indexOf(tweenable)
+  remove(tweenable: Tweenable): Tweenable {
+    const index = this._tweenables.indexOf(tweenable)
 
     if (~index) {
-      this.#tweenables.splice(index, 1)
+      this._tweenables.splice(index, 1)
     }
 
     return tweenable
@@ -113,7 +113,7 @@ export class Scene {
    * @return {Array.<Tweenable>} The {@link Tweenable}s that were
    * removed.
    */
-  empty() {
+  empty(): Array<Tweenable> {
     // Deliberate of the tweenables getter here to create a temporary array
     return this.tweenables.map(this.remove.bind(this))
   }
@@ -124,8 +124,8 @@ export class Scene {
    * @method Scene#isPlaying
    * @return {boolean}
    */
-  isPlaying() {
-    return this.#tweenables.some(tweenable => tweenable.isPlaying())
+  isPlaying(): boolean {
+    return this._tweenables.some(tweenable => tweenable.isPlaying())
   }
 
   /**
@@ -133,8 +133,8 @@ export class Scene {
    * @method Scene#play
    * @return {Scene}
    */
-  play() {
-    this.#tweenables.forEach(tweenable => tweenable.tween())
+  play(): Scene {
+    this._tweenables.forEach(tweenable => tweenable.tween())
 
     return this
   }
@@ -145,8 +145,8 @@ export class Scene {
    * @method Scene#pause
    * @return {Scene}
    */
-  pause() {
-    this.#tweenables.forEach(tweenable => tweenable.pause())
+  pause(): Scene {
+    this._tweenables.forEach(tweenable => tweenable.pause())
     return this
   }
 
@@ -155,7 +155,7 @@ export class Scene {
    * @method Scene#resume
    * @return {Scene}
    */
-  resume() {
+  resume(): Scene {
     this.playingTweenables.forEach(tweenable => tweenable.resume())
 
     return this
@@ -168,8 +168,8 @@ export class Scene {
    * @param {boolean} [gotoEnd]
    * @return {Scene}
    */
-  stop(gotoEnd) {
-    this.#tweenables.forEach(tweenable => tweenable.stop(gotoEnd))
+  stop(gotoEnd: boolean): Scene {
+    this._tweenables.forEach(tweenable => tweenable.stop(gotoEnd))
     return this
   }
 }
