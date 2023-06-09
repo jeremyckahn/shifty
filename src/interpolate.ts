@@ -59,7 +59,7 @@ export const interpolate = <T extends TweenState>(
   from: T,
   to: T,
   position: number,
-  easing: Easing,
+  easing?: Easing,
   delay = 0
 ): T => {
   const current = { ...from }
