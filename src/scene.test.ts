@@ -1,7 +1,7 @@
 import { Tweenable } from './tweenable'
 import { Scene } from './scene'
 
-let scene
+let scene: Scene
 
 beforeEach(() => {
   scene = new Scene()
@@ -53,7 +53,7 @@ describe('empty', () => {
     const tweenable1 = new Tweenable({ foo: 1 })
     const tweenable2 = new Tweenable({ bar: 1 })
     scene = new Scene(tweenable1, tweenable2)
-    const emptiedTweenables = scene.empty(tweenable1)
+    const emptiedTweenables = scene.empty()
 
     expect(scene.tweenables).toHaveLength(0)
     expect(emptiedTweenables).toEqual([tweenable1, tweenable2])
