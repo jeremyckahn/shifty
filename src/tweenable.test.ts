@@ -1,17 +1,20 @@
 import 'babel-polyfill'
 import Promised from 'bluebird'
-import { Tweenable, tween } from '../src'
+import { Tweenable, tween } from '.'
 import {
   getListHead,
   getListTail,
   processTweens,
+  PromisedData,
   resetList,
+  ScheduleFunction,
   scheduleUpdate,
+  TweenState,
 } from './tweenable'
 
 const now = Tweenable.now
 
-let tweenable, state
+let tweenable: Tweenable, state: TweenState
 
 beforeEach(() => {
   tweenable = new Tweenable()
@@ -19,9 +22,6 @@ beforeEach(() => {
 
 afterEach(() => {
   resetList()
-
-  tweenable = undefined
-  state = undefined
   Tweenable.now = now
 })
 
@@ -81,7 +81,7 @@ describe('#tween', () => {
   })
 
   describe('custom easing functions', () => {
-    let easingFn = pos => pos * 2
+    let easingFn = (pos: number) => pos * 2
 
     test('can be given an easing function directly', () => {
       Tweenable.now = () => 0
@@ -188,7 +188,7 @@ describe('#tween', () => {
   })
 
   describe('lifecycle hooks', () => {
-    let testState
+    let testState: TweenState
 
     describe('render', () => {
       test('receives the current state', () => {
@@ -232,7 +232,7 @@ describe('#tween', () => {
   describe('promise support', () => {
     test('supports third party libraries', () => {
       const { _promiseCtor } = tweenable.tween({
-        promise: Promised,
+        promise: (Promised as unknown) as PromiseConstructor,
 
         from: { x: 0 },
         to: { x: 10 },
@@ -243,19 +243,22 @@ describe('#tween', () => {
     })
 
     describe('resolution', () => {
-      let testState
+      let testState: TweenState
 
       beforeAll(() => {
         Tweenable.now = () => 0
         tweenable = new Tweenable()
 
-        let tween = tweenable
+        const tween = tweenable
           .tween({
             from: { x: 0 },
             to: { x: 10 },
             duration: 500,
           })
-          .then(({ state }) => (testState = state))
+          .then(promisedData => {
+            testState = promisedData.state
+            return promisedData
+          })
 
         Tweenable.now = () => 500
         processTweens()
@@ -279,7 +282,7 @@ describe('#tween', () => {
         })
         tween
           .catch(_ => _)
-          .finally(state => {
+          .finally((state?: TweenState) => {
             expect(state).toEqual(undefined)
             done()
           })
@@ -292,7 +295,7 @@ describe('#tween', () => {
     })
 
     describe('rejection', () => {
-      let testState
+      let testState: TweenState
 
       test('rejects with final state', done => {
         Tweenable.now = () => 0
@@ -304,7 +307,10 @@ describe('#tween', () => {
           duration: 500,
         })
 
-        tween.catch(({ state }) => (testState = state))
+        tween.catch(promisedData => {
+          testState = promisedData.state
+          return promisedData
+        })
 
         Tweenable.now = () => 250
         processTweens()
@@ -360,8 +366,8 @@ describe('#tween', () => {
 
   describe('config reuse', () => {
     test('reuses relevant config data from previous tweens', () => {
-      const start = _ => _
-      const render = _ => _
+      const start = (_: TweenState) => _
+      const render = (_: TweenState) => _
 
       Tweenable.now = () => 0
       tweenable = new Tweenable()
@@ -483,7 +489,7 @@ describe('#seek', () => {
 
   test('provides correct value to render handler via seek() (issue #77)', () => {
     let computedX
-    tweenable = new Tweenable(null, {
+    tweenable = new Tweenable(undefined, {
       from: { x: 0 },
       to: { x: 100 },
       duration: 1000,
@@ -550,6 +556,7 @@ describe('#seek', () => {
     let callCount = 0
     tweenable.stop = () => {
       callCount += 1
+      return tweenable
     }
 
     tweenable.seek(98)
@@ -652,7 +659,6 @@ describe('cancel', () => {
     Tweenable.now = () => 0
 
     const tweenable = new Tweenable()
-
     ;(async () => {
       try {
         await tweenable.tween({
@@ -661,7 +667,7 @@ describe('cancel', () => {
           duration: 500,
         })
       } catch (e) {
-        await expect(e.state.x).toEqual(5)
+        expect((e as PromisedData).state.x).toEqual(5)
         done()
       }
     })()
@@ -677,12 +683,16 @@ describe('cancel', () => {
 
 describe('#setScheduleFunction', () => {
   test('calling setScheduleFunction change the internal schedule function', () => {
-    const mockScheduleFunctionCalls = []
-    function mockScheduleFunction(fn, delay) {
+    const mockScheduleFunctionCalls: {
+      fn: ScheduleFunction
+      delay: number
+    }[] = []
+
+    function mockScheduleFunction(fn: ScheduleFunction, delay: number) {
       mockScheduleFunctionCalls.push({ fn, delay })
     }
 
-    tweenable.setScheduleFunction(mockScheduleFunction)
+    Tweenable.setScheduleFunction(mockScheduleFunction)
     Tweenable.now = () => 0
     tweenable.tween({
       from: { x: 0 },
@@ -779,7 +789,7 @@ describe('static tween', () => {
 })
 
 describe('linked tween list', () => {
-  let head, middle, tail
+  let head: Tweenable, middle: Tweenable, tail: Tweenable
 
   beforeEach(() => {
     head = new Tweenable()

@@ -8,7 +8,7 @@ import { getCubicBezierTransition } from './bezier'
 // FIXME: Document removal of `attachment`
 // FIXME: Document removal of tweenable.tweenable (https://github.com/jeremyckahn/shifty/blob/fee93af69c9b4fa9ad462095920adb558ff19ee3/src/tweenable.js#L872-L874)
 
-type ScheduleFunction = (callback: () => void, timeout: number) => void
+export type ScheduleFunction = (callback: () => void, timeout: number) => void
 
 // NOTE: TweenState values are numbers whenever they are worked with internally
 // by Tweenable. The user may define them as strings, but they get
@@ -94,7 +94,7 @@ type FulfillmentHandler = (promisedData: PromisedData) => PromisedData
 
 type RejectionHandler = (promisedData: PromisedData) => PromisedData
 
-interface PromisedData {
+export interface PromisedData {
   state: TweenState
   data: unknown
   tweenable: Tweenable
