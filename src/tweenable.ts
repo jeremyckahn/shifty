@@ -1,9 +1,7 @@
 import EasingFunctions from './easing-functions'
 import { getCubicBezierTransition } from './bezier'
-/** @typedef {import("./index").shifty.filter} shifty.filter */
 
 // FIXME: Ensure all @tutorial links work
-// FIXME: Replace `unknown`s with generic types
 // FIXME: Document removal of `step`
 // FIXME: Document removal of `attachment`
 // FIXME: Document removal of tweenable.tweenable (https://github.com/jeremyckahn/shifty/blob/fee93af69c9b4fa9ad462095920adb558ff19ee3/src/tweenable.js#L872-L874)
@@ -19,20 +17,22 @@ export type TweenState = Record<string, number | string>
 
 export type TweenRawState = Record<string, number>
 
-type StartFunction = (state: TweenState, data: unknown) => void
+export type Data = object | null
+
+type StartFunction = (state: TweenState, data: Data) => void
 
 type FinishFunction = ((data: PromisedData) => void) | null
 
 // FIXME: Reorder data and timeElapsed
 /**
  * @param {TweenState} state The current state of the tween.
- * @param {unknown} data User-defined `data` provided via a {@link
+ * @param {Data} data User-defined `data` provided via a {@link
  * TweenConfig}.
  * @param {number} timeElapsed The time elapsed since the start of the tween.
  */
 type RenderFunction = (
   state: TweenState,
-  data: unknown,
+  data: Data,
   timeElapsed: number
 ) => void
 
@@ -96,7 +96,7 @@ type RejectionHandler = (promisedData: PromisedData) => PromisedData
 
 export interface PromisedData {
   state: TweenState
-  data: unknown
+  data: Data
   tweenable: Tweenable
 }
 
@@ -170,7 +170,7 @@ interface TweenableConfig {
    * Data that is passed to {@link StartFunction}, {@link RenderFunction}, and
    * {@link PromisedData}.
    */
-  data?: unknown
+  data?: Data
 
   /**
    * Promise implementation constructor for when you want to use Promise
@@ -598,7 +598,7 @@ export class Tweenable {
 
   _config: TweenableConfig = {}
 
-  _data: unknown = {}
+  _data: Data = {}
 
   _delay = 0
 
@@ -1067,7 +1067,7 @@ export class Tweenable {
    * @method Tweenable#data
    * @return {Object} The internally stored `data`.
    */
-  data(data: unknown = null): unknown {
+  data(data: Data = null): Data {
     if (data) {
       this._data = { ...data }
     }
