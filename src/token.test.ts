@@ -1,5 +1,5 @@
 import { interpolate } from '.'
-import { EasingKey } from './tweenable'
+import { EasingKey } from './types'
 
 test('can tween an rgb color', () => {
   const from = { color: 'rgb(0,128,255)' },

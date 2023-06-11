@@ -5,12 +5,11 @@ import {
   getListHead,
   getListTail,
   processTweens,
-  PromisedData,
   resetList,
-  ScheduleFunction,
   scheduleUpdate,
-  TweenState,
 } from './tweenable'
+
+import { PromisedData, ScheduleFunction, TweenState } from './types'
 
 const now = Tweenable.now
 

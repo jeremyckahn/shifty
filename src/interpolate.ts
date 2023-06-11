@@ -1,12 +1,6 @@
-import {
-  Tweenable,
-  composeEasingObject,
-  tweenProps,
-  TweenState,
-  Easing,
-  TweenRawState,
-} from './tweenable'
-/** @typedef {import("./index").shifty.easingFunction} shifty.easingFunction */
+import { Tweenable, composeEasingObject, tweenProps } from './tweenable'
+
+import { TweenState, Easing, TweenRawState } from './types'
 
 // Fake a Tweenable and patch some internals.  This approach allows us to
 // skip uneccessary processing and object recreation, cutting down on garbage

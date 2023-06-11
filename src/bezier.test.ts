@@ -4,7 +4,7 @@ import {
   setBezierFunction,
   unsetBezierFunction,
 } from '.'
-import { EasingKey } from './tweenable'
+import { EasingKey } from './types'
 
 test('can create a linear bezier easing curve', () => {
   setBezierFunction('bezier-linear', 0.25, 0.25, 0.75, 0.75)

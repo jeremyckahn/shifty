@@ -1,10 +1,6 @@
-import {
-  Tweenable,
-  EasingKey,
-  EasingObject,
-  isEasingKey,
-  TweenState,
-} from './tweenable'
+import { Tweenable } from './tweenable'
+
+import { EasingKey, EasingObject, isEasingKey, TweenState } from './types'
 
 declare module './tweenable' {
   interface Tweenable {

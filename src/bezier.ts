@@ -1,4 +1,6 @@
-import { EasingFunction, EasingKey, Tweenable } from './tweenable'
+import { EasingFunction, Tweenable } from './tweenable'
+
+import { EasingKey } from './types'
 
 /**
  * The Bezier magic in this file is adapted/copied almost wholesale from
