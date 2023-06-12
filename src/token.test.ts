@@ -1,5 +1,4 @@
 import { interpolate } from '.'
-import { EasingKey } from './types'
 
 test('can tween an rgb color', () => {
   const from = { color: 'rgb(0,128,255)' },
@@ -68,7 +67,7 @@ test('each token chunk can have its own easing curve', () => {
     to = { color: 'rgb(255,255,255)' },
     easing = 'linear easeInQuad easeInCubic'
 
-  const interpolated = interpolate(from, to, 0.5, easing as EasingKey)
+  const interpolated = interpolate(from, to, 0.5, easing)
   const interpolatedR = parseInt(
     String(interpolate({ r: 0 }, { r: 255 }, 0.5, 'linear').r),
     10
@@ -92,7 +91,7 @@ test('missing token eases inherit from the last easing listed', () => {
     to = { color: 'rgb(255,255,255)' },
     easing = 'linear easeInQuad'
 
-  const interpolated = interpolate(from, to, 0.5, easing as EasingKey)
+  const interpolated = interpolate(from, to, 0.5, easing)
   const interpolatedR = parseInt(
     String(interpolate({ r: 0 }, { r: 255 }, 0.5, 'linear').r),
     10

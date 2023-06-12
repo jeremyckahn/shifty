@@ -82,6 +82,7 @@ export type EasingObject = Record<string, EasingKey | EasingFunction>
 
 export type Easing =
   | EasingKey
+  | string
   | EasingFunction
   | Record<string, EasingKey | EasingFunction>
   | number[]

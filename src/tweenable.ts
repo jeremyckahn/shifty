@@ -108,7 +108,7 @@ export const tweenProps = <T extends TweenRawState>(
   targetState: T,
   duration: number,
   timestamp: number,
-  easing: EasingObject | EasingFunction
+  easing: Easing
 ): T => {
   let easedPosition = 0
   let start: number
@@ -129,7 +129,9 @@ export const tweenProps = <T extends TweenRawState>(
       if (typeof easingObjectProp === TYPE_FUNCTION) {
         easingFn = easingObjectProp as EasingFunction
       } else {
-        easingFn = formulas[easingObjectProp as EasingKey]
+        // easingObjectProp is a string
+        easingFn =
+          formulas[easingObjectProp as EasingKey] ?? EasingFunctions.linear
       }
     }
 
