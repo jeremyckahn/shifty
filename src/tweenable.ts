@@ -1,4 +1,4 @@
-import EasingFunctions from './easing-functions'
+import easingFunctions from './easing-functions'
 import { getCubicBezierTransition } from './bezier'
 import {
   EasingKey,
@@ -83,7 +83,7 @@ export const getListHead = (): Tweenable | null => listHead
  */
 export const getListTail = (): Tweenable | null => listTail
 
-export const formulas = { ...EasingFunctions }
+export const formulas = { ...easingFunctions }
 
 /**
  * Calculates the interpolated tween values of an Object for a given
@@ -131,7 +131,7 @@ export const tweenProps = <T extends TweenRawState>(
       } else {
         // easingObjectProp is a string
         easingFn =
-          formulas[easingObjectProp as EasingKey] ?? EasingFunctions.linear
+          formulas[easingObjectProp as EasingKey] ?? easingFunctions.linear
       }
     }
 

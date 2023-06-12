@@ -1,4 +1,5 @@
 import { Tweenable, formulas } from './tweenable'
+import easingFunctions from './easing-functions'
 
 // FIXME: Ensure all @tutorial links work
 // FIXME: Document removal of `step`
@@ -41,42 +42,7 @@ export interface EasingFunction {
   (normalizedPosition: number): number
 }
 
-export type EasingKey =
-  | 'bounce'
-  | 'bouncePast'
-  | 'easeFrom'
-  | 'easeFromTo'
-  | 'easeInBack'
-  | 'easeInCirc'
-  | 'easeInCubic'
-  | 'easeInExpo'
-  | 'easeInOutBack'
-  | 'easeInOutCirc'
-  | 'easeInOutCubic'
-  | 'easeInOutExpo'
-  | 'easeInOutQuad'
-  | 'easeInOutQuart'
-  | 'easeInOutQuint'
-  | 'easeInOutSine'
-  | 'easeInQuad'
-  | 'easeInQuart'
-  | 'easeInQuint'
-  | 'easeInSine'
-  | 'easeOutBack'
-  | 'easeOutBounce'
-  | 'easeOutCirc'
-  | 'easeOutCubic'
-  | 'easeOutExpo'
-  | 'easeOutQuad'
-  | 'easeOutQuart'
-  | 'easeOutQuint'
-  | 'easeOutSine'
-  | 'easeTo'
-  | 'elastic'
-  | 'linear'
-  | 'swingFrom'
-  | 'swingFromTo'
-  | 'swingTo'
+export type EasingKey = keyof typeof easingFunctions
 
 export type EasingObject = Record<string, EasingKey | EasingFunction>
 
@@ -142,13 +108,13 @@ export interface TweenableConfig {
   /**
    * This value can be one of several different types:
    *
-   * - `string`: Name of the {@link EasingFunctions} to apply to all properties
+   * - `string`: Name of the {@link easingFunctions} to apply to all properties
    * of the tween.
    * - {@link EasingFunction}: A custom function that computes the rendered
    * position of the tween for the given normalized (0-1) position of the
    * tween.
    * - `Record<string, string | EasingFunction>`: Keys are tween property
-   * names. Values are the {@link EasingFunctions} string IDs to be applied to
+   * names. Values are the {@link easingFunctions} string IDs to be applied to
    * each tween property, or a {@link EasingFunction}. Any tween properties not
    * explicitly included in the `Record` default to `'linear'`.
    * - `Array.<number>`: The array must contain four `number` values that

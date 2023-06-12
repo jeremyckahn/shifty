@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { EasingFunction } from './tweenable'
+/** @typedef {import(".").shifty.easingFunction} shifty.easingFunction */
 
 /*!
  * All equations are adapted from Thomas Fuchs'
@@ -17,10 +16,11 @@ import { EasingFunction } from './tweenable'
  */
 
 /**
- * @description A static Object of {@link EasingFunction}s that can by
+ * @member Tweenable.easingFunctions
+ * @description A static Object of {@link shifty.easingFunction}s that can by
  * used by Shifty. The default values are defined in
  * [`easing-functions.js`](easing-functions.js.html), but you can add your own
- * {@link EasingFunction}s by defining them as keys to this Object.
+ * {@link shifty.easingFunction}s by defining them as keys to this Object.
  *
  * Shifty ships with an implementation of [Robert Penner's easing
  * equations](http://robertpenner.com/easing/), as adapted from
@@ -35,181 +35,171 @@ import { EasingFunction } from './tweenable'
  * href="https://codepen.io">CodePen</a>.</p>
  * <script async
  * src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
- * @type {Object.<EasingFunction>}
+ * @type {Object.<shifty.easingFunction>}
  * @static
  */
-
-export default class EasingFunctions {
+const easingFunctions = {
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static linear: (pos: number) => number = (pos: number): number => pos
+  linear: (pos: number) => pos,
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeInQuad: (pos: number) => number = (pos: number): number =>
-    Math.pow(pos, 2)
+  easeInQuad: (pos: number) => Math.pow(pos, 2),
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeOutQuad: (pos: number) => number = (pos: number): number =>
-    -(Math.pow(pos - 1, 2) - 1)
+  easeOutQuad: (pos: number) => -(Math.pow(pos - 1, 2) - 1),
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeInOutQuad: (pos: number) => number = (pos: number): number =>
-    (pos /= 0.5) < 1 ? 0.5 * Math.pow(pos, 2) : -0.5 * ((pos -= 2) * pos - 2)
+  easeInOutQuad: (pos: number) =>
+    (pos /= 0.5) < 1 ? 0.5 * Math.pow(pos, 2) : -0.5 * ((pos -= 2) * pos - 2),
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeInCubic: (pos: number) => number = (pos: number): number =>
-    Math.pow(pos, 3)
+  easeInCubic: (pos: number) => Math.pow(pos, 3),
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeOutCubic: (pos: number) => number = (pos: number): number =>
-    Math.pow(pos - 1, 3) + 1
+  easeOutCubic: (pos: number) => Math.pow(pos - 1, 3) + 1,
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeInOutCubic: (pos: number) => number = (pos: number): number =>
-    (pos /= 0.5) < 1 ? 0.5 * Math.pow(pos, 3) : 0.5 * (Math.pow(pos - 2, 3) + 2)
+  easeInOutCubic: (pos: number) =>
+    (pos /= 0.5) < 1
+      ? 0.5 * Math.pow(pos, 3)
+      : 0.5 * (Math.pow(pos - 2, 3) + 2),
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeInQuart: (pos: number) => number = (pos: number): number =>
-    Math.pow(pos, 4)
+  easeInQuart: (pos: number) => Math.pow(pos, 4),
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeOutQuart: (pos: number) => number = (pos: number): number =>
-    -(Math.pow(pos - 1, 4) - 1)
+  easeOutQuart: (pos: number) => -(Math.pow(pos - 1, 4) - 1),
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeInOutQuart: (pos: number) => number = (pos: number): number =>
+  easeInOutQuart: (pos: number) =>
     (pos /= 0.5) < 1
       ? 0.5 * Math.pow(pos, 4)
-      : -0.5 * ((pos -= 2) * Math.pow(pos, 3) - 2)
+      : -0.5 * ((pos -= 2) * Math.pow(pos, 3) - 2),
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeInQuint: (pos: number) => number = (pos: number): number =>
-    Math.pow(pos, 5)
+  easeInQuint: (pos: number) => Math.pow(pos, 5),
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeOutQuint: (pos: number) => number = (pos: number): number =>
-    Math.pow(pos - 1, 5) + 1
+  easeOutQuint: (pos: number) => Math.pow(pos - 1, 5) + 1,
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeInOutQuint: (pos: number) => number = (pos: number): number =>
-    (pos /= 0.5) < 1 ? 0.5 * Math.pow(pos, 5) : 0.5 * (Math.pow(pos - 2, 5) + 2)
+  easeInOutQuint: (pos: number) =>
+    (pos /= 0.5) < 1
+      ? 0.5 * Math.pow(pos, 5)
+      : 0.5 * (Math.pow(pos - 2, 5) + 2),
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeInSine: (pos: number) => number = (pos: number): number =>
-    -Math.cos(pos * (Math.PI / 2)) + 1
+  easeInSine: (pos: number) => -Math.cos(pos * (Math.PI / 2)) + 1,
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeOutSine: (pos: number) => number = (pos: number): number =>
-    Math.sin(pos * (Math.PI / 2))
+  easeOutSine: (pos: number) => Math.sin(pos * (Math.PI / 2)),
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeInOutSine: (pos: number) => number = (pos: number): number =>
-    -0.5 * (Math.cos(Math.PI * pos) - 1)
+  easeInOutSine: (pos: number) => -0.5 * (Math.cos(Math.PI * pos) - 1),
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeInExpo: (pos: number) => number = (pos: number): number =>
-    pos === 0 ? 0 : Math.pow(2, 10 * (pos - 1))
+  easeInExpo: (pos: number) => (pos === 0 ? 0 : Math.pow(2, 10 * (pos - 1))),
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeOutExpo: (pos: number) => number = (pos: number): number =>
-    pos === 1 ? 1 : -Math.pow(2, -10 * pos) + 1
+  easeOutExpo: (pos: number) => (pos === 1 ? 1 : -Math.pow(2, -10 * pos) + 1),
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeInOutExpo: (pos: number) => number = (pos: number): number => {
+  easeInOutExpo: (pos: number) => {
     if (pos === 0) {
       return 0
     }
@@ -223,44 +213,42 @@ export default class EasingFunctions {
     }
 
     return 0.5 * (-Math.pow(2, -10 * --pos) + 2)
-  }
+  },
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeInCirc: (pos: number) => number = (pos: number): number =>
-    -(Math.sqrt(1 - pos * pos) - 1)
+  easeInCirc: (pos: number) => -(Math.sqrt(1 - pos * pos) - 1),
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeOutCirc: (pos: number) => number = (pos: number): number =>
-    Math.sqrt(1 - Math.pow(pos - 1, 2))
+  easeOutCirc: (pos: number) => Math.sqrt(1 - Math.pow(pos - 1, 2)),
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeInOutCirc: (pos: number) => number = (pos: number): number =>
+  easeInOutCirc: (pos: number) =>
     (pos /= 0.5) < 1
       ? -0.5 * (Math.sqrt(1 - pos * pos) - 1)
-      : 0.5 * (Math.sqrt(1 - (pos -= 2) * pos) + 1)
+      : 0.5 * (Math.sqrt(1 - (pos -= 2) * pos) + 1),
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeOutBounce: (pos: number) => number = (pos: number): number => {
+  easeOutBounce: (pos: number) => {
     if (pos < 1 / 2.75) {
       return 7.5625 * pos * pos
     } else if (pos < 2 / 2.75) {
@@ -270,96 +258,96 @@ export default class EasingFunctions {
     } else {
       return 7.5625 * (pos -= 2.625 / 2.75) * pos + 0.984375
     }
-  }
+  },
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeInBack: (pos: number) => number = (pos: number): number => {
+  easeInBack: (pos: number) => {
     const s = 1.70158
     return pos * pos * ((s + 1) * pos - s)
-  }
+  },
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeOutBack: (pos: number) => number = (pos: number): number => {
+  easeOutBack: (pos: number) => {
     const s = 1.70158
     return (pos = pos - 1) * pos * ((s + 1) * pos + s) + 1
-  }
+  },
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeInOutBack: (pos: number) => number = (pos: number): number => {
+  easeInOutBack: (pos: number) => {
     let s = 1.70158
     if ((pos /= 0.5) < 1) {
       return 0.5 * (pos * pos * (((s *= 1.525) + 1) * pos - s))
     }
     return 0.5 * ((pos -= 2) * pos * (((s *= 1.525) + 1) * pos + s) + 2)
-  }
+  },
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static elastic: (pos: number) => number = (pos: number): number =>
+  elastic: (pos: number) =>
     -1 * Math.pow(4, -8 * pos) * Math.sin(((pos * 6 - 1) * (2 * Math.PI)) / 2) +
-    1
+    1,
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static swingFromTo: (pos: number) => number = (pos: number): number => {
+  swingFromTo: (pos: number) => {
     let s = 1.70158
     return (pos /= 0.5) < 1
       ? 0.5 * (pos * pos * (((s *= 1.525) + 1) * pos - s))
       : 0.5 * ((pos -= 2) * pos * (((s *= 1.525) + 1) * pos + s) + 2)
-  }
+  },
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static swingFrom: (pos: number) => number = (pos: number): number => {
+  swingFrom: (pos: number) => {
     const s = 1.70158
     return pos * pos * ((s + 1) * pos - s)
-  }
+  },
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static swingTo: (pos: number) => number = (pos: number): number => {
+  swingTo: (pos: number) => {
     const s = 1.70158
     return (pos -= 1) * pos * ((s + 1) * pos + s) + 1
-  }
+  },
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static bounce: (pos: number) => number = (pos: number): number => {
+  bounce: (pos: number) => {
     if (pos < 1 / 2.75) {
       return 7.5625 * pos * pos
     } else if (pos < 2 / 2.75) {
@@ -369,15 +357,15 @@ export default class EasingFunctions {
     } else {
       return 7.5625 * (pos -= 2.625 / 2.75) * pos + 0.984375
     }
-  }
+  },
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static bouncePast: (pos: number) => number = (pos: number): number => {
+  bouncePast: (pos: number) => {
     if (pos < 1 / 2.75) {
       return 7.5625 * pos * pos
     } else if (pos < 2 / 2.75) {
@@ -387,34 +375,34 @@ export default class EasingFunctions {
     } else {
       return 2 - (7.5625 * (pos -= 2.625 / 2.75) * pos + 0.984375)
     }
-  }
+  },
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeFromTo: (pos: number) => number = (pos: number): number =>
+  easeFromTo: (pos: number) =>
     (pos /= 0.5) < 1
       ? 0.5 * Math.pow(pos, 4)
-      : -0.5 * ((pos -= 2) * Math.pow(pos, 3) - 2)
+      : -0.5 * ((pos -= 2) * Math.pow(pos, 3) - 2),
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeFrom: (pos: number) => number = (pos: number): number =>
-    Math.pow(pos, 4)
+  easeFrom: (pos: number) => Math.pow(pos, 4),
 
   /**
    * @memberof Tweenable.formulas
-   * @type {EasingFunction}
+   * @type {shifty.easingFunction}
    * @param {number} pos
    * @returns {number}
    */
-  static easeTo: (pos: number) => number = (pos: number): number =>
-    Math.pow(pos, 0.25)
+  easeTo: (pos: number) => Math.pow(pos, 0.25),
 }
+
+export default easingFunctions
