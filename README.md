@@ -172,6 +172,14 @@ new release in a single operation. This will kick off [a GitHub
 action](https://github.com/jeremyckahn/shifty/blob/develop/.github/workflows/publish-package.yml)
 that builds and publishes Shifty to NPM.
 
+## Breaking changes
+
+### From v2 to v3
+
+- `tweenConfig.step` has been removed in favor of `tweenConfig.render` (behavior and API is unchanged).
+- `tweenConfig.attachment` has been removed in favor of `tweenConfig.data` (behavior and API is unchanged).
+- `Tweenable#tweenable` has been removed.
+
 ## Contributors
 
 Take a peek at the [Network](https://github.com/jeremyckahn/shifty/network)

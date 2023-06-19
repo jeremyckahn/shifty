@@ -2,9 +2,6 @@ import { Tweenable, formulas } from './tweenable'
 import easingFunctions from './easing-functions'
 
 // FIXME: Ensure all @tutorial links work
-// FIXME: Document removal of `step`
-// FIXME: Document removal of `attachment`
-// FIXME: Document removal of tweenable.tweenable (https://github.com/jeremyckahn/shifty/blob/fee93af69c9b4fa9ad462095920adb558ff19ee3/src/tweenable.js#L872-L874)
 
 export type ScheduleFunction = (callback: () => void, timeout: number) => void
 // NOTE: TweenState values are numbers whenever they are worked with internally
