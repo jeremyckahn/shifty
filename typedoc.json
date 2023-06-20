@@ -1,0 +1,25 @@
+{
+  "out": "./dist/doc",
+  "pluginPages": {
+    "pages": [
+      {
+        "name": "shifty",
+        "moduleRoot": true,
+        "children": [
+          {
+            "name": "Getting Started",
+            "source": "./tutorials/getting-started.md"
+          },
+          {
+            "name": "Easing Curves in Depth",
+            "source": "./tutorials/easing-function-in-depth.md"
+          },
+          {
+            "name": "String Interpolation",
+            "source": "./tutorials/string-interpolation.md"
+          }
+        ]
+      }
+    ]
+  }
+}
