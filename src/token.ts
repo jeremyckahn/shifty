@@ -4,6 +4,9 @@ import { EasingKey, EasingObject, isEasingKey, TweenState } from './types'
 
 declare module './tweenable' {
   interface Tweenable {
+    /**
+     * @ignore
+     */
     _tokenData?: FormatSignature
   }
 }

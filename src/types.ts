@@ -50,6 +50,7 @@ export type Easing =
   | Record<string, EasingKey | EasingFunction>
   | number[]
 export type FulfillmentHandler = (promisedData: PromisedData) => PromisedData
+
 export type RejectionHandler = (promisedData: PromisedData) => PromisedData
 
 export interface PromisedData {
@@ -57,6 +58,7 @@ export interface PromisedData {
   data: Data
   tweenable: Tweenable
 }
+
 export interface TweenableConfig {
   /**
    * Starting position.  If omitted, {@link Tweenable#get} is used.

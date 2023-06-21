@@ -17,6 +17,8 @@ export { interpolate } from './interpolate'
 export { Scene } from './scene'
 export { setBezierFunction, unsetBezierFunction } from './bezier'
 
+export * from './types'
+
 /**
  * @external Promise
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise}

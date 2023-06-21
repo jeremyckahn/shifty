@@ -384,7 +384,10 @@ const defaultPromiseCtor = typeof Promise === TYPE_FUNCTION ? Promise : null
  * @implements {Promise<unknown>}
  */
 export class Tweenable {
-  //required for Promise implementation
+  /**
+   * Required for Promise implementation
+   * @ignore
+   */
   [Symbol.toStringTag] = 'Promise'
   /**
    * @method Tweenable.now
@@ -420,48 +423,109 @@ export class Tweenable {
 
   static formulas = formulas
 
+  /**
+   * @ignore
+   */
   _next: Tweenable | null = null
 
+  /**
+   * @ignore
+   */
   _previous: Tweenable | null = null
 
+  /**
+   * @ignore
+   */
   _config: TweenableConfig = {}
 
+  /**
+   * @ignore
+   */
   _data: Data = {}
 
+  /**
+   * @ignore
+   */
   _delay = 0
 
+  /**
+   * @ignore
+   */
   _duration = DEFAULT_DURATION
 
+  /**
+   * @ignore
+   */
   _filters: Filter[] = []
 
+  /**
+   * @ignore
+   */
   _timestamp: number | null = null
 
+  /**
+   * @ignore
+   */
   _hasEnded = false
 
+  /**
+   * @ignore
+   */
   _resolve: FinishFunction = null
 
+  /**
+   * @ignore
+   */
   _reject: ((data: PromisedData) => void) | null = null
 
+  /**
+   * @ignore
+   */
   _currentState: TweenState
 
+  /**
+   * @ignore
+   */
   _originalState: TweenState = {}
 
+  /**
+   * @ignore
+   */
   _targetState: TweenState = {}
 
+  /**
+   * @ignore
+   */
   _start: StartFunction = noop
 
+  /**
+   * @ignore
+   */
   _render: RenderFunction = noop
 
+  /**
+   * @ignore
+   */
   _promiseCtor: typeof Promise | null = defaultPromiseCtor
 
+  /**
+   * @ignore
+   */
   _promise: Promise<PromisedData> | null = null
 
+  /**
+   * @ignore
+   */
   _isPlaying = false
 
+  /**
+   * @ignore
+   */
   _pausedAtTime: number | null = null
 
-  _scheduleId: number | null = null
-
+  /**
+   * @ignore
+   */
   _easing: EasingObject | EasingFunction = {}
 
   /**
@@ -564,7 +628,6 @@ export class Tweenable {
     // Init the internal state
     this._isPlaying = false
     this._pausedAtTime = null
-    this._scheduleId = null
     this._delay = config.delay || 0
     this._start = start
     this._render = render
@@ -916,7 +979,6 @@ export class Tweenable {
 }
 
 /**
- * @method shifty.tween
  * @param {TweenableConfig} [config={}]
  * @description Standalone convenience method that functions identically to
  * {@link Tweenable#tween}.  You can use this to create tweens without

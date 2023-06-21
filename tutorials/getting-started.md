@@ -1,6 +1,6 @@
 ## Creating a tween
 
-This simplest way create a tween is to use {@link shifty.tween}:
+This simplest way create a tween is to use {@link Tweenable.tween}:
 
 ```javascript
 import { tween } from 'shifty'
