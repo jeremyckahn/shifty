@@ -1,5 +1,6 @@
 {
   "out": "./dist/doc",
+  "readme": "./index.md",
   "pluginPages": {
     "pages": [
       {
