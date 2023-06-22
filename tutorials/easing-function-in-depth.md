@@ -1,14 +1,12 @@
-Shifty supports a number of easing formulas, which you can see in
-[`easing-functions.js`](easing-functions.js.html). You can add new easing
-formulas by attaching methods to {@link shifty.Tweenable.formulas}.
+Shifty supports {@link Tweenable.formulas | a number of easing formulas}.
 
 ## Using multiple easing formulas
 
 Shifty supports tweens that have different easing formulas for each property.
 Having multiple easing formulas on a single tween can make for some really
-interesting animations, because you aren't constrained to moving things in a
-straight line. You can make curves! To do this, simply supply `easing` as an
-Object, rather than a string:
+interesting animations because you aren't constrained to moving things in a
+straight line. You can make curved motions! To do this, simply supply `easing`
+as an Object, rather than a string:
 
 ```javascript
 tween({
@@ -27,11 +25,18 @@ tween({
 })
 ```
 
+## Reusable custom easing functions
+
+You can define custom easing formulas by attaching methods to {@link Tweenable.formulas}.
+
+```ts
+Tweenable.formulas['customFormula'] = (pos: number) => Math.pow(pos, 2)
+```
+
 ## Per-tween custom easing functions
 
-You are not limited to attaching functions to {@link
-shifty.Tweenable.formulas}. You can also supply a custom easing function
-directly to {@link shifty.tween}:
+You are not limited to attaching functions to {@link Tweenable.formulas}. You
+can also supply a custom easing function directly to {@link tween}:
 
 ```javascript
 tween({

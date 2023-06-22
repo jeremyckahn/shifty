@@ -1,4 +1,4 @@
-import easingFunctions from './easing-functions'
+import { easingFunctions } from './easing-functions'
 import { getCubicBezierTransition } from './bezier'
 import {
   EasingKey,
@@ -421,7 +421,15 @@ export class Tweenable {
    */
   static filters: Record<string, Filter> = {}
 
-  static formulas = formulas
+  /**
+   * You can define custom easing formulas by attaching {@link EasingFunction}s
+   * to this static object.
+   *
+   * ```ts
+   * Tweenable.formulas['customFormula'] = (pos: number) => Math.pow(pos, 2)
+   * ```
+   */
+  static formulas: Record<string, EasingFunction> = formulas
 
   /**
    * @ignore

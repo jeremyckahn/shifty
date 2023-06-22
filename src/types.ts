@@ -1,5 +1,5 @@
 import { Tweenable, formulas } from './tweenable'
-import easingFunctions from './easing-functions'
+import { easingFunctions } from './easing-functions'
 
 // FIXME: Ensure all @tutorial links work
 

@@ -14,8 +14,8 @@ tween({
 }).then(() => console.log('All done!'))
 ```
 
-You can also instantiate a {@link shifty.Tweenable} to reuse tweens and have
-more control over the animation:
+You can also instantiate a {@link Tweenable} to reuse tweens and have more
+control over the animation:
 
 ```javascript
 import { Tweenable } from 'shifty'

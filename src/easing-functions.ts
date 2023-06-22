@@ -16,7 +16,6 @@
  */
 
 /**
- * @member Tweenable.easingFunctions
  * @description A static Object of {@link shifty.easingFunction}s that can by
  * used by Shifty. The default values are defined in
  * [`easing-functions.js`](easing-functions.js.html), but you can add your own
@@ -38,7 +37,7 @@
  * @type {Object.<shifty.easingFunction>}
  * @static
  */
-const easingFunctions = {
+export const easingFunctions = {
   /**
    * @memberof Tweenable.formulas
    * @type {shifty.easingFunction}
@@ -404,5 +403,3 @@ const easingFunctions = {
    */
   easeTo: (pos: number) => Math.pow(pos, 0.25),
 }
-
-export default easingFunctions
