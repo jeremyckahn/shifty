@@ -43,7 +43,7 @@ test('can create a "stretched" linear bezier easing curve', () => {
 test('can remove a bezier easing curve', () => {
   setBezierFunction('bezier-linear', 0, 0, 1, 1)
   unsetBezierFunction('bezier-linear')
-  expect(Tweenable.formulas['bezier-linear' as EasingKey]).toBeUndefined()
+  expect(Tweenable.easing['bezier-linear' as EasingKey]).toBeUndefined()
 })
 
 test('bezier handle positions are stored on a custom easing function', () => {

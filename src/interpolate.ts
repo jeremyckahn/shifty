@@ -40,7 +40,7 @@ const { filters } = Tweenable
  * represents `0` and `to` represents `1`.
  * @param {Record<string, string | shifty.easingFunction> | string | shifty.easingFunction} easing
  * The easing curve(s) to calculate the midpoint against.  You can
- * reference any easing function attached to {@link Tweenable.formulas},
+ * reference any easing function attached to {@link Tweenable.easing},
  * or provide the {@link shifty.easingFunction}(s) directly.  If omitted, this
  * defaults to "linear".
  * @param {number} [delay=0] Optional delay to pad the beginning of the

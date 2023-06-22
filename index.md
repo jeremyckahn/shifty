@@ -17,10 +17,10 @@ Shifty is a highly-optimized JavaScript tweening engine designed to fit all of y
 
 ### Load from CDN
 
-| Variant | URL                                            | Size                                                                                                                                                            | Description                                                                                    |
-| ------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| Full    | `https://unpkg.com/shifty`                     | [![Shifty full bundle size](https://badgen.net/badgesize/gzip/https/unpkg.com/shifty@latest)](https://unpkg.com/shifty)                                         | Contains full library                                                                          |
-| Core    | `https://unpkg.com/shifty/dist/shifty.core.js` | [![Shifty core bundle size](https://badgen.net/badgesize/gzip/https/unpkg.com/shifty@latest/dist/shifty.core.js)](https://unpkg.com/shifty/dist/shifty.core.js) | Contains {@link shifty.Tweenable}, {@link shifty.tween}, and {@link shifty.Tweenable.formulas} |
+| Variant | URL                                            | Size                                                                                                                                                            | Description                                                                                  |
+| ------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| Full    | `https://unpkg.com/shifty`                     | [![Shifty full bundle size](https://badgen.net/badgesize/gzip/https/unpkg.com/shifty@latest)](https://unpkg.com/shifty)                                         | Contains full library                                                                        |
+| Core    | `https://unpkg.com/shifty/dist/shifty.core.js` | [![Shifty core bundle size](https://badgen.net/badgesize/gzip/https/unpkg.com/shifty@latest/dist/shifty.core.js)](https://unpkg.com/shifty/dist/shifty.core.js) | Contains {@link shifty.Tweenable}, {@link shifty.tween}, and {@link shifty.Tweenable.easing} |
 
 <p class="codepen" data-height="590" data-theme-id="dark" data-default-tab="js,result" data-user="jeremyckahn" data-slug-hash="PoNNNye" style="height: 590px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="Shifty async/await demo">
   <span>See the Pen <a href="https://codepen.io/jeremyckahn/pen/PoNNNye">
@@ -86,9 +86,9 @@ This next example demonstrates how `await`ed tweens interoperate well with stand
 </p>
 <script async src="https://static.codepen.io/assets/embed/ei.js"></script>
 
-### Tweening with a custom easing formula
+### Tweening with a custom easing
 
-<p data-height="265" data-theme-id="0" data-slug-hash="xqpLQg" data-default-tab="js,result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Tweening with a custom easing formula" class="codepen">See the Pen <a href="http://codepen.io/jeremyckahn/pen/xqpLQg/">Tweening with a custom easing formula</a> by Jeremy Kahn (<a href="http://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="http://codepen.io">CodePen</a>.</p>
+<p data-height="265" data-theme-id="0" data-slug-hash="xqpLQg" data-default-tab="js,result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Tweening with a custom easing" class="codepen">See the Pen <a href="http://codepen.io/jeremyckahn/pen/xqpLQg/">Tweening with a custom easing</a> by Jeremy Kahn (<a href="http://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="http://codepen.io">CodePen</a>.</p>
 <script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
 
 ### Shifting a color

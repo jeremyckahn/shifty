@@ -92,12 +92,12 @@ export * from './types'
  *
  * Legacy property name: `step`.
  * @property {string|shifty.easingFunction|Object<string|shifty.easingFunction>|Array.<number>} [easing]
- * - `string`: Name of the {@link Tweenable.formulas} to apply to all
+ * - `string`: Name of the {@link Tweenable.easing} to apply to all
  *   properties of the tween.
  * - {@link shifty.easingFunction}: A custom function that computes the rendered
  *   position of the tween for the given normalized position of the tween.
  * - `Object`: Keys are tween property names. Values are the {@link
- *   Tweenable.formulas} to be applied to each tween property, or a {@link
+ *   Tweenable.easing} to be applied to each tween property, or a {@link
  *   shifty.easingFunction}. Any tween properties not included in the `Object`
  *   default to `'linear'`.
  * - `Array.<number>`: The array must contain four `number` values that

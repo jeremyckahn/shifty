@@ -176,18 +176,18 @@ export const getCubicBezierTransition = (
 
 /**
  * Create a Bezier easing function and attach it to {@link
- * Tweenable.formulas}.  This function gives you total control over the
+ * Tweenable.easing}.  This function gives you total control over the
  * easing curve.  Matthew Lein's [Ceaser](http://matthewlein.com/ceaser/) is a
  * useful tool for visualizing the curves you can make with this function.
  * @method shifty.setBezierFunction
  * @param {string} name The name of the easing curve.  Overwrites the old
- * easing function on {@link Tweenable.formulas} if it exists.
+ * easing function on {@link Tweenable.easing} if it exists.
  * @param {number} x1
  * @param {number} y1
  * @param {number} x2
  * @param {number} y2
  * @return {EasingFunction} The {@link EasingFunction} that was
- * attached to {@link Tweenable.formulas}.
+ * attached to {@link Tweenable.easing}.
  */
 export const setBezierFunction = (
   name: string,
@@ -204,16 +204,17 @@ export const setBezierFunction = (
   cubicBezierTransition.x2 = x2
   cubicBezierTransition.y2 = y2
 
-  return (Tweenable.formulas[name as EasingKey] = cubicBezierTransition)
+  return (Tweenable.easing[name as EasingKey] = cubicBezierTransition)
 }
 
+// TODO: Improve this to avoid modifying standard easing functions.
 /**
- * `delete` an easing function from {@link Tweenable.formulas}.  Be
- * careful with this method, as it `delete`s whatever easing formula matches
- * `name` (which means you can delete standard Shifty easing functions).
+ * `delete` an easing function from {@link Tweenable.easing}.  Be careful with
+ * this method, as it `delete`s whatever easing function matches `name` (which
+ * means you can delete standard Shifty easing functions).
  * @method shifty.unsetBezierFunction
  * @param {string} name The name of the easing function to delete.
  * @return {boolean} Whether or not the functions was `delete`d.
  */
 export const unsetBezierFunction = (name: string): boolean =>
-  delete Tweenable.formulas[name as EasingKey]
+  delete Tweenable.easing[name as EasingKey]

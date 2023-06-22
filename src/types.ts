@@ -1,4 +1,4 @@
-import { Tweenable, formulas } from './tweenable'
+import { Tweenable } from './tweenable'
 import { easingFunctions } from './easing-functions'
 
 // FIXME: Ensure all @tutorial links work
@@ -148,5 +148,5 @@ export interface Filter {
 export type FilterName = keyof Omit<Filter, 'doesApply'>
 
 export const isEasingKey = (key: string): key is EasingKey => {
-  return key in formulas
+  return key in Tweenable.easing
 }

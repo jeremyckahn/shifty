@@ -83,7 +83,7 @@ export const getListHead = (): Tweenable | null => listHead
  */
 export const getListTail = (): Tweenable | null => listTail
 
-export const formulas = { ...easingFunctions }
+export const easing = { ...easingFunctions }
 
 /**
  * Calculates the interpolated tween values of an Object for a given
@@ -131,7 +131,8 @@ export const tweenProps = <T extends TweenRawState>(
       } else {
         // easingObjectProp is a string
         easingFn =
-          formulas[easingObjectProp as EasingKey] ?? easingFunctions.linear
+          Tweenable.easing[easingObjectProp as EasingKey] ??
+          easingFunctions.linear
       }
     }
 
@@ -302,7 +303,7 @@ export const composeEasingObject = (
 ): EasingObject | EasingFunction => {
   if (typeof easing === TYPE_STRING) {
     if (isEasingKey(easing as string)) {
-      return formulas[easing as EasingKey]
+      return Tweenable.easing[easing as EasingKey]
     }
   }
 
@@ -422,14 +423,14 @@ export class Tweenable {
   static filters: Record<string, Filter> = {}
 
   /**
-   * You can define custom easing formulas by attaching {@link EasingFunction}s
-   * to this static object.
+   * You can define custom easing functions by attaching {@link
+   * EasingFunction}s to this static object.
    *
    * ```ts
-   * Tweenable.formulas['customFormula'] = (pos: number) => Math.pow(pos, 2)
+   * Tweenable.easing['customEasing'] = (pos: number) => Math.pow(pos, 2)
    * ```
    */
-  static formulas: Record<string, EasingFunction> = formulas
+  static easing: Record<string, EasingFunction> = easing
 
   /**
    * @ignore

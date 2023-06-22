@@ -176,6 +176,7 @@ that builds and publishes Shifty to NPM.
 
 ### From v2 to v3
 
+- `Tweenable.formulas` has been renamed to `Tweenable.easing`
 - `tweenConfig.step` has been removed in favor of `tweenConfig.render` (behavior and API is unchanged).
 - `tweenConfig.attachment` has been removed in favor of `tweenConfig.data` (behavior and API is unchanged).
 - `Tweenable#tweenable` has been removed.
@@ -186,7 +187,7 @@ Take a peek at the [Network](https://github.com/jeremyckahn/shifty/network)
 page to see all of the Shifty contributors.
 
 Special thanks goes to [Thomas Fuchs](https://twitter.com/thomasfuchs):
-Shifty's easing formulas and Bezier curve code was adapted from his awesome
+Shifty's easing functions and Bezier curve code was adapted from his awesome
 [Scripty2](https://github.com/madrobby/scripty2) project.
 
 ## License
