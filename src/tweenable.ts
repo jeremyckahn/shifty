@@ -380,16 +380,13 @@ const remove = (() => {
 
 const defaultPromiseCtor = typeof Promise === TYPE_FUNCTION ? Promise : null
 
-/**
- * @class
- * @implements {Promise<unknown>}
- */
 export class Tweenable {
   /**
    * Required for Promise implementation
    * @ignore
    */
   [Symbol.toStringTag] = 'Promise'
+
   /**
    * @method Tweenable.now
    * @static
@@ -414,17 +411,15 @@ export class Tweenable {
     (scheduleFunction = fn)
 
   /**
-   * The {@link shifty.filter}s available for use.  These filters are
+   * The {@link Filter}s available for use.  These filters are
    * automatically applied at tween-time by Shifty. You can define your own
-   * {@link shifty.filter}s and attach them to this object.
-   * @member Tweenable.filters
-   * @type {Record<string, shifty.filter>}
+   * {@link Filter}s and attach them to this object.
    */
   static filters: Record<string, Filter> = {}
 
   /**
-   * You can define custom easing functions by attaching {@link
-   * EasingFunction}s to this static object.
+   * You can define custom easing curves by attaching {@link EasingFunction}s
+   * to this static object.
    *
    * ```ts
    * Tweenable.easing['customEasing'] = (pos: number) => Math.pow(pos, 2)
@@ -538,13 +533,11 @@ export class Tweenable {
   _easing: EasingObject | EasingFunction = {}
 
   /**
-   * @param {TweenState} [initialState={}] The values that the initial tween should
-   * start at if a `from` value is not provided to {@link
-   * Tweenable#tween} or {@link Tweenable#setConfig}.
+   * @param {TweenState} [initialState={}] The values that the initial tween
+   * should start at if a {@link TweenableConfig#from} value is not provided to
+   * {@link Tweenable#tween} or {@link Tweenable#setConfig}.
    * @param {TweenableConfig} [config] Configuration object to be passed to
    * {@link Tweenable#setConfig}.
-   * @constructs Tweenable
-   * @memberof shifty
    */
   constructor(initialState: TweenState = {}, config?: TweenableConfig) {
     /** @private */
