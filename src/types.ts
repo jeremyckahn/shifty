@@ -15,13 +15,22 @@ export type TweenState = Record<string, number | string>
 export type TweenRawState = Record<string, number>
 
 export type Data = object | null
-export type StartFunction = (state: TweenState, data: Data) => void
-export type FinishFunction = ((data: PromisedData) => void) | null
-// FIXME: Reorder data and timeElapsed
+
 /**
  * @param {TweenState} state The current state of the tween.
+ * @param {Data} [data] User-defined data provided via a {@link TweenableConfig}.
+ */
+export type StartFunction = (state: TweenState, data: Data) => void
+
+export type FinishFunction = ((data: PromisedData) => void) | null
+
+// FIXME: Reorder data and timeElapsed
+/**
+ * Gets called for every tick of the tween.  This function is not called on the
+ * final tick of the animation.
+ * @param {TweenState} state The current state of the tween.
  * @param {Data} data User-defined `data` provided via a {@link
- * TweenConfig}.
+ * TweenableConfig}.
  * @param {number} timeElapsed The time elapsed since the start of the tween.
  */
 export type RenderFunction = (

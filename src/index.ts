@@ -1,7 +1,3 @@
-/**
- * @namespace shifty
- */
-
 import {
   processTweens,
   shouldScheduleUpdate,
@@ -18,54 +14,6 @@ export { Scene } from './scene'
 export { setBezierFunction, unsetBezierFunction } from './bezier'
 
 export * from './types'
-
-/**
- * @external Promise
- * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise}
- */
-
-/**
- * @external thenable
- * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then}
- */
-
-/**
- * @callback shifty.easingFunction
- * @param {number} position The normalized (0-1) position of the tween.
- * @return {number} The curve-adjusted value.
- */
-
-/**
- * @callback shifty.startFunction
- * @param {Object} state The current state of the tween.
- * @param {Object|undefined} [data] User-defined data provided via a {@link
- * shifty.tweenConfig}.
- * @returns {void}
- */
-
-/**
- * @callback shifty.finishFunction
- * @param {shifty.promisedData} promisedData
- * @returns {void}
- */
-
-/**
- * Gets called for every tick of the tween.  This function is not called on the
- * final tick of the animation.
- * @callback shifty.renderFunction
- * @param {Object} state The current state of the tween.
- * @param {Object|undefined} data User-defined data provided via a {@link
- * shifty.tweenConfig}.
- * @param {number} timeElapsed The time elapsed since the start of the tween.
- * @returns {void}
- */
-
-/**
- * @callback shifty.scheduleFunction
- * @param {Function} callback
- * @param {number} timeout
- * @returns {void}
- */
 
 /**
  * @typedef {Object} shifty.tweenConfig
