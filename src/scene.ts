@@ -36,8 +36,6 @@ export class Scene {
 
   /**
    * A copy of the internal {@link Tweenable}s array.
-   * @member Scene_tweenables
-   * @type {Array.<Tweenable>}
    */
   get tweenables() {
     return [...this._tweenables]
@@ -46,8 +44,6 @@ export class Scene {
   /**
    * A list of {@link Tweenable}s in the scene that have not yet ended (playing
    * or not).
-   * @member Scene#playingTweenables
-   * @type {Array.<Tweenable>}
    */
   get playingTweenables() {
     return this._tweenables.filter(tweenable => !tweenable.hasEnded())
@@ -68,9 +64,6 @@ export class Scene {
    *       // created so this line only runs once.
    *       scene.play()
    *     );
-   *
-   * @member Scene#promises
-   * @type {Array.<Promise<any>>}
    */
   get promises() {
     return this._tweenables.map(tweenable => tweenable.then())
@@ -79,24 +72,21 @@ export class Scene {
   /**
    * Add a {@link Tweenable} to be controlled by this {@link
    * Scene}.
-   * @method Scene#add
    * @param {Tweenable} tweenable
    * @return {Tweenable} The {@link Tweenable} that was added.
    */
-  add(tweenable: Tweenable): Tweenable {
+  add(tweenable: Tweenable) {
     this._tweenables.push(tweenable)
 
     return tweenable
   }
 
   /**
-   * Remove a {@link Tweenable} that is controlled by this {@link
-   * Scene}.
-   * @method Scene#remove
+   * Remove a {@link Tweenable} that is controlled by this {@link Scene}.
    * @param {Tweenable} tweenable
    * @return {Tweenable} The {@link Tweenable} that was removed.
    */
-  remove(tweenable: Tweenable): Tweenable {
+  remove(tweenable: Tweenable) {
     const index = this._tweenables.indexOf(tweenable)
 
     if (~index) {
@@ -107,13 +97,11 @@ export class Scene {
   }
 
   /**
-   * [Remove]{@link Scene#remove} all {@link Tweenable}s in this {@link
-   * Scene}.
-   * @method Scene#empty
+   * [Remove]{@link Scene#remove} all {@link Tweenable}s in this {@link Scene}.
    * @return {Array.<Tweenable>} The {@link Tweenable}s that were
    * removed.
    */
-  empty(): Array<Tweenable> {
+  empty() {
     // Deliberate of the tweenables getter here to create a temporary array
     return this.tweenables.map(this.remove.bind(this))
   }
@@ -121,54 +109,47 @@ export class Scene {
   /**
    * Is `true` if any {@link Tweenable} in this {@link Scene} is
    * playing.
-   * @method Scene#isPlaying
    * @return {boolean}
    */
-  isPlaying(): boolean {
+  isPlaying() {
     return this._tweenables.some(tweenable => tweenable.isPlaying())
   }
 
   /**
    * Play all {@link Tweenable}s from their beginning.
-   * @method Scene#play
    * @return {Scene}
    */
-  play(): Scene {
+  play() {
     this._tweenables.forEach(tweenable => tweenable.tween())
 
     return this
   }
 
   /**
-   * {@link Tweenable#pause} all {@link Tweenable}s in this
-   * {@link Scene}.
-   * @method Scene#pause
+   * {@link Tweenable#pause} all {@link Tweenable}s in this {@link Scene}.
    * @return {Scene}
    */
-  pause(): Scene {
+  pause() {
     this._tweenables.forEach(tweenable => tweenable.pause())
     return this
   }
 
   /**
    * {@link Tweenable#resume} all paused {@link Tweenable}s.
-   * @method Scene#resume
    * @return {Scene}
    */
-  resume(): Scene {
+  resume() {
     this.playingTweenables.forEach(tweenable => tweenable.resume())
 
     return this
   }
 
   /**
-   * {@link Tweenable#stop} all {@link Tweenable}s in this {@link
-   * Scene}.
-   * @method Scene#stop
+   * {@link Tweenable#stop} all {@link Tweenable}s in this {@link Scene}.
    * @param {boolean} [gotoEnd]
    * @return {Scene}
    */
-  stop(gotoEnd: boolean): Scene {
+  stop(gotoEnd: boolean) {
     this._tweenables.forEach(tweenable => tweenable.stop(gotoEnd))
     return this
   }
