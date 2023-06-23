@@ -35,8 +35,9 @@ Tweenable.easing['customEasing'] = (pos: number) => Math.pow(pos, 2)
 
 ## Per-tween custom easing functions
 
-You are not limited to attaching functions to {@link Tweenable.easing}. You
-can also supply a custom easing function directly to {@link tween}:
+You are not limited to attaching functions to {@link Tweenable.easing}. You can
+also supply a {@link EasingFunction | custom easing function} directly to
+{@link tween}:
 
 ```javascript
 tween({
@@ -52,7 +53,7 @@ tween({
 })
 ```
 
-Or even an Object of mixed strings and functions:
+Or even an {@link EasingObject | object of mixed strings and functions}:
 
 ```javascript
 tween({
@@ -89,4 +90,4 @@ tween({
 })
 ```
 
-{@link shifty.interpolate} also supports all formats for `easing`.
+{@link interpolate} also supports all of the above formats for `easing`.

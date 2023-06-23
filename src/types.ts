@@ -47,7 +47,7 @@ export type Easing =
   | EasingKey
   | string
   | EasingFunction
-  | Record<string, EasingKey | EasingFunction>
+  | EasingObject
   | number[]
 export type FulfillmentHandler = (promisedData: PromisedData) => PromisedData
 
