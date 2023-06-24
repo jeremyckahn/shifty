@@ -62,6 +62,12 @@ export type FulfillmentHandler = (promisedData: PromisedData) => PromisedData
 
 export type RejectionHandler = (promisedData: PromisedData) => PromisedData
 
+/**
+ * @property {TweenState} state The current state of the tween.
+ * @property {Data} data The `data` object that the tween was configured with.
+ * @property {Tweenable} tweenable The {@link Tweenable} instance to which the
+ * tween belongs.
+ */
 export interface PromisedData {
   state: TweenState
   data: Data
@@ -147,13 +153,45 @@ export interface TweenableConfig {
    */
   promise?: typeof Promise
 }
+
+/**
+ * An object that contains functions that are called at key points in a tween's
+ * lifecycle.  Shifty can only process `Number`s internally, but filters can
+ * expand support for any type of data.  This is the mechanism that powers
+ * {@page ../tutorials/string-interpolation.md}.
+ */
 export interface Filter {
+  /**
+   * This is called when a tween is created to determine if a filter is needed.
+   * Filters are only added to a tween when it is created so that they are not
+   * unnecessarily processed if they don't apply during a subsequent update
+   * tick.
+   */
   doesApply: (tweenable: Tweenable) => boolean
+
+  /**
+   * This is called when a tween is created.  This should perform any setup
+   * needed by subsequent per-tick calls to {@link Filter.beforeTween} and
+   * {@link Filter.afterTween}.
+   */
   tweenCreated?: (tweenable: Tweenable) => void
+
+  /**
+   * This is called right before a tween is processed in a tick.
+   */
   beforeTween?: (tweenable: Tweenable) => void
+
+  /**
+   * This is called right after a tween is processed in a tick.
+   */
   afterTween?: (tweenable: Tweenable) => void
+
+  /**
+   * This is called right after a tween is completed.
+   */
   afterTweenEnd?: (tweenable: Tweenable) => void
 }
+
 export type FilterName = keyof Omit<Filter, 'doesApply'>
 
 export const isEasingKey = (key: string): key is EasingKey => {

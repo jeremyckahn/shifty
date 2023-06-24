@@ -411,9 +411,16 @@ export class Tweenable {
     (scheduleFunction = fn)
 
   /**
-   * The {@link Filter}s available for use.  These filters are
-   * automatically applied at tween-time by Shifty. You can define your own
-   * {@link Filter}s and attach them to this object.
+   * The {@link Filter}s available for use.  These filters are automatically
+   * applied. You can define your own {@link Filter}s and attach them to this
+   * object.
+   *
+   * ```ts
+   * Tweenable.filters['customFilter'] = {
+   *   doesApply: () => true
+   *   tweenCreated: () => console.log('tween created!')
+   * }
+   * ```
    */
   static filters: Record<string, Filter> = {}
 
