@@ -724,12 +724,9 @@ export class Tweenable {
     return this.then().catch(onRejected)
   }
   /**
-   * @method Tweenable#finally
-   * @param {function} onFinally
-   * @return {Promise<undefined>}
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally
    */
-  finally(onFinally: () => TweenState): Promise<PromisedData> {
+  finally(onFinally?: typeof Promise.prototype.finally): Promise<PromisedData> {
     return this.then().finally(onFinally)
   }
 
@@ -955,11 +952,7 @@ export class Tweenable {
 
   /**
    * Get and optionally set the data that gets passed as `data` to {@link
-   * shifty.promisedData}, {@link shifty.startFunction} and {@link
-   * shifty.renderFunction}.
-   * @param {Object} [data]
-   * @method Tweenable#data
-   * @return {Object} The internally stored `data`.
+   * StartFunction}, {@link FinishFunction} and {@link RenderFunction}.
    */
   data(data: Data = null): Data {
     if (data) {
@@ -970,9 +963,10 @@ export class Tweenable {
   }
 
   /**
-   * `delete` all "own" properties.  Call this when the {@link
-   * Tweenable} instance is no longer needed to free memory.
-   * @method Tweenable#dispose
+   * `delete` all {@link
+   * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwn
+   * | own} properties.  Call this when the {@link Tweenable} instance is no
+   * longer needed to free memory.
    */
   dispose() {
     for (const prop in this) {
