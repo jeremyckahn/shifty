@@ -899,9 +899,9 @@ export class Tweenable {
   }
 
   /**
-   * {@link Tweenable#stop}s a tween and also rejects its `Promise`. If a tween
-   * is not running, this is a no-op. Prevents calling any provided {@link
-   * TweenableConfig.finish} function.
+   * {@link Tweenable#stop}s a tween and also rejects its {@link !Promise}. If
+   * a tween is not running, this is a no-op. Prevents calling any provided
+   * {@link TweenableConfig.finish} function.
    * @param {boolean} [gotoEnd] Is propagated to {@link Tweenable#stop}.
    * @see https://github.com/jeremyckahn/shifty/issues/122
    */
