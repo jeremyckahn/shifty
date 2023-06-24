@@ -718,10 +718,6 @@ export class Tweenable {
   }
 
   /**
-   * @method Tweenable#catch
-   * @param {function} onRejected Receives {@link shifty.promisedData} as the
-   * first parameter.
-   * @return {Promise<Object>}
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch
    */
   catch(onRejected: RejectionHandler): Promise<PromisedData> {
@@ -903,15 +899,13 @@ export class Tweenable {
   }
 
   /**
-   * {@link Tweenable#stop}s a tween and also `reject`s its {@link
-   * external:Promise}. If a tween is not running, this is a no-op. Prevents
-   * calling any provided `finish` function.
+   * {@link Tweenable#stop}s a tween and also rejects its `Promise`. If a tween
+   * is not running, this is a no-op. Prevents calling any provided {@link
+   * TweenableConfig.finish} function.
    * @param {boolean} [gotoEnd] Is propagated to {@link Tweenable#stop}.
-   * @method Tweenable#cancel
-   * @return {Tweenable}
    * @see https://github.com/jeremyckahn/shifty/issues/122
    */
-  cancel(gotoEnd = false): Tweenable {
+  cancel(gotoEnd = false) {
     const { _currentState, _data, _isPlaying } = this
 
     if (!_isPlaying) {

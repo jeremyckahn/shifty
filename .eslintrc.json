@@ -14,14 +14,6 @@
   "plugins": ["jest", "prettier", "@typescript-eslint"],
   "root": true,
   "rules": {
-    "linebreak-style": ["error", "unix"],
-    "valid-jsdoc": [
-      "error",
-      {
-        "requireReturn": false,
-        "requireReturnDescription": false,
-        "requireParamDescription": false
-      }
-    ]
+    "linebreak-style": ["error", "unix"]
   }
 }
