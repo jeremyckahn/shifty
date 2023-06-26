@@ -741,10 +741,8 @@ export class Tweenable {
   }
 
   /**
-   * Pause a tween. Paused tweens can be resumed from the point at which they
-   * were paused. If a tween is not running, this is a no-op.
-   * @method Tweenable#pause
-   * @return {Tweenable}
+   * Pauses a tween. Paused tweens can be {@link resume}d from the point at
+   * which they were paused. If a tween is not running, this is a no-op.
    */
   pause(): Tweenable {
     if (!this._isPlaying) {
@@ -759,9 +757,7 @@ export class Tweenable {
   }
 
   /**
-   * Resume a paused tween.
-   * @method Tweenable#resume
-   * @return {Tweenable}
+   * Resumes a {@link pause}d tween.
    */
   resume(): Tweenable {
     return this._resume()
@@ -810,13 +806,15 @@ export class Tweenable {
   /**
    * Move the state of the animation to a specific point in the tween's
    * timeline.  If the animation is not running, this will cause {@link
-   * shifty.renderFunction} handlers to be called.
-   * @method Tweenable#seek
-   * @param {number} millisecond The millisecond of the animation to seek
-   * to.  This must not be less than `0`.
-   * @return {Tweenable}
+   * RenderFunction} handlers to be called.
    */
-  seek(millisecond: number): Tweenable {
+  seek(
+    /**
+     * The millisecond of the animation to seek to.  This must not be less than
+     * `0`.
+     */
+    millisecond: number
+  ): Tweenable {
     millisecond = Math.max(millisecond, 0)
     const currentTime = Tweenable.now()
 
@@ -921,14 +919,14 @@ export class Tweenable {
   }
 
   /**
-   * Whether or not a tween is running.
+   * Whether or not a tween is running (not paused or completed).
    */
   get isPlaying(): boolean {
     return this._isPlaying
   }
 
   /**
-   * Whether or not a tween has finished running.
+   * Whether or not a tween has completed.
    */
   get hasEnded(): boolean {
     return this._hasEnded
