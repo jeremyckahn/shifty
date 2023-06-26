@@ -732,11 +732,14 @@ export class Tweenable {
   }
 
   /**
-   * Set the current state.
-   * @method Tweenable#set
-   * @param {TweenState} state The state to set.
+   * Set the current tween state.
    */
-  set(state: TweenState) {
+  setState(
+    /**
+     * The state to set.
+     */
+    state: TweenState
+  ) {
     this._currentState = state
   }
 

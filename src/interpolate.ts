@@ -61,7 +61,7 @@ export const interpolate = <T extends TweenState>(
 
   mockTweenable._filters.length = 0
 
-  mockTweenable.set({})
+  mockTweenable.setState({})
   mockTweenable._currentState = current
   mockTweenable._originalState = from
   mockTweenable._targetState = to
