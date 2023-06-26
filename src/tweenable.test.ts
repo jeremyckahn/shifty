@@ -50,16 +50,16 @@ describe('#tween', () => {
       duration: 1000,
     })
 
-    expect(tweenable.get().x).toEqual(0)
+    expect(tweenable.state.x).toEqual(0)
     Tweenable.now = () => 500
     processTweens()
-    expect(tweenable.get().x).toEqual(50)
+    expect(tweenable.state.x).toEqual(50)
     Tweenable.now = () => 1000
     processTweens()
-    expect(tweenable.get().x).toEqual(100)
+    expect(tweenable.state.x).toEqual(100)
     Tweenable.now = () => 100000
     processTweens()
-    expect(tweenable.get().x).toEqual(100)
+    expect(tweenable.state.x).toEqual(100)
   })
 
   test('render handler receives timestamp offset', () => {
@@ -91,15 +91,15 @@ describe('#tween', () => {
         easing: easingFn,
       })
 
-      expect(tweenable.get().x).toEqual(0)
+      expect(tweenable.state.x).toEqual(0)
 
       Tweenable.now = () => 500
       processTweens()
-      expect(tweenable.get().x).toEqual(10)
+      expect(tweenable.state.x).toEqual(10)
 
       Tweenable.now = () => 1000
       processTweens()
-      expect(tweenable.get().x).toEqual(20)
+      expect(tweenable.state.x).toEqual(20)
     })
 
     test('can be given an Object of easing functions directly', () => {
@@ -111,15 +111,15 @@ describe('#tween', () => {
         easing: { x: easingFn },
       })
 
-      expect(tweenable.get().x).toEqual(0)
+      expect(tweenable.state.x).toEqual(0)
 
       Tweenable.now = () => 500
       processTweens()
-      expect(tweenable.get().x).toEqual(10)
+      expect(tweenable.state.x).toEqual(10)
 
       Tweenable.now = () => 1000
       processTweens()
-      expect(tweenable.get().x).toEqual(20)
+      expect(tweenable.state.x).toEqual(20)
     })
 
     test('supports tokens', () => {
@@ -132,15 +132,15 @@ describe('#tween', () => {
         easing: { x: easingFn },
       })
 
-      expect(tweenable.get().x).toEqual('rgb(0,0,0)')
+      expect(tweenable.state.x).toEqual('rgb(0,0,0)')
 
       Tweenable.now = () => 500
       processTweens()
-      expect(tweenable.get().x).toEqual('rgb(127,127,127)')
+      expect(tweenable.state.x).toEqual('rgb(127,127,127)')
 
       Tweenable.now = () => 1000
       processTweens()
-      expect(tweenable.get().x).toEqual('rgb(255,255,255)')
+      expect(tweenable.state.x).toEqual('rgb(255,255,255)')
     })
   })
 
@@ -154,15 +154,15 @@ describe('#tween', () => {
         easing: [0, 1, 0, 1],
       })
 
-      expect(tweenable.get().x).toEqual(0)
+      expect(tweenable.state.x).toEqual(0)
 
       Tweenable.now = () => 500
       processTweens()
-      expect(tweenable.get().x).toEqual(9.914547270233196)
+      expect(tweenable.state.x).toEqual(9.914547270233196)
 
       Tweenable.now = () => 1000
       processTweens()
-      expect(tweenable.get().x).toEqual(10)
+      expect(tweenable.state.x).toEqual(10)
     })
 
     test('defaults to linear bezier point array for easing', () => {
@@ -174,15 +174,15 @@ describe('#tween', () => {
         easing: [],
       })
 
-      expect(tweenable.get().x).toEqual(0)
+      expect(tweenable.state.x).toEqual(0)
 
       Tweenable.now = () => 500
       processTweens()
-      expect(tweenable.get().x).toEqual(5)
+      expect(tweenable.state.x).toEqual(5)
 
       Tweenable.now = () => 1000
       processTweens()
-      expect(tweenable.get().x).toEqual(10)
+      expect(tweenable.state.x).toEqual(10)
     })
   })
 
@@ -459,17 +459,17 @@ describe('#pause', () => {
 
     Tweenable.now = () => 500
     processTweens()
-    expect(tweenable.get().x).toEqual(50)
+    expect(tweenable.state.x).toEqual(50)
     tweenable.pause()
 
     Tweenable.now = () => 2000
     tweenable.resume()
     processTweens()
-    expect(tweenable.get().x).toEqual(50)
+    expect(tweenable.state.x).toEqual(50)
 
     Tweenable.now = () => 2500
     processTweens()
-    expect(tweenable.get().x).toEqual(100)
+    expect(tweenable.state.x).toEqual(100)
   })
 })
 
@@ -575,7 +575,7 @@ describe('#stop', () => {
     Tweenable.now = () => 500
     processTweens()
     tweenable.stop()
-    expect(tweenable.get().x).toEqual(50)
+    expect(tweenable.state.x).toEqual(50)
     expect(tweenable._isPlaying).toEqual(false)
   })
 
@@ -591,7 +591,7 @@ describe('#stop', () => {
     Tweenable.now = () => 500
     processTweens()
     tweenable.stop(true)
-    expect(tweenable.get().x).toEqual(100)
+    expect(tweenable.state.x).toEqual(100)
   })
 
   describe('repeated calls (#105)', () => {
@@ -719,23 +719,23 @@ describe('delay support', () => {
       duration: 1000,
     })
 
-    expect(tweenable.get().x).toEqual(0)
+    expect(tweenable.state.x).toEqual(0)
 
     Tweenable.now = () => 250
     processTweens()
-    expect(tweenable.get().x).toEqual(0)
+    expect(tweenable.state.x).toEqual(0)
 
     Tweenable.now = () => 1000
     processTweens()
-    expect(tweenable.get().x).toEqual(5)
+    expect(tweenable.state.x).toEqual(5)
 
     Tweenable.now = () => 1500
     processTweens()
-    expect(tweenable.get().x).toEqual(10)
+    expect(tweenable.state.x).toEqual(10)
 
     Tweenable.now = () => 99999
     processTweens()
-    expect(tweenable.get().x).toEqual(10)
+    expect(tweenable.state.x).toEqual(10)
   })
 
   test('pause() functionality is not affected by delay', () => {
@@ -751,17 +751,17 @@ describe('delay support', () => {
 
     Tweenable.now = () => 500 + delay
     processTweens()
-    expect(tweenable.get().x).toEqual(50)
+    expect(tweenable.state.x).toEqual(50)
 
     tweenable.pause()
     Tweenable.now = () => 2000 + delay
     tweenable.resume()
     processTweens()
-    expect(tweenable.get().x).toEqual(50)
+    expect(tweenable.state.x).toEqual(50)
 
     Tweenable.now = () => 2500 + delay
     processTweens()
-    expect(tweenable.get().x).toEqual(100)
+    expect(tweenable.state.x).toEqual(100)
   })
 })
 
@@ -774,16 +774,16 @@ describe('static tween', () => {
       duration: 1000,
     })
 
-    expect(tweenable.get().x).toEqual(0)
+    expect(tweenable.state.x).toEqual(0)
     Tweenable.now = () => 500
     processTweens()
-    expect(tweenable.get().x).toEqual(50)
+    expect(tweenable.state.x).toEqual(50)
     Tweenable.now = () => 1000
     processTweens()
-    expect(tweenable.get().x).toEqual(100)
+    expect(tweenable.state.x).toEqual(100)
     Tweenable.now = () => 100000
     processTweens()
-    expect(tweenable.get().x).toEqual(100)
+    expect(tweenable.state.x).toEqual(100)
   })
 })
 

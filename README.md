@@ -180,7 +180,8 @@ that builds and publishes Shifty to NPM.
 - `tweenConfig.step` has been removed in favor of `tweenConfig.render` (behavior and API is unchanged).
 - `tweenConfig.attachment` has been removed in favor of `tweenConfig.data` (behavior and API is unchanged).
 - `Tweenable#tweenable` has been removed.
-- `Tweenable#get()` is now `Tweenable#get` (a getter, not a method)
+- `Tweenable#get()` is now `Tweenable#state` (a getter, not a method)
+- `Tweenable#hasEnded()` is now `Tweenable#hasEnded` (a getter, not a method)
 
 ## Contributors
 

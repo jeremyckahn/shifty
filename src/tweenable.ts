@@ -595,7 +595,7 @@ export class Tweenable {
     /** @private */
     this._pausedAtTime = null
     this._timestamp = Tweenable.now()
-    this._start(this.get(), this._data)
+    this._start(this.state, this._data)
 
     if (this._delay) {
       this._render(this._currentState, this._data, 0)
@@ -727,7 +727,7 @@ export class Tweenable {
   /**
    * Returns the current state of the tween.
    */
-  get(): TweenState {
+  get state(): TweenState {
     return { ...this._currentState }
   }
 
