@@ -112,7 +112,7 @@ export class Scene {
    * @return {boolean}
    */
   isPlaying() {
-    return this._tweenables.some(tweenable => tweenable.isPlaying())
+    return this._tweenables.some(tweenable => tweenable.isPlaying)
   }
 
   /**

@@ -922,10 +922,8 @@ export class Tweenable {
 
   /**
    * Whether or not a tween is running.
-   * @method Tweenable#isPlaying
-   * @return {boolean}
    */
-  isPlaying(): boolean {
+  get isPlaying(): boolean {
     return this._isPlaying
   }
 

@@ -359,7 +359,7 @@ describe('#tween', () => {
       })
 
       expect(tweenable.stop).toHaveBeenCalled()
-      expect(tweenable.isPlaying()).toEqual(true)
+      expect(tweenable.isPlaying).toEqual(true)
     })
   })
 

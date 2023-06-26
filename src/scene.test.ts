@@ -86,8 +86,8 @@ describe('play', () => {
     tweenable2.setConfig({ from: { x: 10 }, to: { x: 0 } })
     scene.play()
 
-    expect(tweenable1.isPlaying()).toBeTruthy()
-    expect(tweenable2.isPlaying()).toBeTruthy()
+    expect(tweenable1.isPlaying).toBeTruthy()
+    expect(tweenable2.isPlaying).toBeTruthy()
   })
 })
 
