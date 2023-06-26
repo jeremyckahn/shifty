@@ -693,12 +693,6 @@ export class Tweenable {
 
   /**
    * Overrides any `finish` function passed via a {@link TweenableConfig}.
-   * @method Tweenable#then
-   * @param {FulfillmentHandler=} onFulfilled Receives {@link
-   * shifty.promisedData} as the first parameter.
-   * @param {RejectionHandler=} onRejected Receives {@link shifty.promisedData}
-   * as the first parameter.
-   * @return {Promise<Object>}
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then
    */
   then(
@@ -731,8 +725,7 @@ export class Tweenable {
   }
 
   /**
-   * @method Tweenable#get
-   * @return {TweenState} The current state.
+   * Returns the current state of the tween.
    */
   get(): TweenState {
     return { ...this._currentState }
@@ -938,10 +931,8 @@ export class Tweenable {
 
   /**
    * Whether or not a tween has finished running.
-   * @method Tweenable#hasEnded
-   * @return {boolean}
    */
-  hasEnded(): boolean {
+  get hasEnded(): boolean {
     return this._hasEnded
   }
 

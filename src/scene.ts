@@ -46,7 +46,7 @@ export class Scene {
    * or not).
    */
   get playingTweenables() {
-    return this._tweenables.filter(tweenable => !tweenable.hasEnded())
+    return this._tweenables.filter(tweenable => !tweenable.hasEnded)
   }
 
   /**

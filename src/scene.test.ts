@@ -123,9 +123,9 @@ describe('resume', () => {
 
     scene = new Scene(tweenable1, tweenable2)
 
-    jest.spyOn(tweenable1, 'hasEnded').mockReturnValue(false)
+    jest.spyOn(tweenable1, 'hasEnded', 'get').mockReturnValue(false)
     jest.spyOn(tweenable1, 'resume')
-    jest.spyOn(tweenable2, 'hasEnded').mockReturnValue(true)
+    jest.spyOn(tweenable2, 'hasEnded', 'get').mockReturnValue(true)
     jest.spyOn(tweenable2, 'resume')
 
     scene.play()

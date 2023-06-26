@@ -404,9 +404,9 @@ describe('#hasEnded', () => {
       duration: 500,
     })
 
-    expect(tweenable.hasEnded()).toBe(false)
+    expect(tweenable.hasEnded).toBe(false)
     tweenable.seek(500)
-    expect(tweenable.hasEnded()).toBe(true)
+    expect(tweenable.hasEnded).toBe(true)
   })
 
   test('Triggers again after restarting the tween', () => {
@@ -419,9 +419,9 @@ describe('#hasEnded', () => {
     })
 
     tweenable.seek(500)
-    expect(tweenable.hasEnded()).toBe(true)
+    expect(tweenable.hasEnded).toBe(true)
     tweenable.seek(0)
-    expect(tweenable.hasEnded()).toBe(false)
+    expect(tweenable.hasEnded).toBe(false)
   })
 })
 
