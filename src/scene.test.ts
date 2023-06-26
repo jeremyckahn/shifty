@@ -66,12 +66,12 @@ describe('isPlaying', () => {
   })
 
   test('returns false if no tweenables are playing', () => {
-    expect(scene.isPlaying()).toBeFalsy()
+    expect(scene.isPlaying).toBeFalsy()
   })
 
   test('returns true if any Tweenables are playing', () => {
     scene.tweenables[1].tween({ from: { x: 0 }, to: { x: 10 } })
-    expect(scene.isPlaying()).toBeTruthy()
+    expect(scene.isPlaying).toBeTruthy()
   })
 })
 
@@ -100,7 +100,7 @@ describe('pause', () => {
     scene.play()
     scene.pause()
 
-    expect(scene.isPlaying()).toBeFalsy()
+    expect(scene.isPlaying).toBeFalsy()
   })
 })
 
@@ -114,7 +114,7 @@ describe('resume', () => {
     scene.pause()
     scene.resume()
 
-    expect(scene.isPlaying()).toBeTruthy()
+    expect(scene.isPlaying).toBeTruthy()
   })
 
   test('does not resume Tweenables that have ended', () => {

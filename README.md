@@ -183,6 +183,7 @@ that builds and publishes Shifty to NPM.
 - `Tweenable#get()` is now `Tweenable#state` (a getter, not a method)
 - `Tweenable#hasEnded()` is now `Tweenable#hasEnded` (a getter, not a method)
 - `Tweenable#isPlaying()` is now `Tweenable#isPlaying` (a getter, not a method)
+- `Scene#isPlaying()` is now `Scene#isPlaying` (a getter, not a method)
 
 ## Contributors
 

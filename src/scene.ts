@@ -107,12 +107,10 @@ export class Scene {
   }
 
   /**
-   * Is `true` if any {@link Tweenable} in this {@link Scene} is
-   * playing.
-   * @return {boolean}
+   * Whether or not any {@link Tweenable} in this {@link Scene} is playing.
    */
-  isPlaying() {
-    return this._tweenables.some(tweenable => tweenable.isPlaying)
+  get isPlaying() {
+    return this._tweenables.some(({ isPlaying }) => isPlaying)
   }
 
   /**
