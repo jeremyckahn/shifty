@@ -4,9 +4,6 @@ import {
   Tweenable,
   tween,
 } from './tweenable'
-import * as token from './token'
-
-Tweenable.filters.token = token
 
 export { processTweens, shouldScheduleUpdate, Tweenable, tween }
 export { interpolate } from './interpolate'

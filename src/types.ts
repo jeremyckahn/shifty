@@ -6,8 +6,6 @@ export type ScheduleFunction = (callback: () => void, timeout: number) => void
 // NOTE: TweenState values are numbers whenever they are worked with internally
 // by Tweenable. The user may define them as strings, but they get
 // automatically converted to numbers before they are processed.
-//
-// FIXME: Improve the typing to avoid this confusing discrepancy.
 
 export type TweenState = Record<string, number | string>
 

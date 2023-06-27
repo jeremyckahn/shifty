@@ -180,12 +180,16 @@ that builds and publishes Shifty to NPM.
 - `tweenConfig.step` has been removed in favor of `tweenConfig.render` (behavior and API is unchanged).
 - `tweenConfig.attachment` has been removed in favor of `tweenConfig.data` (behavior and API is unchanged).
 - `Tweenable#tweenable` has been removed.
-- `Tweenable#set()` is now `Tweenable#setState`
-- `Tweenable#get()` is now `Tweenable#state` (a getter, not a method)
-- `Tweenable#hasEnded()` is now `Tweenable#hasEnded` (a getter, not a method)
-- `Tweenable#isPlaying()` is now `Tweenable#isPlaying` (a getter, not a method)
+- `Tweenable#set()` is now `Tweenable#setState`.
+- `Tweenable#get()` is now `Tweenable#state` (a getter, not a method).
+- `Tweenable#hasEnded()` is now `Tweenable#hasEnded` (a getter, not a method).
+- `Tweenable#isPlaying()` is now `Tweenable#isPlaying` (a getter, not a method).
 - `Tweenable#setScheduleFunction` has been removed. The static method `Tweenable.setScheduleFunction` method should be used instead.
-- `Scene#isPlaying()` is now `Scene#isPlaying` (a getter, not a method)
+- `Scene#isPlaying()` is now `Scene#isPlaying` (a getter, not a method).
+
+#### Non-breaking changes
+
+- Token extension is now baked into Shifty Core.
 
 ## Contributors
 

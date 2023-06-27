@@ -1,1 +1,10 @@
-export { processTweens, Tweenable, tween } from './tweenable'
+import {
+  processTweens,
+  shouldScheduleUpdate,
+  Tweenable,
+  tween,
+} from './tweenable'
+
+export { processTweens, shouldScheduleUpdate, Tweenable, tween }
+
+export * from './types'

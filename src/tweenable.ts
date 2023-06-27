@@ -19,6 +19,7 @@ import {
   FulfillmentHandler,
   RejectionHandler,
 } from './types'
+import * as token from './token'
 
 // CONSTANTS
 const DEFAULT_EASING: EasingKey = 'linear'
@@ -163,16 +164,14 @@ const processTween = (tween: Tweenable, currentTime: number) => {
   let timeToCompute = currentTime > endTime ? endTime : currentTime
   tween._hasEnded = timeToCompute >= endTime
   const offset = duration - (endTime - timeToCompute)
-  const hasFilters = tween._filters.length > 0
 
   if (tween._hasEnded) {
     tween._render(targetState, tween._data, offset)
     return tween.stop(true)
   }
 
-  if (hasFilters) {
-    tween._applyFilter(BEFORE_TWEEN)
-  }
+  // Converts internal state objects to TweenRawState
+  tween._applyFilter(BEFORE_TWEEN)
 
   // If the animation has not yet reached the start point (e.g., there was
   // delay that has not yet completed), just interpolate the starting
@@ -193,9 +192,7 @@ const processTween = (tween: Tweenable, currentTime: number) => {
     tween._easing
   )
 
-  if (hasFilters) {
-    tween._applyFilter(AFTER_TWEEN)
-  }
+  tween._applyFilter(AFTER_TWEEN)
 
   tween._render(currentState, tween._data, offset)
 }
@@ -415,7 +412,7 @@ export class Tweenable {
    * }
    * ```
    */
-  static filters: Record<string, Filter> = {}
+  static filters: Record<string, Filter> = { token }
 
   /**
    * You can define custom easing curves by attaching {@link EasingFunction}s
@@ -842,12 +839,9 @@ export class Tweenable {
 
     remove(this)
 
-    const hasFilters = this._filters.length > 0
-
     if (gotoEnd) {
-      if (hasFilters) {
-        this._applyFilter(BEFORE_TWEEN)
-      }
+      // Converts internal state objects to TweenRawState
+      this._applyFilter(BEFORE_TWEEN)
 
       tweenProps(
         1,
@@ -859,10 +853,8 @@ export class Tweenable {
         this._easing
       )
 
-      if (hasFilters) {
-        this._applyFilter(AFTER_TWEEN)
-        this._applyFilter(AFTER_TWEEN_END)
-      }
+      this._applyFilter(AFTER_TWEEN)
+      this._applyFilter(AFTER_TWEEN_END)
     }
 
     this._resolve?.({

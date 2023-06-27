@@ -38,26 +38,11 @@ const R_RGBA_PREFIX = /^.*\(/
 const R_HEX = /#([0-9]|[a-f]){3,6}/gi
 const VALUE_PLACEHOLDER = 'VAL'
 
-// HELPERS
-
-/**
- * @param {number[]} rawValues
- * @param {string} prefix
- *
- * @return {Array.<string>}
- * @private
- */
 const getFormatChunksFrom = (
   rawValues: number[],
   prefix: string
 ): Array<string> => rawValues.map((_val, i) => `_${prefix}_${i}`)
 
-/**
- * @param {string} formattedString
- *
- * @return {string}
- * @private
- */
 const getFormatStringFrom = (formattedString: string): string => {
   let chunks = formattedString.match(R_FORMAT_CHUNKS)
 
@@ -86,11 +71,6 @@ const getFormatStringFrom = (formattedString: string): string => {
 
 /**
  * Convert a base-16 number to base-10.
- *
- * @param {string} hex The value to convert.
- *
- * @returns {number} The base-10 equivalent of `hex`.
- * @private
  */
 function hexToDec(hex: string): number {
   return parseInt(hex, 16)
@@ -99,14 +79,17 @@ function hexToDec(hex: string): number {
 /**
  * Convert a hexadecimal string to an array with three items, one each for
  * the red, blue, and green decimal values.
- *
- * @param {string} hex A hexadecimal string.
- *
- * @returns {Array.<number>} The converted Array of RGB values if `hex` is a
- * valid string, or an Array of three 0's.
- * @private
  */
-const hexToRGBArray = (hex: string): Array<number> => {
+const hexToRGBArray = (
+  /**
+   * A hexadecimal string.
+   */
+  hex: string
+): /**
+ * The converted Array of RGB values if `hex` is a valid string, or an Array of
+ * three 0's.
+ */
+Array<number> => {
   hex = hex.replace(/#/, '')
 
   // If the string is a shorthand three digit hex notation, normalize it to
@@ -123,25 +106,12 @@ const hexToRGBArray = (hex: string): Array<number> => {
   ]
 }
 
-/**
- * @param {string} hexString
- *
- * @return {string}
- * @private
- */
 const convertHexToRGB = (hexString: string): string =>
   `rgb(${hexToRGBArray(hexString).join(',')})`
 
 /**
  * TODO: Can this be rewritten to leverage String#replace more efficiently?
  * Runs a filter operation on all chunks of a string that match a RegExp.
- *
- * @param {RegExp} pattern
- * @param {string} unfilteredString
- * @param {function(string)} filter
- *
- * @return {string}
- * @private
  */
 const filterStringChunks = (
   pattern: RegExp,
@@ -164,20 +134,11 @@ const filterStringChunks = (
   return filteredString
 }
 
-/**
- * @param {string} str
- *
- * @return {string}
- * @private
- */
 const sanitizeHexChunksToRGB = (str: string): string =>
   filterStringChunks(R_HEX, str, convertHexToRGB)
 
 /**
  * Convert all hex color values within a string to an rgb string.
- *
- * @param {Object} stateObject
- * @private
  */
 const sanitizeObjectForHexProps = (stateObject: TweenState) => {
   for (const prop in stateObject) {
@@ -189,12 +150,6 @@ const sanitizeObjectForHexProps = (stateObject: TweenState) => {
   }
 }
 
-/**
- * @param {string} rgbChunk
- *
- * @return {string}
- * @private
- */
 const sanitizeRGBAChunk = (rgbChunk: string): string => {
   const rgbaRawValues = rgbChunk.match(R_UNFORMATTED_VALUES) ?? []
   const rgbNumbers = rgbaRawValues
@@ -213,34 +168,17 @@ const sanitizeRGBAChunk = (rgbChunk: string): string => {
 
 /**
  * Check for floating point values within rgb strings and round them.
- *
- * @param {string} formattedString
- *
- * @return {string}
- * @private
  */
 const sanitizeRGBChunks = (formattedString: string): string =>
   filterStringChunks(R_RGBA, formattedString, sanitizeRGBAChunk)
 
 /**
- * Note: It's the duty of the caller to convert the Array elements of the
+ * NOTE: It's the duty of the caller to convert the Array elements of the
  * return value into numbers.  This is a performance optimization.
- *
- * @param {string} formattedString
- *
- * @return {Array.<string>|null}
- * @private
  */
 const getValuesFrom = (formattedString: string): Array<string> =>
   formattedString.match(R_UNFORMATTED_VALUES) ?? []
 
-/**
- * @param {TweenState} stateObject
- *
- * @return {FormatSignature} An Object of formatSignatures that correspond to
- * the string properties of stateObject.
- * @private
- */
 const getFormatSignatures = (stateObject: TweenState): FormatSignature => {
   const signatures: FormatSignature = {}
 
@@ -261,11 +199,6 @@ const getFormatSignatures = (stateObject: TweenState): FormatSignature => {
   return signatures
 }
 
-/**
- * @param {TweenState} stateObject
- * @param {FormatSignature} formatSignatures
- * @private
- */
 const expandFormattedProperties = (
   stateObject: TweenState,
   formatSignatures: FormatSignature
@@ -280,13 +213,6 @@ const expandFormattedProperties = (
   }
 }
 
-/**
- * @param {Object} stateObject
- * @param {Array.<string>} chunkNames
- *
- * @return {Object} The extracted value chunks.
- * @private
- */
 const extractPropertyChunks = (
   stateObject: TweenState,
   chunkNames: string[]
@@ -301,25 +227,11 @@ const extractPropertyChunks = (
   return extractedValues
 }
 
-/**
- * @param {Object} stateObject
- * @param {Array.<string>} chunkNames
- *
- * @return {Array.<number>}
- * @private
- */
 const getValuesList = (
   stateObject: TweenState,
   chunkNames: Array<string>
 ): Array<number> => chunkNames.map(chunkName => Number(stateObject[chunkName]))
 
-/**
- * @param {string} formatString
- * @param {Array.<number>} rawValues
- *
- * @return {string}
- * @private
- */
 const getFormattedValues = (
   formatString: string,
   rawValues: Array<number>
@@ -335,11 +247,6 @@ const getFormattedValues = (
   return formatString
 }
 
-/**
- * @param {Object} stateObject
- * @param {FormatSignature} formatSignature
- * @private
- */
 const collapseFormattedProperties = (
   stateObject: TweenState,
   formatSignature: FormatSignature
@@ -356,11 +263,6 @@ const collapseFormattedProperties = (
   }
 }
 
-/**
- * @param {Record<string, string>} easingObject
- * @param {FormatSignature} formatSignature
- * @private
- */
 const expandEasingObject = (
   easingObject: EasingObject,
   formatSignature: FormatSignature
@@ -390,11 +292,6 @@ const expandEasingObject = (
   }
 }
 
-/**
- * @param {EasingObject} easingObject
- * @param {FormatSignature} formatSignature
- * @private
- */
 const collapseEasingObject = (
   easingObject: EasingObject,
   formatSignature: FormatSignature
@@ -424,11 +321,6 @@ const collapseEasingObject = (
   }
 }
 
-/**
- * @memberof Tweenable.filters.token
- * @param {Tweenable} tweenable
- * @returns {boolean}
- */
 export const doesApply = (tweenable: Tweenable): boolean => {
   for (const key in tweenable._currentState) {
     if (typeof tweenable._currentState[key] === 'string') {
@@ -439,10 +331,6 @@ export const doesApply = (tweenable: Tweenable): boolean => {
   return false
 }
 
-/**
- * @memberof Tweenable.filters.token
- * @param {Tweenable} tweenable
- */
 export function tweenCreated(tweenable: Tweenable) {
   const { _currentState, _originalState, _targetState } = tweenable
   ;[_currentState, _originalState, _targetState].forEach(
@@ -452,10 +340,6 @@ export function tweenCreated(tweenable: Tweenable) {
   tweenable._tokenData = getFormatSignatures(_currentState)
 }
 
-/**
- * @memberof Tweenable.filters.token
- * @param {Tweenable} tweenable
- */
 export function beforeTween(tweenable: Tweenable) {
   const {
     _currentState,
@@ -475,10 +359,6 @@ export function beforeTween(tweenable: Tweenable) {
   )
 }
 
-/**
- * @memberof Tweenable.filters.token
- * @param {Tweenable} tweenable
- */
 export function afterTween(tweenable: Tweenable) {
   const {
     _currentState,
