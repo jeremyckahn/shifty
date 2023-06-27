@@ -395,14 +395,13 @@ export class Tweenable {
   static now = (): number => now
 
   /**
-   * Set a custom schedule function.
+   * Sets a custom schedule function.
    *
    * By default,
    * [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window.requestAnimationFrame)
    * is used if available, otherwise
    * [`setTimeout`](https://developer.mozilla.org/en-US/docs/Web/API/Window.setTimeout)
    * is used.
-   * @method Tweenable.setScheduleFunction
    * @param {ScheduleFunction} fn The function to be
    * used to schedule the next frame to be rendered.
    * @return {ScheduleFunction} The function that was set.
@@ -808,8 +807,8 @@ export class Tweenable {
 
   /**
    * Move the state of the animation to a specific point in the tween's
-   * timeline.  If the animation is not running, this will cause {@link
-   * RenderFunction} handlers to be called.
+   * timeline. If the animation is not running, this will cause the tween's
+   * {@link TweenableConfig.render | render} handler to be called.
    */
   seek(
     /**
@@ -933,15 +932,6 @@ export class Tweenable {
    */
   get hasEnded(): boolean {
     return this._hasEnded
-  }
-
-  /**
-   * @method Tweenable#setScheduleFunction
-   * @param {shifty.scheduleFunction} scheduleFunction
-   * @deprecated Will be removed in favor of {@link Tweenable.setScheduleFunction} in 3.0.
-   */
-  setScheduleFunction(scheduleFunction: ScheduleFunction) {
-    Tweenable.setScheduleFunction(scheduleFunction)
   }
 
   /**
