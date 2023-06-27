@@ -215,7 +215,6 @@ const processTween = (tween: Tweenable, currentTime: number) => {
  * Tweenable.setScheduleFunction}, override {@link Tweenable.now}
  * and manage the scheduling logic yourself.
  *
- * @method shifty.processTweens
  * @see https://github.com/jeremyckahn/shifty/issues/109
  */
 export const processTweens = () => {
@@ -252,8 +251,6 @@ let heartbeatIsRunning = false
  *   shouldScheduleUpdate(false)
  * })
  * ```
- *
- * @method shifty.shouldScheduleUpdate
  * @param {boolean} doScheduleUpdate
  * @see https://github.com/jeremyckahn/shifty/issues/156
  */
@@ -388,26 +385,23 @@ export class Tweenable {
   [Symbol.toStringTag] = 'Promise'
 
   /**
-   * @method Tweenable.now
-   * @static
-   * @returns {number} The current timestamp.
+   * Returns the current timestamp.
    */
   static now = (): number => now
 
   /**
    * Sets a custom schedule function.
    *
-   * By default,
+   * By default, Shifty uses
    * [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window.requestAnimationFrame)
-   * is used if available, otherwise
-   * [`setTimeout`](https://developer.mozilla.org/en-US/docs/Web/API/Window.setTimeout)
-   * is used.
-   * @param {ScheduleFunction} fn The function to be
-   * used to schedule the next frame to be rendered.
-   * @return {ScheduleFunction} The function that was set.
+   * is used if available, otherwise {@link !setTimeout} is used.
    */
-  static setScheduleFunction = (fn: ScheduleFunction): ScheduleFunction =>
-    (scheduleFunction = fn)
+  static setScheduleFunction = (
+    /**
+     * The function to be used to schedule the next frame to be rendered.
+     */
+    fn: ScheduleFunction
+  ): ScheduleFunction => (scheduleFunction = fn)
 
   /**
    * The {@link Filter}s available for use.  These filters are automatically
@@ -575,12 +569,9 @@ export class Tweenable {
   }
 
   /**
-   * Configure and start a tween. If this {@link Tweenable}'s instance
-   * is already running, then it will stop playing the old tween and
-   * immediately play the new one.
-   * @method Tweenable#tween
-   * @param {TweenableConfig} [config] Gets passed to {@link Tweenable#setConfig}.
-   * @returns {Tweenable}
+   * {@link Tweenable#setConfig Configure} and start a tween. If this {@link
+   * Tweenable}'s instance is already running, then it will stop playing the
+   * old tween and immediately play the new one.
    */
   tween(config?: TweenableConfig): Tweenable {
     if (this._isPlaying) {
@@ -604,13 +595,11 @@ export class Tweenable {
   }
 
   /**
-   * Configure a tween that will start at some point in the future. Aside from
-   * `delay`, `from`, and `to`, each configuration option will automatically
-   * default to the same option used in the preceding tween of this {@link
-   * Tweenable} instance.
-   * @method Tweenable#setConfig
-   * @param {TweenableConfig} [config={}]
-   * @return {Tweenable}
+   * Configures a tween without starting it. Aside from {@link
+   * TweenableConfig.delay}, {@link TweenableConfig.from}, and {@link
+   * TweenableConfig.to}, each configuration option will automatically default
+   * to the same option used in the preceding tween of the {@link Tweenable}
+   * instance.
    */
   setConfig(config: TweenableConfig = {}): Tweenable {
     const { _config } = this
@@ -834,15 +823,17 @@ export class Tweenable {
 
   /**
    * Stops a tween. If a tween is not running, this is a no-op. This method
-   * does not cancel the tween {@link external:Promise}. For that, use {@link
+   * does **not** reject the tween {@link !Promise}. For that, use {@link
    * Tweenable#cancel}.
-   * @param {boolean} [gotoEnd] If `false`, the tween just stops at its current
-   * state.  If `true`, the tweened object's values are instantly set to the
-   * target values.
-   * @method Tweenable#stop
-   * @return {Tweenable}
    */
-  stop(gotoEnd = false): Tweenable {
+  stop(
+    /**
+     * If `false` or not provided, the tween just stops at its current state.
+     * If `true`, the tweened object's values are instantly set {@link
+     * TweenableConfig.to | to the target values}.
+     */
+    gotoEnd = false
+  ): Tweenable {
     if (!this._isPlaying) {
       return this
     }
@@ -874,13 +865,11 @@ export class Tweenable {
       }
     }
 
-    if (this._resolve) {
-      this._resolve({
-        data: this._data,
-        state: this._currentState,
-        tweenable: this,
-      })
-    }
+    this._resolve?.({
+      data: this._data,
+      state: this._currentState,
+      tweenable: this,
+    })
 
     this._resolve = null
     this._reject = null
@@ -906,13 +895,11 @@ export class Tweenable {
       return this
     }
 
-    if (this._reject) {
-      this._reject({
-        data: _data,
-        state: _currentState,
-        tweenable: this,
-      })
-    }
+    this._reject?.({
+      data: _data,
+      state: _currentState,
+      tweenable: this,
+    })
 
     this._resolve = null
     this._reject = null
