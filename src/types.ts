@@ -1,9 +1,8 @@
 import { Tweenable } from './tweenable'
 import { easingFunctions } from './easing-functions'
 
-// FIXME: Ensure all @tutorial links work
-
 export type ScheduleFunction = (callback: () => void, timeout: number) => void
+
 // NOTE: TweenState values are numbers whenever they are worked with internally
 // by Tweenable. The user may define them as strings, but they get
 // automatically converted to numbers before they are processed.
@@ -14,6 +13,11 @@ export type TweenState = Record<string, number | string>
 
 export type TweenRawState = Record<string, number>
 
+/**
+ * Arbitrary data that can be provided to a {@link Tweenable} via {@link
+ * Tweenable#setConfig} and {@link Tweenable#tween}. This data is provided to a
+ * tween's {@link RenderFunction render handler}.
+ */
 export type Data = object | null
 
 /**
@@ -135,8 +139,8 @@ export interface TweenableConfig {
    * correspond to the `[x1, y1, x2, y2]` values of a [Bezier
    * curve](https://cubic-bezier.com/).
    *
-   * You can learn more about this in the {@tutorial easing-function-in-depth}
-   * tutorial.
+   * You can learn more about this in the {@page
+   * ../tutorials/easing-function-in-depth.md} tutorial.
    */
   easing?: Easing
 
