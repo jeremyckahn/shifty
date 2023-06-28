@@ -186,6 +186,7 @@ that builds and publishes Shifty to NPM.
 - `Tweenable#isPlaying()` is now `Tweenable#isPlaying` (a getter, not a method).
 - `Tweenable#setScheduleFunction` has been removed. The static method `Tweenable.setScheduleFunction` method should be used instead.
 - `Scene#isPlaying()` is now `Scene#isPlaying` (a getter, not a method).
+- `Scene#playingTweenables()` has been removed.
 
 #### Non-breaking changes
 

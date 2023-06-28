@@ -15,9 +15,9 @@ export class Scene {
    * on top of Shifty).
    *
    * Please be aware that {@link Scene} does **not** perform any
-   * automatic cleanup. If you want to remove a {@link Tweenable} from a
-   * {@link Scene}, you must do so explicitly with either {@link
-   * Scene#remove} or {@link Scene#empty}.
+   * automatic tween cleanup. If you want to remove a {@link Tweenable} from a
+   * {@link Scene}, you must do so explicitly with either {@link Scene#remove}
+   * or {@link Scene#empty}.
    *
    * <p class="codepen" data-height="677" data-theme-id="0" data-default-tab="js,result" data-user="jeremyckahn" data-slug-hash="qvZKbe" style="height: 677px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid black; margin: 1em 0; padding: 1em;" data-pen-title="Shifty Scene Demo">
    * <span>See the Pen <a href="https://codepen.io/jeremyckahn/pen/qvZKbe/">
@@ -25,10 +25,7 @@ export class Scene {
    * on <a href="https://codepen.io">CodePen</a>.</span>
    * </p>
    * <script async src="https://static.codepen.io/assets/embed/ei.js"></script>
-   * @param {...Tweenable[]} tweenables
    * @see https://codepen.io/jeremyckahn/pen/qvZKbe
-   * @constructs Scene
-   * @memberof shifty
    */
   constructor(...tweenables: Tweenable[]) {
     tweenables.forEach(this.add.bind(this))
@@ -39,14 +36,6 @@ export class Scene {
    */
   get tweenables() {
     return [...this._tweenables]
-  }
-
-  /**
-   * A list of {@link Tweenable}s in the scene that have not yet ended (playing
-   * or not).
-   */
-  get playingTweenables() {
-    return this._tweenables.filter(tweenable => !tweenable.hasEnded)
   }
 
   /**
@@ -137,7 +126,9 @@ export class Scene {
    * @return {Scene}
    */
   resume() {
-    this.playingTweenables.forEach(tweenable => tweenable.resume())
+    this._tweenables
+      .filter(({ hasEnded }) => !hasEnded)
+      .forEach(tweenable => tweenable.resume())
 
     return this
   }
