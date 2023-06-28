@@ -39,11 +39,9 @@ export class Scene {
   }
 
   /**
-   * The {@link external:Promise}s for all {@link Tweenable}s in this
-   * {@link Scene} that have been configured with {@link
-   * Tweenable#setConfig}. Note that each call of {@link
-   * Scene#play} or {@link Scene#pause} creates new {@link
-   * external:Promise}s:
+   * The {@link !Promise}s for all {@link Tweenable}s in this {@link Scene} .
+   * Note that each call of {@link Scene#tween} or {@link Scene#pause} creates
+   * new {@link !Promise}s:
    *
    *     const scene = new Scene(new Tweenable());
    *     scene.play();
@@ -59,10 +57,8 @@ export class Scene {
   }
 
   /**
-   * Add a {@link Tweenable} to be controlled by this {@link
-   * Scene}.
-   * @param {Tweenable} tweenable
-   * @return {Tweenable} The {@link Tweenable} that was added.
+   * Add a {@link Tweenable} to be controlled by this {@link Scene}.
+   * @return The {@link Tweenable} that was added.
    */
   add(tweenable: Tweenable) {
     this._tweenables.push(tweenable)
@@ -72,8 +68,7 @@ export class Scene {
 
   /**
    * Remove a {@link Tweenable} that is controlled by this {@link Scene}.
-   * @param {Tweenable} tweenable
-   * @return {Tweenable} The {@link Tweenable} that was removed.
+   * @return The {@link Tweenable} that was removed.
    */
   remove(tweenable: Tweenable) {
     const index = this._tweenables.indexOf(tweenable)
@@ -86,12 +81,13 @@ export class Scene {
   }
 
   /**
-   * [Remove]{@link Scene#remove} all {@link Tweenable}s in this {@link Scene}.
-   * @return {Array.<Tweenable>} The {@link Tweenable}s that were
-   * removed.
+   * {@link Scene#remove | Remove} all {@link Tweenable}s in this {@link
+   * Scene}.
+   * @return The {@link Tweenable}s that were removed.
    */
   empty() {
-    // Deliberate of the tweenables getter here to create a temporary array
+    // NOTE: This is a deliberate use of the tweenables getter here to create a
+    // temporary array
     return this.tweenables.map(this.remove.bind(this))
   }
 
@@ -103,27 +99,25 @@ export class Scene {
   }
 
   /**
-   * Play all {@link Tweenable}s from their beginning.
-   * @return {Scene}
+   * Call {@link Tweenable#tween} on all {@link Tweenable}s in the scene.
    */
-  play() {
+  tween() {
     this._tweenables.forEach(tweenable => tweenable.tween())
 
     return this
   }
 
   /**
-   * {@link Tweenable#pause} all {@link Tweenable}s in this {@link Scene}.
-   * @return {Scene}
+   * Call {@link Tweenable#pause} all {@link Tweenable}s in this {@link Scene}.
    */
   pause() {
     this._tweenables.forEach(tweenable => tweenable.pause())
+
     return this
   }
 
   /**
-   * {@link Tweenable#resume} all paused {@link Tweenable}s.
-   * @return {Scene}
+   * Call {@link Tweenable#resume} on all paused {@link Tweenable}s.
    */
   resume() {
     this._tweenables
@@ -134,12 +128,12 @@ export class Scene {
   }
 
   /**
-   * {@link Tweenable#stop} all {@link Tweenable}s in this {@link Scene}.
-   * @param {boolean} [gotoEnd]
-   * @return {Scene}
+   * Call {@link Tweenable#stop} on all {@link Tweenable}s in this {@link
+   * Scene}.
    */
   stop(gotoEnd: boolean) {
     this._tweenables.forEach(tweenable => tweenable.stop(gotoEnd))
+
     return this
   }
 }

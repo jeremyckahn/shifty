@@ -84,7 +84,7 @@ describe('play', () => {
     const [tweenable1, tweenable2] = scene.tweenables
     tweenable1.setConfig({ from: { x: 0 }, to: { x: 10 } })
     tweenable2.setConfig({ from: { x: 10 }, to: { x: 0 } })
-    scene.play()
+    scene.tween()
 
     expect(tweenable1.isPlaying).toBeTruthy()
     expect(tweenable2.isPlaying).toBeTruthy()
@@ -97,7 +97,7 @@ describe('pause', () => {
   })
 
   test('pauses all Tweenables', () => {
-    scene.play()
+    scene.tween()
     scene.pause()
 
     expect(scene.isPlaying).toBeFalsy()
@@ -110,7 +110,7 @@ describe('resume', () => {
   })
 
   test('resumes Tweenables', () => {
-    scene.play()
+    scene.tween()
     scene.pause()
     scene.resume()
 
@@ -128,7 +128,7 @@ describe('resume', () => {
     jest.spyOn(tweenable2, 'hasEnded', 'get').mockReturnValue(true)
     jest.spyOn(tweenable2, 'resume')
 
-    scene.play()
+    scene.tween()
     scene.pause()
     scene.resume()
 
