@@ -73,7 +73,7 @@ export class Scene {
   remove(tweenable: Tweenable) {
     const index = this._tweenables.indexOf(tweenable)
 
-    if (~index) {
+    if (index > -1) {
       this._tweenables.splice(index, 1)
     }
 
@@ -99,7 +99,8 @@ export class Scene {
   }
 
   /**
-   * Call {@link Tweenable#tween} on all {@link Tweenable}s in the scene.
+   * Call {@link Tweenable#tween} on all {@link Tweenable}s in this {@link
+   * Scene}.
    */
   tween() {
     this._tweenables.forEach(tweenable => tweenable.tween())
@@ -117,7 +118,8 @@ export class Scene {
   }
 
   /**
-   * Call {@link Tweenable#resume} on all paused {@link Tweenable}s.
+   * Call {@link Tweenable#resume} on all paused {@link Tweenable}s in this
+   * scene.
    */
   resume() {
     this._tweenables
