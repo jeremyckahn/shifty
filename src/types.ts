@@ -41,25 +41,50 @@ export type RenderFunction = (
   timeElapsed: number
 ) => void
 
+/**
+ * A function used to compute the state of a tween against a curve.
+ * @returns {number} The curve-adjusted value.
+ */
 export interface EasingFunction {
-  /**
-   * @param {number} normalizedPosition The normalized (0-1) position of the
-   * tween.
-   * @returns {number} The curve-adjusted value.
-   */
-  (normalizedPosition: number): number
+  (
+    /**
+     * The normalized (0-1) position of the tween.
+     */
+    normalizedPosition: number
+  ): number
 }
 
+/**
+ * A string identifier of an easing curve to use for an animation. Here are the
+ * available key names provided by default:
+ * <p data-height="965" data-theme-id="0" data-slug-hash="wqObdO"
+ * data-default-tab="result" data-user="jeremyckahn" data-embed-version="2"
+ * data-pen-title="Shifty - Easing curve names" class="codepen">See the Pen <a
+ * href="https://codepen.io/jeremyckahn/pen/wqObdO/">Shifty - Easing curve
+ * names</a> by Jeremy Kahn (<a
+ * href="https://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a
+ * href="https://codepen.io">CodePen</a>.</p> <script async
+ * src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
+ */
 export type EasingKey = keyof typeof easingFunctions
 
-export type EasingObject = Record<string, EasingKey | EasingFunction>
+/**
+ * A map of {@link TweenState} property names to the easing identifier or
+ * implementations to animate them with. Omitted property names default to
+ * linear easing.
+ */
+export type EasingObject = Record<keyof TweenState, EasingKey | EasingFunction>
 
+/**
+ * A user-specified easing identifier or implementation.
+ */
 export type Easing =
   | EasingKey
   | string
   | EasingFunction
   | EasingObject
   | number[]
+
 export type FulfillmentHandler = (promisedData: PromisedData) => PromisedData
 
 export type RejectionHandler = (promisedData: PromisedData) => PromisedData
@@ -194,7 +219,7 @@ export interface Filter {
   afterTweenEnd?: (tweenable: Tweenable) => void
 }
 
-export type FilterName = keyof Omit<Filter, 'doesApply'>
+export type FilterType = keyof Omit<Filter, 'doesApply'>
 
 export const isEasingKey = (key: string): key is EasingKey => {
   return key in Tweenable.easing

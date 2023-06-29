@@ -15,7 +15,7 @@ import {
   PromisedData,
   StartFunction,
   RenderFunction,
-  FilterName,
+  FilterType,
   FulfillmentHandler,
   RejectionHandler,
 } from './types'
@@ -248,7 +248,6 @@ let heartbeatIsRunning = false
  *   shouldScheduleUpdate(false)
  * })
  * ```
- * @param {boolean} doScheduleUpdate
  * @see https://github.com/jeremyckahn/shifty/issues/156
  */
 export const shouldScheduleUpdate = (doScheduleUpdate: boolean) => {
@@ -288,7 +287,6 @@ export const scheduleUpdate = () => {
  * @param {Easing} [easing]
  * @param {EasingObject | EasingFunction} [composedEasing] Reused composedEasing object (used internally)
  * @return {EasingObject | EasingFunction}
- * @private
  */
 export const composeEasingObject = (
   fromTweenParams: TweenState,
@@ -550,18 +548,13 @@ export class Tweenable {
 
   /**
    * Applies a filter to Tweenable instance.
-   * @param {FilterName} filterName The name of the filter to apply.
    * @private
    */
-  _applyFilter(filterName: FilterName) {
+  _applyFilter(filterType: FilterType) {
     for (let i = this._filters.length; i > 0; i--) {
-      const filters = this._filters[i - i]
+      const filter = this._filters[i - i]
 
-      const filterFn = filters[filterName]
-
-      if (filterFn) {
-        filterFn(this)
-      }
+      filter[filterType]?.(this)
     }
   }
 
@@ -752,9 +745,7 @@ export class Tweenable {
   }
 
   /**
-   * @private
-   * @param {number} currentTime
-   * @returns {Tweenable}
+   * @ignore
    */
   _resume(currentTime: number = Tweenable.now()): Tweenable {
     if (this._timestamp === null) {
@@ -939,10 +930,9 @@ export class Tweenable {
 }
 
 /**
- * @param {TweenableConfig} [config={}]
- * @description Standalone convenience method that functions identically to
- * {@link Tweenable#tween}.  You can use this to create tweens without
- * needing to set up a {@link Tweenable} instance.
+ * Standalone convenience method that functions identically to {@link
+ * Tweenable#tween}.  You can use this to create tweens without needing to set
+ * up a {@link Tweenable} instance.
  *
  * ```
  * import { tween } from 'shifty';
@@ -952,7 +942,7 @@ export class Tweenable {
  * );
  * ```
  *
- * @returns {Tweenable} A new {@link Tweenable} instance.
+ * @returns A new {@link Tweenable} instance.
  */
 export function tween(config: TweenableConfig = {}): Tweenable {
   const tweenable = new Tweenable({}, {})
