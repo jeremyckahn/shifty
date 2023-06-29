@@ -219,8 +219,6 @@ export interface Filter {
   afterTweenEnd?: (tweenable: Tweenable) => void
 }
 
-export type FilterType = keyof Omit<Filter, 'doesApply'>
-
 export const isEasingKey = (key: string): key is EasingKey => {
   return key in Tweenable.easing
 }

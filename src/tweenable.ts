@@ -15,7 +15,6 @@ import {
   PromisedData,
   StartFunction,
   RenderFunction,
-  FilterType,
   FulfillmentHandler,
   RejectionHandler,
 } from './types'
@@ -548,9 +547,9 @@ export class Tweenable {
 
   /**
    * Applies a filter to Tweenable instance.
-   * @private
+   * @ignore
    */
-  _applyFilter(filterType: FilterType) {
+  _applyFilter(filterType: keyof Omit<Filter, 'doesApply'>) {
     for (let i = this._filters.length; i > 0; i--) {
       const filter = this._filters[i - i]
 
