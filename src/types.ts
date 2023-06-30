@@ -19,12 +19,16 @@ export type TweenRawState = Record<string, number>
 export type Data = object | null
 
 /**
+ * This is called when a tween is started.
  * @param {TweenState} state The current state of the tween.
  * @param {Data} [data] User-defined data provided via a {@link TweenableConfig}.
  */
 export type StartFunction = (state: TweenState, data: Data) => void
 
-export type FinishFunction = ((data: PromisedData) => void) | null
+/**
+ * This is called when a tween is completed.
+ */
+export type FinishFunction = ((promisedData: PromisedData) => void) | null
 
 // FIXME: Reorder data and timeElapsed
 /**
