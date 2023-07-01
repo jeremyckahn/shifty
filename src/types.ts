@@ -65,6 +65,26 @@ export interface EasingFunction {
      */
     normalizedPosition: number
   ): number
+  /**
+   * @ignore
+   */
+  displayName?: string
+  /**
+   * @ignore
+   */
+  x1?: number
+  /**
+   * @ignore
+   */
+  y1?: number
+  /**
+   * @ignore
+   */
+  x2?: number
+  /**
+   * @ignore
+   */
+  y2?: number
 }
 
 /**
@@ -238,6 +258,10 @@ export interface Filter {
   afterTweenEnd?: (tweenable: Tweenable) => void
 }
 
+/**
+ * Determines whether or not a given string represents a defined easing curve
+ * on {@link Tweenable.easing}. This also handles custom easing functions.
+ */
 export const isEasingKey = (key: string): key is EasingKey => {
   return key in Tweenable.easing
 }

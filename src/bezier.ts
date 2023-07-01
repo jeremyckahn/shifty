@@ -1,6 +1,6 @@
-import { EasingFunction, Tweenable } from './tweenable'
+import { Tweenable } from './tweenable'
 
-import { EasingKey } from './types'
+import { EasingFunction, EasingKey } from './types'
 
 /**
  * The Bezier magic in this file is adapted/copied almost wholesale from
@@ -9,17 +9,6 @@ import { EasingKey } from './types'
  * [here](http://opensource.apple.com/source/WebCore/WebCore-955.66/platform/graphics/UnitBezier.h)).
  * Special thanks to Apple and Thomas Fuchs for much of this code.
  */
-
-declare module './tweenable' {
-  interface EasingFunction {
-    (normalizedPosition: number): number
-    displayName?: string
-    x1?: number
-    y1?: number
-    x2?: number
-    y2?: number
-  }
-}
 
 /**
  *  Copyright (c) 2006 Apple Computer, Inc. All rights reserved.
@@ -152,20 +141,11 @@ function cubicBezierAtTime(
 // End ported code
 
 /**
- *  GetCubicBezierTransition(x1, y1, x2, y2) -> Function.
+ * Generates a transition easing function that is compatible with WebKit's CSS
+ * transitions `-webkit-transition-timing-function` CSS property.
  *
- *  Generates a transition easing function that is compatible
- *  with WebKit's CSS transitions `-webkit-transition-timing-function`
- *  CSS property.
- *
- *  The W3C has more information about CSS3 transition timing functions:
- *  http://www.w3.org/TR/css3-transitions/#transition-timing-function_tag
- *
- *  @param {number} [x1]
- *  @param {number} [y1]
- *  @param {number} [x2]
- *  @param {number} [y2]
- *  @returns {EasingFunction}
+ * The W3C has more information about CSS3 transition timing functions:
+ * http://www.w3.org/TR/css3-transitions/#transition-timing-function_tag
  */
 export const getCubicBezierTransition = (
   x1 = 0.25,
@@ -179,13 +159,8 @@ export const getCubicBezierTransition = (
  * Tweenable.easing}.  This function gives you total control over the
  * easing curve.  Matthew Lein's [Ceaser](http://matthewlein.com/ceaser/) is a
  * useful tool for visualizing the curves you can make with this function.
- * @method shifty.setBezierFunction
  * @param {string} name The name of the easing curve.  Overwrites the old
  * easing function on {@link Tweenable.easing} if it exists.
- * @param {number} x1
- * @param {number} y1
- * @param {number} x2
- * @param {number} y2
  * @return {EasingFunction} The {@link EasingFunction} that was
  * attached to {@link Tweenable.easing}.
  */
@@ -212,7 +187,6 @@ export const setBezierFunction = (
  * `delete` an easing function from {@link Tweenable.easing}.  Be careful with
  * this method, as it `delete`s whatever easing function matches `name` (which
  * means you can delete standard Shifty easing functions).
- * @method shifty.unsetBezierFunction
  * @param {string} name The name of the easing function to delete.
  * @return {boolean} Whether or not the functions was `delete`d.
  */

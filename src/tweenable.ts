@@ -1,22 +1,23 @@
 import { easingFunctions } from './easing-functions'
 import { getCubicBezierTransition } from './bezier'
 import {
-  EasingKey,
-  ScheduleFunction,
-  TweenRawState,
-  EasingObject,
-  TweenState,
-  Easing,
-  isEasingKey,
-  Filter,
-  TweenableConfig,
   Data,
+  Easing,
+  EasingFunction,
+  EasingKey,
+  EasingObject,
+  Filter,
   FinishFunction,
-  PromisedData,
-  StartFunction,
-  RenderFunction,
   FulfillmentHandler,
+  PromisedData,
   RejectionHandler,
+  RenderFunction,
+  ScheduleFunction,
+  StartFunction,
+  TweenRawState,
+  TweenState,
+  TweenableConfig,
+  isEasingKey,
 } from './types'
 import * as token from './token'
 
@@ -202,7 +203,7 @@ const processTween = (tween: Tweenable, currentTime: number) => {
  * run *by* the scheduling functionality. Specifically, it computes the state
  * and calls all of the relevant {@link TweenableConfig} functions supplied to each
  * of the tweens for the current point in time (as determined by {@link
- * Tweenable.now}.
+ * Tweenable.now}).
  *
  * This is a low-level API that won't be needed in the majority of situations.
  * It is primarily useful as a hook for higher-level animation systems that are
