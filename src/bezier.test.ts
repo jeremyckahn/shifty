@@ -1,10 +1,4 @@
-import {
-  Tweenable,
-  interpolate,
-  setBezierFunction,
-  unsetBezierFunction,
-} from '.'
-import { EasingKey } from './types'
+import { interpolate, setBezierFunction } from '.'
 
 test('can create a linear bezier easing curve', () => {
   setBezierFunction('bezier-linear', 0.25, 0.25, 0.75, 0.75)
@@ -38,12 +32,6 @@ test('can create a "stretched" linear bezier easing curve', () => {
       1
     )
   )
-})
-
-test('can remove a bezier easing curve', () => {
-  setBezierFunction('bezier-linear', 0, 0, 1, 1)
-  unsetBezierFunction('bezier-linear')
-  expect(Tweenable.easing['bezier-linear' as EasingKey]).toBeUndefined()
 })
 
 test('bezier handle positions are stored on a custom easing function', () => {

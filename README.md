@@ -191,6 +191,7 @@ that builds and publishes Shifty to NPM.
 - `Scene#play()` has been renamed to `Scene#tween`.
 - `Scene#isPlaying()` is now `Scene#isPlaying` (a getter, not a method).
 - `Scene#playingTweenables()` has been removed.
+- `unsetBezierFunction` has been removed.
 
 #### Non-breaking changes
 
