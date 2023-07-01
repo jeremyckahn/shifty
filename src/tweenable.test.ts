@@ -684,10 +684,10 @@ describe('#setScheduleFunction', () => {
   test('calling setScheduleFunction change the internal schedule function', () => {
     const mockScheduleFunctionCalls: {
       fn: ScheduleFunction
-      delay: number
+      delay?: number
     }[] = []
 
-    function mockScheduleFunction(fn: ScheduleFunction, delay: number) {
+    function mockScheduleFunction(fn: ScheduleFunction, delay?: number) {
       mockScheduleFunctionCalls.push({ fn, delay })
     }
 

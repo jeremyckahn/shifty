@@ -99,7 +99,7 @@ export const easing = { ...easingFunctions }
  * @param {Record<string, string|Function>} easing: This Object's keys must correspond
  * to the keys in targetState.
  * @returns {Object}
- * @private
+ * @ignore
  */
 export const tweenProps = <T extends TweenRawState>(
   forPosition: number, // The position to compute the state for.

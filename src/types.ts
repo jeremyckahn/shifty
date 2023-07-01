@@ -1,14 +1,25 @@
 import { Tweenable } from './tweenable'
 import { easingFunctions } from './easing-functions'
 
-export type ScheduleFunction = (callback: () => void, timeout: number) => void
+/**
+ * Asynchronous scheduling function. By default this is
+ * [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window.requestAnimationFrame)
+ * when available and {@link !setTimeout} when not.
+ */
+export type ScheduleFunction = (callback: () => void, timeout?: number) => void
 
 // NOTE: TweenState values are numbers whenever they are worked with internally
 // by Tweenable. The user may define them as strings, but they get
 // automatically converted to numbers before they are processed.
 
+/**
+ * A tween's starting, beginning, and mid-point state.
+ */
 export type TweenState = Record<string, number | string>
 
+/**
+ * @ignore
+ */
 export type TweenRawState = Record<string, number>
 
 /**
