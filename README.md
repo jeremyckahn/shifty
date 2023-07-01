@@ -185,6 +185,9 @@ that builds and publishes Shifty to NPM.
 - `Tweenable#hasEnded()` is now `Tweenable#hasEnded` (a getter, not a method).
 - `Tweenable#isPlaying()` is now `Tweenable#isPlaying` (a getter, not a method).
 - `Tweenable#setScheduleFunction` has been removed. The static method `Tweenable.setScheduleFunction` method should be used instead.
+- Render handler parameters have been reordered:
+  - In v2, the function signature was `(state: TweenState, data: Data, timeElapsed: number) => void`
+  - In v3, the function signature was `(state: TweenState, timeElapsed: number, data: Data) => void`
 - `Scene#play()` has been renamed to `Scene#tween`.
 - `Scene#isPlaying()` is now `Scene#isPlaying` (a getter, not a method).
 - `Scene#playingTweenables()` has been removed.

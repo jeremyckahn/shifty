@@ -165,7 +165,7 @@ const processTween = (tween: Tweenable, currentTime: number) => {
   const offset = duration - (endTime - timeToCompute)
 
   if (tween._hasEnded) {
-    tween._render(targetState, tween._data, offset)
+    tween._render(targetState, offset, tween._data)
     return tween.stop(true)
   }
 
@@ -193,7 +193,7 @@ const processTween = (tween: Tweenable, currentTime: number) => {
 
   tween._applyFilter(AFTER_TWEEN)
 
-  tween._render(currentState, tween._data, offset)
+  tween._render(currentState, offset, tween._data)
 }
 
 /**
@@ -577,7 +577,7 @@ export class Tweenable {
     this._start(this.state, this._data)
 
     if (this._delay) {
-      this._render(this._currentState, this._data, 0)
+      this._render(this._currentState, 0, this._data)
     }
 
     return this._resume(this._timestamp)

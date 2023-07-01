@@ -30,19 +30,17 @@ export type StartFunction = (state: TweenState, data: Data) => void
  */
 export type FinishFunction = ((promisedData: PromisedData) => void) | null
 
-// FIXME: Reorder data and timeElapsed
 /**
- * Gets called for every tick of the tween.  This function is not called on the
- * final tick of the animation.
+ * Gets called for every tick of the tween.
  * @param {TweenState} state The current state of the tween.
+ * @param {number} timeElapsed The time elapsed since the start of the tween.
  * @param {Data} data User-defined `data` provided via a {@link
  * TweenableConfig}.
- * @param {number} timeElapsed The time elapsed since the start of the tween.
  */
 export type RenderFunction = (
   state: TweenState,
-  data: Data,
-  timeElapsed: number
+  timeElapsed: number,
+  data: Data
 ) => void
 
 /**
@@ -89,8 +87,14 @@ export type Easing =
   | EasingObject
   | number[]
 
+/**
+ * {@link !Promise} resolution handler.
+ */
 export type FulfillmentHandler = (promisedData: PromisedData) => PromisedData
 
+/**
+ * {@link !Promise} rejection handler.
+ */
 export type RejectionHandler = (promisedData: PromisedData) => PromisedData
 
 /**

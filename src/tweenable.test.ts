@@ -69,7 +69,7 @@ describe('#tween', () => {
       from: { x: 0 },
       to: { x: 100 },
       duration: 1000,
-      render: function(_state, _data, offset) {
+      render: function(_state, offset) {
         capturedOffset = offset
       },
     })
