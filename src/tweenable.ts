@@ -61,8 +61,6 @@ let listTail: Tweenable | null = null
 
 /**
  * Strictly for testing.
- * @private
- * @internal
  */
 export const resetList = () => {
   listHead = listTail = null
@@ -70,17 +68,11 @@ export const resetList = () => {
 
 /**
  * Strictly for testing.
- * @returns {Tweenable}
- * @private
- * @internal
  */
 export const getListHead = (): Tweenable | null => listHead
 
 /**
  * Strictly for testing.
- * @returns {Tweenable}
- * @private
- * @internal
  */
 export const getListTail = (): Tweenable | null => listTail
 
@@ -234,8 +226,8 @@ let heartbeatIsRunning = false
  * generally only useful for testing environments where Shifty's continuous
  * heartbeat mechanism causes test runner issues.
  *
- * If you are using Jest, you'll want to put this in a global `afterAll` hook.
- * If you don't already have a Jest setup file, follow the setup in [this
+ * If you are using Jest, it is recommended to put this in a global `afterAll`
+ * hook. If you don't already have a Jest setup file, follow the setup in [this
  * StackOverflow post](https://stackoverflow.com/a/57647146), and then add this
  * to it:
  *
@@ -262,7 +254,6 @@ export const shouldScheduleUpdate = (doScheduleUpdate: boolean) => {
 
 /**
  * Handles the update logic for one tick of a tween.
- * @private
  */
 export const scheduleUpdate = () => {
   now = getCurrentTime()
@@ -537,7 +528,6 @@ export class Tweenable {
      */
     config?: TweenableConfig
   ) {
-    /** @private */
     this._currentState = initialState || {}
 
     // To prevent unnecessary calls to setConfig do not set default
@@ -574,7 +564,6 @@ export class Tweenable {
       this.setConfig(config)
     }
 
-    /** @private */
     this._pausedAtTime = null
     this._timestamp = Tweenable.now()
     this._start(this.state, this._data)
@@ -649,7 +638,6 @@ export class Tweenable {
       _targetState[key] = to[key] ?? currentProp
     }
 
-    /** @private */
     this._easing = composeEasingObject(
       this._currentState,
       _config.easing,
