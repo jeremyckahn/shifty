@@ -1,4 +1,4 @@
-import { easingFunctions } from './easing-functions'
+import { baseEasingFunctions } from './easing-functions'
 import { getCubicBezierTransition } from './bezier'
 import {
   Data,
@@ -84,8 +84,6 @@ export const getListHead = (): Tweenable | null => listHead
  */
 export const getListTail = (): Tweenable | null => listTail
 
-export const easing = { ...easingFunctions }
-
 /**
  * Calculates the interpolated tween values of an Object for a given
  * timestamp.
@@ -133,7 +131,7 @@ export const tweenProps = <T extends TweenRawState>(
         // easingObjectProp is a string
         easingFn =
           Tweenable.easing[easingObjectProp as EasingKey] ??
-          easingFunctions.linear
+          baseEasingFunctions.linear
       }
     }
 
@@ -420,7 +418,7 @@ export class Tweenable {
    * Tweenable.easing['customEasing'] = (pos: number) => Math.pow(pos, 2)
    * ```
    */
-  static easing: Record<string, EasingFunction> = easing
+  static easing: typeof baseEasingFunctions = Object.create(baseEasingFunctions)
 
   /**
    * @ignore

@@ -1,5 +1,5 @@
 import { Tweenable } from './tweenable'
-import { easingFunctions } from './easing-functions'
+import { baseEasingFunctions } from './easing-functions'
 
 /**
  * Asynchronous scheduling function. By default this is
@@ -90,7 +90,7 @@ export interface EasingFunction {
 /**
  * A string identifier of an easing curve to use for an animation.
  */
-export type EasingKey = keyof typeof easingFunctions
+export type EasingKey = keyof typeof baseEasingFunctions
 
 /**
  * A map of {@link TweenState} property names to the easing identifier or
@@ -179,13 +179,13 @@ export interface TweenableConfig {
   /**
    * This value can be one of several different types:
    *
-   * - `string`: Name of the {@link easingFunctions} to apply to all properties
+   * - `string`: Name of the {@link baseEasingFunctions} to apply to all properties
    * of the tween.
    * - {@link EasingFunction}: A custom function that computes the rendered
    * position of the tween for the given normalized (0-1) position of the
    * tween.
    * - `Record<string, string | EasingFunction>`: Keys are tween property
-   * names. Values are the {@link easingFunctions} string IDs to be applied to
+   * names. Values are the {@link baseEasingFunctions} string IDs to be applied to
    * each tween property, or a {@link EasingFunction}. Any tween properties not
    * explicitly included in the `Record` default to `'linear'`.
    * - `Array.<number>`: The array must contain four `number` values that

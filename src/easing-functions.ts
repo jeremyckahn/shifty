@@ -20,7 +20,7 @@
  * contains everything within `easingFunctions` but also any custom easing
  * functions that you have defined.
  */
-export const easingFunctions = Object.freeze({
+export const baseEasingFunctions = {
   linear: (pos: number) => pos,
 
   easeInQuad: (pos: number) => Math.pow(pos, 2),
@@ -175,4 +175,4 @@ export const easingFunctions = Object.freeze({
   easeFrom: (pos: number) => Math.pow(pos, 4),
 
   easeTo: (pos: number) => Math.pow(pos, 0.25),
-})
+}
