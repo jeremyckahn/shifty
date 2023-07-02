@@ -176,15 +176,24 @@ that builds and publishes Shifty to NPM.
 
 ### From v2 to v3
 
+Shifty's legacy version 2 remains available in the
+[v2](https://github.com/jeremyckahn/shifty/tree/v2) branch. Legacy
+documentation can be found at:
+https://shifty-git-v2-jeremyckahn.vercel.app/doc/
+
 - `Tweenable.formulas` has been renamed to `Tweenable.easing`
-- `tweenConfig.step` has been removed in favor of `tweenConfig.render` (behavior and API is unchanged).
-- `tweenConfig.attachment` has been removed in favor of `tweenConfig.data` (behavior and API is unchanged).
+- `tweenConfig.step` has been removed in favor of `tweenConfig.render`
+  (behavior and API is unchanged).
+- `tweenConfig.attachment` has been removed in favor of `tweenConfig.data`
+  (behavior and API is unchanged).
 - `Tweenable#tweenable` has been removed.
 - `Tweenable#set()` is now `Tweenable#setState`.
 - `Tweenable#get()` is now `Tweenable#state` (a getter, not a method).
 - `Tweenable#hasEnded()` is now `Tweenable#hasEnded` (a getter, not a method).
-- `Tweenable#isPlaying()` is now `Tweenable#isPlaying` (a getter, not a method).
-- `Tweenable#setScheduleFunction` has been removed. The static method `Tweenable.setScheduleFunction` method should be used instead.
+- `Tweenable#isPlaying()` is now `Tweenable#isPlaying` (a getter, not a
+  method).
+- `Tweenable#setScheduleFunction` has been removed. The static method
+  `Tweenable.setScheduleFunction` method should be used instead.
 - Render handler parameters have been reordered:
   - In v2, the function signature was `(state: TweenState, data: Data, timeElapsed: number) => void`
   - In v3, the function signature was `(state: TweenState, timeElapsed: number, data: Data) => void`
