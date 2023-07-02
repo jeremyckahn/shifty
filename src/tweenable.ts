@@ -77,28 +77,37 @@ export const getListHead = (): Tweenable | null => listHead
 export const getListTail = (): Tweenable | null => listTail
 
 /**
- * Calculates the interpolated tween values of an Object for a given
- * timestamp.
- * @param {number} forPosition The position to compute the state for.
- * @param {Object} currentState Current state properties.
- * @param {Object} originalState: The original state properties the Object is
- * tweening from.
- * @param {Object} targetState: The destination state properties the Object
- * is tweening to.
- * @param {number} duration: The length of the tween in milliseconds.
- * @param {number} timestamp: The UNIX epoch time at which the tween began.
- * @param {Record<string, string|Function>} easing: This Object's keys must correspond
- * to the keys in targetState.
- * @returns {Object}
+ * Calculates the interpolated tween values of an object for a given timestamp.
  * @ignore
  */
 export const tweenProps = <T extends TweenRawState>(
-  forPosition: number, // The position to compute the state for.
+  /**
+   * The position to compute the state for.
+   */
+  forPosition: number,
+  /**
+   * Current state properties.
+   */
   currentState: T,
+  /**
+   * The original state properties the Object is tweening from.
+   */
   originalState: T,
+  /**
+   * The destination state properties the Object is tweening to.
+   */
   targetState: T,
+  /**
+   * The length of the tween in milliseconds.
+   */
   duration: number,
+  /**
+   * The UNIX epoch time at which the tween began.
+   */
   timestamp: number,
+  /**
+   * This Object's keys must correspond to the keys in targetState.
+   */
   easing: Easing
 ): T => {
   let easedPosition = 0
@@ -191,16 +200,15 @@ const processTween = (tween: Tweenable, currentTime: number) => {
  * Process all tweens currently managed by Shifty for the current tick. This
  * does not perform any timing or update scheduling; it is the logic that is
  * run *by* the scheduling functionality. Specifically, it computes the state
- * and calls all of the relevant {@link TweenableConfig} functions supplied to each
- * of the tweens for the current point in time (as determined by {@link
+ * and calls all of the relevant {@link TweenableConfig} functions supplied to
+ * each of the tweens for the current point in time (as determined by {@link
  * Tweenable.now}).
  *
  * This is a low-level API that won't be needed in the majority of situations.
  * It is primarily useful as a hook for higher-level animation systems that are
  * built on top of Shifty. If you need this function, it is likely you need to
- * pass something like `() => {}` to {@link
- * Tweenable.setScheduleFunction}, override {@link Tweenable.now}
- * and manage the scheduling logic yourself.
+ * pass something like `() => {}` to {@link Tweenable.setScheduleFunction},
+ * override {@link Tweenable.now} and manage the scheduling logic yourself.
  *
  * @see https://github.com/jeremyckahn/shifty/issues/109
  */
@@ -217,46 +225,16 @@ export const processTweens = () => {
   }
 }
 
-const getCurrentTime = Date.now || (() => +new Date())
-let now: number
+const { now } = Date
+
+let currentTime: number
 let heartbeatIsRunning = false
-
-/**
- * Determines whether or not a heartbeat tick should be scheduled. This is
- * generally only useful for testing environments where Shifty's continuous
- * heartbeat mechanism causes test runner issues.
- *
- * If you are using Jest, it is recommended to put this in a global `afterAll`
- * hook. If you don't already have a Jest setup file, follow the setup in [this
- * StackOverflow post](https://stackoverflow.com/a/57647146), and then add this
- * to it:
- *
- * ```
- * import { shouldScheduleUpdate } from 'shifty'
- *
- * afterAll(() => {
- *   shouldScheduleUpdate(false)
- * })
- * ```
- * @see https://github.com/jeremyckahn/shifty/issues/156
- */
-export const shouldScheduleUpdate = (doScheduleUpdate: boolean) => {
-  if (doScheduleUpdate && heartbeatIsRunning) {
-    return
-  }
-
-  heartbeatIsRunning = doScheduleUpdate
-
-  if (doScheduleUpdate) {
-    scheduleUpdate()
-  }
-}
 
 /**
  * Handles the update logic for one tick of a tween.
  */
 export const scheduleUpdate = () => {
-  now = getCurrentTime()
+  currentTime = now()
 
   if (heartbeatIsRunning) {
     scheduleFunction.call(root, scheduleUpdate, UPDATE_TIME)
@@ -266,20 +244,19 @@ export const scheduleUpdate = () => {
 }
 
 /**
- * Creates a usable easing Object from a string, a function or another easing
- * Object.  If `easing` is an Object, then this function clones it and fills
- * in the missing properties with `"linear"`.
+ * Creates an EasingObject or EasingFunction from a string, a function or
+ * another easing Object. If `easing` is an Object, then this function clones
+ * it and fills in the missing properties with `"linear"`.
  *
  * If the tween has only one easing across all properties, that function is
  * returned directly.
- * @param {TweenState} fromTweenParams
- * @param {Easing} [easing]
- * @param {EasingObject | EasingFunction} [composedEasing] Reused composedEasing object (used internally)
- * @return {EasingObject | EasingFunction}
  */
 export const composeEasingObject = (
   fromTweenParams: TweenState,
   easing: Easing = DEFAULT_EASING,
+  /**
+   * Reused composedEasing object (mutated internally)
+   */
   composedEasing: EasingObject | EasingFunction = {}
 ): EasingObject | EasingFunction => {
   if (typeof easing === TYPE_STRING) {
@@ -371,7 +348,7 @@ export class Tweenable {
   /**
    * Returns the current timestamp.
    */
-  static now = (): number => now
+  static now = (): number => currentTime
 
   /**
    * Sets a custom schedule function.
@@ -921,8 +898,8 @@ export class Tweenable {
 
 /**
  * Standalone convenience method that functions identically to {@link
- * Tweenable#tween}.  You can use this to create tweens without needing to set
- * up a {@link Tweenable} instance.
+ * Tweenable#tween}. You can use this to create tweens without needing to
+ * explicitly set up a {@link Tweenable} instance.
  *
  * ```
  * import { tween } from 'shifty';
@@ -931,12 +908,41 @@ export class Tweenable {
  *   () => console.log('All done!')
  * );
  * ```
- *
- * @returns A new {@link Tweenable} instance.
  */
 export function tween(config: TweenableConfig = {}): Tweenable {
   const tweenable = new Tweenable({}, {})
   return tweenable.tween(config)
+}
+
+/**
+ * Determines whether or not a heartbeat tick should be scheduled. This is
+ * generally only useful for testing environments where Shifty's continuous
+ * heartbeat mechanism causes test runner issues.
+ *
+ * If you are using Jest, it is recommended to put this in a global `afterAll`
+ * hook. If you don't already have a Jest setup file, follow the setup in [this
+ * StackOverflow post](https://stackoverflow.com/a/57647146), and then add this
+ * to it:
+ *
+ * ```
+ * import { shouldScheduleUpdate } from 'shifty'
+ *
+ * afterAll(() => {
+ *   shouldScheduleUpdate(false)
+ * })
+ * ```
+ * @see https://github.com/jeremyckahn/shifty/issues/156
+ */
+export const shouldScheduleUpdate = (doScheduleUpdate: boolean) => {
+  if (doScheduleUpdate && heartbeatIsRunning) {
+    return
+  }
+
+  heartbeatIsRunning = doScheduleUpdate
+
+  if (doScheduleUpdate) {
+    scheduleUpdate()
+  }
 }
 
 shouldScheduleUpdate(true)

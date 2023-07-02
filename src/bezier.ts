@@ -41,16 +41,6 @@ import { EasingFunction, EasingKey } from './types'
  */
 // port of webkit cubic bezier handling by http://www.netzgesta.de/dev/
 
-/**
- * @param {number} t
- * @param {number} p1x
- * @param {number} p1y
- * @param {number} p2x
- * @param {number} p2y
- * @param {number} duration
- * @returns {Function}
- * @private
- */
 function cubicBezierAtTime(
   t: number,
   p1x: number,
@@ -165,14 +155,17 @@ export const getCubicBezierTransition = (
  *
  * ```
  * setBezierFunction('customCurve', 0, 0, 1, 1)
+ *
  * delete Tweenable.easing.customCurve
  * ```
- * @param {string} name The name of the easing curve.  Overwrites the old
- * easing function on {@link Tweenable.easing} if it exists.
  * @return {EasingFunction} The {@link EasingFunction} that was
  * attached to {@link Tweenable.easing}.
  */
 export const setBezierFunction = (
+  /**
+   * The name of the easing curve. Overwrites the matching, preexisting easing
+   * function on {@link Tweenable.easing} if it exists.
+   */
   name: string,
   x1: number,
   y1: number,
