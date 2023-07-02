@@ -88,16 +88,7 @@ export interface EasingFunction {
 }
 
 /**
- * A string identifier of an easing curve to use for an animation. Here are the
- * available key names provided by default:
- * <p data-height="965" data-theme-id="0" data-slug-hash="wqObdO"
- * data-default-tab="result" data-user="jeremyckahn" data-embed-version="2"
- * data-pen-title="Shifty - Easing curve names" class="codepen">See the Pen <a
- * href="https://codepen.io/jeremyckahn/pen/wqObdO/">Shifty - Easing curve
- * names</a> by Jeremy Kahn (<a
- * href="https://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a
- * href="https://codepen.io">CodePen</a>.</p> <script async
- * src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
+ * A string identifier of an easing curve to use for an animation.
  */
 export type EasingKey = keyof typeof easingFunctions
 
@@ -142,7 +133,7 @@ export interface PromisedData {
 
 export interface TweenableConfig {
   /**
-   * Starting position.  If omitted, {@link Tweenable#get} is used.
+   * Starting position.  If omitted, {@link Tweenable#state} is used.
    */
   from?: TweenState
 
@@ -260,7 +251,7 @@ export interface Filter {
 
 /**
  * Determines whether or not a given string represents a defined easing curve
- * on {@link Tweenable.easing}. This also handles custom easing functions.
+ * on {@link Tweenable.easing}. This also supports custom easing functions.
  */
 export const isEasingKey = (key: string): key is EasingKey => {
   return key in Tweenable.easing

@@ -2,9 +2,10 @@
 
 **_The fastest JavaScript animation engine on the web_**
 
-### `npm install --save shifty`
+- `npm install --save shifty`
+- `https://unpkg.com/shifty`
 
-[![Current Shifty version](https://badgen.net/npm/v/shifty)](https://www.npmjs.com/package/shifty) [![Shifty license](https://badgen.net/github/license/jeremyckahn/shifty)](https://github.com/jeremyckahn/shifty/blob/develop/LICENSE-MIT) [![Downloads per week](https://badgen.net/npm/dw/shifty)](https://www.npmjs.com/package/shifty) [![GitHub stars](https://badgen.net/github/stars/jeremyckahn/shifty)](https://github.com/jeremyckahn/shifty/stargazers) [![Repo dependents](https://badgen.net/github/dependents-repo/jeremyckahn/shifty)](https://github.com/jeremyckahn/shifty/network/dependents)
+[![Current Shifty version](https://badgen.net/npm/v/shifty)](https://www.npmjs.com/package/shifty) [![Shifty license](https://badgen.net/github/license/jeremyckahn/shifty)](https://github.com/jeremyckahn/shifty/blob/develop/LICENSE-MIT) [![Shifty full bundle size](https://badgen.net/badgesize/gzip/https/unpkg.com/shifty@latest)](https://unpkg.com/shifty) [![Downloads per week](https://badgen.net/npm/dw/shifty)](https://www.npmjs.com/package/shifty) [![GitHub stars](https://badgen.net/github/stars/jeremyckahn/shifty)](https://github.com/jeremyckahn/shifty/stargazers) [![Repo dependents](https://badgen.net/github/dependents-repo/jeremyckahn/shifty)](https://github.com/jeremyckahn/shifty/network/dependents)
 
 ## [Source code](https://github.com/jeremyckahn/shifty)
 
@@ -14,13 +15,6 @@ Shifty is a highly-optimized JavaScript tweening engine designed to fit all of y
 - **Flexibility and extensibility**: Shifty can easily be built upon and extended via its unopinionated API.
 - **Renderer-agnostic**: Shifty does not perform any rendering, but it can be easily integrated into whatever rendering mechanism is most appropriate for your project such as DOM or `<canvas>`.
 - **`Promise` support**: Shifty's tweens are `await`-able [thenables](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then). ([Learn about the benefits of `async`/`await`-based animations here](https://dev.to/jeremyckahn/the-case-for-async-await-based-javascript-animations-pkl)).
-
-### Load from CDN
-
-| Variant | URL                                            | Size                                                                                                                                                            | Description                                                                                         |
-| ------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| Full    | `https://unpkg.com/shifty`                     | [![Shifty full bundle size](https://badgen.net/badgesize/gzip/https/unpkg.com/shifty@latest)](https://unpkg.com/shifty)                                         | Contains Shifty Core and extensions ({@link interpolate}, {@link Scene}, {@link setBezierFunction}) |
-| Core    | `https://unpkg.com/shifty/dist/shifty.core.js` | [![Shifty core bundle size](https://badgen.net/badgesize/gzip/https/unpkg.com/shifty@latest/dist/shifty.core.js)](https://unpkg.com/shifty/dist/shifty.core.js) | Contains {@link Tweenable}                                                                          |
 
 <p class="codepen" data-height="590" data-theme-id="dark" data-default-tab="js,result" data-user="jeremyckahn" data-slug-hash="PoNNNye" style="height: 590px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="Shifty async/await demo">
   <span>See the Pen <a href="https://codepen.io/jeremyckahn/pen/PoNNNye">
@@ -51,15 +45,14 @@ Shifty is meant to be a lightweight alternative to rich tools like the excellent
 
 Shifty's tiny footprint compares very favorably against other popular animation libraries:
 
-| Library       | Size                                                                                                                                                            |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Shifty (full) | [![Shifty full bundle size](https://badgen.net/badgesize/gzip/https/unpkg.com/shifty@latest)](https://bundlephobia.com/result?p=shifty)                         |
-| Shifty (core) | [![Shifty core bundle size](https://badgen.net/badgesize/gzip/https/unpkg.com/shifty@latest/dist/shifty.core.js)](https://unpkg.com/shifty/dist/shifty.core.js) |
-| GreenSock     | [![GreenSock bundle size](https://badgen.net/badgesize/gzip/https/unpkg.com/gsap)](https://bundlephobia.com/result?p=gsap)                                      |
-| AnimeJS       | [![AnimeJS bundle size](https://badgen.net/badgesize/gzip/https/unpkg.com/animejs)](https://bundlephobia.com/result?p=animejs)                                  |
-| `@mojs/core`  | [![@core/mojs bundle size](https://badgen.net/badgesize/gzip/https/unpkg.com/@mojs/core)](https://bundlephobia.com/result?p=@mojs/core)                         |
-| Velocity      | [![Velocity bundle size](https://badgen.net/badgesize/gzip/https/unpkg.com/velocity-animate)](https://bundlephobia.com/result?p=velocity-animate)               |
-| Popmotion     | [![Popmotion bundle size](https://badgen.net/badgesize/gzip/https/unpkg.com/popmotion)](https://bundlephobia.com/result?p=popmotion)                            |
+| Library      | Size                                                                                                                                              |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Shifty       | [![Shifty bundle size](https://badgen.net/badgesize/gzip/https/unpkg.com/shifty@latest)](https://bundlephobia.com/result?p=shifty)                |
+| GreenSock    | [![GreenSock bundle size](https://badgen.net/badgesize/gzip/https/unpkg.com/gsap)](https://bundlephobia.com/result?p=gsap)                        |
+| AnimeJS      | [![AnimeJS bundle size](https://badgen.net/badgesize/gzip/https/unpkg.com/animejs)](https://bundlephobia.com/result?p=animejs)                    |
+| `@mojs/core` | [![@core/mojs bundle size](https://badgen.net/badgesize/gzip/https/unpkg.com/@mojs/core)](https://bundlephobia.com/result?p=@mojs/core)           |
+| Velocity     | [![Velocity bundle size](https://badgen.net/badgesize/gzip/https/unpkg.com/velocity-animate)](https://bundlephobia.com/result?p=velocity-animate) |
+| Popmotion    | [![Popmotion bundle size](https://badgen.net/badgesize/gzip/https/unpkg.com/popmotion)](https://bundlephobia.com/result?p=popmotion)              |
 
 ## Examples
 

@@ -527,14 +527,18 @@ export class Tweenable {
    */
   _easing: EasingObject | EasingFunction = {}
 
-  /**
-   * @param {TweenState} [initialState={}] The values that the initial tween
-   * should start at if a {@link TweenableConfig#from} value is not provided to
-   * {@link Tweenable#tween} or {@link Tweenable#setConfig}.
-   * @param {TweenableConfig} [config] Configuration object to be passed to
-   * {@link Tweenable#setConfig}.
-   */
-  constructor(initialState: TweenState = {}, config?: TweenableConfig) {
+  constructor(
+    /**
+     * The values that the initial tween should start at if a {@link
+     * TweenableConfig#from} value is not provided to {@link Tweenable#tween}
+     * or {@link Tweenable#setConfig}.
+     */
+    initialState: TweenState = {},
+    /**
+     * Configuration object to be passed to {@link Tweenable#setConfig}.
+     */
+    config?: TweenableConfig
+  ) {
     /** @private */
     this._currentState = initialState || {}
 

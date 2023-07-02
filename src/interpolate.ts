@@ -2,8 +2,8 @@ import { Tweenable, composeEasingObject, tweenProps } from './tweenable'
 
 import { TweenState, Easing, TweenRawState } from './types'
 
-// Fake a Tweenable and patch some internals.  This approach allows us to
-// skip uneccessary processing and object recreation, cutting down on garbage
+// Fake a Tweenable and patch some internals.  This approach enables skipping
+// uneccessary processing and object recreation, cutting down on garbage
 // collection pauses.
 const tweenable = new Tweenable()
 const { filters } = Tweenable

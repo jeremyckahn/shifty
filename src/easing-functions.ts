@@ -1,5 +1,3 @@
-/** @typedef {import(".").shifty.easingFunction} shifty.easingFunction */
-
 /*!
  * All equations are adapted from Thomas Fuchs'
  * [Scripty2](https://github.com/madrobby/scripty2/blob/master/src/effects/transitions/penner.js).
@@ -15,148 +13,60 @@
  *  Easing Equations (c) 2003 Robert Penner, all rights reserved.
  */
 
-export const easingFunctions = {
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
+/**
+ * The base set of easing functions availble for use with Shifty tweens.
+ *
+ * This is distinct from {@link Tweenable.easing}. {@link Tweenable.easing}
+ * contains everything within `easingFunctions` but also any custom easing
+ * functions that you have defined.
+ */
+export const easingFunctions = Object.freeze({
   linear: (pos: number) => pos,
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeInQuad: (pos: number) => Math.pow(pos, 2),
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeOutQuad: (pos: number) => -(Math.pow(pos - 1, 2) - 1),
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeInOutQuad: (pos: number) =>
     (pos /= 0.5) < 1 ? 0.5 * Math.pow(pos, 2) : -0.5 * ((pos -= 2) * pos - 2),
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeInCubic: (pos: number) => Math.pow(pos, 3),
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeOutCubic: (pos: number) => Math.pow(pos - 1, 3) + 1,
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeInOutCubic: (pos: number) =>
     (pos /= 0.5) < 1
       ? 0.5 * Math.pow(pos, 3)
       : 0.5 * (Math.pow(pos - 2, 3) + 2),
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeInQuart: (pos: number) => Math.pow(pos, 4),
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeOutQuart: (pos: number) => -(Math.pow(pos - 1, 4) - 1),
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeInOutQuart: (pos: number) =>
     (pos /= 0.5) < 1
       ? 0.5 * Math.pow(pos, 4)
       : -0.5 * ((pos -= 2) * Math.pow(pos, 3) - 2),
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeInQuint: (pos: number) => Math.pow(pos, 5),
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeOutQuint: (pos: number) => Math.pow(pos - 1, 5) + 1,
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeInOutQuint: (pos: number) =>
     (pos /= 0.5) < 1
       ? 0.5 * Math.pow(pos, 5)
       : 0.5 * (Math.pow(pos - 2, 5) + 2),
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeInSine: (pos: number) => -Math.cos(pos * (Math.PI / 2)) + 1,
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeOutSine: (pos: number) => Math.sin(pos * (Math.PI / 2)),
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeInOutSine: (pos: number) => -0.5 * (Math.cos(Math.PI * pos) - 1),
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeInExpo: (pos: number) => (pos === 0 ? 0 : Math.pow(2, 10 * (pos - 1))),
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeOutExpo: (pos: number) => (pos === 1 ? 1 : -Math.pow(2, -10 * pos) + 1),
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeInOutExpo: (pos: number) => {
     if (pos === 0) {
       return 0
@@ -173,35 +83,15 @@ export const easingFunctions = {
     return 0.5 * (-Math.pow(2, -10 * --pos) + 2)
   },
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeInCirc: (pos: number) => -(Math.sqrt(1 - pos * pos) - 1),
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeOutCirc: (pos: number) => Math.sqrt(1 - Math.pow(pos - 1, 2)),
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeInOutCirc: (pos: number) =>
     (pos /= 0.5) < 1
       ? -0.5 * (Math.sqrt(1 - pos * pos) - 1)
       : 0.5 * (Math.sqrt(1 - (pos -= 2) * pos) + 1),
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeOutBounce: (pos: number) => {
     if (pos < 1 / 2.75) {
       return 7.5625 * pos * pos
@@ -214,31 +104,16 @@ export const easingFunctions = {
     }
   },
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeInBack: (pos: number) => {
     const s = 1.70158
     return pos * pos * ((s + 1) * pos - s)
   },
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeOutBack: (pos: number) => {
     const s = 1.70158
     return (pos = pos - 1) * pos * ((s + 1) * pos + s) + 1
   },
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeInOutBack: (pos: number) => {
     let s = 1.70158
     if ((pos /= 0.5) < 1) {
@@ -247,20 +122,10 @@ export const easingFunctions = {
     return 0.5 * ((pos -= 2) * pos * (((s *= 1.525) + 1) * pos + s) + 2)
   },
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   elastic: (pos: number) =>
     -1 * Math.pow(4, -8 * pos) * Math.sin(((pos * 6 - 1) * (2 * Math.PI)) / 2) +
     1,
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   swingFromTo: (pos: number) => {
     let s = 1.70158
     return (pos /= 0.5) < 1
@@ -268,31 +133,16 @@ export const easingFunctions = {
       : 0.5 * ((pos -= 2) * pos * (((s *= 1.525) + 1) * pos + s) + 2)
   },
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   swingFrom: (pos: number) => {
     const s = 1.70158
     return pos * pos * ((s + 1) * pos - s)
   },
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   swingTo: (pos: number) => {
     const s = 1.70158
     return (pos -= 1) * pos * ((s + 1) * pos + s) + 1
   },
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   bounce: (pos: number) => {
     if (pos < 1 / 2.75) {
       return 7.5625 * pos * pos
@@ -305,11 +155,6 @@ export const easingFunctions = {
     }
   },
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   bouncePast: (pos: number) => {
     if (pos < 1 / 2.75) {
       return 7.5625 * pos * pos
@@ -322,27 +167,12 @@ export const easingFunctions = {
     }
   },
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeFromTo: (pos: number) =>
     (pos /= 0.5) < 1
       ? 0.5 * Math.pow(pos, 4)
       : -0.5 * ((pos -= 2) * Math.pow(pos, 3) - 2),
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeFrom: (pos: number) => Math.pow(pos, 4),
 
-  /**
-   * @type {shifty.easingFunction}
-   * @param {number} pos
-   * @returns {number}
-   */
   easeTo: (pos: number) => Math.pow(pos, 0.25),
-}
+})
