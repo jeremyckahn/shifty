@@ -1,4 +1,4 @@
-import { interpolate } from './'
+import { interpolate } from '.'
 
 test('can tween an rgb color', () => {
   const from = { color: 'rgb(0,128,255)' },
@@ -69,15 +69,15 @@ test('each token chunk can have its own easing curve', () => {
 
   const interpolated = interpolate(from, to, 0.5, easing)
   const interpolatedR = parseInt(
-    interpolate({ r: 0 }, { r: 255 }, 0.5, 'linear').r,
+    String(interpolate({ r: 0 }, { r: 255 }, 0.5, 'linear').r),
     10
   )
   const interpolatedG = parseInt(
-    interpolate({ g: 0 }, { g: 255 }, 0.5, 'easeInQuad').g,
+    String(interpolate({ g: 0 }, { g: 255 }, 0.5, 'easeInQuad').g),
     10
   )
   const interpolatedB = parseInt(
-    interpolate({ b: 0 }, { b: 255 }, 0.5, 'easeInCubic').b,
+    String(interpolate({ b: 0 }, { b: 255 }, 0.5, 'easeInCubic').b),
     10
   )
   const targetString =
@@ -93,15 +93,15 @@ test('missing token eases inherit from the last easing listed', () => {
 
   const interpolated = interpolate(from, to, 0.5, easing)
   const interpolatedR = parseInt(
-    interpolate({ r: 0 }, { r: 255 }, 0.5, 'linear').r,
+    String(interpolate({ r: 0 }, { r: 255 }, 0.5, 'linear').r),
     10
   )
   const interpolatedG = parseInt(
-    interpolate({ g: 0 }, { g: 255 }, 0.5, 'easeInQuad').g,
+    String(interpolate({ g: 0 }, { g: 255 }, 0.5, 'easeInQuad').g),
     10
   )
   const interpolatedB = parseInt(
-    interpolate({ b: 0 }, { b: 255 }, 0.5, 'easeInQuad').b,
+    String(interpolate({ b: 0 }, { b: 255 }, 0.5, 'easeInQuad').b),
     10
   )
   const targetString =

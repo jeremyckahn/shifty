@@ -1,4 +1,4 @@
-import { interpolate } from './'
+import { interpolate } from '.'
 
 test('computes the midpoint of two numbers', () => {
   const interpolated = interpolate({ x: 0 }, { x: 10 }, 0.5)
@@ -24,7 +24,7 @@ test('accounts for optional delay', () => {
 })
 
 test('supports per-interpolation custom easing curves', () => {
-  const easingFn = pos => pos * 2
+  const easingFn = (pos: number) => pos * 2
 
   const interpolated = interpolate({ x: 0 }, { x: 10 }, 0.5, easingFn)
   expect(interpolated.x).toEqual(10)

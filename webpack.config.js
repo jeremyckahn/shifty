@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const Webpack = require('webpack')
 
 const { version } = require('./package.json')
@@ -7,13 +8,14 @@ const config = {
   devtool: 'source-map',
   module: {
     rules: [
-      {
-        test: /\.js$/,
-        use: 'babel-loader',
-      },
+      // All files with a '.ts' extension will be handled by 'ts-loader'.
+      { test: /\.ts$/, loader: 'ts-loader' },
+      // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
+      { test: /\.js$/, loader: 'source-map-loader' },
     ],
   },
   resolve: {
+    extensions: ['.ts', '.js'],
     modules: ['node_modules'],
   },
   plugins: [
@@ -36,15 +38,6 @@ module.exports = [
     output: {
       ...output,
       filename: 'shifty.js',
-    },
-  },
-  {
-    ...config,
-    entry: './src/core.index.js',
-    target: ['web', 'es5'],
-    output: {
-      ...output,
-      filename: 'shifty.core.js',
     },
   },
   {

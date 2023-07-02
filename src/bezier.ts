@@ -1,5 +1,6 @@
 import { Tweenable } from './tweenable'
-/** @typedef {import(".").shifty.easingFunction} shifty.easingFunction */
+
+import { EasingFunction, EasingKey } from './types'
 
 /**
  * The Bezier magic in this file is adapted/copied almost wholesale from
@@ -40,17 +41,14 @@ import { Tweenable } from './tweenable'
  */
 // port of webkit cubic bezier handling by http://www.netzgesta.de/dev/
 
-/**
- * @param {number} t
- * @param {number} p1x
- * @param {number} p1y
- * @param {number} p2x
- * @param {number} p2y
- * @param {number} duration
- * @returns {Function}
- * @private
- */
-function cubicBezierAtTime(t, p1x, p1y, p2x, p2y, duration) {
+function cubicBezierAtTime(
+  t: number,
+  p1x: number,
+  p1y: number,
+  p2x: number,
+  p2y: number,
+  duration: number
+): number {
   let ax = 0,
     bx = 0,
     cx = 0,
@@ -58,17 +56,17 @@ function cubicBezierAtTime(t, p1x, p1y, p2x, p2y, duration) {
     by = 0,
     cy = 0
 
-  const sampleCurveX = t => ((ax * t + bx) * t + cx) * t
+  const sampleCurveX = (t: number) => ((ax * t + bx) * t + cx) * t
 
-  const sampleCurveY = t => ((ay * t + by) * t + cy) * t
+  const sampleCurveY = (t: number) => ((ay * t + by) * t + cy) * t
 
-  const sampleCurveDerivativeX = t => (3 * ax * t + 2 * bx) * t + cx
+  const sampleCurveDerivativeX = (t: number) => (3 * ax * t + 2 * bx) * t + cx
 
-  const solveEpsilon = duration => 1 / (200 * duration)
+  const solveEpsilon = (duration: number) => 1 / (200 * duration)
 
-  const fabs = n => (n >= 0 ? n : 0 - n)
+  const fabs = (n: number) => (n >= 0 ? n : 0 - n)
 
-  const solveCurveX = (x, epsilon) => {
+  const solveCurveX = (x: number, epsilon: number) => {
     let t0, t1, t2, x2, d2, i
 
     for (t2 = x, i = 0; i < 8; i++) {
@@ -118,7 +116,8 @@ function cubicBezierAtTime(t, p1x, p1y, p2x, p2y, duration) {
     return t2 // Failure.
   }
 
-  const solve = (x, epsilon) => sampleCurveY(solveCurveX(x, epsilon))
+  const solve = (x: number, epsilon: number) =>
+    sampleCurveY(solveCurveX(x, epsilon))
 
   cx = 3 * p1x
   bx = 3 * (p2x - p1x) - cx
@@ -132,44 +131,47 @@ function cubicBezierAtTime(t, p1x, p1y, p2x, p2y, duration) {
 // End ported code
 
 /**
- *  GetCubicBezierTransition(x1, y1, x2, y2) -> Function.
+ * Generates a transition easing function that is compatible with WebKit's CSS
+ * transitions `-webkit-transition-timing-function` CSS property.
  *
- *  Generates a transition easing function that is compatible
- *  with WebKit's CSS transitions `-webkit-transition-timing-function`
- *  CSS property.
- *
- *  The W3C has more information about CSS3 transition timing functions:
- *  http://www.w3.org/TR/css3-transitions/#transition-timing-function_tag
- *
- *  @param {number} [x1]
- *  @param {number} [y1]
- *  @param {number} [x2]
- *  @param {number} [y2]
- *  @return {Function}
+ * The W3C has more information about CSS3 transition timing functions:
+ * http://www.w3.org/TR/css3-transitions/#transition-timing-function_tag
  */
 export const getCubicBezierTransition = (
   x1 = 0.25,
   y1 = 0.25,
   x2 = 0.75,
   y2 = 0.75
-) => pos => cubicBezierAtTime(pos, x1, y1, x2, y2, 1)
+): EasingFunction => pos => cubicBezierAtTime(pos, x1, y1, x2, y2, 1)
 
 /**
  * Create a Bezier easing function and attach it to {@link
- * Tweenable.formulas}.  This function gives you total control over the
+ * Tweenable.easing}.  This function gives you total control over the
  * easing curve.  Matthew Lein's [Ceaser](http://matthewlein.com/ceaser/) is a
  * useful tool for visualizing the curves you can make with this function.
- * @method shifty.setBezierFunction
- * @param {string} name The name of the easing curve.  Overwrites the old
- * easing function on {@link Tweenable.formulas} if it exists.
- * @param {number} x1
- * @param {number} y1
- * @param {number} x2
- * @param {number} y2
- * @return {shifty.easingFunction} The {@link shifty.easingFunction} that was
- * attached to {@link Tweenable.formulas}.
+ *
+ * To remove any easing functions that are created by this method, `delete`
+ * them from {@link Tweenable.easing}:
+ *
+ * ```
+ * setBezierFunction('customCurve', 0, 0, 1, 1)
+ *
+ * delete Tweenable.easing.customCurve
+ * ```
+ * @return {EasingFunction} The {@link EasingFunction} that was
+ * attached to {@link Tweenable.easing}.
  */
-export const setBezierFunction = (name, x1, y1, x2, y2) => {
+export const setBezierFunction = (
+  /**
+   * The name of the easing curve. Overwrites the matching, preexisting easing
+   * function on {@link Tweenable.easing} if it exists.
+   */
+  name: string,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number
+): EasingFunction => {
   const cubicBezierTransition = getCubicBezierTransition(x1, y1, x2, y2)
 
   cubicBezierTransition.displayName = name
@@ -178,15 +180,5 @@ export const setBezierFunction = (name, x1, y1, x2, y2) => {
   cubicBezierTransition.x2 = x2
   cubicBezierTransition.y2 = y2
 
-  return (Tweenable.formulas[name] = cubicBezierTransition)
+  return (Tweenable.easing[name as EasingKey] = cubicBezierTransition)
 }
-
-/**
- * `delete` an easing function from {@link Tweenable.formulas}.  Be
- * careful with this method, as it `delete`s whatever easing formula matches
- * `name` (which means you can delete standard Shifty easing functions).
- * @method shifty.unsetBezierFunction
- * @param {string} name The name of the easing function to delete.
- * @return {boolean} Whether or not the functions was `delete`d.
- */
-export const unsetBezierFunction = name => delete Tweenable.formulas[name]

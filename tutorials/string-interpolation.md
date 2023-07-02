@@ -32,7 +32,7 @@ the equivalent RGB output values. This is done to optimize for performance.
 
 Easing works somewhat differently with string interpolation. This is because
 some CSS properties have multiple values in them, and you might need to tween
-each value along its own easing curve. A basic example:
+each value along its own easing curve.
 
 <p data-height="265" data-theme-id="0" data-slug-hash="OjGjpm" data-default-tab="js,result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Shifty - String interpolation with single ease demo" class="codepen">See the Pen <a href="https://codepen.io/jeremyckahn/pen/OjGjpm/">Shifty - String interpolation with single ease demo</a> by Jeremy Kahn (<a href="https://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="https://codepen.io">CodePen</a>.</p>
 <script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
@@ -47,7 +47,7 @@ both use the same easing curve. We can also tween `translateX` and
 
 `translateX` and `translateY` are not in sync anymore, because `easeInQuad` was
 specified for `translateX` and `bounce` for `translateY`. Mixing and matching
-easing curves can make for some interesting motion in your animations!
+easing curves can make for some interesting motions in your animations!
 
 The order of the space-separated easing curves correspond the number values
 they apply to. If there are more number values than easing curves listed, the
@@ -56,15 +56,15 @@ last easing curve listed is used for the remaining numbers.
 <p data-height="438" data-theme-id="0" data-slug-hash="dzLwQX" data-default-tab="js,result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Shifty - Basic CSS animation" class="codepen">See the Pen <a href="https://codepen.io/jeremyckahn/pen/dzLwQX/">Shifty - Basic CSS animation</a> by Jeremy Kahn (<a href="https://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="https://codepen.io">CodePen</a>.</p>
 <script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
 
-## A word on performance
+## A note on performance
 
-Shifty's string interpolation is powerful because it is fully abstract — that
-is, it can handle just about any kind of string format. However, that
-abstraction comes at a performance cost. In many cases this cost is
-insignificant, but if Shifty is playing many animations simultaneously, you may
-see some slowdown. If you experience performance issues when animating strings,
-consider finding an alternative solution that relies solely on raw numbers. For
-instance, if your animation looks like this:
+Shifty's string interpolation is powerful because it is generic and can handle
+just about any kind of string format. However, that power comes at a
+performance cost. In many cases this cost is insignificant, but if Shifty is
+playing many animations simultaneously, you may see some slowdown. If you
+experience performance issues when animating strings, consider finding a lower
+level solution that relies solely on raw `Number`s. For instance, if your
+animation looks like this:
 
 ```js
 const div = document.querySelector('div')

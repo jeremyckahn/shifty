@@ -5,18 +5,15 @@
     "es6": true,
     "jest": true
   },
-  "extends": ["eslint:recommended", "prettier"],
-  "parser": "babel-eslint",
-  "plugins": ["jest", "prettier"],
+  "extends": [
+    "eslint:recommended",
+    "prettier",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["jest", "prettier", "@typescript-eslint"],
+  "root": true,
   "rules": {
-    "linebreak-style": ["error", "unix"],
-    "valid-jsdoc": [
-      "error",
-      {
-        "requireReturn": false,
-        "requireReturnDescription": false,
-        "requireParamDescription": false
-      }
-    ]
+    "linebreak-style": ["error", "unix"]
   }
 }

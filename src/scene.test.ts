@@ -1,7 +1,7 @@
 import { Tweenable } from './tweenable'
 import { Scene } from './scene'
 
-let scene
+let scene: Scene
 
 beforeEach(() => {
   scene = new Scene()
@@ -53,7 +53,7 @@ describe('empty', () => {
     const tweenable1 = new Tweenable({ foo: 1 })
     const tweenable2 = new Tweenable({ bar: 1 })
     scene = new Scene(tweenable1, tweenable2)
-    const emptiedTweenables = scene.empty(tweenable1)
+    const emptiedTweenables = scene.empty()
 
     expect(scene.tweenables).toHaveLength(0)
     expect(emptiedTweenables).toEqual([tweenable1, tweenable2])
@@ -66,12 +66,12 @@ describe('isPlaying', () => {
   })
 
   test('returns false if no tweenables are playing', () => {
-    expect(scene.isPlaying()).toBeFalsy()
+    expect(scene.isPlaying).toBeFalsy()
   })
 
   test('returns true if any Tweenables are playing', () => {
     scene.tweenables[1].tween({ from: { x: 0 }, to: { x: 10 } })
-    expect(scene.isPlaying()).toBeTruthy()
+    expect(scene.isPlaying).toBeTruthy()
   })
 })
 
@@ -84,10 +84,10 @@ describe('play', () => {
     const [tweenable1, tweenable2] = scene.tweenables
     tweenable1.setConfig({ from: { x: 0 }, to: { x: 10 } })
     tweenable2.setConfig({ from: { x: 10 }, to: { x: 0 } })
-    scene.play()
+    scene.tween()
 
-    expect(tweenable1.isPlaying()).toBeTruthy()
-    expect(tweenable2.isPlaying()).toBeTruthy()
+    expect(tweenable1.isPlaying).toBeTruthy()
+    expect(tweenable2.isPlaying).toBeTruthy()
   })
 })
 
@@ -97,10 +97,10 @@ describe('pause', () => {
   })
 
   test('pauses all Tweenables', () => {
-    scene.play()
+    scene.tween()
     scene.pause()
 
-    expect(scene.isPlaying()).toBeFalsy()
+    expect(scene.isPlaying).toBeFalsy()
   })
 })
 
@@ -110,11 +110,11 @@ describe('resume', () => {
   })
 
   test('resumes Tweenables', () => {
-    scene.play()
+    scene.tween()
     scene.pause()
     scene.resume()
 
-    expect(scene.isPlaying()).toBeTruthy()
+    expect(scene.isPlaying).toBeTruthy()
   })
 
   test('does not resume Tweenables that have ended', () => {
@@ -123,12 +123,12 @@ describe('resume', () => {
 
     scene = new Scene(tweenable1, tweenable2)
 
-    jest.spyOn(tweenable1, 'hasEnded').mockReturnValue(false)
+    jest.spyOn(tweenable1, 'hasEnded', 'get').mockReturnValue(false)
     jest.spyOn(tweenable1, 'resume')
-    jest.spyOn(tweenable2, 'hasEnded').mockReturnValue(true)
+    jest.spyOn(tweenable2, 'hasEnded', 'get').mockReturnValue(true)
     jest.spyOn(tweenable2, 'resume')
 
-    scene.play()
+    scene.tween()
     scene.pause()
     scene.resume()
 

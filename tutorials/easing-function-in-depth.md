@@ -1,14 +1,12 @@
-Shifty supports a number of easing formulas, which you can see in
-[`easing-functions.js`](easing-functions.js.html). You can add new easing
-formulas by attaching methods to {@link shifty.Tweenable.formulas}.
+Shifty supports {@link Tweenable.easing | a number of easing curves}.
 
-## Using multiple easing formulas
+## Using multiple easing curves
 
-Shifty supports tweens that have different easing formulas for each property.
-Having multiple easing formulas on a single tween can make for some really
-interesting animations, because you aren't constrained to moving things in a
-straight line. You can make curves! To do this, simply supply `easing` as an
-Object, rather than a string:
+Shifty supports tweens that have different easing curves for each property.
+Having multiple easing curves on a single tween can make for some really
+interesting animations because you aren't constrained to moving things in a
+straight line. You can make curved motions! To do this, simply supply `easing`
+as an Object, rather than a string:
 
 ```javascript
 tween({
@@ -27,11 +25,19 @@ tween({
 })
 ```
 
+## Reusable custom easing functions
+
+You can define custom easing curves by attaching methods to {@link Tweenable.easing}.
+
+```ts
+Tweenable.easing['customEasing'] = (pos: number) => Math.pow(pos, 2)
+```
+
 ## Per-tween custom easing functions
 
-You are not limited to attaching functions to {@link
-shifty.Tweenable.formulas}. You can also supply a custom easing function
-directly to {@link shifty.tween}:
+You are not limited to attaching functions to {@link Tweenable.easing}. You can
+also supply a {@link EasingFunction | custom easing function} directly to
+{@link tween}:
 
 ```javascript
 tween({
@@ -47,7 +53,7 @@ tween({
 })
 ```
 
-Or even an Object of mixed strings and functions:
+Or even an {@link EasingObject | object of mixed strings and functions}:
 
 ```javascript
 tween({
@@ -84,4 +90,4 @@ tween({
 })
 ```
 
-{@link shifty.interpolate} also supports all formats for `easing`.
+{@link interpolate} also supports all of the above formats for `easing`.
