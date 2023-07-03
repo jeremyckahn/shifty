@@ -56,14 +56,14 @@ Shifty's tiny footprint compares very favorably against other popular animation 
 
 ## Examples
 
-<!--### Sequencing-->
+### Sequencing
 
-<!--<p class="codepen" data-height="500" data-theme-id="dark" data-default-tab="js,result" data-user="jeremyckahn" data-slug-hash="GRZZVLZ" style="height: 500px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="Shifty Sequencing Demo">-->
-  <!--<span>See the Pen <a href="https://codepen.io/jeremyckahn/pen/GRZZVLZ">-->
-  <!--Shifty Sequencing Demo</a> by Jeremy Kahn (<a href="https://codepen.io/jeremyckahn">@jeremyckahn</a>)-->
-  <!--on <a href="https://codepen.io">CodePen</a>.</span>-->
-<!--</p>-->
-<!--<script async src="https://static.codepen.io/assets/embed/ei.js"></script>-->
+<p class="codepen" data-height="500" data-theme-id="dark" data-default-tab="js,result" data-user="jeremyckahn" data-slug-hash="GRZZVLZ" style="height: 500px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="Shifty Sequencing Demo">
+  <span>See the Pen <a href="https://codepen.io/jeremyckahn/pen/GRZZVLZ">
+  Shifty Sequencing Demo</a> by Jeremy Kahn (<a href="https://codepen.io/jeremyckahn">@jeremyckahn</a>)
+  on <a href="https://codepen.io">CodePen</a>.</span>
+</p>
+<script async src="https://static.codepen.io/assets/embed/ei.js"></script>
 
 ### `await`ed tweens
 
