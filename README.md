@@ -117,7 +117,7 @@ tween({ from: { x: 0 }, to: { x: 10 } })
 ## Using Shifty
 
 See the [Getting
-Started](https://jeremyckahn.github.io/shifty/doc/tutorial-getting-started.html)
+Started](https://jeremyckahn.github.io/shifty/doc/pages/tutorials/getting-started.html)
 guide and check out the API documentation.
 
 ### Troubleshooting
