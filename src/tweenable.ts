@@ -1,4 +1,4 @@
-import { baseEasingFunctions } from './easing-functions'
+import { standardEasingFunctions } from './standard-easing-functions'
 import { getCubicBezierTransition } from './bezier'
 import {
   Data,
@@ -132,7 +132,7 @@ export const tweenProps = <T extends TweenRawState>(
         // easingObjectProp is a string
         easingFn =
           Tweenable.easing[easingObjectProp as EasingKey] ??
-          baseEasingFunctions.linear
+          standardEasingFunctions.linear
       }
     }
 
@@ -386,7 +386,9 @@ export class Tweenable {
    * Tweenable.easing['customEasing'] = (pos: number) => Math.pow(pos, 2)
    * ```
    */
-  static easing: typeof baseEasingFunctions = Object.create(baseEasingFunctions)
+  static easing: Record<string, EasingFunction> = Object.create(
+    standardEasingFunctions
+  )
 
   /**
    * @ignore

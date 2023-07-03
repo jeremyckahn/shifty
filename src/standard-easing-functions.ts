@@ -14,13 +14,13 @@
  */
 
 /**
- * The base set of easing functions availble for use with Shifty tweens.
+ * The standard set of easing functions availble for use with Shifty tweens.
  *
- * This is distinct from {@link Tweenable.easing}. {@link Tweenable.easing}
- * contains everything within `easingFunctions` but also any custom easing
- * functions that you have defined.
+ * This is distinct from `Tweenable`'s {@link Tweenable.easing}. {@link
+ * Tweenable.easing} contains everything within `easingFunctions` but also any
+ * custom easing functions that you have defined.
  */
-export const baseEasingFunctions = {
+export const standardEasingFunctions = Object.freeze({
   linear: (pos: number) => pos,
 
   easeInQuad: (pos: number) => Math.pow(pos, 2),
@@ -175,4 +175,4 @@ export const baseEasingFunctions = {
   easeFrom: (pos: number) => Math.pow(pos, 4),
 
   easeTo: (pos: number) => Math.pow(pos, 0.25),
-}
+})
