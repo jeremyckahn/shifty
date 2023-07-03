@@ -1,6 +1,4 @@
-# Shifty
-
-**_The fastest JavaScript animation engine on the web_**
+**_The fastest TypeScript animation engine on the web_**
 
 - `npm install --save shifty`
 - `https://unpkg.com/shifty`
@@ -9,12 +7,16 @@
 
 ## [Source code](https://github.com/jeremyckahn/shifty)
 
-Shifty is a highly-optimized JavaScript tweening engine designed to fit all of your animation needs. It is a low-level animation library focused on optimal performance and flexibility that can easily be built upon and extended. Shifty's key benefits are:
+Shifty is a highly-optimized TypeScript tweening engine designed to fit all of your animation needs. It is a low-level animation library focused on optimal performance and flexibility that can easily be built upon and extended. Shifty's key benefits are:
 
 - **Speed**: Shifty is engineered for maximum animation performance and minimal memory usage
 - **Flexibility and extensibility**: Shifty can easily be built upon and extended via its unopinionated API.
 - **Renderer-agnostic**: Shifty does not perform any rendering, but it can be easily integrated into whatever rendering mechanism is most appropriate for your project such as DOM or `<canvas>`.
 - **`Promise` support**: Shifty's tweens are `await`-able [thenables](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then). ([Learn about the benefits of `async`/`await`-based animations here](https://dev.to/jeremyckahn/the-case-for-async-await-based-javascript-animations-pkl)).
+
+This is the documentation for the latest version of Shifty. If you need documentation for a previous version of Shifty, please see:
+
+- [Shifty version 2 documentation](https://shifty-git-v2-jeremyckahn.vercel.app/)
 
 <p class="codepen" data-height="590" data-theme-id="dark" data-default-tab="js,result" data-user="jeremyckahn" data-slug-hash="PoNNNye" style="height: 590px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="Shifty async/await demo">
   <span>See the Pen <a href="https://codepen.io/jeremyckahn/pen/PoNNNye">
@@ -70,7 +72,7 @@ Shifty's tiny footprint compares very favorably against other popular animation 
 <p data-height="388" data-theme-id="0" data-slug-hash="NvQXqP" data-default-tab="js,result" data-user="jeremyckahn" data-embed-version="2" data-pen-title="Primise-chained tweens" class="codepen">See the Pen <a href="https://codepen.io/jeremyckahn/pen/NvQXqP/">Primise-chained tweens</a> by Jeremy Kahn (<a href="https://codepen.io/jeremyckahn">@jeremyckahn</a>) on <a href="https://codepen.io">CodePen</a>.</p>
 <script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
 
-This next example demonstrates how `await`ed tweens interoperate well with standard JavaScript `try`/`catch` blocks, as well as infinite `while` loops. Typically you'd want to avoid intentionally infinite loops, but it's common to need animations to loop indefinitely. A `while (true)` loop is a simple way to achieve this. The ball in this demo pulsates repeatedly, but the animation loop is gracefully interrupted when the user clicks anywhere else within the demo. Response to the user's input is handled in `catch` blocks, wherein the ball swings over to where the user clicked. From there it continues to pulsate. With `await`ed tweens, you can have full control over the lifecycle of an animation with standard JavaScript programming constructs, rather than a library API that may or may not integrate well with other libraries.
+This next example demonstrates how `await`ed tweens interoperate well with standard TypeScript `try`/`catch` blocks, as well as infinite `while` loops. Typically you'd want to avoid intentionally infinite loops, but it's common to need animations to loop indefinitely. A `while (true)` loop is a simple way to achieve this. The ball in this demo pulsates repeatedly, but the animation loop is gracefully interrupted when the user clicks anywhere else within the demo. Response to the user's input is handled in `catch` blocks, wherein the ball swings over to where the user clicked. From there it continues to pulsate. With `await`ed tweens, you can have full control over the lifecycle of an animation with standard TypeScript programming constructs, rather than a library API that may or may not integrate well with other libraries.
 
 <p class="codepen" data-height="542" data-theme-id="dark" data-default-tab="js,result" data-user="jeremyckahn" data-slug-hash="abNmGwV" style="height: 542px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="async/await try/catch demo">
   <span>See the Pen <a href="https://codepen.io/jeremyckahn/pen/abNmGwV">

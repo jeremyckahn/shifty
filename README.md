@@ -151,7 +151,7 @@ afterAll(() => {
 Shifty's legacy version 2 remains available in the
 [v2](https://github.com/jeremyckahn/shifty/tree/v2) branch. Legacy
 documentation can be found at:
-https://shifty-git-v2-jeremyckahn.vercel.app/doc/
+https://shifty-git-v2-jeremyckahn.vercel.app/
 
 - `Tweenable.formulas` has been renamed to `Tweenable.easing`
 - `tweenConfig.step` has been removed in favor of `tweenConfig.render`
