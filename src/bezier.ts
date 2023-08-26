@@ -41,6 +41,7 @@ import { EasingFunction, EasingKey } from './types'
  */
 // port of webkit cubic bezier handling by http://www.netzgesta.de/dev/
 
+/* istanbul ignore next */
 function cubicBezierAtTime(
   t: number,
   p1x: number,

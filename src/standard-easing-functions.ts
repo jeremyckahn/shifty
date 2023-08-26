@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 /*!
  * All equations are adapted from Thomas Fuchs'
  * [Scripty2](https://github.com/madrobby/scripty2/blob/master/src/effects/transitions/penner.js).

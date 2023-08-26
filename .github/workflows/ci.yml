@@ -19,6 +19,13 @@ jobs:
           npm ci
           npm run ci
 
+      - name: 'Report test coverage'
+        uses: dorny/test-reporter@v1
+        with:
+          name: Jest Tests # Name of the check run which will be created
+          path: reports/jest-*.xml # Path to test results
+          reporter: jest-junit # Format of test results
+
       - name: 'Build code'
         run: |
           npm run build
