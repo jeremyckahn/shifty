@@ -19,7 +19,7 @@ jobs:
           npm ci
           npm run ci
 
-      - name: 'Report test coverage'
+      - name: 'Report test results'
         uses: dorny/test-reporter@v1
         with:
           name: Jest Tests # Name of the check run which will be created

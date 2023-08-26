@@ -52,7 +52,7 @@
     "typegen:watch": "tsc --watch",
     "test": "jest --watch",
     "test:coverage": "jest --coverage",
-    "ci": "npm run lint && jest --reporters=default --reporters=jest-junit && tsc",
+    "ci": "npm run lint && jest --reporters=default --reporters=jest-junit --coverage && tsc",
     "doc": "typedoc src/index.ts",
     "doc:view": "serve dist/doc",
     "doc:watch": "nodemon --exec \"npm run doc\" --watch src --watch ./ --ext ts,js,json,md --ignore dist",
