@@ -12,3 +12,8 @@ export { setBezierFunction } from './bezier'
 export { standardEasingFunctions } from './standard-easing-functions'
 
 export * from './types'
+
+/**
+ * The NPM package version of Shifty.
+ */
+export const VERSION = String(process.env.npm_package_version)
