@@ -22,6 +22,11 @@ const config = {
     new Webpack.BannerPlugin(
       `Shifty ${version} - https://github.com/jeremyckahn/shifty`
     ),
+    new Webpack.DefinePlugin({
+      'process.env.PACKAGE_VERSION': JSON.stringify(
+        require('./package.json').version
+      ),
+    }),
   ],
 }
 
