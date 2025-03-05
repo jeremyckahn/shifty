@@ -228,7 +228,7 @@ export const processTweens = () => {
 const { now } = Date
 
 let currentTime: number
-let heartbeatIsRunning = false
+let isHeartbeatRunning = false
 
 /**
  * Handles the update logic for one tick of a tween.
@@ -236,7 +236,7 @@ let heartbeatIsRunning = false
 export const scheduleUpdate = () => {
   currentTime = now()
 
-  if (heartbeatIsRunning) {
+  if (isHeartbeatRunning) {
     scheduleFunction.call(root, scheduleUpdate, UPDATE_TIME)
   }
 
@@ -348,7 +348,13 @@ export class Tweenable {
   /**
    * Returns the current timestamp.
    */
-  static now = (): number => currentTime
+  static now = (): number => {
+    if (!isHeartbeatRunning) {
+      currentTime = now()
+    }
+
+    return currentTime
+  }
 
   /**
    * Sets a custom schedule function.
@@ -732,6 +738,8 @@ export class Tweenable {
 
     this._isPlaying = true
 
+    const wasRunning = Boolean(listHead)
+
     if (listHead === null) {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       listHead = this
@@ -746,6 +754,10 @@ export class Tweenable {
 
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       listTail = this
+    }
+
+    if (!wasRunning) {
+      shouldScheduleUpdate(true)
     }
 
     return this
@@ -936,15 +948,13 @@ export function tween(config: TweenableConfig = {}): Tweenable {
  * @see https://github.com/jeremyckahn/shifty/issues/156
  */
 export const shouldScheduleUpdate = (doScheduleUpdate: boolean) => {
-  if (doScheduleUpdate && heartbeatIsRunning) {
+  if (doScheduleUpdate && isHeartbeatRunning) {
     return
   }
 
-  heartbeatIsRunning = doScheduleUpdate
+  isHeartbeatRunning = doScheduleUpdate
 
   if (doScheduleUpdate) {
     scheduleUpdate()
   }
 }
-
-shouldScheduleUpdate(true)
