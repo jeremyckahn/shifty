@@ -8,9 +8,12 @@
     "url": "https://github.com/jeremyckahn/shifty.git"
   },
   "description": "The fastest JavaScript animation engine on the web",
-  "browser": "dist/shifty.js",
-  "main": "dist/shifty.node.js",
+  "browser": "./dist/shifty.js",
+  "main": "./dist/shifty.node.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    "unpkg": "./dist/shifty.js"
+  },
   "devDependencies": {
     "@babel/core": "^7.21.4",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
