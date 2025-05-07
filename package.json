@@ -12,6 +12,7 @@
   "main": "./dist/shifty.node.js",
   "types": "./dist/index.d.ts",
   "exports": {
+    "default": "./dist/shifty.js",
     "unpkg": "./dist/shifty.js"
   },
   "devDependencies": {
