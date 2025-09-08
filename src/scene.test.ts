@@ -123,10 +123,10 @@ describe('resume', () => {
 
     scene = new Scene(tweenable1, tweenable2)
 
-    jest.spyOn(tweenable1, 'hasEnded', 'get').mockReturnValue(false)
-    jest.spyOn(tweenable1, 'resume')
-    jest.spyOn(tweenable2, 'hasEnded', 'get').mockReturnValue(true)
-    jest.spyOn(tweenable2, 'resume')
+    vi.spyOn(tweenable1, 'hasEnded', 'get').mockReturnValue(false)
+    vi.spyOn(tweenable1, 'resume')
+    vi.spyOn(tweenable2, 'hasEnded', 'get').mockReturnValue(true)
+    vi.spyOn(tweenable2, 'resume')
 
     scene.tween()
     scene.pause()
@@ -146,8 +146,8 @@ describe('stop', () => {
     const [tweenable1, tweenable2] = scene.tweenables
     tweenable1.setConfig({ from: { x: 0 }, to: { x: 10 } })
     tweenable2.setConfig({ from: { x: 10 }, to: { x: 0 } })
-    jest.spyOn(tweenable1, 'stop')
-    jest.spyOn(tweenable2, 'stop')
+    vi.spyOn(tweenable1, 'stop')
+    vi.spyOn(tweenable2, 'stop')
     scene.stop(true)
 
     expect(tweenable1.stop).toHaveBeenCalledWith(true)
