@@ -31,6 +31,9 @@ jobs:
           npm run build
           npm run doc
 
+      - name: 'Smoke test packaged module'
+        run: npm run test:package
+
       - name: 'Upload artifacts'
         uses: actions/upload-artifact@v4
         with:
