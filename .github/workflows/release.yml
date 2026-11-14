@@ -11,6 +11,11 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      # Push the version commit and tag, and create the GitHub release.
+      contents: write
+      # Lets npm verify this run via OIDC for trusted publishing.
+      id-token: write
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -50,10 +55,15 @@ jobs:
           npm run build
           zip shifty-${{ env.PACKAGE_VERSION }}.zip -r dist/*
 
+      # Trusted publishing requires npm >= 11.5.1, which is newer than the npm
+      # bundled with Node 22.
+      - name: Upgrade npm
+        run: npm install -g npm@latest
+
+      # Authenticates via the trusted publisher configured for this package on
+      # npmjs.com (workflow: release.yml). No NPM_TOKEN secret is needed.
       - name: Publish to NPM
         run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create Release
         id: create_release
