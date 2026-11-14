@@ -96,6 +96,10 @@ Shifty exposes a UMD module, so you can load it however you like:
 import { tween } from 'shifty'
 ```
 
+This works in Node (as an ES module or via `require`) as well as in bundlers
+and browsers. Node loads `dist/shifty.node.mjs` / `dist/shifty.node.js`, while
+browser-targeting bundlers load the browser build, `dist/shifty.js`.
+
 Or:
 
 ```javascript
